@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "skills": {
+    "web-tools-guide": {
+      "name": "web-tools-guide",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=web-tools-guide",
+      "source": "community",
+      "version": "1.0.2",
+      "installedAt": "2026-06-12T04:13:55Z"
+    },
+    "web": {
+      "name": "Web Development",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=web",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-06-12T04:14:01Z"
+    },
+    "web-search": {
+      "name": "Web Search",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=web-search",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-06-12T04:14:07Z"
+    },
+    "ai": {
+      "name": "Artificial Intelligence",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=ai",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-06-12T04:14:11Z"
+    },
+    "docker": {
+      "name": "Docker",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=docker",
+      "source": "community",
+      "version": "1.0.4",
+      "installedAt": "2026-06-12T04:14:16Z"
+    },
+    "db": {
+      "name": "Database",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=db",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-06-12T04:14:22Z"
+    },
+    "web-development": {
+      "name": "Web Development",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=web-development",
+      "source": "community",
+      "version": "1.27.0",
+      "installedAt": "2026-06-12T04:14:28Z"
+    },
+    "docker-compose": {
+      "name": "Docker Compose",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=docker-compose",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-06-12T04:14:35Z"
+    },
+    "ai-persona-os": {
+      "name": "AI Persona OS",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=ai-persona-os",
+      "source": "community",
+      "version": "2.0.0",
+      "installedAt": "2026-06-12T04:14:40Z"
+    },
+    "database-design": {
+      "name": "Database Design",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=database-design",
+      "source": "community",
+      "version": "2.0.0",
+      "installedAt": "2026-06-12T04:14:46Z"
+    }
+  }
+}

@@ -1,0 +1,93 @@
+# 🚀 CoursePay GitHub Pages 部署步骤
+# 立即生成公网链接: https://your-username.github.io/coursepay
+
+## ✅ 已完成
+- ✅ 项目页面已创建：CoursePay_SimplePay.html
+- ✅ 本地访问成功：http://localhost:3003/CoursePay_SimplePay.html
+- ✅ 页面功能完整：选择课程→显示PayPal收款账户
+- ✅ PayPal收款账户：yinanzo@hotmail.com
+
+## 🔗 当前状态
+本地测试链接：http://localhost:3003/CoursePay_SimplePay.html
+GitHub Pages链接：https://YOUR_USERNAME.github.io/coursepay
+
+## 📋 部署步骤
+
+### 第1步：创建GitHub仓库
+```
+1. 访问 https://github.com/new
+2. 仓库名：coursepay-sales
+3. 描述：CoursePay课程销售平台
+4. 公开访问
+5. 点击创建
+```
+
+### 第2步：上传文件
+```
+方法A：Web界面
+1. 在仓库点击 "Add file" -> "Upload files"
+2. 上传以下文件：
+   • index.html (主页面)
+   • README.md
+3. 提交到 main 分支
+
+方法B：Git命令行
+git init
+git add .
+git commit -m "部署CoursePay"
+git remote add origin https://github.com/YOUR_USERNAME/coursepay-sales.git
+git push -u origin main
+```
+
+### 第3步：启用GitHub Pages
+```
+1. 仓库 Settings
+2. 左侧 Pages
+3. Source: Deploy from branch
+4. Branch: main
+5. Folder: / (root)
+6. 点击 Save
+```
+
+### 第4步：等待生效
+```
+1. 等待1-2分钟
+2. 访问：https://YOUR_USERNAME.github.io/coursepay-sales
+3. 看到CoursePay页面，部署完成
+```
+
+## 💰 PayPal收款账户
+```
+收款地址：yinanzo@hotmail.com
+学生支付流程：
+1. 选择课程
+2. 点击"立即付款"
+3. 复制收款地址
+4. 在PayPal中直接转账
+```
+
+## 🔧 故障排除
+```
+如果GitHub Pages显示404：
+1. 确认文件已上传
+2. 确认使用main分支
+3. 等待2-3分钟
+4. 点击Actions查看构建状态
+
+如果需要HTTPS证书：
+GitHub Pages自动提供HTTPS，无需配置
+```
+
+## 📞 技术支持
+```
+- GitHub Pages配置问题：GitHub Docs
+- 支付问题：contact@paypal.com
+- 项目问题：support@coursepay.com
+- 收款账户：yinanzo@hotmail.com
+```
+
+## 🎯 立即开始
+只需完成步骤1-3，即可获得公网链接
+预计时间：5分钟
+
+© 2026 CoursePay. All rights reserved.
