@@ -9,7 +9,7 @@ Production-ready prompts for common agentic tasks. Each prompt is tested and opt
 | `code-review.md` | Ask AI to review code with security + style focus |
 | `github-digest.md` | Summarize a GitHub repo or trending digest |
 | `task-planner.md` | Break a complex task into executable steps |
-| `web-scraper.md` | Extract structured data from any webpage |
+| `architecture-review.md` | Comprehensive software architecture review framework |
 
 ---
 
