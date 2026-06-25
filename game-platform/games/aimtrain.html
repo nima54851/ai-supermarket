@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎯 瞄准训练</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:monospace;overflow:hidden}
+canvas{border-radius:8px;display:block;cursor:crosshair}
+#hud{position:fixed;top:16px;left:50%;transform:translateX(-50%);display:flex;gap:24px;z-index:10}
+.stat{background:rgba(0,0,0,.7);border:1px solid rgba(255,200,50,.2);padding:8px 20px;border-radius:8px;text-align:center}
+.stat .v{font-size:22px;font-weight:900;color:#ffcc00;text-shadow:0 0 10px rgba(255,200,0,.6)}
+.stat .l{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:2px}
+#timer-bar{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:300px;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+#timer-fill{height:100%;width:100%;border-radius:3px;background:linear-gradient(90deg,#ff4444,#ffca28,#00ff88);transition:width .1s}
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;backdrop-filter:blur(4px)}
+#overlay h1{font-size:42px;color:#ffcc00;text-shadow:0 0 20px rgba(255,200,0,.6);margin-bottom:8px}
+#overlay p{color:rgba(255,255,255,.4);margin-bottom:24px}
+#start-btn{background:linear-gradient(90deg,#ffcc00,#ff8800);color:#000;padding:14px 48px;border:none;border-radius:12px;font-size:18px;font-weight:900;cursor:pointer;font-family:monospace;box-shadow:0 0 30px rgba(255,200,0,.4)}
+</style></head><body>
+<div id="hud">
+  <div class="stat"><div class="v" id="s">0</div><div class="l">分数</div></div>
+  <div class="stat"><div class="v" id="acc">0%</div><div class="l">命中率</div></div>
+  <div class="stat"><div class="v" id="time">30</div><div class="l">剩余秒</div></div>
+</div>
+<div id="timer-bar"><div id="timer-fill"></div></div>
+<div id="overlay">
+  <h1>🎯 瞄准训练</h1>
+  <p>点击靶子得分 · 限时30秒 · 越准越快分数越高</p>
+  <button id="start-btn" onclick="start()">▶ 开始训练</button>
+</div>
+<canvas id="c"></canvas>
+<script>
+// ============================================================
+// CLASSES
+// ============================================================
+class Particle {
+  constructor(x, y, color) {
+    this.x = x; this.y = y; this.color = color;
+    const a = Math.random() * Math.PI * 2, sp = 2 + Math.random() * 5;
+    this.vx = Math.cos(a) * sp; this.vy = Math.sin(a) * sp;
+    this.life = 1; this.decay = 0.025 + Math.random() * 0.02;
+    this.r = 2 + Math.random() * 5;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy; this.vy += 0.1;
+    this.life -= this.decay;
+  }
+  draw(ctx) {
+    ctx.globalAlpha = Math.max(0, this.life);
+    ctx.fillStyle = this.color; ctx.shadowColor = this.color; ctx.shadowBlur = 6;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r * this.life, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  }
+  isDead() { return this.life <= 0; }
+}
+
+class Target {
+  constructor(x, y, r, pts, dur, color) {
+    this.x = x; this.y = y; this.r = r; this.pts = pts; this.dur = dur;
+    this.color = color; this.t = 0;
+    this.pulsePhase = Math.random() * Math.PI * 2;
+  }
+  update(dt) { this.t += dt; }
+  isExpired() { return this.t >= this.dur; }
+  draw(ctx) {
+    const pulse = 1 + Math.sin(this.t * 8 + this.pulsePhase) * 0.06;
+    const r = this.r * pulse;
+    ctx.strokeStyle = this.color; ctx.lineWidth = 3; ctx.shadowColor = this.color; ctx.shadowBlur = 18;
+    ctx.beginPath(); ctx.arc(this.x, this.y, r, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(this.x, this.y, r * 0.65, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(this.x, this.y, r * 0.3, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = this.color;
+    ctx.beginPath(); ctx.arc(this.x, this.y, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+    // Timer ring
+    const prog = this.t / this.dur;
+    ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(this.x, this.y, r + 8, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * (1 - prog)); ctx.stroke();
+    // Points label
+    ctx.fillStyle = this.color; ctx.font = `bold 13px monospace`;
+    ctx.fillText('+' + this.pts, this.x + r + 12, this.y - 6);
+    // Inner glow ring
+    const gr = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, r);
+    gr.addColorStop(0, this.color.replace('hsl(', 'hsla(').replace(')', ', 0.08)'));
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(this.x, this.y, r, 0, Math.PI * 2); ctx.fill();
+  }
+  hitTest(mx, my) { return Math.sqrt((mx - this.x) ** 2 + (my - this.y) ** 2) < this.r; }
+}
+
+class BulletHole {
+  constructor(x, y) {
+    this.x = x; this.y = y; this.r = 3 + Math.random() * 2;
+    this.life = 1; this.decay = 0.008;
+  }
+  update() { this.life -= this.decay; }
+  draw(ctx) {
+    ctx.globalAlpha = this.life * 0.6;
+    ctx.fillStyle = '#333';
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#222'; ctx.lineWidth = 1;
+    ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  isDead() { return this.life <= 0; }
+}
+
+class Star {
+  constructor(W, H) {
+    this.x = Math.random() * W; this.y = Math.random() * H * 0.6;
+    this.r = 0.3 + Math.random() * 0.8;
+    this.twinkle = Math.random() * Math.PI * 2;
+  }
+  draw(ctx, frame) {
+    this.twinkle += 0.02;
+    const alpha = 0.15 + 0.35 * Math.abs(Math.sin(this.twinkle));
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#aaccff';
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+// ============================================================
+// GAME
+// ============================================================
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const W = Math.min(600, window.innerWidth - 20), H = Math.min(500, window.innerHeight - 80);
+canvas.width = W; canvas.height = H;
+
+let score, total, timeLeft, gameOver, targets, particles, bulletHoles, timerInterval, stars;
+
+function init() {
+  score = 0; total = 0; timeLeft = 30; targets = []; particles = []; bulletHoles = []; gameOver = false;
+  stars = Array.from({ length: 50 }, () => new Star(W, H));
+  document.getElementById('s').textContent = 0; document.getElementById('acc').textContent = '0%';
+  document.getElementById('time').textContent = 30; document.getElementById('timer-fill').style.width = '100%';
+}
+
+function spawnTarget() {
+  const sizes = [40, 30, 20, 15]; const pts = [10, 20, 40, 60];
+  const si = Math.floor(Math.random() * sizes.length);
+  const hue = Math.random() * 360;
+  targets.push(new Target(
+    50 + Math.random() * (W - 100),
+    50 + Math.random() * (H - 150),
+    sizes[si], pts[si],
+    2.5 + Math.random() * 1.5,
+    `hsl(${hue},80%,60%)`
+  ));
+}
+
+function spawnParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) particles.push(new Particle(x, y, color));
+}
+
+canvas.addEventListener('click', e => {
+  if (gameOver) return;
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  total++;
+  let hit = false;
+  for (let i = targets.length - 1; i >= 0; i--) {
+    const t = targets[i];
+    if (t.hitTest(mx, my)) {
+      const accuracy = 1 - Math.sqrt((mx - t.x) ** 2 + (my - t.y) ** 2) / t.r;
+      const pts = Math.round(t.pts * (1 + accuracy * 0.5));
+      score += pts; hit = true;
+      spawnParticles(mx, my, t.color, 20);
+      spawnParticles(mx, my, '#ffffff', 8);
+      targets.splice(i, 1);
+      spawnTarget();
+      break;
+    }
+  }
+  if (!hit) {
+    spawnParticles(mx, my, '#ff4444', 5);
+    bulletHoles.push(new BulletHole(mx, my));
+  }
+  document.getElementById('s').textContent = score;
+  document.getElementById('acc').textContent = total > 0 ? Math.round((score / (total * 15)) * 100) + '%' : '0%';
+});
+
+function start() {
+  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('overlay').querySelector('h1').textContent = '🎯 瞄准训练';
+  init(); spawnTarget(); spawnTarget(); spawnTarget();
+  timerInterval = setInterval(() => {
+    timeLeft--; document.getElementById('time').textContent = timeLeft;
+    document.getElementById('timer-fill').style.width = (timeLeft / 30 * 100) + '%';
+    if (timeLeft <= 0) {
+      gameOver = true; clearInterval(timerInterval);
+      document.getElementById('overlay').querySelector('h1').textContent = `🏆 ${score}分！`;
+      document.getElementById('overlay').style.display = 'flex';
+    }
+  }, 1000);
+  loop();
+}
+
+let lastTime = 0;
+function update(ts) {
+  if (gameOver) return;
+  const dt = (ts - lastTime) / 1000; lastTime = ts;
+  targets.forEach(t => t.update(dt));
+  targets = targets.filter(t => !t.isExpired());
+  if (targets.length < 3) spawnTarget();
+  particles.forEach(p => p.update());
+  particles = particles.filter(p => !p.isDead());
+  bulletHoles.forEach(b => b.update());
+  bulletHoles = bulletHoles.filter(b => !b.isDead());
+}
+
+function draw() {
+  // Background
+  ctx.fillStyle = '#080810'; ctx.fillRect(0, 0, W, H);
+  // Stars
+  stars.forEach(s => s.draw(ctx, 0));
+  // Red spotlight from top
+  const rg = ctx.createRadialGradient(W / 2, 0, 0, W / 2, 0, H);
+  rg.addColorStop(0, 'rgba(80,0,0,0.15)'); rg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,.03)'; ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+  // Bullet holes
+  bulletHoles.forEach(b => b.draw(ctx));
+  // Targets
+  targets.forEach(t => t.draw(ctx));
+  // Particles
+  particles.forEach(p => p.draw(ctx));
+  // Crosshair
+  canvas.style.cursor = 'none';
+}
+
+function loop(ts) {
+  if (lastTime === 0) lastTime = ts || 0;
+  update(ts || 0); draw(); requestAnimationFrame(loop);
+}
+document.getElementById('overlay').style.display = 'flex';
+</script></body></html>

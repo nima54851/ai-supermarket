@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="UTF-8"><title>🏓 弹球对战</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}#overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;backdrop-filter:blur(6px)}
+#overlay h1{font-size:42px;margin-bottom:8px;text-shadow:0 0 20px rgba(0,200,255,.5)}
+#overlay p{color:rgba(255,255,255,.4);margin-bottom:24px}
+#start-btn{background:#00d4ff;color:#000;padding:14px 48px;border:none;border-radius:12px;font-size:18px;font-weight:900;cursor:pointer;font-family:monospace;box-shadow:0 0 30px rgba(0,200,255,.4)}
+body{background:#050810;display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;font-family:monospace}canvas{border-radius:8px;box-shadow:0 0 30px rgba(0,212,255,0.2)}#ui{position:fixed;top:16px;left:50%;transform:translateX(-50%);color:#e2e8f0;font-size:16px;z-index:10;display:flex;gap:20px}</style></head>
+<body>
+<div id="ui">
+  <span style="color:#00d4ff">🔵 玩家1: W/S</span>
+  <span style="color:#ff6b6b">🔴 玩家2: ↑/↓</span>
+  <span id="score">0 - 0</span>
+</div>
+<div id="overlay">
+  <h1>🏓 弹球对战</h1>
+  <p>🔵 W/S 玩家1 &nbsp;|&nbsp; 🔴 ↑/↓ 玩家2 &nbsp;|&nbsp; 空格发球</p>
+  <button id="start-btn" onclick="doStart()">▶ 开始</button>
+</div>
+<canvas id="c"></canvas>
+<script>
+// ============================================================
+// CLASSES
+// ============================================================
+class Paddle {
+  constructor(x, y, w, h, color, glowColor) {
+    this.x = x; this.y = y; this.w = w; this.h = h;
+    this.color = color; this.glowColor = glowColor;
+    this.speed = 8;
+  }
+  move(dir, H) {
+    this.y += dir * this.speed;
+    this.y = Math.max(0, Math.min(H - this.h, this.y));
+  }
+  draw(ctx) {
+    const g = ctx.createLinearGradient(this.x, 0, this.x + this.w, 0);
+    g.addColorStop(0, this.color); g.addColorStop(1, this.glowColor);
+    ctx.fillStyle = g; ctx.shadowColor = this.glowColor; ctx.shadowBlur = 18;
+    ctx.beginPath(); ctx.roundRect(this.x, this.y, this.w, this.h, 4); ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  hitTest(ball) {
+    return ball.x - ball.r <= this.x + this.w && ball.x + ball.r >= this.x &&
+           ball.y >= this.y && ball.y <= this.y + this.h;
+  }
+}
+
+class Ball {
+  constructor(x, y, r) {
+    this.x = x; this.y = y; this.r = r;
+    this.vx = 0; this.vy = 0;
+    this.trail = [];
+  }
+  update(W, H) {
+    this.x += this.vx; this.y += this.vy;
+    // Trail
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > 8) this.trail.shift();
+    // Top/bottom bounce
+    if (this.y - this.r <= 0) { this.vy = Math.abs(this.vy); this.y = this.r; }
+    if (this.y + this.r >= H) { this.vy = -Math.abs(this.vy); this.y = H - this.r; }
+  }
+  draw(ctx) {
+    // Trail
+    for (let i = 0; i < this.trail.length; i++) {
+      const t = this.trail[i];
+      const alpha = (i / this.trail.length) * 0.3;
+      const radius = this.r * (i / this.trail.length) * 0.8;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = '#88ddff';
+      ctx.beginPath(); ctx.arc(t.x, t.y, radius, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    // Ball
+    ctx.fillStyle = '#ffffff'; ctx.shadowColor = '#ffffff'; ctx.shadowBlur = 18;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  serve(dir) {
+    this.vx = dir * (4 + Math.random() * 2);
+    this.vy = (Math.random() - 0.5) * 4;
+    this.trail = [];
+  }
+}
+
+class Particle {
+  constructor(x, y, color, vx, vy) {
+    this.x = x; this.y = y; this.color = color;
+    this.vx = vx !== undefined ? vx : (Math.random() - 0.5) * 8;
+    this.vy = vy !== undefined ? vy : (Math.random() - 0.5) * 8;
+    this.life = 1; this.decay = 0.04 + Math.random() * 0.03;
+    this.r = 2 + Math.random() * 4;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    this.vx *= 0.96; this.vy *= 0.96;
+    this.life -= this.decay;
+  }
+  draw(ctx) {
+    ctx.globalAlpha = Math.max(0, this.life);
+    ctx.fillStyle = this.color; ctx.shadowColor = this.color; ctx.shadowBlur = 5;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r * this.life, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  }
+  isDead() { return this.life <= 0; }
+}
+
+class Star {
+  constructor(W, H) {
+    this.x = Math.random() * W; this.y = Math.random() * H;
+    this.r = 0.5 + Math.random() * 1.5;
+    this.speed = 0.1 + Math.random() * 0.3;
+    this.twinkle = Math.random() * Math.PI * 2;
+  }
+  update(W) {
+    this.x -= this.speed;
+    if (this.x < 0) { this.x = W; this.y = Math.random() * H; }
+    this.twinkle += 0.03;
+  }
+  draw(ctx) {
+    const alpha = 0.2 + 0.5 * Math.abs(Math.sin(this.twinkle));
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+// ============================================================
+// GAME
+// ============================================================
+const canvas = document.getElementById('c'); const ctx = canvas.getContext('2d');
+const W = 760, H = 480; canvas.width = W; canvas.height = H;
+const PADDLE_W = 14, PADDLE_H = 80, BALL_R = 8;
+
+let p1, p2, ball, serveBall, keys, frame, rally, gameOver, particles, stars;
+
+function init() {
+  p1 = new Paddle(20, H / 2 - PADDLE_H / 2, PADDLE_W, PADDLE_H, '#0088cc', '#00aaff');
+  p2 = new Paddle(W - 34, H / 2 - PADDLE_H / 2, PADDLE_W, PADDLE_H, '#cc4444', '#ff6666');
+  ball = new Ball(W / 2, H / 2, BALL_R);
+  serveBall = true; rally = 0; gameOver = false; frame = 0; particles = [];
+  stars = Array.from({ length: 80 }, () => new Star(W, H));
+}
+
+document.addEventListener('keydown', e => {
+  keys[e.key] = true;
+  if (e.key === ' ' && serveBall) { serveBall = false; ball.serve(Math.random() > 0.5 ? 1 : -1); }
+  if ((e.key === 'r' || e.key === 'R') && gameOver) { p1.score = 0; p2.score = 0; document.getElementById('score').textContent = '0 - 0'; gameOver = false; serve(); }
+  e.preventDefault();
+});
+document.addEventListener('keyup', e => { keys[e.key] = false; });
+
+function serve() {
+  ball = new Ball(W / 2, H / 2, BALL_R); serveBall = true; rally = 0;
+}
+
+function spawnParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) particles.push(new Particle(x, y, color));
+}
+
+function update() {
+  if (serveBall || gameOver) return;
+  frame++;
+  // Move paddles
+  if (keys['w'] || keys['W']) p1.move(-1, H);
+  if (keys['s'] || keys['S']) p1.move(1, H);
+  if (keys['ArrowUp']) p2.move(-1, H);
+  if (keys['ArrowDown']) p2.move(1, H);
+  // Stars
+  stars.forEach(s => s.update(W));
+  // Ball
+  ball.update(W, H);
+  // P1 paddle
+  if (ball.vx < 0 && ball.hitTest) {
+    if (ball.x - ball.r <= p1.x + p1.w && ball.x + ball.r >= p1.x &&
+        ball.y >= p1.y && ball.y <= p1.y + p1.h) {
+      ball.vx = Math.abs(ball.vx) * 1.05;
+      ball.vy += (ball.y - (p1.y + p1.h / 2)) * 0.15;
+      rally++; spawnParticles(ball.x, ball.y, '#00d4ff', 8);
+      const spd = Math.sqrt(ball.vx ** 2 + ball.vy ** 2);
+      if (spd > 12) { ball.vx *= 12 / spd; ball.vy *= 12 / spd; }
+    }
+  }
+  // P2 paddle
+  if (ball.vx > 0) {
+    if (ball.x + ball.r >= p2.x && ball.x - ball.r <= p2.x + p2.w &&
+        ball.y >= p2.y && ball.y <= p2.y + p2.h) {
+      ball.vx = -Math.abs(ball.vx) * 1.05;
+      ball.vy += (ball.y - (p2.y + p2.h / 2)) * 0.15;
+      rally++; spawnParticles(ball.x, ball.y, '#ff6b6b', 8);
+      const spd = Math.sqrt(ball.vx ** 2 + ball.vy ** 2);
+      if (spd > 12) { ball.vx *= -12 / spd; ball.vy *= 12 / spd; }
+    }
+  }
+  // Score
+  if (ball.x < 0) {
+    p2.score++; document.getElementById('score').textContent = p1.score + ' - ' + p2.score;
+    if (p2.score >= 5) gameOver = true;
+    spawnParticles(50, ball.y, '#ff6b6b', 20); serve();
+  }
+  if (ball.x > W) {
+    p1.score++; document.getElementById('score').textContent = p1.score + ' - ' + p2.score;
+    if (p1.score >= 5) gameOver = true;
+    spawnParticles(W - 50, ball.y, '#00d4ff', 20); serve();
+  }
+  particles.forEach(p => p.update());
+  particles = particles.filter(p => !p.isDead());
+}
+
+function draw() {
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#05081a'); g.addColorStop(1, '#0a0820');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // Stars
+  stars.forEach(s => s.draw(ctx));
+  // Nebula
+  const n1 = ctx.createRadialGradient(W * 0.2, H * 0.3, 0, W * 0.2, H * 0.3, 200);
+  n1.addColorStop(0, 'rgba(0,50,100,0.1)'); n1.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = n1; ctx.fillRect(0, 0, W, H);
+  // Center line
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.setLineDash([10, 10]); ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.stroke(); ctx.setLineDash([]);
+  // Paddles
+  p1.draw(ctx); p2.draw(ctx);
+  // Ball
+  if (!serveBall) ball.draw(ctx);
+  // Particles
+  particles.forEach(p => p.draw(ctx));
+  // Net
+  ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fillRect(W / 2 - 2, 0, 4, H);
+  // Score
+  ctx.fillStyle = 'rgba(0,212,255,0.12)'; ctx.font = 'bold 72px monospace'; ctx.textAlign = 'center';
+  ctx.fillText(p1.score, W / 4, H / 2 + 24);
+  ctx.fillStyle = 'rgba(255,107,107,0.12)';
+  ctx.fillText(p2.score, W * 3 / 4, H / 2 + 24);
+  // Serve prompt
+  if (serveBall && !gameOver) {
+    ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '14px monospace'; ctx.textAlign = 'center';
+    ctx.fillText('🔵 空格发球', W / 2, H - 20);
+  }
+  if (gameOver) {
+    ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.fillRect(0, 0, W, H);
+    const win = (p1.score >= 5 ? '🔵' : '🔴') + ' 获胜！';
+    ctx.fillStyle = '#ffd700'; ctx.font = 'bold 40px monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = '#ffd700'; ctx.shadowBlur = 20;
+    ctx.fillText(win, W / 2, H / 2 - 20);
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#888'; ctx.font = '16px monospace';
+    ctx.fillText('按 R 重新开始', W / 2, H / 2 + 30);
+  }
+}
+
+var started = false;
+function doStart() {
+  started = true;
+  document.getElementById('overlay').style.display = 'none';
+}
+function loop() {
+  if (!started) { draw(); requestAnimationFrame(loop); return; }
+  update(); draw(); requestAnimationFrame(loop);
+}
+var started = false;
+init();
+loop();
+</script>
+</body></html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>游戏配对测试客户端</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f0f1a; color: #e0e0f0; min-height: 100vh; display: flex; }
+  
+  .panel { width: 320px; padding: 20px; border-right: 1px solid #2a2a4a; display: flex; flex-direction: column; gap: 16px; }
+  .panel h2 { font-size: 14px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .panel h1 { font-size: 18px; color: #fff; }
+  
+  label { display: block; font-size: 12px; color: #888; margin-bottom: 4px; }
+  input, select { width: 100%; padding: 8px 12px; background: #1a1a2e; border: 1px solid #3a3a5a; border-radius: 6px; color: #fff; font-size: 14px; }
+  input:focus, select:focus { outline: none; border-color: #6c63ff; }
+  
+  button { padding: 10px 16px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: #6c63ff; color: #fff; }
+  .btn-primary:hover { background: #5a52e0; }
+  .btn-secondary { background: #2a2a4a; color: #aaa; }
+  .btn-secondary:hover { background: #3a3a5a; color: #fff; }
+  .btn-danger { background: #ff4a4a; color: #fff; }
+  .btn-danger:hover { background: #e03030; }
+  
+  .status-bar { padding: 8px 12px; background: #1a1a2e; border-radius: 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.green { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+  .dot.red   { background: #ff4a4a; }
+  .dot.yellow{ background: #facc15; }
+  
+  .room-code { font-size: 28px; font-weight: 700; color: #6c63ff; letter-spacing: 4px; text-align: center; padding: 12px; background: #1a1a2e; border-radius: 8px; }
+  
+  .log-area { flex: 1; background: #0a0a14; border-radius: 8px; overflow-y: auto; font-family: 'Fira Code', 'Consolas', monospace; font-size: 12px; padding: 12px; line-height: 1.6; }
+  .log-line { border-bottom: 1px solid #1a1a2e; padding: 2px 0; }
+  .log-send  { color: #6c63ff; }
+  .log-recv  { color: #4ade80; }
+  .log-error { color: #ff4a4a; }
+  .log-sys   { color: #888; }
+  
+  .game-area { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+  .canvas-wrap { position: relative; }
+  #gameCanvas { background: #1a1a2e; border-radius: 8px; display: block; }
+  
+  .player-info { display: flex; gap: 16px; }
+  .player-card { flex: 1; padding: 12px; background: #1a1a2e; border-radius: 8px; border: 1px solid #2a2a4a; }
+  .player-card.me { border-color: #6c63ff; }
+  .player-card .name { font-size: 14px; font-weight: 600; }
+  .player-card .slot { font-size: 11px; color: #888; }
+  
+  .controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .dpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .dpad button { font-size: 18px; padding: 14px; background: #2a2a4a; }
+  .dpad button:hover { background: #3a3a5a; }
+  .dpad button:active { background: #6c63ff; }
+</style>
+</head>
+<body>
+
+<!-- 左面板 -->
+<div class="panel">
+  <div>
+    <h1>🎮 配对测试</h1>
+  </div>
+  
+  <div>
+    <label>WebSocket 地址</label>
+    <input id="wsUrl" value="ws://localhost:8080" />
+  </div>
+  
+  <div>
+    <label>你的 Player ID</label>
+    <input id="playerId" value="player_1" />
+  </div>
+  
+  <div>
+    <label>昵称</label>
+    <input id="nickname" value="小明" />
+  </div>
+  
+  <button class="btn-primary" onclick="connect()">连接服务器</button>
+  <button class="btn-danger" onclick="disconnect()">断开</button>
+  
+  <div class="status-bar">
+    <div class="dot red" id="connDot"></div>
+    <span id="connStatus">未连接</span>
+  </div>
+  
+  <div>
+    <label>房间码（加入）</label>
+    <input id="joinCode" placeholder="ABC123" maxlength="6" />
+    <button class="btn-secondary" style="margin-top:8px;width:100%" onclick="joinRoom()">加入房间</button>
+  </div>
+  
+  <div>
+    <button class="btn-primary" style="width:100%" onclick="createRoom()">🆕 创建新房间</button>
+  </div>
+  
+  <div>
+    <label>当前房间码</label>
+    <div class="room-code" id="roomCode">------</div>
+  </div>
+  
+  <div>
+    <label>日志</label>
+    <div class="log-area" id="logArea"></div>
+  </div>
+</div>
+
+<!-- 游戏区域 -->
+<div class="game-area">
+  <h2>游戏画布</h2>
+  
+  <div class="player-info">
+    <div class="player-card me">
+      <div class="name" id="myName">-</div>
+      <div class="slot">Slot 0（你）</div>
+    </div>
+    <div class="player-card">
+      <div class="name" id="oppName">等待对手...</div>
+      <div class="slot" id="oppSlot">Slot 1（对手）</div>
+    </div>
+  </div>
+  
+  <div class="canvas-wrap">
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+  </div>
+  
+  <div>
+    <label>操作</label>
+    <div class="controls">
+      <button class="btn-secondary" onclick="sendMove('up')">↑ 上</button>
+      <button class="btn-secondary" onclick="sendMove('down')">↓ 下</button>
+      <button class="btn-secondary" onclick="sendMove('left')">← 左</button>
+      <button class="btn-secondary" onclick="sendMove('right')">→ 右</button>
+      <button class="btn-primary" onclick="sendShoot()">🔥 射击</button>
+      <button class="btn-secondary" onclick="sendSync()">🔄 同步状态</button>
+    </div>
+  </div>
+  
+  <div class="dpad">
+    <span></span>
+    <button onclick="sendMove('up')">▲</button>
+    <span></span>
+    <button onclick="sendMove('left')">◀</button>
+    <button onclick="sendMove('down')">▼</button>
+    <button onclick="sendMove('right')">▶</button>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// 全局状态
+// ─────────────────────────────────────────────
+let ws = null;
+let mySlot = null;
+let roomCode = null;
+let opponent = null;
+
+// 画布状态
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const players = [null, null]; // slot → {x, y, color}
+
+const myColor = '#6c63ff';
+const oppColor = '#4ade80';
+
+// ─────────────────────────────────────────────
+// 日志
+// ─────────────────────────────────────────────
+function log(msg, type = 'sys') {
+  const area = document.getElementById('logArea');
+  const div = document.createElement('div');
+  div.className = `log-line log-${type}`;
+  div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  area.prepend(div);
+}
+
+// ─────────────────────────────────────────────
+// UI 状态
+// ─────────────────────────────────────────────
+function setConnStatus(connected) {
+  const dot = document.getElementById('connDot');
+  const txt = document.getElementById('connStatus');
+  if (connected) {
+    dot.className = 'dot green';
+    txt.textContent = '已连接';
+  } else {
+    dot.className = 'dot red';
+    txt.textContent = '未连接';
+  }
+}
+
+function setRoomCode(code) {
+  roomCode = code;
+  document.getElementById('roomCode').textContent = code || '------';
+  document.getElementById('joinCode').value = code || '';
+}
+
+// ─────────────────────────────────────────────
+// WebSocket
+// ─────────────────────────────────────────────
+function connect() {
+  const url = document.getElementById('wsUrl').value;
+  if (ws) ws.close();
+
+  log(`连接 ${url}...`, 'sys');
+  ws = new WebSocket(url);
+
+  ws.onopen = () => {
+    setConnStatus(true);
+    log('已连接服务器', 'sys');
+    startHeartbeat();
+  };
+
+  ws.onmessage = (e) => {
+    let msg;
+    try { msg = JSON.parse(e.data); } catch { return; }
+    handleMsg(msg);
+  };
+
+  ws.onclose = () => {
+    setConnStatus(false);
+    log('连接已断开', 'error');
+    mySlot = null;
+    opponent = null;
+    players[0] = null; players[1] = null;
+    render();
+  };
+
+  ws.onerror = (err) => {
+    log(`WS 错误: ${err}`, 'error');
+  };
+}
+
+function disconnect() {
+  if (ws) ws.close();
+}
+
+// 客户端心跳
+function startHeartbeat() {
+  setInterval(() => {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'pong' }));
+    }
+  }, 5000);
+}
+
+// ─────────────────────────────────────────────
+// 消息处理
+// ─────────────────────────────────────────────
+function send(msg) {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify(msg));
+    log(`→ ${msg.type} ${JSON.stringify(msg).slice(0, 80)}`, 'send');
+  }
+}
+
+function handleMsg(msg) {
+  log(`← ${msg.type} ${JSON.stringify(msg).slice(0, 80)}`, 'recv');
+
+  switch (msg.type) {
+    case 'joined':
+      mySlot = 0; // 第一个加入的是 slot 0
+      players[0] = { x: 100, y: 200, color: myColor };
+      document.getElementById('myName').textContent = document.getElementById('nickname').value;
+      document.getElementById('oppName').textContent = '等待对手...';
+      setRoomCode(msg.players[0] && msg.players[0].roomCode || '');
+      log(`已加入，等待对手... (slot ${mySlot})`, 'sys');
+      break;
+
+    case 'player_joined': {
+      const slot = msg.slot;
+      if (slot !== undefined) {
+        players[slot] = { x: 500, y: 200, color: oppColor };
+        opponent = msg;
+        document.getElementById('oppName').textContent = msg.nickname || msg.playerId;
+      }
+      break;
+    }
+
+    case 'start': {
+      // 重置所有玩家
+      const me = msg.players.find(p => p.slot === 0) || msg.players[0];
+      const opp = msg.players.find(p => p.slot === 1) || msg.players[1];
+      players[0] = { x: 100, y: 200, color: myColor };
+      players[1] = { x: 500, y: 200, color: oppColor };
+      mySlot = me.playerId === document.getElementById('playerId').value ? me.slot : (opp.slot || 1);
+      document.getElementById('myName').textContent = me.nickname || me.playerId;
+      document.getElementById('oppName').textContent = opp.nickname || opp.playerId;
+      log(`🎮 游戏开始！你是 ${me.playerId === document.getElementById('playerId').value ? 'Slot 0' : 'Slot 1'}`, 'sys');
+      break;
+    }
+
+    case 'opponent_move':
+      if (players[1] && msg.dir) {
+        movePlayer(1, msg.dir);
+      }
+      break;
+
+    case 'opponent_shoot':
+      if (players[1]) {
+        shootAt(1, msg.x, msg.y);
+      }
+      break;
+
+    case 'opponent_sync':
+      if (players[1] && msg.state) {
+        players[1].x = msg.state.x || players[1].x;
+        players[1].y = msg.state.y || players[1].y;
+      }
+      break;
+
+    case 'opponent_disconnect':
+      opponent = null;
+      players[1] = null;
+      document.getElementById('oppName').textContent = '对手已离开';
+      log('对手断开了连接', 'error');
+      break;
+
+    case 'error':
+      log(`❌ 错误: ${msg.message}`, 'error');
+      break;
+  }
+
+  render();
+}
+
+// ─────────────────────────────────────────────
+// 加入 / 创建房间
+// ─────────────────────────────────────────────
+function joinRoom() {
+  const code = document.getElementById('joinCode').value.trim().toUpperCase();
+  if (!code) return log('请输入房间码', 'error');
+  setRoomCode(code);
+  send({
+    type: 'join',
+    roomCode: code,
+    playerId: document.getElementById('playerId').value,
+    nickname: document.getElementById('nickname').value,
+  });
+}
+
+async function createRoom() {
+  // 通过 HTTP 获取新房间码
+  const url = document.getElementById('wsUrl').value.replace('ws://', 'http://').replace('wss://', 'https://');
+  try {
+    const res = await fetch(`${url}/new-room`);
+    const data = await res.json();
+    setRoomCode(data.roomCode);
+    document.getElementById('joinCode').value = data.roomCode;
+    log(`已生成房间码: ${data.roomCode}`, 'sys');
+  } catch {
+    // fallback: 本地生成
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+    setRoomCode(code);
+    log(`本地生成房间码: ${code}（服务器可能未启动）`, 'error');
+  }
+}
+
+// ─────────────────────────────────────────────
+// 游戏操作
+// ─────────────────────────────────────────────
+function sendMove(dir) {
+  if (mySlot === null) return log('请先加入房间', 'error');
+  send({ type: 'move', dir });
+  movePlayer(mySlot, dir);
+}
+
+function sendShoot() {
+  if (mySlot === null) return log('请先加入房间', 'error');
+  const p = players[mySlot];
+  if (!p) return;
+  send({ type: 'shoot', x: p.x, y: p.y });
+  // 视觉效果
+  bullets.push({ x: p.x, y: p.y, vx: 5, vy: 0, owner: mySlot, life: 60 });
+}
+
+function sendSync() {
+  if (mySlot === null) return log('请先加入房间', 'error');
+  const p = players[mySlot];
+  if (!p) return;
+  send({ type: 'sync', state: { x: p.x, y: p.y } });
+}
+
+function movePlayer(slot, dir) {
+  const p = players[slot];
+  if (!p) return;
+  const step = 20;
+  switch (dir) {
+    case 'up':    p.y = Math.max(0, p.y - step); break;
+    case 'down':  p.y = Math.min(canvas.height - 20, p.y + step); break;
+    case 'left':  p.x = Math.max(0, p.x - step); break;
+    case 'right': p.x = Math.min(canvas.width - 20, p.x + step); break;
+  }
+  render();
+}
+
+const bullets = [];
+
+function shootAt(slot, x, y) {
+  if (players[slot]) {
+    bullets.push({ x: players[slot].x, y: players[slot].y, vx: 5, vy: 0, owner: slot, life: 60 });
+  }
+}
+
+// ─────────────────────────────────────────────
+// 渲染
+// ─────────────────────────────────────────────
+function render() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // 网格背景
+  ctx.strokeStyle = '#2a2a4a';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < canvas.width; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+  }
+  for (let y = 0; y < canvas.height; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+  }
+  ctx.strokeStyle = '#3a3a5a';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+  // 中线
+  ctx.setLineDash([8, 8]);
+  ctx.strokeStyle = '#3a3a5a';
+  ctx.beginPath(); ctx.moveTo(canvas.width / 2, 0); ctx.lineTo(canvas.width / 2, canvas.height); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // 子弹
+  bullets.forEach(b => {
+    ctx.fillStyle = b.owner === mySlot ? myColor : oppColor;
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
+    ctx.fill();
+    b.x += b.vx;
+    b.life--;
+  });
+
+  // 玩家
+  players.forEach((p, i) => {
+    if (!p) return;
+    const label = i === mySlot ? '你' : '对手';
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.roundRect(p.x - 15, p.y - 15, 30, 30, 6);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, p.x, p.y + 4);
+  });
+
+  // 子弹清理
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    if (bullets[i].life <= 0) bullets.splice(i, 1);
+  }
+
+  requestAnimationFrame(render);
+}
+
+// 初始渲染
+render();
+</script>
+</body>
+</html>
