@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 太空生存战</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Courier New', monospace; }
+
+  #game { border: 1px solid #1a1a3a; border-radius: 8px; box-shadow: 0 0 40px rgba(0,212,255,0.2); display: block; }
+
+  /* ── HUD Overlay ── */
+  #hud {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    display: flex; justify-content: center; align-items: center;
+  }
+
+  /* ── Shop Button ── */
+  #shop-btn {
+    position: fixed; bottom: 18px; right: 18px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff; border: none; border-radius: 12px;
+    padding: 10px 18px; font-size: 14px; font-family: 'Courier New', monospace;
+    cursor: pointer; pointer-events: all;
+    box-shadow: 0 4px 20px rgba(245,158,11,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 10;
+  }
+  #shop-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(245,158,11,0.6); }
+
+  /* ── Modal Backdrop ── */
+  #modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 100; justify-content: center; align-items: center;
+    backdrop-filter: blur(4px);
+  }
+  #modal.active { display: flex; }
+
+  .modal-box {
+    background: #0a0a1a;
+    border: 1px solid #2a2a5a;
+    border-radius: 16px;
+    padding: 28px;
+    width: min(460px, 95vw);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    position: relative;
+    color: #fff;
+  }
+
+  .modal-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; color: #555;
+    font-size: 22px; cursor: pointer; line-height: 1;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: #fff; }
+
+  .modal-title {
+    font-size: 22px; font-weight: bold; margin-bottom: 6px;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .modal-sub {
+    font-size: 13px; color: #888; margin-bottom: 20px;
+  }
+
+  /* ── Coin Balance ── */
+  .coin-balance {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 10px; padding: 10px 16px; margin-bottom: 20px;
+    font-size: 18px; font-weight: bold; color: #f59e0b;
+  }
+
+  /* ── Product Grid ── */
+  .product-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;
+  }
+
+  .product-card {
+    background: #11112a; border: 1px solid #2a2a5a;
+    border-radius: 12px; padding: 14px; text-align: center;
+    cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+  }
+  .product-card:hover { border-color: #f59e0b; transform: translateY(-2px); }
+  .product-card.selected { border-color: #f59e0b; background: rgba(245,158,11,0.08); }
+
+  .product-icon { font-size: 28px; margin-bottom: 6px; }
+  .product-name { font-size: 13px; color: #ccc; margin-bottom: 4px; }
+  .product-coins { font-size: 15px; color: #f59e0b; font-weight: bold; }
+  .product-price { font-size: 12px; color: #666; margin-top: 3px; }
+  .product-tag {
+    display: inline-block; background: #ef4444; color: #fff;
+    font-size: 10px; border-radius: 4px; padding: 1px 6px;
+    margin-top: 4px;
+  }
+
+  /* ── Pay Button ── */
+  #pay-btn {
+    width: 100%; padding: 14px; border: none; border-radius: 10px;
+    background: linear-gradient(135deg, #0070ba, #004c8f);
+    color: #fff; font-size: 16px; font-weight: bold;
+    cursor: pointer; font-family: 'Courier New', monospace;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(0,112,186,0.3);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  #pay-btn:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(0,112,186,0.5); }
+  #pay-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .pay-note { font-size: 11px; color: #555; text-align: center; margin-top: 10px; }
+
+  /* ── Owned Items ── */
+  .owned-title { font-size: 13px; color: #888; margin-bottom: 10px; }
+  .owned-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .owned-item {
+    background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 8px; padding: 6px 12px; font-size: 12px; color: #10b981;
+  }
+
+  /* ── PayPal redirect notice ── */
+  #pay-notice {
+    display: none; margin-top: 14px;
+    background: rgba(0,112,186,0.15); border: 1px solid rgba(0,112,186,0.3);
+    border-radius: 8px; padding: 12px; font-size: 12px; color: #60a5fa;
+    text-align: center;
+  }
+  #pay-notice.show { display: block; }
+
+  /* ── Active Powerup HUD ── */
+  #active-items {
+    position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; pointer-events: none; z-index: 5;
+  }
+  .active-badge {
+    background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.5);
+    border-radius: 20px; padding: 4px 12px; font-size: 12px; color: #10b981;
+  }
+  .active-badge.red { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.5); color: #ef4444; }
+  .active-badge.blue { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.5); color: #60a5fa; }
+
+  /* ── Notification Toast ── */
+  #toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: #11112a; border: 1px solid #f59e0b; color: #f59e0b;
+    padding: 10px 20px; border-radius: 10px; font-size: 14px;
+    display: none; z-index: 200; pointer-events: none;
+    animation: fadeUp 2.5s forwards;
+  }
+  #toast.show { display: block; }
+  @keyframes fadeUp {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    75% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* ── Notification dot on shop btn ── */
+  #coin-badge {
+    position: fixed; bottom: 52px; right: 14px;
+    background: #f59e0b; color: #000; font-size: 10px; font-weight: bold;
+    border-radius: 10px; padding: 2px 6px; pointer-events: none; z-index: 11;
+    display: none;
+  }
+  #coin-badge.show { display: block; }
+</style>
+</head>
+<body>
+
+<canvas id="game"></canvas>
+
+<!-- Active powerup badges -->
+<div id="active-items"></div>
+
+<!-- Coin badge -->
+<div id="coin-badge"></div>
+
+<!-- Shop Button -->
+<button id="shop-btn" onclick="openShop()">
+  🛒 商店 · 💰 <span id="shop-coins">0</span>
+</button>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Shop Modal -->
+<div id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeShop()">✕</button>
+    <div class="modal-title">🚀 太空商店</div>
+    <div class="modal-sub">用金币购买强力道具，助你称霸宇宙！</div>
+
+    <div class="coin-balance">
+      💰 当前金币: <span id="modal-coins">0</span>
+    </div>
+
+    <!-- Owned items -->
+    <div class="owned-title">已拥有的道具（购买后永久生效）</div>
+    <div class="owned-list" id="owned-list">
+      <span style="color:#444;font-size:12px;">还没有道具，快去购买吧！</span>
+    </div>
+
+    <!-- Products -->
+    <div class="product-grid">
+
+      <div class="product-card" data-id="shield" onclick="selectProduct('shield')">
+        <div class="product-icon">🛡️</div>
+        <div class="product-name">能量护盾</div>
+        <div class="product-coins">80 金币</div>
+        <div class="product-price">$0.99</div>
+        <div class="product-tag">必买</div>
+      </div>
+
+      <div class="product-card" data-id="rapid" onclick="selectProduct('rapid')">
+        <div class="product-icon">⚡</div>
+        <div class="product-name">极速射击</div>
+        <div class="product-coins">120 金币</div>
+        <div class="product-price">$1.49</div>
+        <div class="product-tag">热门</div>
+      </div>
+
+      <div class="product-card" data-id="pierce" onclick="selectProduct('pierce')">
+        <div class="product-icon">🔱</div>
+        <div class="product-name">穿透弹</div>
+        <div class="product-coins">160 金币</div>
+        <div class="product-price">$1.99</div>
+      </div>
+
+      <div class="product-card" data-id="nuke" onclick="selectProduct('nuke')">
+        <div class="product-icon">☢️</div>
+        <div class="product-name">核弹补给</div>
+        <div class="product-coins">200 金币</div>
+        <div class="product-price">$2.49</div>
+        <div class="product-tag">超值</div>
+      </div>
+
+      <div class="product-card" data-id="hp+2" onclick="selectProduct('hp+2')">
+        <div class="product-icon">❤️‍🔥</div>
+        <div class="product-name">生命+2</div>
+        <div class="product-coins">50 金币</div>
+        <div class="product-price">$0.59</div>
+      </div>
+
+      <div class="product-card" data-id="triple" onclick="selectProduct('triple')">
+        <div class="product-icon">🔱</div>
+        <div class="product-name">三联发</div>
+        <div class="product-coins">180 金币</div>
+        <div class="product-price">$2.29</div>
+      </div>
+
+    </div>
+
+    <!-- Selected info -->
+    <div id="pay-notice">
+      点击下方按钮后，将跳转 PayPal 完成支付 💳<br>
+      支付完成后，道具自动到账！请勿关闭页面。
+    </div>
+
+    <button id="pay-btn" onclick="doPay()" disabled>
+      <span>⬡</span> 选择道具后购买
+    </button>
+    <div class="pay-note">
+      💳 使用 PayPal 安全支付 · 收款: yinanzo@hotmail.com
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+let coins = parseInt(localStorage.getItem('space_coins') || '0');
+let owned = JSON.parse(localStorage.getItem('space_owned') || '[]');
+let selectedProduct = null;
+let activeBuffs = { shield: 0, rapid: 0, pierce: 0, triple: 0, nuke: 0 };
+
+const PRODUCTS = {
+  shield:  { name: '能量护盾', cost: 80,  pay: '0.99', priceLabel: '$0.99', buff: 'shield' },
+  rapid:   { name: '极速射击', cost: 120, pay: '1.49', priceLabel: '$1.49', buff: 'rapid' },
+  pierce:  { name: '穿透弹',   cost: 160, pay: '1.99', priceLabel: '$1.99', buff: 'pierce' },
+  nuke:    { name: '核弹补给', cost: 200, pay: '2.49', priceLabel: '$2.49', buff: 'nuke' },
+  'hp+2':  { name: '生命+2',  cost: 50,  pay: '0.59', priceLabel: '$0.59', buff: 'hp+2' },
+  triple:  { name: '三联发',  cost: 180, pay: '2.29', priceLabel: '$2.29', buff: 'triple' },
+};
+
+// ═══════════════════════════════════════
+//  UI UPDATES
+// ═══════════════════════════════════════
+function updateCoinUI() {
+  document.getElementById('shop-coins').textContent = coins;
+  document.getElementById('modal-coins').textContent = coins;
+  const badge = document.getElementById('coin-badge');
+  if (coins > 0) {
+    badge.textContent = '💰' + coins;
+    badge.classList.add('show');
+  } else {
+    badge.classList.remove('show');
+  }
+  // Auto-activate owned buffs on game start
+  activateOwnedBuffs();
+}
+
+function updateOwnedUI() {
+  const el = document.getElementById('owned-list');
+  if (owned.length === 0) {
+    el.innerHTML = '<span style="color:#444;font-size:12px;">还没有道具，快去购买吧！</span>';
+    return;
+  }
+  el.innerHTML = owned.map(id => {
+    const p = PRODUCTS[id];
+    const emoji = { shield:'🛡️', rapid:'⚡', pierce:'🔱', nuke:'☢️', 'hp+2':'❤️‍🔥', triple:'🔱' }[id];
+    return `<div class="owned-item">${emoji} ${p ? p.name : id}</div>`;
+  }).join('');
+}
+
+function activateOwnedBuffs() {
+  if (state !== 'playing') return;
+  if (owned.includes('rapid'))   { shootCooldown = 4; }
+  if (owned.includes('triple'))  { multiShot = 3; }
+  if (owned.includes('pierce')) { bulletsCanPierce = true; }
+  if (owned.includes('nuke'))   { playerNukes += 3; }
+  if (owned.includes('shield')) { ship.shieldActive = true; }
+}
+
+function updateActiveBadges() {
+  const el = document.getElementById('active-items');
+  let html = '';
+  if (owned.includes('shield'))  html += '<div class="active-badge">🛡️ 护盾</div>';
+  if (owned.includes('rapid'))   html += '<div class="active-badge blue">⚡ 极速</div>';
+  if (owned.includes('pierce'))  html += '<div class="active-badge">🔱 穿透</div>';
+  if (owned.includes('triple'))  html += '<div class="active-badge blue">🔱 三联</div>';
+  if (owned.includes('nuke') && playerNukes > 0) html += `<div class="active-badge red">☢️ 核弹×${playerNukes}</div>`;
+  if (playerNukes > 0 && !owned.includes('nuke')) html += `<div class="active-badge red">☢️ 核弹×${playerNukes}</div>`;
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════
+//  SHOP
+// ═══════════════════════════════════════
+function openShop() {
+  if (state === 'playing') state = 'paused';
+  document.getElementById('modal').classList.add('active');
+  selectedProduct = null;
+  document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('pay-btn').disabled = true;
+  document.getElementById('pay-btn').innerHTML = '<span>⬡</span> 选择道具后购买';
+  document.getElementById('pay-notice').classList.remove('show');
+  updateOwnedUI();
+}
+
+function closeShop() {
+  document.getElementById('modal').classList.remove('active');
+  if (state === 'paused') state = 'playing';
+}
+
+function selectProduct(id) {
+  if (owned.includes(id)) {
+    showToast('✅ ' + PRODUCTS[id].name + ' 已拥有，无需重复购买！');
+    return;
+  }
+  selectedProduct = id;
+  document.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`[data-id="${id}"]`).classList.add('selected');
+  const p = PRODUCTS[id];
+  document.getElementById('pay-btn').disabled = false;
+  document.getElementById('pay-btn').innerHTML = `💳 购买 ${p.name} (${p.priceLabel})`;
+  document.getElementById('pay-notice').classList.add('show');
+}
+
+// ═══════════════════════════════════════
+//  PAY (PayPal)
+// ═══════════════════════════════════════
+function doPay() {
+  if (!selectedProduct) return;
+  const p = PRODUCTS[selectedProduct];
+  // PayPal Smart Buttons - redirect to PayPal
+  // Replace BUSINESS and ITEM_NAME with real values
+  const biz = 'yinanzo@hotmail.com';
+  const item = encodeURIComponent(p.name + ' - 太空生存战道具');
+  const amount = p.pay;
+  const custom = encodeURIComponent(JSON.stringify({ product: selectedProduct, game: 'space-shooter' }));
+
+  // Direct PayPal checkout URL
+  const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick` +
+    `&business=${biz}` +
+    `&item_name=${item}` +
+    `&amount=${amount}` +
+    `&currency_code=USD` +
+    `&custom=${custom}` +
+    `&return=https://nima54851.github.io/lingxi-games/space-shooter.html?paid=1` +
+    `&cancel_return=https://nima54851.github.io/lingxi-games/space-shooter.html`;
+
+  // Also open in popup for better UX
+  const win = window.open(paypalUrl, 'paypal', 'width=600,height=700,scrollbars=yes');
+
+  // Poll for payment confirmation via localStorage (simulated for demo)
+  // In production, use PayPal IPN or webhook
+  const checkPayment = setInterval(() => {
+    try {
+      const confirmed = localStorage.getItem('paypal_confirmed_' + selectedProduct);
+      if (confirmed === '1') {
+        clearInterval(checkPayment);
+        localStorage.removeItem('paypal_confirmed_' + selectedProduct);
+        grantProduct(selectedProduct);
+        closeShop();
+        showToast('✅ 购买成功！' + p.name + ' 已到账！');
+        return;
+      }
+    } catch(e) {}
+  }, 1000);
+
+  // Auto-close check after 60s
+  setTimeout(() => { clearInterval(checkPayment); }, 60000);
+}
+
+// ═══════════════════════════════════════
+//  GRANT PRODUCT (called after payment confirmed)
+// ═══════════════════════════════════════
+function grantProduct(id) {
+  if (!owned.includes(id)) {
+    owned.push(id);
+    localStorage.setItem('space_owned', JSON.stringify(owned));
+    // Grant coins equivalent
+    const p = PRODUCTS[id];
+    coins += p.cost;
+    localStorage.setItem('space_coins', coins);
+    updateCoinUI();
+    updateOwnedUI();
+    // Apply buff if in game
+    activateOwnedBuffs();
+    updateActiveBadges();
+  }
+}
+
+// Demo: simulate payment for testing (remove in production)
+function demoGrant(id) {
+  grantProduct(id);
+  closeShop();
+  showToast('✅ 演示模式：' + PRODUCTS[id].name + ' 已到账！');
+}
+
+// ═══════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('show');
+  void t.offsetWidth; // reflow
+  t.classList.add('show');
+}
+
+// ═══════════════════════════════════════
+//  GAME ENGINE
+// ═══════════════════════════════════════
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const W = Math.min(window.innerWidth - 20, 900);
+const H = Math.min(window.innerHeight - 20, 640);
+canvas.width = W;
+canvas.height = H;
+
+let state = 'start';
+let score = 0;
+let highScore = parseInt(localStorage.getItem('space_shooter_hs') || '0');
+let frame = 0;
+let shootCooldown = 8;
+let multiShot = 1;
+let bulletsCanPierce = false;
+let playerNukes = parseInt(localStorage.getItem('space_nukes') || '0');
+let extraHp = parseInt(localStorage.getItem('space_extra_hp') || '0');
+
+const ship = { x: W * 0.15, y: H / 2, r: 16, vy: 0, hp: 3, invincible: 0, dead: false, shieldActive: false };
+
+let bullets = [], enemies = [], stars = [], explosions = [], powerups = [], particles = [];
+let keys = {}, touching = false, touchY = ship.y;
+
+document.addEventListener('keydown', e => { keys[e.code] = true; if (e.code === 'Space') e.preventDefault(); });
+document.addEventListener('keyup', e => keys[e.code] = false);
+canvas.addEventListener('touchstart', e => { touching = true; touchY = e.touches[0].clientY - canvas.getBoundingClientRect().top; e.preventDefault(); }, { passive: false });
+canvas.addEventListener('touchmove', e => { touchY = e.touches[0].clientY - canvas.getBoundingClientRect().top; e.preventDefault(); }, { passive: false });
+canvas.addEventListener('touchend', () => touching = false);
+canvas.addEventListener('mousedown', e => { touching = true; touchY = e.offsetY; });
+canvas.addEventListener('mouseup', () => touching = false);
+
+// Check URL for payment success
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('paid') === '1') {
+  // Payment return - simulate grant of last selected
+  setTimeout(() => showToast('✅ 支付完成！道具已到账！'), 1000);
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 140; i++) {
+    stars.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 2 + 0.5, speed: Math.random() * 2 + 0.5, alpha: Math.random() * 0.8 + 0.2, twinkle: Math.random() * Math.PI * 2 });
+  }
+}
+initStars();
+
+function circleCollide(a, b) {
+  const dx = a.x - b.x, dy = a.y - b.y;
+  return Math.sqrt(dx*dx + dy*dy) < (a.r||4) + (b.r||4);
+}
+
+function spawnEnemy() {
+  const type = Math.random();
+  if (type < 0.45) {
+    enemies.push({ x: W+25, y: Math.random()*(H-60)+30, r: 18+Math.random()*16, vx: -(2+Math.random()*2), vy: (Math.random()-0.5)*1.5, rot: Math.random()*Math.PI*2, rotSpeed: (Math.random()-0.5)*0.05, type: 'asteroid', hp: 1 });
+  } else if (type < 0.78) {
+    enemies.push({ x: W+15, y: Math.random()*(H-60)+30, r: 12, vx: -(4+Math.random()*2), vy: (Math.random()-0.5)*2, rot: 0, rotSpeed: 0, type: 'asteroid', hp: 1, fast: true });
+  } else if (type < 0.92) {
+    enemies.push({ x: W+20, y: Math.random()*(H-60)+30, r: 20, vx: -(1.5+Math.random()), vy: 0, rot: 0, rotSpeed: 0, type: 'ufo', hp: 2, shootTimer: 0 });
+  } else {
+    // Boss (bigger enemy)
+    enemies.push({ x: W+40, y: Math.random()*(H-80)+40, r: 35, vx: -(1+Math.random()), vy: (Math.random()-0.5)*1, rot: 0, rotSpeed: 0, type: 'boss', hp: 6, shootTimer: 0 });
+  }
+}
+
+function spawnPowerup() {
+  const types = ['hp', 'bomb', 'coin'];
+  const t = types[Math.floor(Math.random() * types.length)];
+  powerups.push({ x: W+10, y: Math.random()*(H-80)+40, r: 12, vx: -2, type: t, timer: 0 });
+}
+
+function explode(x, y, color, count=15) {
+  for (let i=0; i<count; i++) {
+    const angle = Math.random()*Math.PI*2, speed = Math.random()*4+1;
+    particles.push({ x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, life: 1, decay: 0.02+Math.random()*0.03, r: Math.random()*4+1, color });
+  }
+}
+
+function boom(x, y) {
+  explosions.push({ x, y, r: 5, maxR: 60, alpha: 1 });
+  for (let i=0; i<30; i++) {
+    const angle = Math.random()*Math.PI*2, speed = Math.random()*8+2;
+    particles.push({ x, y, vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed, life: 1, decay: 0.015+Math.random()*0.02, r: Math.random()*6+2, color: `hsl(${Math.random()*60+30},100%,60%)` });
+  }
+}
+
+function resetGame() {
+  ship.y=H/2; ship.vy=0;
+  ship.hp = 3 + extraHp;
+  if (owned.includes('hp+2')) ship.hp += 2;
+  ship.invincible=0; ship.dead=false;
+  bullets=[]; enemies=[]; explosions=[]; powerups=[]; particles=[];
+  score=0; frame=0;
+  shootCooldown = owned.includes('rapid') ? 4 : 8;
+  multiShot = owned.includes('triple') ? 3 : 1;
+  bulletsCanPierce = owned.includes('pierce');
+  ship.shieldActive = owned.includes('shield');
+  updateActiveBadges();
+}
+
+// ═══════════════════════════════════════
+//  DRAW FUNCTIONS
+// ═══════════════════════════════════════
+function drawStars() {
+  stars.forEach(s => {
+    s.twinkle += 0.02;
+    const a = s.alpha*(0.5+0.5*Math.sin(s.twinkle));
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.fill();
+  });
+}
+
+function drawShip(x, y, r, invincible) {
+  if (invincible>0 && Math.floor(frame/4)%2===0) return;
+  ctx.save(); ctx.translate(x, y);
+
+  // Shield glow
+  if (ship.shieldActive) {
+    ctx.beginPath(); ctx.arc(0, 0, r*1.6, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(59,130,246,0.4)'; ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(59,130,246,0.06)'; ctx.fill();
+  }
+
+  const flameLen = 12+Math.random()*8;
+  const grad = ctx.createLinearGradient(-r, 0, -r-flameLen, 0);
+  grad.addColorStop(0,'rgba(255,150,0,0.9)'); grad.addColorStop(0.5,'rgba(255,80,0,0.6)'); grad.addColorStop(1,'rgba(255,50,0,0)');
+  ctx.beginPath(); ctx.moveTo(-r,-5); ctx.lineTo(-r-flameLen,0); ctx.lineTo(-r,5);
+  ctx.fillStyle=grad; ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(r,0); ctx.lineTo(-r*0.7,-r*0.7); ctx.lineTo(-r*0.3,0); ctx.lineTo(-r*0.7,r*0.7);
+  ctx.closePath();
+  const bodyGrad = ctx.createLinearGradient(-r,-r,r,r);
+  bodyGrad.addColorStop(0,'#00d4ff'); bodyGrad.addColorStop(1,'#0066aa');
+  ctx.fillStyle=bodyGrad; ctx.fill();
+  ctx.strokeStyle='rgba(0,212,255,0.5)'; ctx.lineWidth=1; ctx.stroke();
+
+  ctx.beginPath(); ctx.arc(r*0.2,0,r*0.25,0,Math.PI*2);
+  ctx.fillStyle='rgba(180,230,255,0.8)'; ctx.fill();
+  ctx.restore();
+}
+
+function drawAsteroid(e) {
+  ctx.save(); ctx.translate(e.x,e.y); ctx.rotate(e.rot);
+  ctx.beginPath();
+  const spikes=8;
+  for (let i=0; i<spikes*2; i++) {
+    const angle=(i/(spikes*2))*Math.PI*2;
+    const r2 = i%2===0 ? e.r : e.r*(0.7+(i*17%5)*0.06);
+    if(i===0) ctx.moveTo(Math.cos(angle)*r2,Math.sin(angle)*r2);
+    else ctx.lineTo(Math.cos(angle)*r2,Math.sin(angle)*r2);
+  }
+  ctx.closePath();
+  const grad = ctx.createRadialGradient(0,0,0,0,0,e.r);
+  if (e.type==='boss') {
+    grad.addColorStop(0,'#661111'); grad.addColorStop(1,'#220000');
+    ctx.fillStyle=grad; ctx.fill();
+    ctx.strokeStyle='#ff3333'; ctx.lineWidth=2; ctx.stroke();
+    // Boss HP bar
+    ctx.restore(); ctx.save(); ctx.translate(e.x,e.y);
+    ctx.fillStyle='#333'; ctx.fillRect(-e.r, -e.r-10, e.r*2, 5);
+    ctx.fillStyle='#ef4444'; ctx.fillRect(-e.r, -e.r-10, e.r*2*(e.hp/6), 5);
+    return;
+  }
+  grad.addColorStop(0, e.fast?'#884400':'#555'); grad.addColorStop(1, e.fast?'#331100':'#222');
+  ctx.fillStyle=grad; ctx.fill();
+  ctx.strokeStyle=e.fast?'#ff6600':'#666'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.restore();
+}
+
+function drawUFO(e) {
+  ctx.save(); ctx.translate(e.x,e.y);
+  ctx.beginPath(); ctx.arc(0,-6,10,Math.PI,0); ctx.fillStyle='#aaaaff'; ctx.fill();
+  ctx.beginPath(); ctx.ellipse(0,0,20,8,0,0,Math.PI*2);
+  const g=ctx.createLinearGradient(-20,0,20,0);
+  g.addColorStop(0,'#333'); g.addColorStop(0.5,'#888'); g.addColorStop(1,'#333');
+  ctx.fillStyle=g; ctx.fill();
+  ctx.beginPath(); ctx.ellipse(0,6,12,4,0,0,Math.PI*2);
+  ctx.fillStyle=`rgba(168,85,247,${0.5+0.5*Math.sin(frame*0.1)})`; ctx.fill();
+  ctx.restore();
+}
+
+function drawPowerup(p) {
+  ctx.save(); ctx.translate(p.x,p.y);
+  const glow=0.7+0.3*Math.sin(frame*0.1);
+  ctx.beginPath(); ctx.arc(0,0,p.r,0,Math.PI*2);
+  if(p.type==='hp') { ctx.fillStyle=`rgba(16,185,129,${glow})`; ctx.strokeStyle='#10b981'; }
+  else if(p.type==='coin') { ctx.fillStyle=`rgba(245,158,11,${glow})`; ctx.strokeStyle='#f59e0b'; }
+  else { ctx.fillStyle=`rgba(245,158,11,${glow})`; ctx.strokeStyle='#f59e0b'; }
+  ctx.lineWidth=2; ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font=`bold ${p.r*1.2}px monospace`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  if(p.type==='hp') ctx.fillText('+',0,1);
+  else if(p.type==='coin') ctx.fillText('💰',0,1);
+  else ctx.fillText('💥',0,1);
+  ctx.restore();
+}
+
+function drawParticles() {
+  particles.forEach(p => { ctx.globalAlpha=p.life; ctx.beginPath(); ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill(); });
+  ctx.globalAlpha=1;
+}
+
+function drawExplosions() {
+  explosions.forEach(e => {
+    ctx.beginPath(); ctx.arc(e.x,e.y,e.r,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(255,150,50,${e.alpha})`; ctx.lineWidth=2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(e.x,e.y,e.r*0.6,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,200,${e.alpha*0.5})`; ctx.fill();
+  });
+}
+
+function drawHUD() {
+  // HP
+  for (let i=0; i<ship.hp+extraHp+(owned.includes('hp+2')?2:0); i++) {
+    ctx.fillStyle = i<ship.hp ? '#10b981' : '#333';
+    ctx.font='20px monospace'; ctx.fillText('❤️', 10+i*28, 30);
+  }
+  // Shield indicator
+  if (ship.shieldActive) {
+    ctx.fillStyle='#3b82f6'; ctx.font='14px monospace';
+    ctx.fillText('🛡️', 10+(ship.hp+extraHp+2)*28, 30);
+  }
+  // Score
+  ctx.fillStyle='#00d4ff'; ctx.font='bold 20px monospace'; ctx.textAlign='right';
+  ctx.fillText(`分数: ${score}`, W-10, 30);
+  ctx.fillStyle='#f59e0b'; ctx.font='13px monospace';
+  ctx.fillText(`最高: ${highScore}`, W-10, 50);
+  // Nukes
+  if (playerNukes>0) {
+    ctx.fillStyle='#ef4444'; ctx.font='13px monospace';
+    ctx.fillText(`☢️ ×${playerNukes}`, W-10, 70);
+  }
+  ctx.textAlign='left';
+}
+
+function drawStart() {
+  ctx.textAlign='center';
+  ctx.font=`bold ${Math.min(56,W*0.07)}px monospace`;
+  ctx.fillStyle='#00d4ff'; ctx.fillText('🚀', W/2, H*0.25);
+  ctx.font=`bold ${Math.min(42,W*0.06)}px monospace`;
+  const g=ctx.createLinearGradient(W*0.2,0,W*0.8,0);
+  g.addColorStop(0,'#00d4ff'); g.addColorStop(1,'#a855f7');
+  ctx.fillStyle=g; ctx.fillText('太空生存战', W/2, H*0.25+56);
+
+  ctx.font='14px monospace'; ctx.fillStyle='#555';
+  ctx.fillText('← → 或 ↑ ↓ 控制飞船，空格/W 发射', W/2, H*0.52);
+  ctx.fillText('躲避陨石 · 击毁敌人 · 收集能量', W/2, H*0.52+22);
+
+  // Owned buffs summary
+  if (owned.length>0) {
+    ctx.font='12px monospace'; ctx.fillStyle='#f59e0b';
+    const names = owned.map(id => PRODUCTS[id] ? PRODUCTS[id].name : id).join(' · ');
+    ctx.fillText('已拥有: '+names, W/2, H*0.62);
+  }
+
+  ctx.fillStyle='#f59e0b'; ctx.font='14px monospace';
+  ctx.fillText(`最高分: ${highScore}`, W/2, H*0.7);
+
+  if (Math.floor(frame/30)%2===0) {
+    ctx.fillStyle='#fff'; ctx.font='bold 20px monospace';
+    ctx.fillText('▶ 按任意键开始', W/2, H*0.8);
+  }
+  ctx.textAlign='left';
+}
+
+function drawOver() {
+  ctx.fillStyle='rgba(0,0,0,0.65)'; ctx.fillRect(0,0,W,H);
+  ctx.textAlign='center';
+  ctx.font=`bold ${Math.min(48,W*0.07)}px monospace`;
+  ctx.fillStyle='#ef4444'; ctx.fillText('💥 飞船坠毁', W/2, H*0.32);
+
+  ctx.font='bold 32px monospace'; ctx.fillStyle='#fff';
+  ctx.fillText(`最终分数: ${score}`, W/2, H*0.45);
+
+  // Coin earnings
+  const earned = Math.floor(score / 10);
+  if (earned>0) {
+    ctx.font='16px monospace'; ctx.fillStyle='#f59e0b';
+    ctx.fillText(`🎁 本局获得: +${earned} 金币`, W/2, H*0.52);
+  }
+
+  if (score>=highScore && score>0) {
+    ctx.font='18px monospace'; ctx.fillStyle='#f59e0b';
+    ctx.fillText('🏆 新纪录！', W/2, H*0.58);
+  }
+
+  ctx.fillStyle='#888'; ctx.font='14px monospace';
+  ctx.fillText(`最高分: ${highScore}`, W/2, H*0.64);
+  ctx.fillText(`金币余额: ${coins}`, W/2, H*0.68);
+
+  if (Math.floor(frame/30)%2===0) {
+    ctx.fillStyle='#00d4ff'; ctx.font='bold 20px monospace';
+    ctx.fillText('▶ 按任意键重新开始', W/2, H*0.78);
+  }
+  ctx.textAlign='left';
+}
+
+// ═══════════════════════════════════════
+//  UPDATE
+// ═══════════════════════════════════════
+function update() {
+  frame++;
+  stars.forEach(s => { s.x-=s.speed; if(s.x<0){s.x=W;s.y=Math.random()*H;} });
+
+  if (state!=='playing') return;
+
+  const accel=0.6, maxVY=7, friction=0.92;
+  if (keys['ArrowUp']||keys['KeyW']) ship.vy-=accel;
+  if (keys['ArrowDown']||keys['KeyS']) ship.vy+=accel;
+  if (touching) { const t=(touchY-ship.y)*0.15; ship.vy+=(t-ship.vy)*0.2; }
+  ship.vy=Math.max(-maxVY,Math.min(maxVY,ship.vy)); ship.vy*=friction;
+  ship.y+=ship.vy; ship.y=Math.max(ship.r+2,Math.min(H-ship.r-2,ship.y));
+
+  // Shooting with buffs
+  if ((keys['Space']||keys['KeyZ']||keys['Enter']) && frame%shootCooldown===0) {
+    const offsets = multiShot===3 ? [-8,0,8] : [0];
+    offsets.forEach(dy => {
+      bullets.push({ x:ship.x+ship.r, y:ship.y+dy, vx:10, vy:0, r:4, enemy:false, pierce:bulletsCanPierce, hitIds:[] });
+    });
+  }
+
+  // Nuke (press N key)
+  if (keys['KeyN'] && playerNukes>0) {
+    enemies.forEach(e=>{ boom(e.x,e.y); score+=e.type==='boss'?30:5; });
+    enemies=[];
+    bullets=[];
+    playerNukes--;
+    localStorage.setItem('space_nukes', playerNukes);
+    updateActiveBadges();
+    keys['KeyN']=false;
+  }
+
+  if (ship.invincible>0) ship.invincible--;
+
+  // Spawn
+  if (frame%Math.max(20,80-Math.floor(score/5))===0) spawnEnemy();
+  if (frame%250===0) spawnPowerup();
+
+  // Bullets
+  bullets.forEach(b=>{ b.x+=b.vx; b.y+=b.vy||0; });
+  bullets=bullets.filter(b=>b.x<W+20 && b.y>0 && b.y<H);
+
+  // Enemies
+  enemies.forEach(e=>{
+    e.x+=e.vx; e.y+=e.vy||0; e.rot+=e.rotSpeed||0;
+    if (e.type==='ufo') {
+      if(frame%120<60) e.vy=0.8; else e.vy=-0.8;
+      e.y=Math.max(30,Math.min(H-30,e.y));
+      e.shootTimer++;
+      if(e.shootTimer>90){ bullets.push({x:e.x-e.r,y:e.y,vx:-6,r:3,enemy:true,hitIds:[]}); e.shootTimer=0; }
+    }
+    if(e.y<e.r||e.y>H-e.r) e.vy*=-1;
+  });
+
+  // Powerups
+  powerups.forEach(p=>{ p.x+=p.vx; p.timer++; });
+  powerups=powerups.filter(p=>p.x>-20);
+
+  // Bullet-enemy collision
+  bullets.forEach((b,bi)=>{
+    enemies.forEach((e,ei)=>{
+      if(!b.enemy && circleCollide(b,e) && !b.hitIds.includes(ei)) {
+        if(b.pierce) {
+          e.hp--; b.hitIds.push(ei);
+          explode(e.x,e.y,'#ff8800',5);
+          if(e.hp<=0){ boom(e.x,e.y); enemies.splice(ei,1); score+=e.type==='boss'?30:e.type==='ufo'?15:5; }
+        } else {
+          e.hp--; bullets.splice(bi,1);
+          if(e.hp<=0){ boom(e.x,e.y); enemies.splice(ei,1); score+=e.type==='boss'?30:e.type==='ufo'?15:5; }
+          else explode(e.x,e.y,'#ff8800',8);
+        }
+      }
+    });
+  });
+
+  // Ship-enemy collision
+  if (ship.invincible===0 && !ship.shieldActive) {
+    for(const e of enemies) {
+      if(circleCollide(ship,e)) {
+        ship.hp--;
+        ship.invincible=90; boom(ship.x,ship.y);
+        if(ship.hp<=0){ state='over'; onGameOver(); }
+        break;
+      }
+    }
+  } else if (ship.invincible===0 && ship.shieldActive) {
+    for(const e of enemies) {
+      if(circleCollide(ship,e)) {
+        boom(e.x,e.y);
+        enemies=enemies.filter(en=>en!==e);
+        score+=5;
+      }
+    }
+  }
+
+  // Enemy bullets
+  bullets=bullets.filter(b=>{
+    if(!b.enemy) return true;
+    for(const e of enemies) if(circleCollide(b,e)) return false;
+    return true;
+  });
+
+  // Powerup collision
+  powerups=powerups.filter(p=>{
+    if(circleCollide(ship,p)) {
+      if(p.type==='hp') ship.hp=Math.min(5,ship.hp+1);
+      if(p.type==='bomb'){ enemies.forEach(e=>{boom(e.x,e.y);score+=5;}); enemies=[]; }
+      if(p.type==='coin'){
+        const amt=10+Math.floor(Math.random()*10);
+        coins+=amt; localStorage.setItem('space_coins',coins);
+        showToast(`💰 +${amt} 金币！`); updateCoinUI();
+      }
+      return false;
+    }
+    return true;
+  });
+
+  particles.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vx*=0.96; p.vy*=0.96; p.life-=p.decay; });
+  particles=particles.filter(p=>p.life>0);
+  explosions.forEach(e=>{ e.r+=4; e.alpha-=0.06; });
+  explosions=explosions.filter(e=>e.alpha>0);
+  enemies=enemies.filter(e=>e.x>-60);
+}
+
+function onGameOver() {
+  if(score>highScore){ highScore=score; localStorage.setItem('space_shooter_hs',highScore); }
+  const earned=Math.floor(score/10);
+  if(earned>0){ coins+=earned; localStorage.setItem('space_coins',coins); updateCoinUI(); }
+}
+
+// ═══════════════════════════════════════
+//  LOOP
+// ═══════════════════════════════════════
+function loop() {
+  update();
+  ctx.fillStyle='#050810'; ctx.fillRect(0,0,W,H);
+  drawStars(); drawParticles(); drawExplosions();
+
+  if(state==='start') drawStart();
+  else if(state==='playing'||state==='over') {
+    enemies.forEach(e=>{ if(e.type==='ufo') drawUFO(e); else drawAsteroid(e); });
+    bullets.forEach(b=>{
+      ctx.fillStyle=b.enemy?'#ff4444':(b.pierce?'#a855f7':'#00d4ff');
+      ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
+    });
+    powerups.forEach(drawPowerup);
+    drawShip(ship.x,ship.y,ship.r,ship.invincible);
+    drawHUD();
+    if(state==='over') drawOver();
+  }
+
+  requestAnimationFrame(loop);
+}
+
+// ═══════════════════════════════════════
+//  INPUT
+// ═══════════════════════════════════════
+function tryStart() {
+  if(state==='start'){ state='playing'; resetGame(); }
+  else if(state==='over'){ state='playing'; resetGame(); }
+}
+
+document.addEventListener('keydown', e=>{
+  tryStart();
+  // Open shop with E
+  if(e.code==='KeyE'&&(state==='start'||state==='over')) openShop();
+});
+canvas.addEventListener('click', tryStart);
+canvas.addEventListener('touchstart', tryStart, { passive:false });
+
+// Init
+updateCoinUI();
+updateActiveBadges();
+loop();
+</script>
+</body>
+</html>
