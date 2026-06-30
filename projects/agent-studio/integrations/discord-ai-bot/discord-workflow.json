@@ -1,0 +1,84 @@
+{
+  "name": "Discord AI Bot Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethods": ["POST"],
+        "path": "discord-webhook"
+      },
+      "name": "Discord Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "discord-ai-bot"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cron",
+              "hours": 9,
+              "minute": "0"
+            }
+          ]
+        }
+      },
+      "name": "Daily Digest Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 100]
+    },
+    {
+      "parameters": {
+        "resource": "repo",
+        "operation": "getTrending",
+        "language": "python",
+        "limit": 5
+      },
+      "name": "Fetch GitHub Trending",
+      "type": "n8n-nodes-base.githubApi",
+      "typeVersion": 1,
+      "position": [500, 100]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate AI digest from trending data\nconst items = $input.all();\nconst digest = items.map((item, i) => \n  `${i+1}. **${item.json.name}** ⭐ ${item.json.stars}\\n   ${item.json.description}`\n).join('\\n\\n');\n\nreturn {\n  json: {\n    content: `🤖 **AI Daily Digest — ${new Date().toLocaleDateString('zh-CN')}**\\n\\n${digest}\\n\\n_Powered by agent-studio_`
+  }
+};"
+      },
+      "name": "Generate Digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [750, 100]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.DISCORD_WEBHOOK_URL}}",
+        "method": "POST",
+        "body": {
+          "content": "={{ $json.content }}"
+        },
+        "options": {}
+      },
+      "name": "Send to Discord",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1000, 100]
+    }
+  ],
+  "connections": {
+    "Daily Digest Schedule": {
+      "main": [[{ "node": "Fetch GitHub Trending", "type": "main", "index": 0 }]]
+    },
+    "Fetch GitHub Trending": {
+      "main": [[{ "node": "Generate Digest", "type": "main", "index": 0 }]]
+    },
+    "Generate Digest": {
+      "main": [[{ "node": "Send to Discord", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "discord-ai-bot-workflow"
+}

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>agent-studio — AI Agent Developer's Toolkit</title>
+  <link rel="icon" type="image/svg+xml" href="nav-icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:           #04040a;
+      --surface:      #0b0b14;
+      --surface-2:    #111120;
+      --surface-3:    #181828;
+      --border:       rgba(255,255,255,0.06);
+      --border-hi:    rgba(34,211,238,0.3);
+      --t1: #f0f4f8;
+      --t2: #8b9ab0;
+      --t3: #4a5568;
+      --cyan:  #22d3ee;
+      --cyan-d: rgba(34,211,238,0.1);
+      --cyan-g: rgba(34,211,238,0.35);
+      --violet:  #a78bfa;
+      --violet-d: rgba(167,139,250,0.1);
+      --green: #4ade80;
+      --sans: 'Inter', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --r: 6px; --r-lg: 12px;
+      --ease: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:var(--sans);
+      background:var(--bg);
+      color:var(--t1);
+      font-size:15px;
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    a{color:var(--cyan);text-decoration:none;transition:color var(--ease)}
+
+    /* ═══ GLOBAL BACKGROUND ═══ */
+    /* Layer 1: Deep space base */
+    body::before{
+      content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+      background:
+        radial-gradient(ellipse 100% 70% at 50% -20%, rgba(34,211,238,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 15% 85%, rgba(167,139,250,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 85% 75%, rgba(34,211,238,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(10,10,30,1) 0%, var(--bg) 100%);
+    }
+    /* Layer 2: Grid matrix */
+    body::after{
+      content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+      background-image:
+        linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image:radial-gradient(ellipse 90% 80% at 50% 0%, black 0%, transparent 70%);
+      -webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 0%, black 0%, transparent 70%);
+    }
+
+    /* Layer 3: Neural network nodes SVG canvas */
+    #neural-canvas{
+      position:fixed;inset:0;z-index:0;pointer-events:none;
+      width:100%;height:100%;
+      opacity:0.6;
+    }
+
+    /* Layer 4: Light beams */
+    .beam{
+      position:fixed;z-index:0;pointer-events:none;
+      top:0;
+      background:linear-gradient(to bottom, rgba(34,211,238,0.12), transparent 80%);
+    }
+    .beam-1{left:30%;width:1px;height:80%;transform:rotate(15deg);transform-origin:top center;opacity:0.8}
+    .beam-2{left:55%;width:1px;height:70%;transform:rotate(-12deg);transform-origin:top center;opacity:0.5;background:linear-gradient(to bottom, rgba(167,139,250,0.1), transparent 80%)}
+    .beam-3{left:72%;width:0.5px;height:60%;transform:rotate(8deg);transform-origin:top center;opacity:0.4;background:linear-gradient(to bottom, rgba(34,211,238,0.08), transparent 80%)}
+
+    /* Layer 5: Floating particles */
+    .particles{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+    .dot{
+      position:absolute;border-radius:50%;
+      animation:rise linear infinite;
+      opacity:0;
+    }
+    @keyframes rise{
+      0%{transform:translateY(105vh) scale(0);opacity:0}
+      8%{opacity:1}
+      92%{opacity:0.8}
+      100%{transform:translateY(-10vh) scale(1.2);opacity:0}
+    }
+
+    /* Layer 6: Hero glow blob */
+    .hero-blob{
+      position:absolute;top:-30%;left:50%;transform:translateX(-50%);
+      width:700px;height:500px;
+      background:radial-gradient(ellipse, rgba(34,211,238,0.09) 0%, rgba(167,139,250,0.04) 40%, transparent 70%);
+      pointer-events:none;z-index:0;
+    }
+
+    /* ═══ CONTENT ABOVE BG ═══ */
+    nav,.container,footer{position:relative;z-index:2}
+    main{position:relative;z-index:2}
+
+    /* ═══ NAV ═══ */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      backdrop-filter:blur(20px) saturate(180%);
+      -webkit-backdrop-filter:blur(20px) saturate(180%);
+      background:rgba(4,4,10,0.8);
+      border-bottom:1px solid var(--border);
+    }
+    nav .container{
+      display:flex;align-items:center;justify-content:space-between;
+      height:58px;
+    }
+    .nav-logo{
+      display:flex;align-items:center;gap:10px;
+      font-family:var(--mono);font-weight:600;font-size:14px;
+      color:var(--t1);text-decoration:none;
+    }
+    .nav-icon{
+      width:30px;height:30px;border-radius:7px;
+      background:var(--surface-2);
+      border:1px solid var(--border-hi);
+      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;flex-shrink:0;
+    }
+    .nav-icon svg{width:20px;height:20px}
+    .nav-links{display:flex;align-items:center;gap:28px;list-style:none}
+    .nav-links a{font-size:13px;font-weight:500;color:var(--t3);transition:color var(--ease)}
+    .nav-links a:hover{color:var(--t1)}
+    @media(max-width:640px){.nav-links{display:none}}
+
+    /* ═══ BUTTONS ═══ */
+    .btn{
+      display:inline-flex;align-items:center;gap:7px;
+      padding:9px 18px;border-radius:var(--r);
+      font-family:var(--sans);font-size:13px;font-weight:500;
+      cursor:pointer;border:none;transition:all var(--ease);
+      text-decoration:none;line-height:1;
+    }
+    .btn-pri{background:var(--cyan);color:#04040a;box-shadow:0 0 20px rgba(34,211,238,0.25)}
+    .btn-pri:hover{background:#38e5f7;color:#04040a;transform:translateY(-1px);box-shadow:0 6px 28px rgba(34,211,238,0.4)}
+    .btn-out{
+      background:transparent;border:1px solid var(--border);
+      color:var(--t2);backdrop-filter:blur(8px)
+    }
+    .btn-out:hover{border-color:var(--border-hi);color:var(--cyan);background:var(--cyan-d)}
+    .btn-sm{padding:6px 13px;font-size:12px}
+    ::selection{background:var(--cyan);color:#04040a}
+    :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:3px}
+
+    /* ═══ LAYOUT ═══ */
+    .container{width:100%;max-width:1100px;margin:0 auto;padding:0 24px}
+    .section{padding:88px 0}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    @media(max-width:900px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.grid-3,.grid-2{grid-template-columns:1fr};.section{padding:56px 0}}
+
+    /* ═══ TYPOGRAPHY ═══ */
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      font-family:var(--mono);font-size:11px;font-weight:500;
+      letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);
+      margin-bottom:16px;
+    }
+    .eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--cyan)}
+    .s-title{
+      font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;
+      letter-spacing:-.035em;line-height:1.1;color:var(--t1);margin-bottom:14px;
+    }
+    .s-desc{font-size:15px;color:var(--t2);max-width:520px;line-height:1.72}
+
+    /* ═══ TAGS ═══ */
+    .tag{
+      display:inline-flex;align-items:center;gap:4px;
+      padding:3px 10px;border-radius:20px;
+      font-family:var(--mono);font-size:11px;font-weight:500;
+      letter-spacing:.02em;white-space:nowrap;
+    }
+    .t-c{background:var(--cyan-d);color:var(--cyan);border:1px solid rgba(34,211,238,.2)}
+    .t-v{background:var(--violet-d);color:var(--violet);border:1px solid rgba(167,139,250,.2)}
+    .t-g{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2)}
+
+    /* ═══ CODE ═══ */
+    pre{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 24px;overflow-x:auto;line-height:1.75}
+    pre,code{font-family:var(--mono);font-size:13px}
+    .cm{color:var(--t3)}.kw{color:var(--violet)}.fn{color:var(--cyan)}.str{color:var(--green)}.op{color:var(--t2)}
+
+    /* ═══ HERO ═══ */
+    .hero{padding:148px 0 96px;text-align:left}
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:5px 14px;border-radius:20px;
+      background:var(--surface);border:1px solid var(--border);
+      font-family:var(--mono);font-size:12px;color:var(--t2);
+      margin-bottom:28px;
+    }
+    .live-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:var(--green);box-shadow:0 0 8px var(--green);
+      animation:live 2.4s ease-in-out infinite;
+    }
+    @keyframes live{0%,100%{opacity:1;box-shadow:0 0 8px var(--green)}50%{opacity:.3;box-shadow:0 0 2px var(--green)}}
+    .hero h1{
+      font-size:clamp(2.6rem,7vw,4.5rem);font-weight:700;
+      letter-spacing:-.04em;line-height:1.04;color:var(--t1);
+      margin-bottom:24px;max-width:700px;
+    }
+    .hero h1 .g{background:linear-gradient(135deg,var(--cyan) 0%,var(--violet) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-desc{font-size:clamp(1rem,2vw,1.1rem);color:var(--t2);max-width:520px;line-height:1.75;margin-bottom:36px}
+    .hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .h-stats{
+      display:flex;gap:36px;margin-top:60px;
+      padding-top:32px;border-top:1px solid var(--border);
+    }
+    .sv{font-family:var(--mono);font-size:1.6rem;font-weight:600;color:var(--t1)}
+    .sl{font-size:12px;color:var(--t3);margin-top:3px}
+    @media(max-width:480px){.h-stats{gap:24px}.sv{font-size:1.3rem}}
+
+    /* ═══ DEMO BANNER ═══ */
+    .banner{
+      background:linear-gradient(135deg,rgba(34,211,238,.07) 0%,rgba(167,139,250,.07) 100%);
+      border:1px solid rgba(34,211,238,.2);border-radius:var(--r-lg);
+      padding:20px 24px;display:flex;align-items:center;gap:16px;
+    }
+    .bi{font-size:22px;flex-shrink:0}
+    .bt h4{font-size:14px;font-weight:600;margin-bottom:3px}
+    .bt p{font-size:13px;color:var(--t2)}
+    .banner .btn{margin-left:auto;flex-shrink:0}
+    @media(max-width:640px){.banner{flex-direction:column;align-items:flex-start}.banner .btn{margin-left:0}}
+
+    /* ═══ MODULE TILES ═══ */
+    .tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:border-color var(--ease),background var(--ease)}
+    .tile:hover{border-color:var(--border-hi);background:rgba(34,211,238,.025)}
+    .th{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+    .th h3{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--t1)}
+    .th .lang{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--t3);background:var(--surface-2);padding:2px 8px;border-radius:4px}
+    .ti{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;border-bottom:1px solid rgba(255,255,255,.04);transition:background var(--ease)}
+    .ti:last-child{border-bottom:none}.ti:hover{background:rgba(34,211,238,.04)}
+    .ti-name{font-family:var(--mono);font-size:13px;color:var(--t1)}
+    .ti-desc{font-size:12px;color:var(--t3);margin-top:1px}
+
+    /* ═══ ARCHITECTURE ═══ */
+    .arch-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:10px}
+    .an{display:flex;align-items:center;gap:12px;padding:12px 20px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface-2);font-family:var(--mono);font-size:13px;font-weight:500;min-width:280px;justify-content:center;width:100%;max-width:320px}
+    .an-hi{border-color:var(--border-hi);background:var(--cyan-d);color:var(--cyan);box-shadow:0 0 24px rgba(34,211,238,.1)}
+    .an-v{border-color:rgba(167,139,250,.3);background:var(--violet-d);color:var(--violet)}
+    .a-arrow{color:var(--t3);font-size:15px;font-family:var(--mono)}
+    @media(max-width:640px){.arch-box{padding:20px 16px}.an{min-width:auto;width:100%}}
+
+    /* ═══ CARDS ═══ */
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;transition:border-color var(--ease)}
+    .card:hover{border-color:var(--border-hi)}
+    .card h3{font-size:14px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    .card p{font-size:13px;color:var(--t2);line-height:1.65}
+
+    /* ═══ FOOTER ═══ */
+    footer{border-top:1px solid var(--border);padding:36px 0}
+    .fi{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .fl{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--t3)}
+    .fl-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);opacity:.5}
+    .fl a{color:var(--t3);transition:color var(--ease)}.fl a:hover{color:var(--t1)}
+    .fl a:not(:last-child)::after{content:'·';margin-left:4px;opacity:.3}
+    .flinks{display:flex;gap:20px;list-style:none}
+    .flinks a{font-size:13px;color:var(--t3);transition:color var(--ease)}.flinks a:hover{color:var(--t1)}
+  </style>
+</head>
+<body>
+
+<!-- Background Layers -->
+<div id="neural-canvas"></div>
+<div class="beam beam-1"></div>
+<div class="beam beam-2"></div>
+<div class="beam beam-3"></div>
+
+<div class="particles">
+  <div class="dot" style="left:6%;width:3px;height:3px;background:var(--cyan);animation-duration:18s;animation-delay:0s"></div>
+  <div class="dot" style="left:18%;width:2px;height:2px;background:var(--violet);animation-duration:22s;animation-delay:3s"></div>
+  <div class="dot" style="left:30%;width:4px;height:4px;background:var(--cyan);animation-duration:16s;animation-delay:7s"></div>
+  <div class="dot" style="left:42%;width:2px;height:2px;background:var(--violet);animation-duration:24s;animation-delay:2s"></div>
+  <div class="dot" style="left:54%;width:3px;height:3px;background:var(--cyan);animation-duration:20s;animation-delay:5s"></div>
+  <div class="dot" style="left:66%;width:2px;height:2px;background:var(--violet);animation-duration:19s;animation-delay:9s"></div>
+  <div class="dot" style="left:78%;width:4px;height:4px;background:var(--cyan);animation-duration:23s;animation-delay:1s"></div>
+  <div class="dot" style="left:90%;width:2px;height:2px;background:var(--violet);animation-duration:17s;animation-delay:6s"></div>
+  <div class="dot" style="left:12%;width:2px;height:2px;background:var(--cyan);animation-duration:26s;animation-delay:11s"></div>
+  <div class="dot" style="left:62%;width:3px;height:3px;background:var(--violet);animation-duration:21s;animation-delay:4s"></div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <div class="container">
+    <a href="#" class="nav-logo">
+      <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#0b0b18"/>
+  <polygon points="16,3 27,9.5 27,22.5 16,29 5,22.5 5,9.5" fill="none" stroke="#22d3ee" stroke-width="1.2" opacity="0.85"/>
+  <circle cx="16" cy="16" r="3" fill="#22d3ee"/>
+  <circle cx="16" cy="16" r="6" fill="none" stroke="#22d3ee" stroke-width="0.6" opacity="0.3"/>
+  <line x1="16" y1="9.5" x2="16" y2="6" stroke="#22d3ee" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="16" y1="22.5" x2="16" y2="26" stroke="#22d3ee" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="9.5" y1="16" x2="6" y2="16" stroke="#a78bfa" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="22.5" y1="16" x2="26" y2="16" stroke="#a78bfa" stroke-width="1.2" stroke-linecap="round"/>
+  <circle cx="16" cy="5.5" r="1.2" fill="#22d3ee"/>
+  <circle cx="26" cy="9.5" r="1" fill="#a78bfa"/>
+  <circle cx="6" cy="9.5" r="1" fill="#a78bfa"/>
+  <circle cx="26" cy="22.5" r="1" fill="#a78bfa"/>
+  <circle cx="6" cy="22.5" r="1" fill="#a78bfa"/>
+  <circle cx="16" cy="26.5" r="1.2" fill="#22d3ee"/>
+</svg></div>
+      agent-studio
+    </a>
+    <ul class="nav-links">
+      <li><a href="#modules">Modules</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="https://github.com/nima54851/agent-studio" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://github.com/nima54851/agent-studio/releases" target="_blank" rel="noopener">Changelog</a></li>
+    </ul>
+    <a href="https://github.com/nima54851/agent-studio" class="btn btn-pri btn-sm" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+      Star
+    </a>
+  </div>
+</nav>
+
+<main>
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-blob"></div>
+  <div class="container">
+    <div class="hero-badge"><div class="live-dot"></div>Open Source · MIT License · Automated Daily</div>
+    <h1>Build AI Agents<br><span class="g">Ship Real Tools.</span></h1>
+    <p class="hero-desc">A production-ready toolkit for AI agent developers. Skills, scripts, workflows, and automation patterns — everything you need to go from prototype to production.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/nima54851/agent-studio" class="btn btn-pri" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        View on GitHub
+      </a>
+      <a href="#modules" class="btn btn-out">Explore Modules</a>
+    </div>
+    <div class="h-stats">
+      <div><div class="sv">4</div><div class="sl">Skills & Templates</div></div>
+      <div><div class="sv">4</div><div class="sl">Scripts</div></div>
+      <div><div class="sv">1</div><div class="sl">n8n Workflow</div></div>
+      <div><div class="sv">MIT</div><div class="sl">License</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Demo Banner -->
+<div class="container" style="margin-top:-40px;">
+  <div class="banner">
+    <div class="bi">📡</div>
+    <div class="bt"><h4>Daily operations running automatically</h4><p>GitHub trending analysis, quality comments, and repo tracking — every day at 09:00 Beijing time.</p></div>
+    <a href="https://github.com/nima54851/agent-studio" class="btn btn-out btn-sm" target="_blank" rel="noopener">See How</a>
+  </div>
+</div>
+
+<!-- Modules -->
+<section class="section" id="modules">
+  <div class="container">
+    <div class="eyebrow">What's Inside</div>
+    <h2 class="s-title">Everything an AI agent developer needs.</h2>
+    <p class="s-desc" style="margin-bottom:40px;">Modular, composable tools that work independently or together. Pick what you need, leave the rest.</p>
+
+    <div class="grid-3">
+      <div class="tile">
+        <div class="th"><span style="font-size:18px">🔍</span><h3>scripts/</h3><span class="lang">Python</span></div>
+        <div class="ti"><div><div class="ti-name">github_trending.py</div><div class="ti-desc">Track AI/ML repos daily</div></div><span class="tag t-c">ready</span></div>
+        <div class="ti"><div><div class="ti-name">mcp_client.py</div><div class="ti-desc">MCP protocol client</div></div><span class="tag t-c">ready</span></div>
+        <div class="ti"><div><div class="ti-name">memory.py</div><div class="ti-desc">Long-term agent memory</div></div><span class="tag t-c">ready</span></div>
+        <div class="ti"><div><div class="ti-name">webhook_dispatcher.py</div><div class="ti-desc">Event routing gateway</div></div><span class="tag t-c">ready</span></div>
+      </div>
+      <div class="tile">
+        <div class="th"><span style="font-size:18px">⚙️</span><h3>skills/</h3><span class="lang">OpenClaw · 12 skills</span></div>
+        <div class="ti"><div><div class="ti-name">skill-builder</div><div class="ti-desc">Create AI Agent skills from scratch</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">coding-tutor</div><div class="ti-desc">Learn Python, JS, React — with exercises</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">n8n-workflow-builder</div><div class="ti-desc">Design & debug n8n workflows</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">career-roadmap</div><div class="ti-desc">Programmer growth — junior to architect</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">agent-skills-kit</div><div class="ti-desc">Agent skills development framework</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">self-hosted-ai</div><div class="ti-desc">Deploy Ollama, n8n, Open WebUI</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">agent-memory</div><div class="ti-desc">Long-term memory for AI agents</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">github-trending-monitor</div><div class="ti-desc">Daily AI trends tracking</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">test-master</div><div class="ti-desc">Automated testing for AI outputs</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">agent-health-monitor</div><div class="ti-desc">Monitor agent health & uptime</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">mcp-integration</div><div class="ti-desc">MCP ecosystem guide</div></div><span class="tag t-v">skill</span></div>
+        <div class="ti"><div><div class="ti-name">webhook-dispatcher</div><div class="ti-desc">Event routing skill</div></div><span class="tag t-v">skill</span></div>
+      </div>
+      <div class="tile">
+        <div class="th"><span style="font-size:18px">⚡</span><h3>workflows/</h3><span class="lang">n8n + CI</span></div>
+        <div class="ti"><div><div class="ti-name">github-ai-digest.json</div><div class="ti-desc">n8n daily digest workflow</div></div><span class="tag t-g">workflow</span></div>
+        <div class="ti"><div><div class="ti-name">daily-report.yml</div><div class="ti-desc">GitHub Actions CI/CD</div></div><span class="tag t-g">workflow</span></div>
+        <div class="ti"><div><div class="ti-name">daily_ops.py</div><div class="ti-desc">Automated GitHub ops</div></div><span class="tag t-g">workflow</span></div>
+        <div class="ti"><div><div class="ti-name">github-ai-digest-runbook</div><div class="ti-desc">Setup guide + docs</div></div><span class="tag t-g">docs</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Architecture -->
+<section class="section" id="architecture">
+  <div class="container">
+    <div class="grid-2" style="align-items:center;gap:56px">
+      <div>
+        <div class="eyebrow">How It Works</div>
+        <h2 class="s-title">Built on a simple stack.</h2>
+        <p class="s-desc" style="margin-bottom:32px">No bloat. Just Python, GitHub Actions, and the tools you already use. Run locally or deploy anywhere in minutes.</p>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card"><h3>🔍 Intelligent Tracking</h3><p>Monitors GitHub for trending AI projects. Daily snapshots with star counts, descriptions, and links.</p></div>
+          <div class="card"><h3>🔌 Open Integration</h3><p>Connects to n8n, MCP servers, webhooks, and any REST API. The dispatcher routes events anywhere.</p></div>
+          <div class="card"><h3>🤖 Agent-Native</h3><p>Skills designed for AI agents first. Long-term memory, structured context, and tool-agnostic patterns.</p></div>
+        </div>
+      </div>
+      <div class="arch-box">
+        <div class="an an-hi">🤖 AI Agent (OpenClaw)</div>
+        <div class="a-arrow">↓ ↑</div>
+        <div class="an">⚡ daily_ops.py</div>
+        <div class="a-arrow">↓</div>
+        <div class="an an-v">📊 GitHub API</div>
+        <div class="a-arrow">↑</div>
+        <div class="an">📄 Report · ⭐ Star · 💬 Comment</div>
+        <div class="a-arrow">↘</div>
+        <div class="an an-v">⚡ n8n Workflows</div>
+        <div class="a-arrow">↓</div>
+        <div class="an">🔔 Webhook → Telegram / Email</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Start -->
+<section class="section">
+  <div class="container">
+    <div class="eyebrow">Get Started</div>
+    <h2 class="s-title">Up and running in 60 seconds.</h2>
+    <div class="grid-2" style="margin-top:32px;gap:32px;align-items:start">
+      <div>
+        <pre><span class="cm"># Clone the repo</span>
+<span class="kw">git</span> clone https://github.com/nima54851/agent-studio
+<span class="kw">cd</span> agent-studio
+
+<span class="cm"># Run the trending tracker</span>
+<span class="kw">pip</span> install requests
+<span class="fn">python3</span> scripts/github_trending.py
+
+<span class="cm"># Daily automation (09:00 Beijing)</span>
+<span class="fn">./</span>daily_scheduler.sh
+
+<span class="cm"># Import n8n workflow</span>
+<span class="cm"># → Copy workflows/github-ai-digest.json</span>
+<span class="cm"># → Paste into n8n → Import</span></pre>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card"><h3 style="margin-bottom:12px">📦 Requirements</h3>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span class="tag t-c">req</span> Python 3.10+</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span class="tag t-c">req</span> GitHub PAT (for API access)</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span class="tag t-v">opt</span> n8n (for workflow automation)</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><span class="tag t-g">opt</span> OpenClaw (for agent skills)</div>
+          </div>
+        </div>
+        <div class="card" style="background:var(--cyan-d);border-color:rgba(34,211,238,.2)"><h3 style="margin-bottom:8px">💡 Pro Tip</h3><p style="font-size:13px">Set <code style="background:var(--surface-2);padding:2px 6px;border-radius:4px">GITHUB_TOKEN</code> for 5,000 API requests/hour instead of 60.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="fi">
+      <div class="fl">
+        <div class="fl-dot"></div>
+        agent-studio · Built by <a href="https://github.com/nima54851" target="_blank" rel="noopener">nima54851</a> with 灵犀 AI
+      </div>
+      <ul class="flinks">
+        <li><a href="https://github.com/nima54851/agent-studio" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/nima54851/agent-studio/issues" target="_blank" rel="noopener">Issues</a></li>
+        <li><a href="https://github.com/nima54851/agent-studio/releases" target="_blank" rel="noopener">Releases</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<!-- Neural Canvas Animation -->
+<script>
+(function(){
+  var canvas=document.getElementById('neural-canvas');
+  var ctx=canvas.getContext('2d');
+  var W,H,nodes=[],links=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  var NODE_COUNT=Math.min(40,Math.floor(W*H/25000));
+  for(var i=0;i<NODE_COUNT;i++){
+    nodes.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.5,vx:(Math.random()-0.5)*0.25,vy:(Math.random()-0.5)*0.25,color:Math.random()>0.5?'#22d3ee':'#a78bfa'});
+  }
+  var t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    t+=0.003;
+    // Move nodes
+    for(var n of nodes){
+      n.x+=n.vx+(Math.sin(t+i)*0.1||0);
+      n.y+=n.vy;
+      if(n.x<0)n.x=W;if(n.x>W)n.x=0;
+      if(n.y<0)n.y=H;if(n.y>H)n.y=0;
+    }
+    // Draw links
+    for(var i=0;i<nodes.length;i++){
+      for(var j=i+1;j<nodes.length;j++){
+        var a=nodes[i],b=nodes[j];
+        var d=Math.hypot(a.x-b.x,a.y-b.y);
+        if(d<180){
+          var alpha=(1-d/180)*0.25;
+          ctx.strokeStyle=a.color==b.color?a.color:'rgba(34,211,238,0.5)';
+          ctx.globalAlpha=alpha;
+          ctx.lineWidth=0.5;
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+        }
+      }
+    }
+    // Draw nodes
+    ctx.globalAlpha=1;
+    for(var n of nodes){
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=n.color;ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+
+</body>
+</html>

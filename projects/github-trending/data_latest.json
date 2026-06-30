@@ -1,0 +1,208 @@
+{
+  "generated": "2026-06-19 14:26",
+  "sections": [
+    {
+      "title": "🤖 AI / LLM 近期热门",
+      "repos": []
+    },
+    {
+      "title": "🔧 AI 开发工具 / Agent 框架",
+      "repos": []
+    },
+    {
+      "title": "🐍 Python 生态 新势力",
+      "repos": [
+        {
+          "name": "public-apis/public-apis",
+          "url": "https://github.com/public-apis/public-apis",
+          "stars": 442661,
+          "lang": "Python"
+        },
+        {
+          "name": "EbookFoundation/free-programming-books",
+          "url": "https://github.com/EbookFoundation/free-programming-books",
+          "stars": 390481,
+          "lang": "Python"
+        },
+        {
+          "name": "vinta/awesome-python",
+          "url": "https://github.com/vinta/awesome-python",
+          "stars": 303669,
+          "lang": "Python"
+        },
+        {
+          "name": "TheAlgorithms/Python",
+          "url": "https://github.com/TheAlgorithms/Python",
+          "stars": 222040,
+          "lang": "Python"
+        },
+        {
+          "name": "NousResearch/hermes-agent",
+          "url": "https://github.com/NousResearch/hermes-agent",
+          "stars": 197145,
+          "lang": "Python"
+        },
+        {
+          "name": "Significant-Gravitas/AutoGPT",
+          "url": "https://github.com/Significant-Gravitas/AutoGPT",
+          "stars": 185023,
+          "lang": "Python"
+        },
+        {
+          "name": "yt-dlp/yt-dlp",
+          "url": "https://github.com/yt-dlp/yt-dlp",
+          "stars": 171531,
+          "lang": "Python"
+        },
+        {
+          "name": "huggingface/transformers",
+          "url": "https://github.com/huggingface/transformers",
+          "stars": 161713,
+          "lang": "Python"
+        },
+        {
+          "name": "anthropics/skills",
+          "url": "https://github.com/anthropics/skills",
+          "stars": 152595,
+          "lang": "Python"
+        },
+        {
+          "name": "langflow-ai/langflow",
+          "url": "https://github.com/langflow-ai/langflow",
+          "stars": 149828,
+          "lang": "Python"
+        }
+      ]
+    },
+    {
+      "title": "🔥 全站近期上升项目",
+      "repos": [
+        {
+          "name": "freeCodeCamp/freeCodeCamp",
+          "url": "https://github.com/freeCodeCamp/freeCodeCamp",
+          "stars": 449632,
+          "lang": "TypeScript"
+        },
+        {
+          "name": "public-apis/public-apis",
+          "url": "https://github.com/public-apis/public-apis",
+          "stars": 442661,
+          "lang": "Python"
+        },
+        {
+          "name": "EbookFoundation/free-programming-books",
+          "url": "https://github.com/EbookFoundation/free-programming-books",
+          "stars": 390481,
+          "lang": "Python"
+        },
+        {
+          "name": "openclaw/openclaw",
+          "url": "https://github.com/openclaw/openclaw",
+          "stars": 379430,
+          "lang": "TypeScript"
+        },
+        {
+          "name": "nilbuild/developer-roadmap",
+          "url": "https://github.com/nilbuild/developer-roadmap",
+          "stars": 357669,
+          "lang": "TypeScript"
+        },
+        {
+          "name": "vinta/awesome-python",
+          "url": "https://github.com/vinta/awesome-python",
+          "stars": 303669,
+          "lang": "Python"
+        },
+        {
+          "name": "awesome-selfhosted/awesome-selfhosted",
+          "url": "https://github.com/awesome-selfhosted/awesome-selfhosted",
+          "stars": 299963,
+          "lang": null
+        },
+        {
+          "name": "react/react",
+          "url": "https://github.com/react/react",
+          "stars": 245986,
+          "lang": "JavaScript"
+        },
+        {
+          "name": "torvalds/linux",
+          "url": "https://github.com/torvalds/linux",
+          "stars": 236934,
+          "lang": "C"
+        },
+        {
+          "name": "obra/superpowers",
+          "url": "https://github.com/obra/superpowers",
+          "stars": 232616,
+          "lang": "Shell"
+        },
+        {
+          "name": "TheAlgorithms/Python",
+          "url": "https://github.com/TheAlgorithms/Python",
+          "stars": 222040,
+          "lang": "Python"
+        },
+        {
+          "name": "affaan-m/ECC",
+          "url": "https://github.com/affaan-m/ECC",
+          "stars": 217874,
+          "lang": "JavaScript"
+        }
+      ]
+    },
+    {
+      "title": "🆕 近期新晋项目（14天内）",
+      "repos": [
+        {
+          "name": "DietrichGebert/ponytail",
+          "url": "https://github.com/DietrichGebert/ponytail",
+          "stars": 37650,
+          "lang": "JavaScript"
+        },
+        {
+          "name": "XiaomiMiMo/MiMo-Code",
+          "url": "https://github.com/XiaomiMiMo/MiMo-Code",
+          "stars": 9833,
+          "lang": "TypeScript"
+        },
+        {
+          "name": "shadcn/improve",
+          "url": "https://github.com/shadcn/improve",
+          "stars": 5507,
+          "lang": null
+        },
+        {
+          "name": "omnigent-ai/omnigent",
+          "url": "https://github.com/omnigent-ai/omnigent",
+          "stars": 3849,
+          "lang": "Python"
+        },
+        {
+          "name": "tamnd/kage",
+          "url": "https://github.com/tamnd/kage",
+          "stars": 2022,
+          "lang": "Go"
+        },
+        {
+          "name": "JimLiu/baoyu-design",
+          "url": "https://github.com/JimLiu/baoyu-design",
+          "stars": 1570,
+          "lang": "JavaScript"
+        },
+        {
+          "name": "lenucksi/aur-malware-check",
+          "url": "https://github.com/lenucksi/aur-malware-check",
+          "stars": 1549,
+          "lang": "Shell"
+        },
+        {
+          "name": "vercel/eve",
+          "url": "https://github.com/vercel/eve",
+          "stars": 1442,
+          "lang": "TypeScript"
+        }
+      ]
+    }
+  ]
+}

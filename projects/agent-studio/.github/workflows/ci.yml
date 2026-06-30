@@ -1,0 +1,90 @@
+# GitHub Actions CI/CD Workflow for Agent Studio
+
+name: Agent Studio CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pytest pytest-asyncio black ruff
+
+      - name: Run linting (black + ruff)
+        run: |
+          black --check scripts/ || true
+          ruff check scripts/ || true
+
+      - name: Check workflow JSON syntax
+        run: |
+          python3 -c "
+          import json, glob
+          for f in glob.glob('**/*.json'):
+              try:
+                  with open(f) as fp: json.load(fp)
+                  print(f'✅ {f}')
+              except Exception as e:
+                  print(f'❌ {f}: {e}')
+                  exit(1)
+          "
+
+  test-scripts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Test github_trending.py (dry run)
+        run: |
+          pip install requests beautifulsoup4
+          python3 scripts/github_trending.py --dry-run 2>&1 | head -20 || true
+
+  deploy-pages:
+    needs: [quality, test-scripts]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'docs/'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Verify deployment
+        run: |
+          sleep 5
+          curl -s -o /dev/null -w "%{http_code}" ${{ steps.deployment.outputs.page_url }}

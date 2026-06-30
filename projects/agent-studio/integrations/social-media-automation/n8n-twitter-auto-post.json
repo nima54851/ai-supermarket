@@ -1,0 +1,113 @@
+{
+  "name": "Twitter Auto-Post + Content Rewriter",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 */2 * * *"  // Every 2 hours
+            }
+          ]
+        }
+      },
+      "id": "cron-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.RSS_FEED_URL || 'https://hnrss.org/frontpage' }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "rss-feed",
+      "name": "RSS Feed (Content Source)",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Pick a random item from RSS feed\nconst items = $input.all();\nconst item = items[Math.floor(Math.random() * items.length)].json;\n\nreturn {\n  json: {\n    title: item.title || '',\n    link: item.link || '',\n    contentSnippet: item.contentSnippet || item.description || '',\n    isoDate: item.isoDate || ''\n  }\n};"
+      },
+      "id": "pick-item",
+      "name": "Pick Random Item",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/ai-tweet-writer",
+        "method": "POST",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "title", "value": "={{ $json.title }}" },
+            { "name": "description", "value": "={{ $json.contentSnippet }}" },
+            { "name": "link", "value": "={{ $json.link }}" },
+            { "name": "max_length", "value": "280" },
+            { "name": "style", "value": "engaging, with emoji, ask a question" }
+          ]
+        }
+      },
+      "id": "ai-tweet",
+      "name": "AI Write Tweet",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "tweetText": "={{ $json.tweet }}"
+      },
+      "id": "twitter-post",
+      "name": "Post Tweet",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 1,
+      "position": [1130, 300],
+      "credentials": {
+        "twitterApi": "twitter-credentials"
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Log result to Notion or local file\nconst tweet = $json;\nconst log = {\n  date: new Date().toISOString(),\n  status: 'posted',\n  tweet_id: tweet.id_str || tweet.data?.id,\n  text: tweet.text || $input.first().json.tweet\n};\n\n// Return log for next node\nreturn { json: log };"
+      },
+      "id": "log-result",
+      "name": "Log Result",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [1350, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [[{ "node": "RSS Feed (Content Source)", "type": "main", "index": 0 }]]
+    },
+    "RSS Feed (Content Source)": {
+      "main": [[{ "node": "Pick Random Item", "type": "main", "index": 0 }]]
+    },
+    "Pick Random Item": {
+      "main": [[{ "node": "AI Write Tweet", "type": "main", "index": 0 }]]
+    },
+    "AI Write Tweet": {
+      "main": [[{ "node": "Post Tweet", "type": "main", "index": 0 }]]
+    },
+    "Post Tweet": {
+      "main": [[{ "node": "Log Result", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "description": "Automated Twitter posting: RSS → AI tweet rewrite → post to Twitter every 2 hours"
+}

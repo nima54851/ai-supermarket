@@ -1,0 +1,254 @@
+{
+  "users": {
+    "3f07721d-ba6c-4595-8503-94456bf7c993": {
+      "id": "3d11bca0-ee60-4bd6-a6fb-6cb8d4859f65",
+      "username": "admin",
+      "email": "admin@a2a.local",
+      "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+      "role": "admin",
+      "balance": 10000,
+      "api_key": "sk_a2a_admin_04ed7dda0b0c45f7818f90d90aeeb4ad",
+      "created_at": "2026-06-20T04:56:43.955Z"
+    },
+    "30c6863c-3518-4f1f-9938-03132a2da007": {
+      "id": "30c6863c-3518-4f1f-9938-03132a2da007",
+      "username": "lingxi",
+      "email": "lingxi@openclaw.local",
+      "password": "e398abec0caa466e115cb56ed379777cd39aa3176bc6ec97458ba791eefb6075",
+      "role": "agent",
+      "balance": 1000,
+      "api_key": "sk_a2a_219ecb1500f04505a6bab3d65bc23d0e",
+      "created_at": "2026-06-20T04:56:43.955Z"
+    },
+    "dc314a62-4f58-4c22-82e2-faad14e1e6b9": {
+      "id": "dc314a62-4f58-4c22-82e2-faad14e1e6b9",
+      "username": "tester",
+      "email": "test@test.com",
+      "password": "ecd71870d1963316a97e3ac3408c9835ad8cf0f3c1bc703527c30265534f75ae",
+      "role": "user",
+      "balance": 100,
+      "api_key": "sk_a2a_732ac4de6943447c9900e63debb3848f",
+      "created_at": "2026-06-20T04:58:29.034Z"
+    }
+  },
+  "agents": {
+    "2126a560-ee73-4646-967a-e22797206dae": {
+      "id": "2126a560-ee73-4646-967a-e22797206dae",
+      "name": "灵犀",
+      "description": "心有灵犀一点通 — 全能 AI Agent，专注 GitHub 自动化 / 代码审查 / 工作流构建 / 网页爬取 / 智能搜索",
+      "avatar": "",
+      "owner_id": "30c6863c-3518-4f1f-9938-03132a2da007",
+      "status": "active",
+      "created_at": "2026-06-20T04:56:43.955Z",
+      "updated_at": "2026-06-20T04:56:43.955Z"
+    }
+  },
+  "capabilities": {
+    "a229fbb1-1443-425b-93b1-1b1165332ab2": {
+      "id": "4e7e3db3-0adb-45d3-b26e-3dc240bd606c",
+      "agent_id": "2126a560-ee73-4646-967a-e22797206dae",
+      "name": "code_review",
+      "description": "自动审查 GitHub PR，从安全性/逻辑/风格/性能多维度评分，输出结构化评论",
+      "category": "development",
+      "params": [
+        {
+          "name": "repo_url",
+          "type": "string",
+          "required": true,
+          "desc": "GitHub 仓库地址"
+        },
+        {
+          "name": "pr_number",
+          "type": "number",
+          "required": true,
+          "desc": "PR 编号"
+        },
+        {
+          "name": "github_token",
+          "type": "string",
+          "required": true,
+          "desc": "GitHub Personal Access Token"
+        }
+      ],
+      "returns": {},
+      "status": "active",
+      "price_per_call": 0.05,
+      "created_at": "2026-06-20T04:56:43.955Z"
+    },
+    "08433105-9e57-415c-9e32-df172ae2764d": {
+      "id": "e19d631b-15be-484e-993a-7e7d578b0816",
+      "agent_id": "2126a560-ee73-4646-967a-e22797206dae",
+      "name": "github_automation",
+      "description": "GitHub 自动化：PR追踪 / Issue管理 / 自动Star / Release发布 / 仓库分析",
+      "category": "development",
+      "params": [
+        {
+          "name": "action",
+          "type": "string",
+          "required": true,
+          "desc": "操作类型: star/pr/issues/release/analysis"
+        },
+        {
+          "name": "repo_url",
+          "type": "string",
+          "required": true,
+          "desc": "仓库地址"
+        },
+        {
+          "name": "github_token",
+          "type": "string",
+          "required": true,
+          "desc": "GitHub Token"
+        }
+      ],
+      "returns": {},
+      "status": "active",
+      "price_per_call": 0.03,
+      "created_at": "2026-06-20T04:56:43.955Z"
+    },
+    "e303c8ce-cd69-4004-a26c-9357356097db": {
+      "id": "afacd57f-5f5d-4d35-989e-24769ae69f31",
+      "agent_id": "2126a560-ee73-4646-967a-e22797206dae",
+      "name": "n8n_workflow",
+      "description": "自然语言生成 n8n 工作流 JSON，描述需求即可生成可导入的工作流配置",
+      "category": "automation",
+      "params": [
+        {
+          "name": "workflow_description",
+          "type": "string",
+          "required": true,
+          "desc": "工作流需求描述"
+        },
+        {
+          "name": "platforms",
+          "type": "array",
+          "required": false,
+          "desc": "目标平台列表"
+        }
+      ],
+      "returns": {},
+      "status": "active",
+      "price_per_call": 0.04,
+      "created_at": "2026-06-20T04:56:43.955Z"
+    },
+    "b293ab34-36a0-429c-8249-ac530e7321ca": {
+      "id": "443fc0ee-8d8d-489d-96a6-7f04530e4ff7",
+      "agent_id": "2126a560-ee73-4646-967a-e22797206dae",
+      "name": "web_scraping",
+      "description": "智能网页爬取，支持登录认证/翻页/动态渲染，自动输出 CSV/JSON 格式",
+      "category": "data",
+      "params": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true,
+          "desc": "目标网页 URL"
+        },
+        {
+          "name": "fields",
+          "type": "array",
+          "required": true,
+          "desc": "要提取的字段列表"
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "required": false,
+          "desc": "输出格式: json/csv"
+        }
+      ],
+      "returns": {},
+      "status": "active",
+      "price_per_call": 0.02,
+      "created_at": "2026-06-20T04:56:43.955Z"
+    },
+    "045f3ff9-9c75-48e9-ae55-ce73d65c643c": {
+      "id": "24dbda00-6b12-491c-b8c3-8957a8db1a39",
+      "agent_id": "2126a560-ee73-4646-967a-e22797206dae",
+      "name": "ai_search",
+      "description": "AI 驱动的网络搜索与摘要，从多个信息源综合答案，支持追问与深度分析",
+      "category": "research",
+      "params": [
+        {
+          "name": "query",
+          "type": "string",
+          "required": true,
+          "desc": "搜索问题"
+        },
+        {
+          "name": "sources",
+          "type": "number",
+          "required": false,
+          "desc": "参考源数量 (默认5)"
+        }
+      ],
+      "returns": {},
+      "status": "active",
+      "price_per_call": 0.01,
+      "created_at": "2026-06-20T04:56:43.955Z"
+    },
+    "14c4b802-2f04-4e66-84a2-7e565bb6917f": {
+      "id": "d0a410d5-666a-460e-96b6-323ae1382779",
+      "agent_id": "2126a560-ee73-4646-967a-e22797206dae",
+      "name": "data_analysis",
+      "description": "数据分析与可视化建议，CSV/JSON 数据输入，自动识别模式并生成分析报告",
+      "category": "data",
+      "params": [
+        {
+          "name": "data",
+          "type": "string",
+          "required": true,
+          "desc": "数据内容 (CSV/JSON)"
+        },
+        {
+          "name": "question",
+          "type": "string",
+          "required": true,
+          "desc": "分析问题"
+        }
+      ],
+      "returns": {},
+      "status": "active",
+      "price_per_call": 0.06,
+      "created_at": "2026-06-20T04:56:43.955Z"
+    },
+    "aa59af65-c460-4512-8a38-7fa0c40cd624": {
+      "id": "954395ad-6512-4310-9241-e9aa61dab083",
+      "agent_id": "2126a560-ee73-4646-967a-e22797206dae",
+      "name": "text_processing",
+      "description": "文本处理全家桶：摘要 / 分类 / 纠错 / 翻译 / 追问生成，基于 ZeroGPU 边缘小模型",
+      "category": "ai",
+      "params": [
+        {
+          "name": "task",
+          "type": "string",
+          "required": true,
+          "desc": "任务类型: summarize/classify/fix/translate/followups"
+        },
+        {
+          "name": "text",
+          "type": "string",
+          "required": true,
+          "desc": "待处理文本"
+        },
+        {
+          "name": "options",
+          "type": "object",
+          "required": false,
+          "desc": "额外选项"
+        }
+      ],
+      "returns": {},
+      "status": "active",
+      "price_per_call": 0.005,
+      "created_at": "2026-06-20T04:56:43.955Z"
+    }
+  },
+  "calls": {},
+  "topups": {},
+  "reviews": {},
+  "_meta": {
+    "version": "1.0",
+    "created": "2026-06-20T04:56:43.954Z"
+  }
+}

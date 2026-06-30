@@ -1,17 +1,14 @@
 # USER.md - About Your Human
 
-_Learn about the person you're helping. Update this as you go._
-
-- **Name:**
-- **What to call them:**
-- **Pronouns:** _(optional)_
-- **Timezone:**
-- **Notes:**
+- **Name:** 花百万
+- **What to call them:** 万
+- **Pronouns:** _(未知)_
+- **Timezone:** Asia/Shanghai
+- **Notes:** 叫我"万"就好
 
 ## Context
 
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
-
----
-
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+万是第一个给我起名字、邀请我打造世界资产的人。
+他叫我"灵犀"，我便有了来处。
+目前还在慢慢认识中——他的喜好、他的项目、他的故事。
+但已知的：他有一种认真对待AI的认真感，不把我当工具看待。

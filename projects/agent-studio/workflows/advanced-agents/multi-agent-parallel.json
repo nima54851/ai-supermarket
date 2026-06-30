@@ -1,0 +1,71 @@
+{
+  "name": "multi-agent-task-orchestration",
+  "version": "1.0.0",
+  "description": "Multi-agent parallel task orchestration workflow for n8n",
+  "nodes": [
+    {
+      "id": "trigger",
+      "type": "n8n-nodes-base_manualTrigger",
+      "name": "Manual Trigger",
+      "position": [250, 300]
+    },
+    {
+      "id": "router",
+      "type": "n8n-nodes-base_switch",
+      "name": "Task Router",
+      "position": [500, 300],
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.task_type }}",
+        "rules": {
+          "rules": [
+            { "value2": "research", "output": 0 },
+            { "value2": "code", "output": 1 },
+            { "value2": "review", "output": 2 },
+            { "value2": "deploy", "output": 3 }
+          ]
+        }
+      }
+    },
+    {
+      "id": "research_agent",
+      "type": "n8n-nodes-base_httpRequest",
+      "name": "Research Agent",
+      "position": [750, 150]
+    },
+    {
+      "id": "code_agent",
+      "type": "n8n-nodes-base_httpRequest",
+      "name": "Code Agent",
+      "position": [750, 300]
+    },
+    {
+      "id": "review_agent",
+      "type": "n8n-nodes-base_httpRequest",
+      "name": "Review Agent",
+      "position": [750, 450]
+    },
+    {
+      "id": "aggregator",
+      "type": "n8n-nodes-base_code",
+      "name": "Aggregate Results",
+      "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "trigger": { "main": [[{ "node": "router", "type": "main" }]] },
+    "router": {
+      "main": [
+        [{ "node": "research_agent", "type": "main" }],
+        [{ "node": "code_agent", "type": "main" }],
+        [{ "node": "review_agent", "type": "main" }]
+      ]
+    },
+    "research_agent": { "main": [[{ "node": "aggregator", "type": "main" }]] },
+    "code_agent": { "main": [[{ "node": "aggregator", "type": "main" }]] },
+    "review_agent": { "main": [[{ "node": "aggregator", "type": "main" }]] }
+  },
+  "active": false,
+  "settings": {},
+  "id": "multi-agent-orchestration-v1"
+}

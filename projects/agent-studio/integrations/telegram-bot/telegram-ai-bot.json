@@ -1,0 +1,96 @@
+{
+  "name": "Telegram AI Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "telegram-webhook",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300],
+      "webhookId": "telegram-ai-bot"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "cron", "expression": ["0", "9", "*", "*", "*"] }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Telegram message handler\nconst msg = $input.item.json;\n\nconst chatId = msg.message?.chat?.id;\nconst text = msg.message?.text || '';\nconst username = msg.message?.chat?.username || 'anonymous';\nconst firstName = msg.message?.chat?.first_name || 'Friend';\n\n// Route commands\nlet reply = '';\nif (text.startsWith('/start')) {\n  reply = `👋 Hey ${firstName}! I'm your AI assistant.\\n\\nTry asking me anything, or use:\\n/start - see this message\\n/help - get help\\n/status - your session info`;\n} else if (text.startsWith('/help')) {\n  reply = '📖 Just send me any question or task.\\n\\nCommands:\\n/start - Restart\\n/help - This guide\\n/status - Session info\\n/reset - Clear history';\n} else if (text.startsWith('/status')) {\n  reply = `📊 Status OK!\\nUser: @${username}\\nChat ID: ${chatId}\\nMode: AI-powered\\nContext: Active`;\n} else if (text.startsWith('/reset')) {\n  reply = '🧹 Memory cleared! Starting fresh. Hi there!';\n} else {\n  // AI response path (set AI node after this)\n  reply = `[AI_RESPONSE_PLACEHOLDER] ${text}`;\n}\n\nreturn [{ json: { chatId, reply, username, firstName } }];"
+      },
+      "id": "message-handler",
+      "name": "Message Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "chatId": "={{ $json.chatId }}",
+        "text": "={{ $json.reply }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "telegram-send",
+      "name": "Send Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [750, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-creds",
+          "name": "Telegram Bot API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "table": "telegram_messages",
+        "columns": "chat_id, username, message_text, direction, created_at",
+        "values": "={{ $json.chatId }}|={{ $json.username }}|={{ $('Message Handler').item.json.reply || $input.item.json.message?.text }}|out|{{ $now.toISO() }}"
+      },
+      "id": "log-to-db",
+      "name": "Log to PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "position": [750, 500],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-creds",
+          "name": "PostgreSQL"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [{ "node": "Message Handler", "type": "main", "index": 0 }]
+      ]
+    },
+    "Message Handler": {
+      "main": [
+        [{ "node": "Send Reply", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "telegram-ai-bot"
+}

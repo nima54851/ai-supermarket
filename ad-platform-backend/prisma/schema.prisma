@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String        @id @default(uuid())
+  email             String        @unique
+  username          String?       @unique
+  password_hash     String
+  full_name         String?
+  avatar_url        String?
+  role              String        @default("user")
+  telegram_id       String?       @unique
+  email_verified    Boolean       @default(false)
+  is_active         Boolean       @default(true)
+  
+  // 会员相关
+  membership_type   String        @default("free")
+  membership_start  DateTime?
+  membership_end    DateTime?
+  
+  // 关联
+  ads               Ad[]
+  orders            Order[]
+  sessions          Session[]
+  notifications     Notification[]
+  
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+  
+  @@index([email])
+  @@index([telegram_id])
+  @@index([role])
+  @@index([membership_type])
+}
+
+model Session {
+  id           String    @id @default(uuid())
+  user_id      String
+  token        String    @unique
+  user_agent   String?
+  ip_address   String?
+  expires_at   DateTime
+  created_at   DateTime  @default(now())
+  
+  user         User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  
+  @@index([user_id])
+  @@index([token])
+}
+
+model MembershipPlan {
+  id             String    @id @default(uuid())
+  name           String
+  description    String?
+  price          Float
+  currency       String    @default("USD")
+  duration_days  Int
+  features       Json      @default("[]")
+  is_active      Boolean   @default(true)
+  sort_order     Int       @default(0)
+  max_ads        Int       @default(5)
+  max_budget     Float     @default(1000.00)
+  
+  orders         Order[]
+  created_at     DateTime  @default(now())
+  
+  @@index([is_active])
+  @@index([sort_order])
+}
+
+model Order {
+  id              String    @id @default(uuid())
+  user_id         String
+  plan_id         String
+  amount          Float
+  currency        String    @default("USD")
+  status          String    @default("pending") // pending, paid, cancelled, failed
+  payment_method  String?   // stripe, paypal, crypto
+  payment_id      String?   // payment gateway id
+  invoice_url     String?
+  paid_at         DateTime?
+  
+  // 关联
+  user            User          @relation(fields: [user_id], references: [id])
+  plan            MembershipPlan @relation(fields: [plan_id], references: [id])
+  
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  
+  @@index([user_id])
+  @@index([status])
+  @@index([payment_id])
+}
+
+model Ad {
+  id              String    @id @default(uuid())
+  user_id         String
+  title           String
+  description     String?
+  content         String
+  media_urls      Json      @default("[]") // JSON array of media URLs
+  category        String?
+  target_url      String?
+  budget          Float
+  spent           Float     @default(0)
+  status          String    @default("draft") // draft, pending_review, active, paused, rejected, completed
+  start_date      DateTime?
+  end_date        DateTime?
+  targeting       Json      @default("{}") // JSON object for targeting options
+  
+  // 统计数据
+  impressions     Int       @default(0)
+  clicks          Int       @default(0)
+  ctr             Float     @default(0)
+  
+  // 审核信息
+  reviewed_by     String?
+  reviewed_at     DateTime?
+  rejection_reason String?
+  
+  // 关联
+  user            User      @relation(fields: [user_id], references: [id])
+  stats           AdStat[]
+  
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  
+  @@index([user_id])
+  @@index([status])
+  @@index([category])
+  @@index([created_at])
+}
+
+model AdStat {
+  id           String    @id @default(uuid())
+  ad_id        String
+  date         DateTime
+  impressions  Int       @default(0)
+  clicks       Int       @default(0)
+  spend        Float     @default(0)
+  
+  ad           Ad        @relation(fields: [ad_id], references: [id], onDelete: Cascade)
+  
+  @@unique([ad_id, date])
+  @@index([ad_id])
+  @@index([date])
+}
+
+model DailyStatistic {
+  id              String    @id @default(uuid())
+  date            DateTime  @unique
+  user_count      Int       @default(0)
+  active_users    Int       @default(0)
+  premium_users   Int       @default(0)
+  order_count     Int       @default(0)
+  revenue         Float     @default(0)
+  ad_impressions  Int       @default(0)
+  ad_clicks       Int       @default(0)
+  total_spend     Float     @default(0)
+  ctr             Float     @default(0)
+  
+  created_at      DateTime  @default(now())
+  
+  @@index([date])
+}
+
+model Notification {
+  id          String    @id @default(uuid())
+  user_id     String
+  type        String    // info, success, warning, error, payment, ad_review
+  title       String
+  message     String
+  data        Json?     @default("{}")
+  is_read     Boolean   @default(false)
+  
+  user        User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  
+  created_at  DateTime  @default(now())
+  
+  @@index([user_id])
+  @@index([is_read])
+  @@index([type])
+}
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  user_id     String?
+  action      String
+  entity      String
+  entity_id   String?
+  old_data    Json?
+  new_data    Json?
+  ip_address  String?
+  user_agent  String?
+  
+  user        User?     @relation(fields: [user_id], references: [id], onDelete: SetNull)
+  
+  created_at  DateTime  @default(now())
+  
+  @@index([user_id])
+  @@index([action])
+  @@index([entity])
+  @@index([created_at])
+}
+
+model SystemConfig {
+  id          String    @id @default(uuid())
+  key         String    @unique
+  value       String
+  description String?
+  is_public   Boolean   @default(false)
+  
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  
+  @@index([key])
+}

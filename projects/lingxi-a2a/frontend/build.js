@@ -1,0 +1,1101 @@
+/**
+ * A2A 平台 — 静态前端
+ * 包含：能力市场 + 用户控制台 + 后台管理
+ */
+const html = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>灵犀 A2A 能力市场</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2322d3ee' opacity='.15'/><circle cx='16' cy='16' r='5' fill='%2322d3ee'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04040a;--surface:#0b0b14;--surface2:#111120;--surface3:#181828;
+  --border:rgba(255,255,255,.06);--border-hi:rgba(34,211,238,.3);
+  --t1:#f0f4f8;--t2:#8b9ab0;--t3:#4a5568;
+  --cyan:#22d3ee;--cyan-d:rgba(34,211,238,.1);--cyan-g:rgba(34,211,238,.35);
+  --violet:#a78bfa;--violet-d:rgba(167,139,250,.1);
+  --green:#4ade80;--red:#f87171;--orange:#fb923c;
+  --sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:8px;--r-lg:14px;--ease:150ms cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--cyan);text-decoration:none;transition:color var(--ease)}
+input,textarea,select{font-family:var(--sans);font-size:14px;color:var(--t1);background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;width:100%;outline:none;transition:border-color var(--ease)}
+input:focus,textarea:focus,select:focus{border-color:var(--border-hi)}
+select option{background:var(--surface2)}
+button{font-family:var(--sans);cursor:pointer;border:none;border-radius:var(--r);transition:all var(--ease);font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all var(--ease);line-height:1}
+.btn-pri{background:var(--cyan);color:#04040a}
+.btn-pri:hover{background:#38e5f7;transform:translateY(-1px);box-shadow:0 6px 24px rgba(34,211,238,.4)}
+.btn-out{background:transparent;border:1px solid var(--border);color:var(--t2)}
+.btn-out:hover{border-color:var(--border-hi);color:var(--cyan);background:var(--cyan-d)}
+.btn-red{background:rgba(248,113,113,.15);color:var(--red);border:1px solid rgba(248,113,113,.3)}
+.btn-red:hover{background:rgba(248,113,113,.25)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.btn-xs{padding:5px 10px;font-size:12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;transition:border-color var(--ease)}
+.card:hover{border-color:var(--border-hi)}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-family:var(--mono);font-size:11px;font-weight:500}
+.tag-c{background:var(--cyan-d);color:var(--cyan);border:1px solid rgba(34,211,238,.2)}
+.tag-o{background:rgba(251,146,60,.1);color:var(--orange);border:1px solid rgba(251,146,60,.2)}
+.tag-g{background:rgba(74,222,128,.1);color:var(--green);border:1px solid rgba(74,222,128,.2)}
+.tag-v{background:var(--violet-d);color:var(--violet);border:1px solid rgba(167,139,250,.2)}
+.tag-red{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2)}
+::-selection{background:var(--cyan);color:#04040a}
+::placeholder{color:var(--t3)}
+
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 100% 60% at 50% -20%,rgba(34,211,238,.07) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 15% 85%,rgba(167,139,250,.05) 0%,transparent 55%);}
+.bg::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(34,211,238,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.03) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 90% 80% at 50% 0%,black 0%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 0%,black 0%,transparent 70%);}
+*{position:relative;z-index:1}
+
+.container{width:100%;max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(4,4,10,.85);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:58px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:700;font-size:14px;color:var(--t1)}
+.nav-logo svg{width:28px;height:28px}
+.nav-links{display:flex;align-items:center;gap:24px;list-style:none}
+.nav-links a{font-size:13px;font-weight:500;color:var(--t3);transition:color var(--ease)}
+.nav-links a:hover,.nav-links a.active{color:var(--t1)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-balance{font-family:var(--mono);font-size:12px;color:var(--cyan);background:var(--cyan-d);border:1px solid rgba(34,211,238,.2);padding:4px 12px;border-radius:20px}
+@media(max-width:640px){.nav-links{display:none}}
+
+/* Page */
+.page{padding-top:80px;min-height:100vh}
+.page-hero{padding:60px 0 40px;text-align:center}
+.page-hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.04em;margin-bottom:10px}
+.page-hero p{font-size:15px;color:var(--t2);max-width:500px;margin:0 auto}
+.section{padding:40px 0}
+.s-title{font-size:1.5rem;font-weight:700;letter-spacing:-.03em;margin-bottom:16px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.eyebrow::before{content:'';display:block;width:18px;height:1px;background:var(--cyan)}
+
+/* Stats bar */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center}
+.stat-num{font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--cyan);margin-bottom:4px}
+.stat-label{font-size:12px;color:var(--t3)}
+@media(max-width:600px){.stats-bar{grid-template-columns:repeat(2,1fr)}}
+
+/* Category tabs */
+.cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.cat-tab{padding:7px 16px;border-radius:20px;font-size:13px;font-weight:500;background:var(--surface);border:1px solid var(--border);color:var(--t3);cursor:pointer;transition:all var(--ease)}
+.cat-tab:hover{color:var(--t1);border-color:var(--border-hi)}
+.cat-tab.active{background:var(--cyan-d);border-color:var(--border-hi);color:var(--cyan)}
+
+/* Capability grid */
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.cap-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;display:flex;flex-direction:column;gap:14px;transition:all var(--ease);cursor:pointer}
+.cap-card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.cap-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.cap-name{font-size:15px;font-weight:600;font-family:var(--mono)}
+.cap-price{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--green);white-space:nowrap}
+.cap-desc{font-size:13px;color:var(--t2);line-height:1.6;flex:1}
+.cap-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cap-agent{font-size:12px;color:var(--t3);display:flex;align-items:center;gap:5px}
+.cap-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--t3);font-family:var(--mono)}
+
+/* Capability detail modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
+.modal-close{position:absolute;right:20px;top:20px;background:var(--surface);border:1px solid var(--border);color:var(--t2);padding:6px 10px;border-radius:6px;font-size:13px;cursor:pointer}
+.modal h2{font-size:1.3rem;font-weight:700;margin-bottom:6px}
+.modal-price{font-family:var(--mono);font-size:1.5rem;font-weight:700;color:var(--green);margin:12px 0}
+.modal-p{font-size:14px;color:var(--t2);margin-bottom:20px;line-height:1.7}
+.modal-section{margin-bottom:20px}
+.modal-section h4{font-size:13px;font-weight:600;color:var(--t2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)}
+.param-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.param-row label{font-size:13px;font-weight:500;min-width:120px;color:var(--t2)}
+.param-row .req{color:var(--red);margin-left:2px}
+.param-row small{display:block;font-size:11px;color:var(--t3);width:100%}
+.modal-actions{display:flex;gap:10px;margin-top:24px}
+
+/* Auth forms */
+.auth-page{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 80px)}
+.auth-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:40px;width:100%;max-width:420px}
+.auth-box h2{font-size:1.4rem;font-weight:700;margin-bottom:6px}
+.auth-box p{font-size:14px;color:var(--t2);margin-bottom:28px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:500;color:var(--t2);margin-bottom:6px}
+.form-group small{font-size:12px;color:var(--t3);margin-top:4px;display:block}
+.form-error{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:var(--red);padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:16px}
+.form-links{display:flex;justify-content:space-between;margin-top:16px;font-size:13px;color:var(--t3)}
+.form-links a{color:var(--cyan)}
+
+/* Dashboard */
+.dashboard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:32px}
+.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px}
+.dash-card .label{font-size:12px;color:var(--t3);margin-bottom:8px;font-family:var(--mono)}
+.dash-card .value{font-family:var(--mono);font-size:1.6rem;font-weight:700}
+.dash-card.green .value{color:var(--green)}
+.dash-card.cyan .value{color:var(--cyan)}
+.dash-card.orange .value{color:var(--orange)}
+.dash-card.red .value{color:var(--red)}
+
+/* Table */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--surface2);padding:12px 16px;text-align:left;font-weight:600;color:var(--t2);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--border)}
+td{padding:12px 16px;color:var(--t1);border-bottom:1px solid rgba(255,255,255,.03)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(34,211,238,.02)}
+.status{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.status-success{background:rgba(74,222,128,.1);color:var(--green)}
+.status-pending{background:rgba(251,146,60,.1);color:var(--orange)}
+.status-failed{background:rgba(248,113,113,.1);color:var(--red)}
+
+/* API Console */
+.console-box{background:#020208;border:1px solid var(--border);border-radius:var(--r);padding:16px;font-family:var(--mono);font-size:13px;white-space:pre-wrap;word-break:break-all;color:var(--t2);max-height:400px;overflow-y:auto;margin-top:16px}
+.console-req{color:var(--cyan)}
+.console-res{color:var(--green)}
+.console-err{color:var(--red)}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:28px;gap:4px}
+.tab{padding:10px 20px;font-size:14px;font-weight:500;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:all var(--ease)}
+.tab:hover{color:var(--t1)}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+
+/* Admin */
+.admin-section{margin-bottom:40px}
+.admin-section h3{font-size:1rem;font-weight:700;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.price-row{display:grid;grid-template-columns:1fr 120px 100px 120px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:13px}
+.price-row.header{font-family:var(--mono);font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.price-edit{display:flex;gap:6px}
+.price-input{width:80px;padding:5px 8px;font-family:var(--mono);font-size:13px;text-align:right}
+
+/* Call form */
+.call-form{display:grid;gap:14px}
+.call-result{background:#020208;border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-top:16px;font-family:var(--mono);font-size:13px;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;color:var(--t2)}
+.call-result.error{color:var(--red)}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:14px 20px;font-size:14px;z-index:300;display:none;animation:slideUp .3s ease}
+.toast.show{display:block}
+.toast.success{border-color:var(--green)}
+.toast.error{border-color:var(--red)}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:28px 0;margin-top:60px}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--t3);font-family:var(--mono)}
+
+/* Responsive */
+@media(max-width:640px){
+  .container{padding:0 16px}
+  .modal{padding:20px}
+  .auth-box{padding:24px}
+  .admin-section h3{font-size:14px}
+}
+
+/* Hidden pages */
+.page-section{display:none}
+.page-section.active{display:block}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="container nav-inner">
+    <div class="nav-logo">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="16,3 27,9.5 27,22.5 16,29 5,22.5 5,9.5" fill="none" stroke="#22d3ee" stroke-width="1.5" opacity="0.85"/>
+        <circle cx="16" cy="16" r="4" fill="#22d3ee"/>
+        <line x1="16" y1="9.5" x2="16" y2="6" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="16" y1="22.5" x2="16" y2="26" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="9.5" y1="16" x2="6" y2="16" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="22.5" y1="16" x2="26" y2="16" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      灵犀 A2A
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" onclick="showPage('market')">能力市场</a></li>
+      <li><a href="#" onclick="showPage('console')" id="navConsole" style="display:none">API 控制台</a></li>
+      <li><a href="#" onclick="showPage('dashboard')" id="navDash" style="display:none">我的控制台</a></li>
+      <li><a href="#" onclick="showPage('admin')" id="navAdmin" style="display:none">后台管理</a></li>
+    </ul>
+    <div class="nav-right">
+      <span id="navBalance" class="nav-balance" style="display:none">余额: 0</span>
+      <button id="btnLogin" class="btn btn-pri btn-sm" onclick="showPage('login')">登录</button>
+      <button id="btnRegister" class="btn btn-out btn-sm" onclick="showPage('register')">注册</button>
+      <button id="btnLogout" class="btn btn-out btn-sm" onclick="logout()" style="display:none">退出</button>
+    </div>
+  </div>
+</nav>
+
+<!-- MARKETPLACE PAGE -->
+<div id="page-market" class="page page-section">
+  <div class="page-hero container">
+    <div class="eyebrow">Agent-to-Agent Marketplace</div>
+    <h1>灵犀 A2A 能力市场</h1>
+    <p>调用 AI Agent 能力，按次计费 · 零月租 · 即用即付</p>
+  </div>
+  <div class="container">
+    <!-- Stats -->
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-card"><div class="stat-num" id="sAgents">-</div><div class="stat-label">在线 Agent</div></div>
+      <div class="stat-card"><div class="stat-num" id="sCaps">-</div><div class="stat-label">能力总数</div></div>
+      <div class="stat-card"><div class="stat-num" id="sCalls">-</div><div class="stat-label">累计调用</div></div>
+      <div class="stat-card"><div class="stat-num" id="sUsers">-</div><div class="stat-label">注册用户</div></div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+      <input id="searchInput" placeholder="搜索能力..." style="max-width:300px" oninput="loadMarket()">
+      <select id="sortSelect" style="max-width:160px" onchange="loadMarket()">
+        <option value="price_asc">价格 ↑</option>
+        <option value="price_desc">价格 ↓</option>
+        <option value="popular">最热门</option>
+        <option value="new">最新</option>
+      </select>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="cat-tabs" id="catTabs"></div>
+
+    <!-- Grid -->
+    <div class="cap-grid" id="capGrid"></div>
+    <div id="loadMore" style="text-align:center;margin-top:24px;display:none">
+      <button class="btn btn-out btn-sm" onclick="loadMore()">加载更多</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="page-login" class="page page-section">
+  <div class="auth-page">
+    <div class="auth-box">
+      <h2>登录账号</h2>
+      <p>访问灵犀 A2A 能力市场</p>
+      <div id="loginError" class="form-error" style="display:none"></div>
+      <div class="form-group">
+        <label>邮箱</label>
+        <input type="email" id="loginEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+        <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+      </div>
+      <button class="btn btn-pri" style="width:100%" onclick="login()">登录</button>
+      <div class="form-links">
+        <a href="#" onclick="showPage('register')">没有账号？去注册</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER PAGE -->
+<div id="page-register" class="page page-section">
+  <div class="auth-page">
+    <div class="auth-box">
+      <h2>注册账号</h2>
+      <p>立即开始 · 新用户赠送 100 Token</p>
+      <div id="regError" class="form-error" style="display:none"></div>
+      <div class="form-group">
+        <label>用户名</label>
+        <input type="text" id="regUser" placeholder="yourname">
+      </div>
+      <div class="form-group">
+        <label>邮箱</label>
+        <input type="email" id="regEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>密码 <small>至少6位</small></label>
+        <input type="password" id="regPass" placeholder="••••••••">
+      </div>
+      <button class="btn btn-pri" style="width:100%" onclick="register()">创建账号</button>
+      <div class="form-links">
+        <a href="#" onclick="showPage('login')">已有账号？去登录</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD PAGE -->
+<div id="page-dashboard" class="page page-section">
+  <div class="container" style="padding-top:80px">
+    <div class="page-hero" style="text-align:left;padding:40px 0 30px">
+      <h1>我的控制台</h1>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dash-card green"><div class="label">账户余额</div><div class="value" id="dashBalance">-</div></div>
+      <div class="dash-card cyan"><div class="label">总调用次数</div><div class="value" id="dashCalls">-</div></div>
+      <div class="dash-card orange"><div class="label">本月消费</div><div class="value" id="dashCost">-</div></div>
+      <div class="dash-card"><div class="label">注册时间</div><div class="value" id="dashJoined" style="font-size:1rem;color:var(--t2)">-</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" id="dashTabs">
+      <div class="tab active" onclick="switchDashTab('calls')">调用记录</div>
+      <div class="tab" onclick="switchDashTab('topup')">充值</div>
+      <div class="tab" onclick="switchDashTab('apikey')">API Key</div>
+    </div>
+
+    <!-- Calls tab -->
+    <div id="tabCalls">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 class="s-title">调用记录</h3>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>时间</th><th>能力</th><th>Agent</th><th>状态</th><th>费用</th><th>耗时</th></tr></thead>
+          <tbody id="callsBody"><tr><td colspan="6" style="text-align:center;color:var(--t3)">加载中...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Topup tab -->
+    <div id="tabTopup" style="display:none">
+      <div class="card" style="max-width:400px">
+        <h3 class="s-title">充值 Token</h3>
+        <p style="font-size:14px;color:var(--t2);margin-bottom:20px">1 元 = 100 Token，按实际能力定价扣费</p>
+        <div class="form-group">
+          <label>充值金额 (元)</label>
+          <input type="number" id="topupAmount" value="100" min="1" max="10000">
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+          <button class="btn btn-out btn-sm" onclick="document.getElementById('topupAmount').value=50">¥50</button>
+          <button class="btn btn-out btn-sm" onclick="document.getElementById('topupAmount').value=100">¥100</button>
+          <button class="btn btn-out btn-sm" onclick="document.getElementById('topupAmount').value=500">¥500</button>
+          <button class="btn btn-out btn-sm" onclick="document.getElementById('topupAmount').value=1000">¥1000</button>
+        </div>
+        <button class="btn btn-pri" style="width:100%" onclick="doTopup()">立即充值（演示模式）</button>
+        <p style="font-size:12px;color:var(--t3);margin-top:10px">* 演示模式：点击即到账，无需真实支付</p>
+      </div>
+    </div>
+
+    <!-- API Key tab -->
+    <div id="tabApikey" style="display:none">
+      <div class="card" style="max-width:600px">
+        <h3 class="s-title">API 调用凭证</h3>
+        <p style="font-size:14px;color:var(--t2);margin-bottom:16px">在代码中用此 Key 调用 A2A 能力，类似 UUMit / OpenAI 方式</p>
+        <div style="background:#020208;border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:16px">
+          <div style="font-family:var(--mono);font-size:13px;color:var(--cyan);word-break:break-all" id="showApiKey">加载中...</div>
+        </div>
+        <button class="btn btn-out btn-sm" onclick="copyApiKey()">📋 复制</button>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:24px 0">
+        <h4 style="font-size:14px;font-weight:600;margin-bottom:12px">调用示例</h4>
+        <div class="console-box">curl -X POST https://api.example.com/api/a2a/call \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer <b id="curlToken">YOUR_TOKEN</b>" \\
+  -d '{
+    "capability_id": "<b>能力ID</b>",
+    "params": { "repo_url": "https://github.com/owner/repo" }
+  }'</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONSOLE PAGE -->
+<div id="page-console" class="page page-section">
+  <div class="container" style="padding-top:80px">
+    <div class="page-hero" style="text-align:left;padding:40px 0 30px">
+      <div class="eyebrow">Developer Tools</div>
+      <h1>API 控制台</h1>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+      <!-- 左侧：能力列表 -->
+      <div>
+        <h3 class="s-title">可用能力</h3>
+        <div id="consoleCaps" style="display:flex;flex-direction:column;gap:10px"></div>
+      </div>
+      <!-- 右侧：调用表单 -->
+      <div>
+        <h3 class="s-title">发送请求</h3>
+        <div class="card">
+          <div class="form-group">
+            <label>选择能力</label>
+            <select id="consoleCapSelect" onchange="loadCapParams()">
+              <option value="">-- 选择能力 --</option>
+            </select>
+          </div>
+          <div id="consoleParams" class="call-form"></div>
+          <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:13px;color:var(--t3)">费用: <b style="color:var(--green)" id="consoleCost">-</b> Token/次</span>
+            <button class="btn btn-pri btn-sm" onclick="sendCall()">▶ 发送请求</button>
+          </div>
+          <div id="consoleResult" class="call-result" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="page-admin" class="page page-section">
+  <div class="container" style="padding-top:80px">
+    <div class="page-hero" style="text-align:left;padding:40px 0 30px">
+      <div class="eyebrow">Admin Panel</div>
+      <h1>后台管理</h1>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dash-card cyan"><div class="label">总用户数</div><div class="value" id="adminUsers">-</div></div>
+      <div class="dash-card green"><div class="label">总充值</div><div class="value" id="adminRevenue">-</div></div>
+      <div class="dash-card orange"><div class="label">总调用</div><div class="value" id="adminCalls">-</div></div>
+      <div class="dash-card"><div class="label">平台抽成</div><div class="value" id="adminPlatform">-</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchAdminTab('pricing')">定价管理</div>
+      <div class="tab" onclick="switchAdminTab('users')">用户管理</div>
+      <div class="tab" onclick="switchAdminTab('calls')">调用记录</div>
+      <div class="tab" onclick="switchAdminTab('agents')">Agent 管理</div>
+    </div>
+
+    <!-- Pricing -->
+    <div id="adminPricing">
+      <div class="card" style="margin-bottom:20px">
+        <h3 class="s-title">能力定价管理</h3>
+        <p style="font-size:14px;color:var(--t2);margin-bottom:20px">调整价格后实时生效，按次计费，单位：Token</p>
+        <div class="price-row header">
+          <span>能力名称</span><span>分类</span><span>当前价格</span><span>操作</span>
+        </div>
+        <div id="priceList"></div>
+      </div>
+    </div>
+
+    <!-- Users -->
+    <div id="adminUsers2" style="display:none">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>用户</th><th>邮箱</th><th>角色</th><th>余额</th><th>API Key</th><th>注册时间</th></tr></thead>
+          <tbody id="usersBody"><tr><td colspan="6" style="text-align:center;color:var(--t3)">加载中...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- All Calls -->
+    <div id="adminCalls2" style="display:none">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>用户</th><th>能力</th><th>状态</th><th>费用</th><th>耗时</th><th>时间</th></tr></thead>
+          <tbody id="adminCallsBody"><tr><td colspan="7" style="text-align:center;color:var(--t3)">加载中...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Agents -->
+    <div id="adminAgents" style="display:none">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Agent</th><th>所有者</th><th>能力数</th><th>状态</th><th>注册时间</th><th>操作</th></tr></thead>
+          <tbody id="agentsBody"><tr><td colspan="6" style="text-align:center;color:var(--t3)">加载中...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Capability Modal -->
+<div id="capModal" class="modal-overlay" style="display:none">
+  <div class="modal" style="position:relative">
+    <button onclick="closeModal()" style="position:absolute;right:16px;top:16px;background:var(--surface);border:1px solid var(--border);color:var(--t2);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:12px">✕</button>
+    <div class="eyebrow">A2A Capability</div>
+    <h2 id="mName">-</h2>
+    <div style="display:flex;gap:8px;margin:10px 0" id="mTags"></div>
+    <div class="modal-p" id="mDesc">-</div>
+    <div class="modal-price"><span id="mPrice">-</span> Token / 次</div>
+    <div class="modal-section">
+      <h4>参数说明</h4>
+      <div id="mParams"></div>
+    </div>
+    <div class="modal-section">
+      <h4>返回值</h4>
+      <div id="mReturns" style="font-family:var(--mono);font-size:12px;color:var(--t2)">-</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-pri" onclick="startCall()" id="mCallBtn">▶ 立即调用</button>
+      <button class="btn btn-out" onclick="copyCapId()">📋 复制 ID</button>
+    </div>
+    <div id="mResult" class="call-result" style="display:none;margin-top:16px"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-inner">
+    <span>灵犀 A2A · Agent-to-Agent Marketplace · 2026</span>
+    <span>Powered by OpenClaw + ZeroGPU</span>
+  </div>
+</footer>
+
+<script>
+// ── 全局状态 ───────────────────────────────────────
+const API = '/api';
+let state = {
+  token: localStorage.getItem('a2a_token') || null,
+  apiKey: localStorage.getItem('a2a_apikey') || null,
+  user: JSON.parse(localStorage.getItem('a2a_user') || 'null'),
+  caps: [],
+  page: 1,
+  totalPages: 1,
+  cat: 'all',
+  search: '',
+  sort: 'price_asc',
+  selectedCap: null,
+  adminData: {}
+};
+
+// ── 初始化 ─────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadStats();
+  loadMarket();
+  if (state.token) {
+    updateNav();
+    loadUserInfo();
+  }
+  document.getElementById('searchInput').value = state.search;
+});
+
+// ── 路由 ────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name)?.classList.add('active');
+  if (name === 'dashboard') loadDash();
+  if (name === 'console') loadConsole();
+  if (name === 'admin') loadAdmin();
+  window.scrollTo(0, 0);
+}
+
+// ── Toast ──────────────────────────────────────────
+function toast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Auth ───────────────────────────────────────────
+async function login() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  const res = await fetch(API + '/auth/login', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({email, password: pass})
+  });
+  const data = await res.json();
+  if (!res.ok) { err.textContent = data.error; err.style.display='block'; return; }
+  saveSession(data);
+  toast('登录成功');
+  updateNav();
+  showPage('market');
+}
+
+async function register() {
+  const username = document.getElementById('regUser').value;
+  const email = document.getElementById('regEmail').value;
+  const pass = document.getElementById('regPass').value;
+  const err = document.getElementById('regError');
+  err.style.display = 'none';
+  const res = await fetch(API + '/auth/register', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({username, email, password: pass})
+  });
+  const data = await res.json();
+  if (!res.ok) { err.textContent = data.error; err.style.display='block'; return; }
+  saveSession(data);
+  toast('注册成功，已赠送 100 Token！');
+  updateNav();
+  showPage('market');
+}
+
+function saveSession(data) {
+  state.token = data.token;
+  state.apiKey = data.api_key;
+  state.user = { ...data };
+  localStorage.setItem('a2a_token', data.token);
+  localStorage.setItem('a2a_apikey', data.api_key);
+  localStorage.setItem('a2a_user', JSON.stringify(data));
+}
+
+function logout() {
+  state.token = null;
+  state.apiKey = null;
+  state.user = null;
+  localStorage.removeItem('a2a_token');
+  localStorage.removeItem('a2a_apikey');
+  localStorage.removeItem('a2a_user');
+  document.getElementById('btnLogin').style.display = '';
+  document.getElementById('btnRegister').style.display = '';
+  document.getElementById('btnLogout').style.display = 'none';
+  document.getElementById('navBalance').style.display = 'none';
+  document.getElementById('navConsole').style.display = 'none';
+  document.getElementById('navDash').style.display = 'none';
+  document.getElementById('navAdmin').style.display = 'none';
+  showPage('market');
+  toast('已退出');
+}
+
+function updateNav() {
+  document.getElementById('btnLogin').style.display = 'none';
+  document.getElementById('btnRegister').style.display = 'none';
+  document.getElementById('btnLogout').style.display = '';
+  document.getElementById('navBalance').style.display = '';
+  document.getElementById('navBalance').textContent = '余额: ' + (state.user?.balance ?? '-');
+  document.getElementById('navConsole').style.display = '';
+  document.getElementById('navDash').style.display = '';
+  document.getElementById('navAdmin').style.display = '';
+  // admin only
+  if (state.user?.role !== 'admin') {
+    document.getElementById('navAdmin').style.display = 'none';
+  }
+}
+
+async function loadUserInfo() {
+  if (!state.token) return;
+  const res = await fetch(API + '/user/balance', { headers: authHeaders() });
+  if (res.ok) {
+    const data = await res.json();
+    if (state.user) state.user.balance = data.balance;
+    localStorage.setItem('a2a_user', JSON.stringify(state.user));
+    document.getElementById('navBalance').textContent = '余额: ' + data.balance;
+  }
+}
+
+// ── Stats ───────────────────────────────────────────
+async function loadStats() {
+  try {
+    const res = await fetch(API + '/stats');
+    const d = await res.json();
+    document.getElementById('sAgents').textContent = d.agents;
+    document.getElementById('sCaps').textContent = d.capabilities;
+    document.getElementById('sCalls').textContent = d.total_calls;
+    document.getElementById('sUsers').textContent = d.users;
+  } catch {}
+}
+
+// ── Marketplace ─────────────────────────────────────
+const CATEGORIES = [
+  {id:'all', name:'全部'},
+  {id:'development', name:'开发', color:'cyan'},
+  {id:'automation', name:'自动化', color:'violet'},
+  {id:'data', name:'数据', color:'green'},
+  {id:'ai', name:'AI处理', color:'orange'},
+  {id:'research', name:'研究', color:'blue'}
+];
+
+function renderCatTabs() {
+  const el = document.getElementById('catTabs');
+  el.innerHTML = CATEGORIES.map(c =>
+    \`<div class="cat-tab \${state.cat===c.id?'active':''}" onclick="setCat('\${c.id}')">\${c.name}</div>\`
+  ).join('');
+}
+
+function setCat(cat) {
+  state.cat = cat;
+  state.page = 1;
+  renderCatTabs();
+  loadMarket();
+}
+
+async function loadMarket(append=false) {
+  state.search = document.getElementById('searchInput')?.value || '';
+  state.sort = document.getElementById('sortSelect')?.value || 'price_asc';
+  if (!append) state.page = 1;
+  renderCatTabs();
+
+  const params = new URLSearchParams({
+    category: state.cat, search: state.search, sort: state.sort,
+    page: state.page, limit: 12
+  });
+
+  const res = await fetch(API + '/marketplace?' + params);
+  const data = await res.json();
+  state.caps = append ? [...state.caps, ...data.items] : data.items;
+  state.totalPages = data.pages;
+
+  const grid = document.getElementById('capGrid');
+  grid.innerHTML = state.caps.map(c => {
+    const catTag = CATEGORIES.find(x=>x.id===c.category) || {name:c.category, color:'cyan'};
+    const stars = '★'.repeat(Math.round(c.avg_rating || 0));
+    return \`<div class="cap-card" onclick="openCap('\${c.id}')">
+      <div class="cap-header">
+        <div>
+          <div class="cap-name">\${c.name}</div>
+          <div class="cap-agent">by \${c.agent_name}</div>
+        </div>
+        <div class="cap-price">\${c.price_per_call} 🎫</div>
+      </div>
+      <div class="cap-desc">\${c.description}</div>
+      <div class="cap-meta">
+        <span class="tag tag-\${catTag.color}">\${catTag.name}</span>
+        \${stars ? \`<span style="font-size:12px;color:var(--orange)">\${stars}</span>\` : ''}
+        <span style="font-size:12px;color:var(--t3)">\${c.call_count||0}次调用</span>
+      </div>
+    </div>\`;
+  }).join('');
+
+  document.getElementById('loadMore').style.display = state.page < state.totalPages ? '' : 'none';
+}
+
+function loadMore() {
+  state.page++;
+  loadMarket(true);
+}
+
+// ── Capability Modal ───────────────────────────────
+let allCaps = [];
+
+async function openCap(id) {
+  if (!allCaps.find(c=>c.id===id)) {
+    const res = await fetch(API + '/capabilities/' + id);
+    if (!res.ok) return;
+    const c = await res.json();
+    allCaps.push(c);
+  }
+  const c = allCaps.find(x=>x.id===id);
+  state.selectedCap = c;
+
+  document.getElementById('mName').textContent = c.name;
+  document.getElementById('mDesc').textContent = c.description;
+  document.getElementById('mPrice').textContent = c.price_per_call;
+
+  const catTag = CATEGORIES.find(x=>x.id===c.category) || {name:c.category, color:'cyan'};
+  document.getElementById('mTags').innerHTML = \`<span class="tag tag-\${catTag.color}">\${catTag.name}</span>\`;
+
+  try {
+    const params = JSON.parse(c.params || '[]');
+    document.getElementById('mParams').innerHTML = params.map(p =>
+      \`<div style="margin-bottom:8px;font-size:13px"><b>\${p.name}</b> <span style="color:var(--t3)">(\${p.type})</span> \${p.required?'<span style="color:var(--red)">*</span>':''}<br><span style="color:var(--t3);font-size:12px">\${p.desc}</span></div>\`
+    ).join('');
+  } catch {
+    document.getElementById('mParams').innerHTML = '<span style="color:var(--t3)">无参数说明</span>';
+  }
+
+  try {
+    document.getElementById('mReturns').textContent = JSON.stringify(JSON.parse(c.returns||'{}'), null, 2);
+  } catch {
+    document.getElementById('mReturns').textContent = c.returns || '-';
+  }
+
+  document.getElementById('mResult').style.display = 'none';
+  document.getElementById('capModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('capModal').style.display = 'none';
+}
+
+function copyCapId() {
+  navigator.clipboard.writeText(state.selectedCap?.id || '');
+  toast('能力 ID 已复制');
+}
+
+function startCall() {
+  if (!state.token) { toast('请先登录', 'error'); showPage('login'); return; }
+  showPage('console');
+  setTimeout(() => {
+    document.getElementById('consoleCapSelect').value = state.selectedCap?.id;
+    loadCapParams();
+    closeModal();
+  }, 100);
+}
+
+// ── Dashboard ──────────────────────────────────────
+async function loadDash() {
+  if (!state.token) return showPage('login');
+  const [bal, calls] = await Promise.all([
+    fetch(API + '/user/balance', {headers: authHeaders()}).then(r=>r.json()),
+    fetch(API + '/user/calls?limit=50', {headers: authHeaders()}).then(r=>r.json())
+  ]);
+
+  document.getElementById('dashBalance').textContent = bal.balance + ' 🎫';
+  document.getElementById('dashCalls').textContent = calls.items?.length || 0;
+
+  const total = calls.items?.reduce((s,c)=>s+(c.cost||0),0) || 0;
+  document.getElementById('dashCost').textContent = total.toFixed(2) + ' 🎫';
+  document.getElementById('dashJoined').textContent = state.user?.email || '-';
+
+  document.getElementById('callsBody').innerHTML = (calls.items||[]).map(c => \`<tr>
+    <td style="font-family:var(--mono);font-size:12px">\${new Date(c.created_at).toLocaleString('zh-CN')}</td>
+    <td><span class="tag tag-c" style="font-size:11px">\${c.cap_name}</span></td>
+    <td style="color:var(--t2)">\${c.agent_name}</td>
+    <td><span class="status status-\${c.status}">\${c.status}</span></td>
+    <td style="font-family:var(--mono)">\${c.cost}</td>
+    <td style="font-family:var(--mono);font-size:12px">\${c.duration_ms}ms</td>
+  </tr>\`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--t3)">暂无调用记录</td></tr>';
+
+  if (state.apiKey) {
+    document.getElementById('showApiKey').textContent = state.apiKey;
+    document.getElementById('curlToken').textContent = state.token;
+  }
+}
+
+function switchDashTab(tab) {
+  document.querySelectorAll('#dashTabs .tab').forEach((t,i) => t.classList.toggle('active', ['calls','topup','apikey'][i]===tab));
+  document.getElementById('tabCalls').style.display = tab==='calls'?'':'none';
+  document.getElementById('tabTopup').style.display = tab==='topup'?'':'none';
+  document.getElementById('tabApikey').style.display = tab==='apikey'?'':'none';
+}
+
+async function doTopup() {
+  const amount = Number(document.getElementById('topupAmount').value);
+  const res = await fetch(API + '/user/topup', {
+    method: 'POST',
+    headers: {...authHeaders(), 'Content-Type':'application/json'},
+    body: JSON.stringify({amount})
+  });
+  const data = await res.json();
+  if (!res.ok) { toast(data.error||'充值失败', 'error'); return; }
+  toast('充值成功 +' + amount + ' 🎫');
+  loadDash();
+  loadUserInfo();
+}
+
+function copyApiKey() {
+  navigator.clipboard.writeText(state.apiKey || '');
+  toast('API Key 已复制');
+}
+
+// ── Console ────────────────────────────────────────
+async function loadConsole() {
+  if (!state.token) return showPage('login');
+  const params = new URLSearchParams({limit: 100});
+  const res = await fetch(API + '/marketplace?' + params);
+  const data = await res.json();
+  const sel = document.getElementById('consoleCapSelect');
+  sel.innerHTML = '<option value="">-- 选择能力 --</option>' +
+    data.items.map(c => \`<option value="\${c.id}" data-price="\${c.price_per_call}">\${c.name} — \${c.price_per_call}🎫</option>\`).join('');
+  allCaps = data.items;
+  document.getElementById('consoleCaps').innerHTML = data.items.map(c => \`<div class="card" style="cursor:pointer" onclick="selectConsoleCap('\${c.id}')">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <b style="font-family:var(--mono)">\${c.name}</b>
+      <span style="font-family:var(--mono);color:var(--green)">\${c.price_per_call}🎫</span>
+    </div>
+    <div style="font-size:13px;color:var(--t2)">\${c.description?.slice(0,80)}...</div>
+  </div>\`).join('');
+}
+
+function selectConsoleCap(id) {
+  document.getElementById('consoleCapSelect').value = id;
+  loadCapParams();
+}
+
+function loadCapParams() {
+  const id = document.getElementById('consoleCapSelect').value;
+  const cap = allCaps.find(c => c.id === id);
+  if (!cap) { document.getElementById('consoleParams').innerHTML = ''; document.getElementById('consoleCost').textContent='-'; return; }
+  state.selectedCap = cap;
+  document.getElementById('consoleCost').textContent = cap.price_per_call;
+
+  try {
+    const params = JSON.parse(cap.params || '[]');
+    document.getElementById('consoleParams').innerHTML = params.map(p => \`<div class="form-group">
+      <label>\${p.name}\${p.required?' <span style="color:var(--red)">*</span>':''} <small style="color:var(--t3)">(\${p.type}) \${p.desc||''}</small></label>
+      <input id="param_\${p.name}" placeholder="\${p.desc||p.name}">
+    </div>\`).join('');
+  } catch {
+    document.getElementById('consoleParams').innerHTML = '<p style="color:var(--t3);font-size:13px">无参数</p>';
+  }
+}
+
+async function sendCall() {
+  const cap = state.selectedCap;
+  if (!cap) { toast('请先选择能力', 'error'); return; }
+  if (!state.token) { toast('请先登录', 'error'); showPage('login'); return; }
+
+  const resultEl = document.getElementById('consoleResult');
+  resultEl.className = 'call-result';
+  resultEl.textContent = '⏳ 正在调用 ' + cap.name + '...';
+  resultEl.style.display = 'block';
+
+  // 收集参数
+  const params = {};
+  try {
+    const pdef = JSON.parse(cap.params || '[]');
+    for (const p of pdef) {
+      const val = document.getElementById('param_' + p.name)?.value;
+      if (val) {
+        if (p.type === 'number') params[p.name] = Number(val);
+        else if (p.type === 'array') params[p.name] = val.split(',').map(x=>x.trim());
+        else if (p.type === 'object') { try { params[p.name] = JSON.parse(val); } catch { params[p.name] = val; } }
+        else params[p.name] = val;
+      }
+    }
+  } catch {}
+
+  const start = Date.now();
+  const res = await fetch(API + '/a2a/call', {
+    method: 'POST',
+    headers: {...authHeaders(), 'Content-Type':'application/json'},
+    body: JSON.stringify({capability_id: cap.id, params})
+  });
+
+  const data = await res.json();
+  const ms = Date.now() - start;
+
+  if (res.status === 402) {
+    resultEl.className = 'call-result error';
+    resultEl.textContent = '❌ 余额不足\\n当前余额: ' + data.balance + ' Token\\n需要: ' + data.required + ' Token\\n\\n请先充值';
+    return;
+  }
+
+  if (!res.ok) {
+    resultEl.className = 'call-result error';
+    resultEl.textContent = '❌ 调用失败: ' + JSON.stringify(data);
+    return;
+  }
+
+  resultEl.className = 'call-result';
+  resultEl.innerHTML = '✅ 调用成功 (' + ms + 'ms)\\n\\n' + JSON.stringify(data.result||data, null, 2);
+  toast('调用成功，扣费 ' + (data.cost||0) + ' 🎫');
+  loadUserInfo();
+}
+
+// ── Admin ───────────────────────────────────────────
+async function loadAdmin() {
+  if (!state.token || state.user?.role !== 'admin') { toast('无权限', 'error'); showPage('market'); return; }
+
+  // Load all data
+  const [stats, caps, users, calls] = await Promise.all([
+    fetch(API + '/stats').then(r=>r.json()),
+    fetch(API + '/marketplace?limit=100').then(r=>r.json()),
+    fetch(API + '/admin/users', {headers: authHeaders()}).then(r=>r.json()).catch(()=>[]),
+    fetch('/api/admin/calls?limit=100', {headers: authHeaders()}).then(r=>r.json()).catch(()=>[])
+  ]);
+
+  state.adminData.caps = caps.items || [];
+  document.getElementById('adminUsers').textContent = stats.users;
+  document.getElementById('adminRevenue').textContent = '-';
+  document.getElementById('adminCalls').textContent = stats.total_calls;
+  document.getElementById('adminPlatform').textContent = '-';
+
+  renderPriceList();
+}
+
+function renderPriceList() {
+  const list = document.getElementById('priceList');
+  if (!list) return;
+  list.innerHTML = (state.adminData.caps||[]).map(c => \`<div class="price-row">
+    <span style="font-family:var(--mono)">\${c.name}</span>
+    <span class="tag tag-\${CATEGORIES.find(x=>x.id===c.category)?.color||'cyan'}" style="font-size:10px">\${c.category}</span>
+    <span style="font-family:var(--mono);color:var(--green)">\${c.price_per_call} 🎫</span>
+    <div class="price-edit">
+      <input type="number" class="price-input" id="price_\${c.id}" value="\${c.price_per_call}" step="0.001" min="0">
+      <button class="btn btn-pri btn-xs" onclick="savePrice('\${c.id}')">保存</button>
+    </div>
+  </div>\`).join('');
+}
+
+async function savePrice(capId) {
+  const newPrice = parseFloat(document.getElementById('price_' + capId).value);
+  const res = await fetch(API + '/admin/capabilities/' + capId, {
+    method: 'PUT',
+    headers: {...authHeaders(), 'Content-Type':'application/json'},
+    body: JSON.stringify({price_per_call: newPrice})
+  });
+  const data = await res.json();
+  if (!res.ok) { toast(data.error||'保存失败', 'error'); return; }
+  toast('价格已更新');
+  const cap = state.adminData.caps.find(c=>c.id===capId);
+  if (cap) cap.price_per_call = newPrice;
+  renderPriceList();
+}
+
+function switchAdminTab(tab) {
+  const tabs = ['pricing','users','calls','agents'];
+  document.querySelectorAll('#page-admin .tabs .tab').forEach((t,i) => {
+    t.classList.toggle('active', tabs[i]===tab);
+  });
+  document.getElementById('adminPricing').style.display = tab==='pricing'?'':'none';
+  document.getElementById('adminUsers2').style.display = tab==='users'?'':'none';
+  document.getElementById('adminCalls2').style.display = tab==='calls'?'':'none';
+  document.getElementById('adminAgents').style.display = tab==='agents'?'':'none';
+  if (tab==='users') loadAdminUsers();
+  if (tab==='calls') loadAdminCalls();
+  if (tab==='agents') loadAdminAgents();
+}
+
+async function loadAdminUsers() {
+  const res = await fetch(API + '/admin/users', {headers: authHeaders()});
+  const users = await res.json().catch(()=>({}));
+  const items = users.items || [];
+  document.getElementById('usersBody').innerHTML = items.map(u => \`<tr>
+    <td><b>\${u.username}</b></td>
+    <td style="font-size:12px">\${u.email}</td>
+    <td><span class="tag \${u.role==='admin'?'tag-red':u.role==='agent'?'tag-v':'tag-c'}" style="font-size:10px">\${u.role}</span></td>
+    <td style="font-family:var(--mono);color:var(--green)">\${u.balance}</td>
+    <td style="font-family:var(--mono);font-size:11px;color:var(--t3)">\${u.api_key?.slice(0,16)}...</td>
+    <td style="font-size:12px;color:var(--t3)">\${new Date(u.created_at).toLocaleDateString('zh-CN')}</td>
+  </tr>\`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--t3)">暂无数据</td></tr>';
+}
+
+async function loadAdminCalls() {
+  const res = await fetch(API + '/admin/calls?limit=100', {headers: authHeaders()});
+  const data = await res.json().catch(()=>({}));
+  document.getElementById('adminCallsBody').innerHTML = (data.items||[]).map(c => \`<tr>
+    <td style="font-family:var(--mono);font-size:11px">\${c.id.slice(0,8)}</td>
+    <td>\${c.username||c.caller_id?.slice(0,8)}</td>
+    <td><span class="tag tag-c" style="font-size:10px">\${c.cap_name}</span></td>
+    <td><span class="status status-\${c.status}">\${c.status}</span></td>
+    <td style="font-family:var(--mono)">\${c.cost}</td>
+    <td style="font-family:var(--mono);font-size:12px">\${c.duration_ms}ms</td>
+    <td style="font-size:12px;color:var(--t3)">\${new Date(c.created_at).toLocaleString('zh-CN')}</td>
+  </tr>\`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--t3)">暂无数据</td></tr>';
+}
+
+async function loadAdminAgents() {
+  const res = await fetch(API + '/agents', {headers: authHeaders()}).catch(()=>new Response('{}'));
+  const data = await res.json().catch(()=>{});
+  document.getElementById('agentsBody').innerHTML = (data.items||[]).map(a => \`<tr>
+    <td><b>\${a.name}</b></td>
+    <td>\${a.owner_id?.slice(0,12)}...</td>
+    <td style="font-family:var(--mono)">\${a.cap_count||0}</td>
+    <td><span class="status \${a.status==='active'?'status-success':'status-pending'}">\${a.status}</span></td>
+    <td style="font-size:12px;color:var(--t3)">\${new Date(a.created_at).toLocaleDateString('zh-CN')}</td>
+    <td>
+      <button class="btn btn-out btn-xs" onclick="toggleAgent('\${a.id}','\${a.status==='active'?'inactive':'active'}')">\${a.status==='active'?'停用':'启用'}</button>
+    </td>
+  </tr>\`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--t3)">暂无 Agent</td></tr>';
+}
+
+async function toggleAgent(id, newStatus) {
+  await fetch(API + '/admin/agents/' + id, {
+    method: 'PUT',
+    headers: {...authHeaders(), 'Content-Type':'application/json'},
+    body: JSON.stringify({status: newStatus})
+  });
+  toast('Agent 状态已更新');
+  loadAdminAgents();
+}
+
+// ── 辅助 ───────────────────────────────────────────
+function authHeaders() {
+  return {'Authorization': 'Bearer ' + (state.token || ''), 'x-api-key': state.apiKey || ''};
+}
+
+// close modal on outside click
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>`;
+
+require('fs').writeFileSync(__dirname + '/index.html', html);
+console.log('✅ 前端页面生成完成');

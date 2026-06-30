@@ -1,0 +1,1 @@
+{"version":3,"file":"shellEnv.d.ts","sourceRoot":"","sources":["../../src/lib/shellEnv.ts"],"names":[],"mappings":"AAKA,MAAM,WAAW,YAAY;IAC3B,IAAI,EAAE,MAAM,CAAC;IACb,KAAK,EAAE,KAAK,GAAG,MAAM,GAAG,MAAM,GAAG,OAAO,GAAG,SAAS,CAAC;IACrD,IAAI,CAAC,EAAE,MAAM,CAAC;CACf;AAmDD,wBAAgB,eAAe,CAAC,IAAI,EAAE,MAAM,EAAE,KAAK,EAAE,MAAM,GAAG,YAAY,CAiCzE"}

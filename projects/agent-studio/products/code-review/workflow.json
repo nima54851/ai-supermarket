@@ -1,0 +1,89 @@
+{
+  "name": "AI 代码审查 Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "github-review",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook - GitHub PR",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "webhookId": "github-pr-reviewer"
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/repos/{{ $json.repository.full_name }}/pulls/{{ $json.pull_request.number }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "name": "获取 PR 详情",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/repos/{{ $json.repository.full_name }}/pulls/{{ $json.pull_request.number }}/files",
+        "options": {
+          "response": {
+            "responseFormat": "json"
+          }
+        }
+      },
+      "name": "获取 PR Files",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "expression": "={{ $json.body }}"
+      },
+      "name": "构建审查 Prompt",
+      "type": "n8n-nodes-base.set",
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// 读取 PR 信息，构建审查摘要\nconst pr = $input.first().json;\nconst files = $input.last().json;\n\nconst prompt = `请审查以下 GitHub Pull Request：\n\n标题：${pr.title}\n描述：${pr.body || '无描述'}\n\n改动文件数：${Array.isArray(files) ? files.length : 0}\n\n请从以下角度审查：\n1. 代码安全性（是否有漏洞）\n2. 代码逻辑（是否有错误）\n3. 代码风格（是否符合最佳实践）\n4. 性能问题\n5. 总体评分（1-10）\n\n请用中文回复，简洁明了。`;\n\nreturn [{ json: { prompt, pr_url: pr.html_url, author: pr.user.login, title: pr.title } }];"
+      },
+      "name": "AI 审查处理",
+      "type": "n8n-nodes-base.code",
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "resource": "repo",
+        "operation": "createComment",
+        "repository": "={{ $json.pr_url.split('/').slice(-2, -1)[0] }}",
+        "issueNumber": "={{ parseInt($json.pr_url.split('/').pop()) }}",
+        "body": "={{ $json.ai_review }}"
+      },
+      "name": "提交审查评论",
+      "type": "n8n-nodes-base.githubApi",
+      "position": [1500, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - GitHub PR": {
+      "main": [["获取 PR 详情"]]
+    },
+    "获取 PR 详情": {
+      "main": [["获取 PR Files"]]
+    },
+    "获取 PR Files": {
+      "main": [["AI 审查处理"]]
+    },
+    "AI 审查处理": {
+      "main": [["提交审查评论"]]
+    }
+  },
+  "active": true,
+  "settings": {}
+}

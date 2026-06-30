@@ -1,0 +1,80 @@
+{
+  "name": "WhatsApp AI Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-ai",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "webhookId": "whatsapp-ai"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Twilio WhatsApp webhook\nconst body = $input.first().json;\n\nconst from = body.From || '';\nconst to = body.To || '';\nconst messageBody = body.Body || '';\nconst messageSid = body.MessageSid || '';\n\n// Extract phone number (strip 'whatsapp:' prefix)\nconst phone = from.replace('whatsapp:', '');\n\nreturn {\n  json: {\n    phone,\n    message: messageBody.trim(),\n    messageSid,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "name": "Parse Message",
+      "type": "n8n-nodes-base.code",
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.OPENCLAW_WEBHOOK_URL}}",
+        "method": "POST",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"={{$json.message}}\",\n  \"phone\": \"={{$json.phone}}\",\n  \"source\": \"whatsapp\"\n}",
+        "options": {
+          "timeout": 25000
+        }
+      },
+      "name": "OpenClaw Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract AI response\nconst response = $input.first().json;\n\nlet replyText = '';\n\nif (typeof response === 'string') {\n  replyText = response;\n} else if (response.reply) {\n  replyText = response.reply;\n} else if (response.text) {\n  replyText = response.text;\n} else {\n  replyText = $env.DEFAULT_REPLY || 'Thanks! A team member will respond shortly.';\n}\n\n// Trim to WhatsApp limit (4096 chars)\nif (replyText.length > 4096) {\n  replyText = replyText.substring(0, 4090) + '...';\n}\n\nreturn {\n  json: {\n    reply: replyText,\n    original: response\n  }\n};"
+      },
+      "name": "Extract Reply",
+      "type": "n8n-nodes-base.code",
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "from": "={{$env.TWILIO_WHATSAPP_FROM}}",
+        "to": "={{$json.phone}}",
+        "message": "={{$json.reply}}",
+        "options": {}
+      },
+      "name": "Send WhatsApp Reply",
+      "type": "n8n-nodes-twilio.twillio",
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Parse Message", "type": "main", "index": 0}]]
+    },
+    "Parse Message": {
+      "main": [[{"node": "OpenClaw Agent", "type": "main", "index": 0}]]
+    },
+    "OpenClaw Agent": {
+      "main": [[{"node": "Extract Reply", "type": "main", "index": 0}]]
+    },
+    "Extract Reply": {
+      "main": [[{"node": "Send WhatsApp Reply", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["whatsapp", "ai", "bot", "automation"],
+  "triggerCount": 1,
+  "updatedAt": "2026-06-28T01:00:00.000Z"
+}

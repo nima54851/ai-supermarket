@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent 社交媒体自动运营系统 — agent-studio</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#04040a; --surface:#0b0b14; --surface2:#111120; --surface3:#181828;
+      --border:rgba(255,255,255,0.06); --border-hi:rgba(34,211,238,0.3);
+      --t1:#f0f4f8; --t2:#8b9ab0; --t3:#4a5568;
+      --cyan:#22d3ee; --cyan-d:rgba(34,211,238,0.1); --cyan-g:rgba(34,211,238,0.35);
+      --violet:#a78bfa; --violet-d:rgba(167,139,250,0.1);
+      --green:#4ade80; --orange:#fb923c;
+      --sans:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',monospace;
+      --r:6px; --r-lg:12px; --ease:150ms cubic-bezier(0.4,0,0.2,1);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);background:var(--bg);color:var(--t1);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{color:var(--cyan);text-decoration:none;transition:color var(--ease)}
+
+    body::before{
+      content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+      background:
+        radial-gradient(ellipse 100% 60% at 50% -20%,rgba(34,211,238,0.08) 0%,transparent 55%),
+        radial-gradient(ellipse 60% 50% at 15% 85%,rgba(167,139,250,0.06) 0%,transparent 55%),
+        radial-gradient(ellipse 60% 50% at 85% 75%,rgba(34,211,238,0.05) 0%,transparent 55%);
+    }
+    body::after{
+      content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+      background-image:linear-gradient(rgba(34,211,238,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,0.035) 1px,transparent 1px);
+      background-size:48px 48px;
+      mask-image:radial-gradient(ellipse 90% 80% at 50% 0%,black 0%,transparent 70%);
+      -webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 0%,black 0%,transparent 70%);
+    }
+    nav,.container,footer,.hero{position:relative;z-index:2}
+
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      background:rgba(4,4,10,0.8);border-bottom:1px solid var(--border);
+    }
+    nav .container{display:flex;align-items:center;justify-content:space-between;height:58px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:600;font-size:14px;color:var(--t1);text-decoration:none}
+    .nav-icon{width:30px;height:30px;border-radius:7px;background:var(--surface2);border:1px solid var(--border-hi);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+    .nav-links{display:flex;align-items:center;gap:28px;list-style:none}
+    .nav-links a{font-size:13px;font-weight:500;color:var(--t3);transition:color var(--ease)}.nav-links a:hover{color:var(--t1)}
+    @media(max-width:640px){.nav-links{display:none}}
+
+    .container{width:100%;max-width:1100px;margin:0 auto;padding:0 24px}
+    .hero{padding:120px 0 64px;text-align:center}
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:5px 16px;border-radius:20px;
+      background:var(--surface);border:1px solid var(--border);
+      font-family:var(--mono);font-size:12px;color:var(--t2);margin-bottom:24px;
+    }
+    .badge-pro{display:inline-flex;align-items:center;gap:6px;padding:3px 12px;border-radius:20px;background:linear-gradient(135deg,rgba(251,146,60,0.2),rgba(251,146,60,0.1));border:1px solid rgba(251,146,60,0.3);font-family:var(--mono);font-size:11px;color:var(--orange);margin-bottom:24px}
+    .hero h1{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:700;letter-spacing:-.04em;line-height:1.08;color:var(--t1);margin-bottom:20px}
+    .hero h1 .g{background:linear-gradient(135deg,var(--cyan) 0%,var(--violet) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-desc{font-size:clamp(1rem,2vw,1.15rem);color:var(--t2);max-width:600px;margin:0 auto 36px;line-height:1.75}
+    .hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:11px 24px;border-radius:var(--r);font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all var(--ease);text-decoration:none;line-height:1}
+    .btn-pri{background:var(--cyan);color:#04040a;box-shadow:0 0 24px rgba(34,211,238,0.3)}
+    .btn-pri:hover{background:#38e5f7;color:#04040a;transform:translateY(-2px);box-shadow:0 8px 32px rgba(34,211,238,0.45)}
+    .btn-out{background:transparent;border:1px solid var(--border);color:var(--t2)}
+    .btn-out:hover{border-color:var(--border-hi);color:var(--cyan);background:var(--cyan-d)}
+    .btn-orange{background:var(--orange);color:#04040a;box-shadow:0 0 20px rgba(251,146,60,0.3)}
+    .btn-orange:hover{background:#fd9a50;color:#04040a;transform:translateY(-2px)}
+    .btn-sm{padding:8px 16px;font-size:13px}
+    ::selection{background:var(--cyan);color:#04040a}
+
+    .section{padding:72px 0}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+    .eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--cyan)}
+    .s-title{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;letter-spacing:-.03em;line-height:1.15;color:var(--t1);margin-bottom:14px}
+    .s-desc{font-size:15px;color:var(--t2);max-width:560px;line-height:1.72}
+    .text-center{text-align:center}.mx-auto{margin-left:auto;margin-right:auto}
+
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    @media(max-width:900px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.grid-3,.grid-2{grid-template-columns:1fr};.section{padding:56px 0}}
+
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;transition:border-color var(--ease),background var(--ease)}
+    .card:hover{border-color:var(--border-hi);background:rgba(34,211,238,0.02)}
+    .card-icon{font-size:36px;margin-bottom:16px}
+    .card h3{font-size:15px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    .card p{font-size:13px;color:var(--t2);line-height:1.65}
+
+    .feature-row{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;padding:40px 0;border-bottom:1px solid var(--border)}
+    .feature-row:last-child{border-bottom:none}
+    .feature-tag{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-family:var(--mono);font-size:11px;font-weight:500;margin-bottom:12px}
+    .tag-c{background:var(--cyan-d);color:var(--cyan);border:1px solid rgba(34,211,238,.2)}
+    .tag-o{background:rgba(251,146,60,.1);color:var(--orange);border:1px solid rgba(251,146,60,.2)}
+    .feature-row h3{font-size:1.3rem;font-weight:700;margin-bottom:10px;letter-spacing:-.02em}
+    .feature-row p{font-size:14px;color:var(--t2);line-height:1.7}
+    .feature-visual{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;display:flex;flex-direction:column;gap:10px;min-height:120px;justify-content:center}
+    .fv-row{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;color:var(--t2)}
+    .fv-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    @media(max-width:700px){.feature-row{grid-template-columns:1fr}}
+
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+    @media(max-width:800px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}}
+    .price-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px;transition:border-color var(--ease),transform var(--ease)}}
+    .price-card:hover{transform:translateY(-4px)}
+    .price-card.featured{border-color:var(--cyan);background:rgba(34,211,238,0.04);box-shadow:0 0 40px rgba(34,211,238,0.08)}
+    .price-card h3{font-size:15px;font-weight:600;margin-bottom:4px}
+    .price-card .price-desc{font-size:12px;color:var(--t3);margin-bottom:20px}
+    .price{font-family:var(--mono);font-size:2.4rem;font-weight:700;color:var(--t1);line-height:1}
+    .price-card.featured .price{color:var(--cyan)}
+    .price span{font-size:14px;font-weight:400;color:var(--t3)}
+    .price-card ul{list-style:none;margin:20px 0;display:flex;flex-direction:column;gap:10px}
+    .price-card li{font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px}
+    .price-card li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
+    .price-card .btn{width:100%;justify-content:center;margin-top:8px}
+    .pop-tag{display:inline-block;padding:2px 10px;border-radius:20px;background:linear-gradient(135deg,var(--cyan),var(--violet));font-family:var(--mono);font-size:10px;font-weight:600;color:#04040a;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase}
+
+    .timeline{display:flex;flex-direction:column;gap:0;position:relative;margin-top:40px}
+    .timeline::before{content:'';position:absolute;left:15px;top:0;bottom:0;width:1px;background:rgba(34,211,238,0.15)}
+    .tl-item{display:flex;gap:20px;padding:0 0 32px;position:relative}
+    .tl-dot{width:31px;height:31px;border-radius:50%;background:var(--surface);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:600;color:var(--cyan);flex-shrink:0;z-index:1}
+    .tl-dot.done{border-color:var(--green);color:var(--green)}
+    .tl-body h4{font-size:14px;font-weight:600;margin-bottom:4px}
+    .tl-body p{font-size:13px;color:var(--t2);line-height:1.65}
+    .tl-body .tl-time{font-family:var(--mono);font-size:11px;color:var(--t3);margin-bottom:6px}
+
+    .proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+    .proof-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px;text-align:center}
+    .proof-num{font-family:var(--mono);font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--cyan),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+    .proof-label{font-size:12px;color:var(--t3)}
+
+    footer{border-top:1px solid var(--border);padding:36px 0}
+    .fi{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .fl{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--t3)}
+    .fl-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);opacity:.5}
+    .fl a{color:var(--t3)}.fl a:hover{color:var(--t1)}
+    .fl a:not(:last-child)::after{content:'·';margin-left:4px;opacity:.3}
+    .flinks{display:flex;gap:20px;list-style:none}
+    .flinks a{font-size:13px;color:var(--t3);transition:color var(--ease)}.flinks a:hover{color:var(--t1)}
+
+    .demo-box{background:linear-gradient(135deg,rgba(34,211,238,.08) 0%,rgba(167,139,250,.06) 100%);border:1px solid rgba(34,211,238,.2);border-radius:var(--r-lg);padding:28px 32px;text-align:center;margin-top:48px}
+    .demo-box h3{font-size:1.2rem;font-weight:700;margin-bottom:8px}
+    .demo-box p{font-size:14px;color:var(--t2);margin-bottom:20px}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="../index.html" class="nav-logo">
+      <div class="nav-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+          <polygon points="16,3 27,9.5 27,22.5 16,29 5,22.5 5,9.5" fill="none" stroke="#22d3ee" stroke-width="1.2" opacity="0.85"/>
+          <circle cx="16" cy="16" r="3" fill="#22d3ee"/>
+          <line x1="16" y1="9.5" x2="16" y2="6" stroke="#22d3ee" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="16" y1="22.5" x2="16" y2="26" stroke="#22d3ee" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="9.5" y1="16" x2="6" y2="16" stroke="#a78bfa" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="22.5" y1="16" x2="26" y2="16" stroke="#a78bfa" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      agent-studio
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="../index.html#modules">工具箱</a></li>
+      <li><a href="https://github.com/nima54851/agent-studio" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+    <a href="https://github.com/nima54851/agent-studio" class="btn btn-pri btn-sm" target="_blank" rel="noopener">⭐ Star</a>
+  </div>
+</nav>
+
+<main>
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="badge-pro">
+      <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#fb923c"/></svg>
+      付费产品 · 零成本启动
+    </div>
+    <h1>AI Agent<br><span class="g">社交媒体自动运营系统</span></h1>
+    <p class="hero-desc">全自动 GitHub 账号运营 · 每天自动追踪热点、生成评论、Star 项目、推送报告。<br>无代码，5 分钟上线，立刻开始积累影响力。</p>
+    <div class="hero-actions">
+      <a href="https://github.com/nima54851/agent-studio/tree/main/products/github-agent-automation" class="btn btn-pri" target="_blank" rel="noopener">
+        🚀 免费获取基础版
+      </a>
+      <a href="#pricing" class="btn btn-out">查看定价</a>
+    </div>
+    <div class="demo-box">
+      <h3>⚡ 5 分钟快速部署</h3>
+      <p>导入 n8n → 填 Token → 激活 → 每天自动运行</p>
+      <a href="https://github.com/nima54851/agent-studio/tree/main/products/github-agent-automation" class="btn btn-out btn-sm" target="_blank" rel="noopener">查看部署指南 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- 核心功能 -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="text-center mx-auto" style="max-width:560px;margin-bottom:48px">
+      <div class="eyebrow">What It Does</div>
+      <h2 class="s-title">全自动化 · 每天只需 5 分钟</h2>
+      <p class="s-desc">从追踪热点到生成评论，全部由 AI Agent 自动完成。你只需要查看结果。</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h3>GitHub 热点追踪</h3>
+        <p>每天自动抓取 AI/ML 领域的热门项目，提取 Stars、描述、语言、作者。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">✍️</div>
+        <h3>AI 智能评论</h3>
+        <p>基于 GPT 生成高质量技术评论，不是模板套话，是真实的开发者视角。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⭐</div>
+        <h3>自动 Star 项目</h3>
+        <p>每天自动 Star 优质开源项目，提升账号活跃度和影响力积累。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>每日报告生成</h3>
+        <p>自动生成结构化日报，包含项目列表、数据统计和趋势分析。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📡</div>
+        <h3>多平台推送</h3>
+        <p>支持 Telegram / 邮件 / Webhook，自定义推送到任意平台。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤖</div>
+        <h3>定时自动运行</h3>
+        <p>每天北京时间 09:00 自动触发，无需手动操作，完全无人值守。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 架构 -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="text-center mx-auto" style="max-width:560px;margin-bottom:40px">
+      <div class="eyebrow">How It Works</div>
+      <h2 class="s-title">技术架构</h2>
+    </div>
+    <div class="feature-row">
+      <div>
+        <div class="feature-tag tag-c">⏰ 定时触发</div>
+        <h3>每天 09:00 自动运行</h3>
+        <p>n8n 内置 Schedule Trigger，每天北京时间 09:00 准时启动，无需任何人工干预。</p>
+      </div>
+      <div class="feature-visual">
+        <div class="fv-row"><div class="fv-dot" style="background:var(--cyan)"></div>Schedule Trigger — 09:00</div>
+        <div class="fv-row"><div class="fv-dot" style="background:var(--violet)"></div>↓ 自动触发</div>
+        <div class="fv-row"><div class="fv-dot" style="background:var(--orange)"></div>GitHub API — 抓取 Trending</div>
+      </div>
+    </div>
+    <div class="feature-row">
+      <div>
+        <div class="feature-tag tag-c">🤖 AI 处理</div>
+        <h3>GPT 智能评论生成</h3>
+        <p>用大模型分析每个项目的技术亮点，生成真实、有见地的技术评论，留下高质量评论记录。</p>
+      </div>
+      <div class="feature-visual">
+        <div class="fv-row"><div class="fv-dot" style="background:var(--cyan)"></div>数据 → Code 节点整理</div>
+        <div class="fv-row"><div class="fv-dot" style="background:var(--violet)"></div>↓</div>
+        <div class="fv-row"><div class="fv-dot" style="background:var(--orange)"></div>GPT → 生成评论内容</div>
+      </div>
+    </div>
+    <div class="feature-row">
+      <div>
+        <div class="feature-tag tag-c">📡 分发推送</div>
+        <h3>Webhook 到任意平台</h3>
+        <p>结果通过 Webhook 推送，可以接入 Telegram Bot、飞书、钉钉、Email 或任何支持 Webhook 的工具。</p>
+      </div>
+      <div class="feature-visual">
+        <div class="fv-row"><div class="fv-dot" style="background:var(--cyan)"></div>报告 JSON</div>
+        <div class="fv-row"><div class="fv-dot" style="background:var(--violet)"></div>↓</div>
+        <div class="fv-row"><div class="fv-dot" style="background:var(--orange)"></div>Telegram / Email / 任意 Webhook</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 定价 -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div class="text-center mx-auto" style="max-width:560px;margin-bottom:8px">
+      <div class="eyebrow">Pricing</div>
+      <h2 class="s-title">灵活定价，按需选择</h2>
+      <p class="s-desc">基础版免费使用，专业版解锁全部功能，企业版提供私有部署。</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="price-card">
+        <span class="pop-tag">Free</span>
+        <h3>入门版</h3>
+        <div class="price-desc">适合个人学习体验</div>
+        <div class="price">¥0 <span>/ 永远免费</span></div>
+        <ul>
+          <li>基础 GitHub Trending 抓取</li>
+          <li>每日 Star 功能</li>
+          <li>WebHook 推送</li>
+          <li>Community Support</li>
+        </ul>
+        <a href="https://github.com/nima54851/agent-studio/tree/main/products/github-agent-automation" class="btn btn-out" target="_blank" rel="noopener">免费获取</a>
+      </div>
+
+      <!-- Pro -->
+      <div class="price-card featured">
+        <span class="pop-tag">🔥 热门</span>
+        <h3>专业版</h3>
+        <div class="price-desc">适合开发者 / 创作者</div>
+        <div class="price" style="color:var(--cyan)">¥99 <span>/ 一次性</span></div>
+        <ul>
+          <li>完整 AI 评论生成（GPT / Ollama 免费）</li>
+          <li>多项目追踪（最多 10 个）</li>
+          <li>Email / Telegram / 飞书推送</li>
+          <li>每日报告 PDF 导出</li>
+          <li>无限使用，无订阅</li>
+          <li>优先技术支持</li>
+        </ul>
+        <a href="https://github.com/nima54851/agent-studio" class="btn btn-pri" target="_blank" rel="noopener">联系购买</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="price-card">
+        <span class="pop-tag">Enterprise</span>
+        <h3>企业版</h3>
+        <div class="price-desc">适合团队 / 企业</div>
+        <div class="price">¥399 <span>/ 一次性</span></div>
+        <ul>
+          <li>私有部署 + Docker</li>
+          <li>多账号管理（最多 50 个）</li>
+          <li>全平台分发支持</li>
+          <li>定制工作流</li>
+          <li>一年免费更新</li>
+          <li>专属技术顾问</li>
+        </ul>
+        <a href="https://github.com/nima54851/agent-studio" class="btn btn-out" target="_blank" rel="noopener">联系购买</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 变现路径 -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="text-center mx-auto" style="max-width:560px;margin-bottom:40px">
+      <div class="eyebrow">Why It Works</div>
+      <h2 class="s-title">用这套系统你能赚到什么</h2>
+    </div>
+
+    <div class="proof-grid">
+      <div class="proof-card">
+        <div class="proof-num">¥2000-5000</div>
+        <div class="proof-label">单次项目接单</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-num">¥3000+</div>
+        <div class="proof-label">每月模板包收入</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-num">¥5000+</div>
+        <div class="proof-label">GitHub Sponsors</div>
+      </div>
+    </div>
+
+    <div class="timeline" style="max-width:560px;margin:48px auto 0">
+      <div class="tl-item">
+        <div class="tl-dot done">✓</div>
+        <div class="tl-body">
+          <div class="tl-time">第 1 天</div>
+          <h4>获取系统，开始运营</h4>
+          <p>导入 n8n，配置 Token，激活工作流，当天就开始自动运营。</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">2</div>
+        <div class="tl-body">
+          <div class="tl-time">第 7 天</div>
+          <h4>GitHub 影响力开始积累</h4>
+          <p>每天持续活跃，账号可信度提升，开始有外包邀请出现。</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">3</div>
+        <div class="tl-body">
+          <div class="tl-time">第 30 天</div>
+          <h4>接到第一单</h4>
+          <p>在程序员客栈、码市等平台接单，帮别人搭建类似的 Agent 系统。</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">4</div>
+        <div class="tl-body">
+          <div class="tl-time">第 90 天</div>
+          <h4>被动收入渠道建立</h4>
+          <p>模板包销售 + 接单 + Sponsors，多条收入线稳定运转。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section" style="padding-top:0">
+  <div class="container">
+    <div class="demo-box">
+      <h3>🚀 现在就开始</h3>
+      <p>基础版完全免费，直接从 GitHub 获取工作流文件，5 分钟上手。</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+        <a href="https://github.com/nima54851/agent-studio/tree/main/products/github-agent-automation" class="btn btn-pri" target="_blank" rel="noopener">⬇️ 下载基础版（免费）</a>
+        <a href="https://github.com/nima54851/agent-studio" class="btn btn-out" target="_blank" rel="noopener">⭐ Star 支持</a>
+      </div>
+    </div>
+
+    <!-- Payment Box -->
+    <div style="margin-top:40px;background:linear-gradient(135deg,rgba(34,211,238,.07) 0%,rgba(167,139,250,.06) 100%);border:1px solid rgba(34,211,238,.2);border-radius:var(--r-lg);padding:28px 32px;text-align:center">
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:8px">💳 购买专业版 / 企业版</h3>
+      <p style="font-size:14px;color:var(--t2);margin-bottom:16px">支持 PayPal 付款，收款账号：<strong style="color:var(--cyan)">yinanzo@hotmail.com</strong></p>
+      <p style="font-size:12px;color:var(--t3);margin-bottom:0">转账时请备注你的 GitHub 用户名或邮箱，付款后联系开启权限</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="fi">
+      <div class="fl">
+        <div class="fl-dot"></div>
+        agent-studio · Built by <a href="https://github.com/nima54851" target="_blank" rel="noopener">nima54851</a> with 灵犀 AI
+      </div>
+      <ul class="flinks">
+        <li><a href="https://github.com/nima54851/agent-studio" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/nima54851/agent-studio/issues" target="_blank" rel="noopener">Issues</a></li>
+        <li><a href="../index.html" target="_blank" rel="noopener">首页</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

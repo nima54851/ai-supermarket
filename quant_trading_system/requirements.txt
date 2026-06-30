@@ -1,0 +1,22 @@
+# 核心依赖
+python>=3.10
+pandas>=2.0.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+scipy>=1.10.0
+statsmodels>=0.14.0
+websocket-client>=1.6.0
+requests>=2.31.0
+sqlite3
+
+# Web界面可选
+streamlit>=1.28.0
+
+# 可选API客户端
+binance>=2.0.0
+ccxt>=4.0.0
+
+# 其他工具
+pyyaml>=6.0
+ta-lib>=0.4.0  # 如需技术指标
+scikit-learn>=1.3.0  # 如需机器学习

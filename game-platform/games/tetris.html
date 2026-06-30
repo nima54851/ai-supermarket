@@ -25,7 +25,7 @@ class SceneManager {
     const octx = oc.getContext('2d');
     octx.fillStyle = 'rgba(0,0,0,0.12)';
     octx.fillRect(0, 0, 4, 2);
-    this.scanlinePattern = document.createPattern(oc, 'repeat');
+    this.scanlinePattern = octx.createPattern(oc, 'repeat');
   }
 
   update() { this.frame++; }

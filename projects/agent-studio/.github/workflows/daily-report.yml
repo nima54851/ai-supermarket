@@ -1,0 +1,94 @@
+name: Daily GitHub Trending Report
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # UTC 01:00 = Beijing 09:00
+  workflow_dispatch:
+    inputs:
+      categories:
+        description: 'Search categories (comma separated)'
+        required: false
+        default: 'ai,python'
+        type: string
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run trending tracker
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/github_trending.py
+
+      - name: Commit report
+        run: |
+          git config user.name "agent-studio CI"
+          git config user.email "ci@agent-studio.dev"
+          git add REPORT.md
+          git diff --staged --quiet || git commit -m "ci: daily trending report $(date +%Y-%m-%d)"
+          git push
+        continue-on-error: true
+
+      - name: Commit via API (fallback when git push fails)
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "⚠️ git push failed — falling back to GitHub API..."
+
+          CONTENT=$(base64 -w 0 REPORT.md)
+          SHA=$(curl -s -X GET \
+            "https://api.github.com/repos/$REPO/contents/REPORT.md" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" | \
+            python3 -c "import sys,json; print(json.load(sys.stdin).get('sha',''))")
+
+          if [ -n "$SHA" ]; then
+            BODY=$(python3 -c "
+import json, sys
+sha = '''$SHA'''
+content = '''$CONTENT'''
+data = {'message': 'ci: daily trending report ' + __import__('datetime').date.today().isoformat(), 'content': content, 'sha': sha}
+print(json.dumps(data))
+")
+          else
+            BODY=$(python3 -c "
+import json
+data = {'message': 'ci: daily trending report ' + __import__('datetime').date.today().isoformat(), 'content': '''$CONTENT'''}
+print(json.dumps(data))
+")
+          fi
+
+          STATUS=$(curl -s -o /dev/stderr -w "%{http_code}" -X PUT \
+            "https://api.github.com/repos/$REPO/contents/REPORT.md" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$BODY")
+
+          if [ "$STATUS" = "200" ] || [ "$STATUS" = "201" ]; then
+            echo "✅ API fallback succeeded (HTTP $STATUS)"
+          else
+            echo "❌ API fallback failed (HTTP $STATUS)"
+            exit 1
+          fi
+
+      - name: Notify (optional webhook)
+        if: github.event_name == 'schedule'
+        run: |
+          curl -s -X POST "${{ secrets.NOTIFY_WEBHOOK }}" \
+            -H "Content-Type: application/json" \
+            -d '{"text": "Daily GitHub Trending report generated: https://github.com/nima54851/agent-studio/blob/main/REPORT.md"}'
+        continue-on-error: true

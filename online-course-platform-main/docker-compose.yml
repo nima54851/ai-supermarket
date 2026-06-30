@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: example
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  s3-bucket:
+    build: .
+    restart: always
+    ports:
+      - 9000:9000
+    command: "node s3.js"
+    volumes:
+      - ".:/home/app"
+
+volumes:
+  postgres:

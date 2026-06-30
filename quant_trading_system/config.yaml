@@ -1,0 +1,97 @@
+# 量化交易系统配置
+
+# 数据源配置
+data_source:
+  # 币安配置
+  binance:
+    api_key: "YOUR_API_KEY_HERE"
+    api_secret: "YOUR_API_SECRET_HERE"
+    testnet: false  # 使用测试网络
+    symbols: ["BTCUSDT", "ETHUSDT", "BNBUSDT"]
+    update_interval: 1  # 更新间隔(秒)
+  
+  # A股数据源 (示例)
+  a_share:
+    qmt_path: "D:/国金QMT/交易端"  # QMT路径
+    account_id: "1234567890"
+    password: "your_password"
+  
+  # CSV历史数据
+  csv_data:
+    path: "./historical_data"
+    date_format: "%Y-%m-%d %H:%M:%S"
+
+# 数据库配置
+database:
+  sqlite_path: "./data/trading.db"
+  backup_enabled: true
+  backup_interval: 3600  # 备份间隔(秒)
+
+# 交易配置
+trading:
+  # 风控参数
+  risk:
+    max_position_pct: 0.3  # 最大仓位30%
+    max_loss_per_trade: 0.01  # 单笔最大亏损1%
+    stop_loss_pct: 0.02  # 止损2%
+    take_profit_pct: 0.05  # 止盈5%
+  
+  # 手续费配置
+  fee:
+    maker: 0.001  # 挂单手续费
+    taker: 0.001  # 吃单手续费
+  
+  # 最小交易量
+  min_qty:
+    BTCUSDT: 0.0001
+    ETHUSDT: 0.001
+    BNBUSDT: 0.01
+
+# 分析参数
+analysis:
+  # 时间周期
+  timeframes:
+    - "1m"
+    - "5m"
+    - "15m"
+    - "1h"
+    - "4h"
+    - "1d"
+  
+  # 技术指标
+  indicators:
+    macd:
+      fast_period: 12
+      slow_period: 26
+      signal_period: 9
+    
+    rsi:
+      period: 14
+      oversold: 30
+      overbought: 70
+    
+    bollinger:
+      period: 20
+      std_dev: 2
+    
+    ma:
+      periods: [5, 10, 20, 30, 60]
+  
+  # 随机漫步分析
+  random_walk:
+    rolling_window: 252  # 滚动窗口
+    confidence_level: 0.95  # 置信水平
+
+# 可视化配置
+visualization:
+  theme: "dark"  # dark/light
+  update_interval: 1  # 图表更新间隔(秒)
+  save_charts: true
+  charts_path: "./charts"
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG/INFO/WARNING/ERROR
+  file_path: "./logs/trading.log"
+  max_size_mb: 10
+  backup_count: 5

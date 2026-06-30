@@ -1,0 +1,126 @@
+{
+  "name": "Slack AI Agent Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "team": "",
+        "event": "app_mention",
+        "authentication": "slackApi",
+        "resolveData": true
+      },
+      "id": "slack-trigger",
+      "name": "Slack Trigger",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "slack-ai-agent"
+    },
+    {
+      "parameters": {
+        "functionCode": "// AI Agent Router - 根据消息内容路由到对应处理逻辑\nconst text = $input.item.json.event.text;\nconst user = $input.item.json.event.user;\nconst channel = $input.item.json.event.channel;\n\nlet route = 'general';\nif (/代码|debug|审查|review|bug/i.test(text)) route = 'code-review';\nelse if (/爬虫|抓取|scrape/i.test(text)) route = 'web-scraper';\nelse if (/github|star|fork/i.test(text)) route = 'github';\nelse if (/报表|分析|analytics/i.test(text)) route = 'analytics';\nelse if (/周报|日报|report/i.test(text)) route = 'report';\n\nreturn [{ json: { text, user, channel, route, original: $input.item.json } }];"
+      },
+      "id": "router",
+      "name": "Route by Intent",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.OPENCLAW_MCP_URL}}/chat",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$env.AGENT_API_KEY}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "={{$json.text}}"
+            },
+            {
+              "name": "agent",
+              "value": "={{$json.route}}"
+            },
+            {
+              "name": "user",
+              "value": "={{$json.user}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ai-agent-call",
+      "name": "Call AI Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "channel": "={{$json.channel}}",
+        "text": "={{$json.reply}}",
+        "attachments": []
+      },
+      "id": "slack-reply",
+      "name": "Reply in Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1000, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-api-creds",
+          "name": "Slack API"
+        }
+      },
+      "webhookId": "slack-ai-agent-reply"
+    },
+    {
+      "parameters": {
+        "text": "✅ AI Agent 回复：\n\n{{ $json.reply }}"
+      },
+      "id": "format-reply",
+      "name": "Format Reply",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "Slack Trigger": {
+      "main": [[{ "node": "Route by Intent", "type": "main", "index": 0 }]]
+    },
+    "Route by Intent": {
+      "main": [[{ "node": "Call AI Agent", "type": "main", "index": 0 }]]
+    },
+    "Call AI Agent": {
+      "main": [[{ "node": "Format Reply", "type": "main", "index": 0 }]]
+    },
+    "Format Reply": {
+      "main": [[{ "node": "Reply in Slack", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": "slack-ai-agent-workflow",
+  "meta": {
+    "templateCredsSetup": [
+      { "name": "slackApi", "type": "n8n-nodes-base.slack" }
+    ],
+    "templateId": "slack-ai-agent"
+  },
+  "tags": ["ai", "slack", "agent", "automation"],
+  "createdAt": "2026-06-27T01:00:00.000Z",
+  "updatedAt": "2026-06-27T01:00:00.000Z"
+}

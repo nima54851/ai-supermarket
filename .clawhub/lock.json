@@ -84,6 +84,266 @@
     "paypal-integration": {
       "version": "1.0.2",
       "installedAt": 1781252010095
+    },
+    "design": {
+      "version": "1.0.0",
+      "installedAt": 1781423707217
+    },
+    "agent-development": {
+      "version": "0.1.0",
+      "installedAt": 1781423718412
+    },
+    "security": {
+      "version": "1.0.12",
+      "installedAt": 1781423744467
+    },
+    "memory": {
+      "version": "1.0.2",
+      "installedAt": 1781423753109
+    },
+    "smart-memory-manager": {
+      "version": "1.0.1",
+      "installedAt": 1781423765108
+    },
+    "agentic-security-audit": {
+      "version": "1.0.0",
+      "installedAt": 1781423777937
+    },
+    "anthropics-frontend-design": {
+      "version": "0.1.0",
+      "installedAt": 1781423786696
+    },
+    "skill-dev-guide": {
+      "version": "1.0.0",
+      "installedAt": 1781424011244
+    },
+    "code-quality": {
+      "version": "1.0.0",
+      "installedAt": 1781424035529
+    },
+    "performance-testing-toolkit": {
+      "version": "1.0.0",
+      "installedAt": 1781424140934
+    },
+    "afrexai-observability-engine": {
+      "version": "1.0.0",
+      "installedAt": 1781424159942
+    },
+    "security-audit": {
+      "version": "1.0.0",
+      "installedAt": 1781424177206
+    },
+    "memory-management": {
+      "version": "9.9.9",
+      "installedAt": 1781424195259
+    },
+    "ui-design": {
+      "version": "1.0.0",
+      "installedAt": 1781424216283
+    },
+    "ui-ux-design": {
+      "version": "1.0.0",
+      "installedAt": 1781424225034
+    },
+    "api-development": {
+      "version": "1.0.0",
+      "installedAt": 1781424267747
+    },
+    "test-master": {
+      "version": "0.1.0",
+      "installedAt": 1781424279441
+    },
+    "docker-development": {
+      "version": "2.1.1",
+      "installedAt": 1781424288610
+    },
+    "software-architecture-design": {
+      "version": "1.1.0",
+      "installedAt": 1781424308074
+    },
+    "skill-quality-assurance": {
+      "version": "0.1.0",
+      "installedAt": 1781424328336
+    },
+    "code-review": {
+      "version": "1.0.0",
+      "installedAt": 1781424350236
+    },
+    "common-development-standards": {
+      "version": "1.1.0",
+      "installedAt": 1781424359694
+    },
+    "database-operations": {
+      "version": "1.0.0",
+      "installedAt": 1781424654046
+    },
+    "database-schema-designer": {
+      "version": "1.0.0",
+      "installedAt": 1781424666739
+    },
+    "gi-database-query-patterns": {
+      "version": "1.0.0",
+      "installedAt": 1781424679218
+    },
+    "mysql": {
+      "version": "1.0.1",
+      "installedAt": 1781424726140
+    },
+    "postgres-mcp-skills": {
+      "version": "1.0.2",
+      "installedAt": 1781424738798
+    },
+    "mongodb": {
+      "version": "1.0.1",
+      "installedAt": 1781424747232
+    },
+    "redis-store": {
+      "version": "1.0.0",
+      "installedAt": 1781424768982
+    },
+    "afrexai-database-engineer": {
+      "version": "1.0.0",
+      "installedAt": 1781424779558
+    },
+    "self-improving": {
+      "version": "1.2.16",
+      "installedAt": 1781844682981
+    },
+    "ontology": {
+      "version": "1.0.4",
+      "installedAt": 1781844666584
+    },
+    "humanizer": {
+      "version": "1.0.0",
+      "installedAt": 1781844701499
+    },
+    "hutian-opc-ai-ip-protection-trial": {
+      "version": "1.0.0",
+      "installedAt": 1781844860193
+    },
+    "browser-web-search": {
+      "version": "0.4.11",
+      "installedAt": 1781844987188
+    },
+    "multi-engine-search": {
+      "version": "1.0.0",
+      "installedAt": 1781844990844
+    },
+    "postgres-db": {
+      "version": "1.0.0",
+      "installedAt": 1781844994553
+    },
+    "agent-guardian": {
+      "version": "1.0.0",
+      "installedAt": 1781844999958
+    },
+    "security-auditor": {
+      "version": "1.0.0",
+      "installedAt": 1781845003854
+    },
+    "agent-long-term-memory": {
+      "version": "1.0.0",
+      "installedAt": 1781845008958
+    },
+    "multi-user-long-term-memory": {
+      "version": "1.0.0",
+      "installedAt": 1781845012974
+    },
+    "productivity-automation-kit": {
+      "version": "1.0.0",
+      "installedAt": 1781845466144
+    },
+    "n8n-workflow-automation": {
+      "version": "1.0.0",
+      "installedAt": 1781847438513
+    },
+    "telegram-bot": {
+      "version": "1.0.0",
+      "installedAt": 1781847441891
+    },
+    "web-scraping": {
+      "version": "1.0.0",
+      "installedAt": 1781847445626
+    },
+    "molts-list": {
+      "version": "2.0.1",
+      "installedAt": 1781847449400
+    },
+    "swarmmarket2": {
+      "version": "1.0.0",
+      "installedAt": 1781847453367
+    },
+    "telegram-shop-bot": {
+      "version": "1.0.1",
+      "installedAt": 1781847456880
+    },
+    "agentic-workflow-designer": {
+      "version": "3.3.3",
+      "installedAt": 1781847460446
+    },
+    "n8n-openclaw-bridge": {
+      "version": "1.0.0",
+      "installedAt": 1781847868980
+    },
+    "railway-skill": {
+      "version": "0.1.0",
+      "installedAt": 1782032808972
+    },
+    "build-game": {
+      "version": "1.2.0",
+      "installedAt": 1782536071442
+    },
+    "threejs-3d": {
+      "version": "1.0.0",
+      "installedAt": 1782278069137
+    },
+    "openclaw-comfyui-imagegenerate": {
+      "version": "1.0.0",
+      "installedAt": 1782283223925
+    },
+    "3d-model-generator": {
+      "version": "1.0.0",
+      "installedAt": 1782283228578
+    },
+    "blender": {
+      "version": "1.0.0",
+      "installedAt": 1782283232495
+    },
+    "redshift": {
+      "version": "0.2.0",
+      "installedAt": 1782283237044
+    },
+    "texture-art-generator": {
+      "version": "1.0.0",
+      "installedAt": 1782283278325
+    },
+    "openclaw-3d-blender-mcp": {
+      "version": "1.0.0",
+      "installedAt": 1782355765501
+    },
+    "logo": {
+      "version": "1.0.0",
+      "installedAt": 1782355783539
+    },
+    "wxa-skills-generate": {
+      "version": "0.1.20",
+      "installedAt": 1782536094249
+    },
+    "awwwards-design": {
+      "version": "1.0.0",
+      "installedAt": 1782536128002
+    },
+    "openclaw-slides": {
+      "version": "2.0.0",
+      "installedAt": 1782536138552
+    },
+    "vibe-check": {
+      "version": "0.2.1",
+      "installedAt": 1782536202340
+    },
+    "frontend-slides": {
+      "version": "2.0.2",
+      "installedAt": 1782620976633
     }
   }
 }

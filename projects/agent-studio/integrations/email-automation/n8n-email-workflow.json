@@ -1,0 +1,170 @@
+{
+  "name": "AI Email Automation Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "icicle": "gmailTrigger",
+          "options": {}
+        }
+      },
+      "id": "gmail-trigger",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "credentials": {
+        "gmailOAuth2": "gmail-credentials"
+      }
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/ai-email-classify",
+        "method": "POST",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "subject", "value": "={{ $json.subject }}" },
+            { "name": "body", "value": "={{ $json.bodyText }}" },
+            { "name": "sender", "value": "={{ $json.from }}" }
+          ]
+        }
+      },
+      "id": "ai-classify",
+      "name": "AI Classify Intent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-urgent",
+              "leftValue": "={{ $json.intent }}",
+              "rightValue": "urgent",
+              "operator": {
+                "type": "equals",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "condition-reply",
+              "leftValue": "={{ $json.intent }}",
+              "rightValue": "auto-reply",
+              "operator": {
+                "type": "equals",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "condition-followup",
+              "leftValue": "={{ $json.intent }}",
+              "rightValue": "follow-up",
+              "operator": {
+                "type": "equals",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "route-intent",
+      "name": "Route by Intent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [690, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/slack-notify",
+        "method": "POST",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "message", "value": "🚨 Urgent email from {{ $json.sender }}" }
+          ]
+        }
+      },
+      "id": "notify-slack",
+      "name": "Slack Urgent Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [910, 150]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:5678/webhook/ai-email-reply",
+        "method": "POST",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "subject", "value": "={{ $json.subject }}" },
+            { "name": "body", "value": "={{ $json.bodyText }}" },
+            { "name": "sender", "value": "={{ $json.sender }}" }
+          ]
+        }
+      },
+      "id": "ai-reply",
+      "name": "AI Generate Reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [910, 300]
+    },
+    {
+      "parameters": {
+        "to": "={{ $json.sender }}",
+        "subject": "=Re: {{ $json.subject }}",
+        "body": "={{ $json.reply }}",
+        "options": {
+          "replyTo": "={{ $env.SENDER_EMAIL }}"
+        }
+      },
+      "id": "send-reply",
+      "name": "Send AI Reply",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1130, 300]
+    },
+    {
+      "parameters": {
+        "label": "Archive",
+        "value": "archive",
+        "parameter": ""
+      },
+      "id": "archive-email",
+      "name": "Archive Email",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [910, 450]
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {
+      "main": [[{ "node": "AI Classify Intent", "type": "main", "index": 0 }]]
+    },
+    "AI Classify Intent": {
+      "main": [[{ "node": "Route by Intent", "type": "main", "index": 0 }]]
+    },
+    "Route by Intent": {
+      "main": [
+        [{ "node": "Slack Urgent Alert", "type": "main", "index": 0 }],
+        [{ "node": "AI Generate Reply", "type": "main", "index": 0 }],
+        [{ "node": "AI Generate Reply", "type": "main", "index": 0 }],
+        [{ "node": "Archive Email", "type": "main", "index": 0 }]
+      ]
+    },
+    "AI Generate Reply": {
+      "main": [[{ "node": "Send AI Reply", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "description": "AI-powered email automation: classify intent, generate replies, notify on urgent"
+}

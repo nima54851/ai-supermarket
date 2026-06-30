@@ -1,0 +1,82 @@
+{
+  "name": "zerogpu-cli",
+  "version": "2.3.0",
+  "description": "Command-line interface for ZeroGPU.",
+  "type": "module",
+  "bin": {
+    "zerogpu": "dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepublishOnly": "npm run build",
+    "release": "npm version patch && git push --follow-tags",
+    "release:minor": "npm version minor && git push --follow-tags",
+    "release:major": "npm version major && git push --follow-tags"
+  },
+  "keywords": [
+    "zerogpu",
+    "ai-inference",
+    "edge-inference",
+    "distributed-inference",
+    "small-language-models",
+    "slm",
+    "nano-language-models",
+    "openai-compatible",
+    "iab-classification",
+    "zero-shot-classification",
+    "named-entity-recognition",
+    "gliner",
+    "pii-detection",
+    "pii-redaction",
+    "text-summarization",
+    "structured-extraction",
+    "llm-cli",
+    "ai-cli",
+    "inference-cli",
+    "typescript"
+  ],
+  "author": {
+    "name": "ZeroGPU",
+    "email": "hello@zerogpu.ai",
+    "url": "https://zerogpu.ai"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zerogpu/cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zerogpu/cli/issues"
+  },
+  "homepage": "https://github.com/zerogpu/cli#readme",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "update-notifier": "^7.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "@types/node": "^20.14.0",
+    "@types/update-notifier": "^6.0.8",
+    "eslint": "^9.9.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.0",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^2.0.0"
+  }
+}
