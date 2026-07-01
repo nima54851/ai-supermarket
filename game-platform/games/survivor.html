@@ -117,6 +117,7 @@ function init() {
   renderer.toneMappingExposure = 1.2;
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(innerWidth, innerHeight);
+  renderer.setClearColor(0x100820, 1);
   document.body.insertBefore(renderer.domElement, document.getElementById('overlay'));
 
   clock = new THREE.Clock();

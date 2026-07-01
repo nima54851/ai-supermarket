@@ -678,8 +678,11 @@ function updateNav() {
   const player = getPlayer();
   const el = document.getElementById('nav-right');
   if (!el) return;
+  const bellBadge = window._notifCount ? `<span class="nav-bell-badge" id="bellBadge">${window._notifCount > 99 ? '99+' : window._notifCount}</span>` : '';
+  const bellBtn = `<div class="nav-bell" onclick="showNotifOrLogin()" title="官方通知">🔔${bellBadge}</div>`;
   if (!player) {
     el.innerHTML = `
+      ${bellBtn}
       <div class="nav-auth">
         <button class="nav-auth-btn login" onclick="showAuth('login')">登录</button>
         <button class="nav-auth-btn register" onclick="showAuth('register')">注册</button>
@@ -690,9 +693,7 @@ function updateNav() {
     const fmt = n => n >= 1000 ? (n/1000).toFixed(1).replace('.0','') + 'K' : String(n);
     const bellBadge = window._notifCount ? `<span class="nav-bell-badge" id="bellBadge">${window._notifCount > 99 ? '99+' : window._notifCount}</span>` : '';
     el.innerHTML = `
-      <div class="nav-bell" onclick="toggleNotifPanel()" title="官方通知">
-        🔔${bellBadge}
-      </div>
+      ${bellBtn}
       <button class="nav-profile-btn" onclick="showProfile()" title="个人资料">${avatar}</button>
       <div class="nav-player">
         <div class="nav-player-avatar">${avatar}</div>
@@ -811,8 +812,6 @@ function showToast(msg, type='ok') {
 async function init() {
   await checkMe();
   updateNav();
-  // Show auth modal if not logged in
-  if (!getToken()) showAuth('register');
   renderAll();
 }
 
@@ -980,7 +979,11 @@ const FALLBACK_NOTIFS = [
 
 async function fetchNotifs() {
   const token = getToken();
-  if (!token) { _notifs = []; _notifCount = 0; return; }
+  if (!token) {
+    _notifs = FALLBACK_NOTIFS;
+    _notifCount = FALLBACK_NOTIFS.length;
+    return;
+  }
   try {
     const r = await fetch(API + '/api/notifications', { headers:{'Authorization':'Bearer '+token} });
     if (r.ok) {
@@ -1010,6 +1013,19 @@ function renderNotifPanel() {
       <div class="notif-item-time">${n.time||''}</div>
     </div>`;
   }).join('');
+}
+
+function showNotifOrLogin() {
+  const player = getPlayer();
+  if (!player) {
+    // 未登录也显示通知（fallback），同时提示登录
+    fetchNotifs(); // 加载 FALLBACK_NOTIFS
+    setTimeout(() => {
+      toggleNotifPanel();
+    }, 80);
+    return;
+  }
+  toggleNotifPanel();
 }
 
 function toggleNotifPanel() {

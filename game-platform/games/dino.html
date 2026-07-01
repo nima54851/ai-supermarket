@@ -71,6 +71,7 @@ for (let i = 0; i < 60; i++) {
   mesh.position.set(Math.random() * W, Math.random() * (GROUND_Y - 40), 0);
   mesh.userData.phase = Math.random() * Math.PI * 2;
   mesh.userData.speed = 0.02 + Math.random() * 0.03;
+  mesh.userData.wrapping = true;  // 向左滚动
   starsGroup.add(mesh);
 }
 scene.add(starsGroup);
@@ -406,7 +407,8 @@ function updateParticles() {
 // ═══════════════════════════════════════════════════════════
 //  GAME STATE
 // ═══════════════════════════════════════════════════════════
-let player, obstacles, score, high, gameOver, frame, speed;
+let player, obstacles, score, high, gameOver, frame, speed, gameState;
+let speedLines = [];
 let dinoY, dinoVY, dinoOnGround;
 high = parseInt(localStorage.getItem('dino_hs') || '0');
 document.getElementById('h').textContent = high;
@@ -551,6 +553,34 @@ function update() {
     }
   });
 
+    // Stars scroll left
+  starsGroup.children.forEach(s => {
+    if (s.userData.wrapping) {
+      s.position.x -= speed * 0.05;
+      if (s.position.x < -5) s.position.x = W + 5;
+    }
+  });
+  // Speed lines (motion blur effect)
+  if (gameState !== 'idle' && frame % 3 === 0) {
+    const sl = new THREE.Mesh(
+      new THREE.PlaneGeometry(2, 2),
+      new THREE.MeshBasicMaterial({ color: 0x88ffbb, transparent: true, opacity: 0.15 })
+    );
+    sl.position.set(W * Math.random(), Math.random() * (GROUND_Y - 20) + 20, 2);
+    sl.userData.slLife = 0.15;
+    scene.add(sl);
+    speedLines.push(sl);
+  }
+  for (let si = speedLines.length - 1; si >= 0; si--) {
+    const sl = speedLines[si];
+    sl.userData.slLife -= 0.016;
+    sl.position.x -= speed * 3;
+    sl.material.opacity = Math.max(0, sl.userData.slLife / 0.15 * 0.15);
+    if (sl.userData.slLife <= 0 || sl.position.x < -10) {
+      scene.remove(sl);
+      speedLines.splice(si, 1);
+    }
+  }
   // Particles
   updateParticles();
 
