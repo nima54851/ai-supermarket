@@ -1,0 +1,92 @@
+{
+  "name": "Database Migration Automation",
+  "nodes": [
+    {
+      "id": "trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base WEBHOOK",
+      "parameters": {
+        "path": "db-migration"
+      },
+      "position": [250, 300]
+    },
+    {
+      "id": "schema-diff",
+      "name": "Schema Comparator",
+      "type": "HTTP Request",
+      "parameters": {
+        "url": "{{$env.DB_TOOL_URL}}/diff",
+        "method": "POST"
+      },
+      "position": [450, 300]
+    },
+    {
+      "id": "llm-generate",
+      "name": "AI Migration Script Generator",
+      "type": "HTTP Request",
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "sendBody": true,
+        "bodyContentType": "json"
+      },
+      "position": [650, 300]
+    },
+    {
+      "id": "dry-run",
+      "name": "Dry Run Validator",
+      "type": "EXEC",
+      "parameters": {
+        "command": "psql -h {{$env.DB_HOST}} -U {{$env.DB_USER}} -d {{$env.DB_NAME}} --dry-run -f migration.sql"
+      },
+      "position": [850, 300]
+    },
+    {
+      "id": "backup",
+      "name": "Database Backup",
+      "type": "EXEC",
+      "parameters": {
+        "command": "pg_dump -h {{$env.DB_HOST}} -U {{$env.DB_USER}} {{$env.DB_NAME}} > backup_v{{$vars.version}}_{{Date.now()}}.sql"
+      },
+      "position": [1050, 300]
+    },
+    {
+      "id": "execute",
+      "name": "Execute Migration",
+      "type": "EXEC",
+      "parameters": {
+        "command": "psql -h {{$env.DB_HOST}} -U {{$env.DB_USER}} -d {{$env.DB_NAME}} -f migration.sql"
+      },
+      "position": [1250, 300]
+    },
+    {
+      "id": "verify",
+      "name": "Data Integrity Check",
+      "type": "HTTP Request",
+      "parameters": {
+        "url": "{{$env.DB_TOOL_URL}}/verify",
+        "method": "POST"
+      },
+      "position": [1450, 300]
+    },
+    {
+      "id": "report",
+      "name": "Migration Report",
+      "type": "Slack",
+      "parameters": {
+        "channel": "{{$env.NOTIFY_CHANNEL}}",
+        "text": "✅ DB Migration v{{$vars.version}} completed. Rows affected: {{$json.rows_affected}}"
+      },
+      "position": [1650, 300]
+    }
+  ],
+  "connections": {
+    "trigger": { "main": [[{ "node": "schema-diff", "type": "main", "index": 0 }]] },
+    "schema-diff": { "main": [[{ "node": "llm-generate", "type": "main", "index": 0 }]] },
+    "llm-generate": { "main": [[{ "node": "dry-run", "type": "main", "index": 0 }]] },
+    "dry-run": { "main": [[{ "node": "backup", "type": "main", "index": 0 }]] },
+    "backup": { "main": [[{ "node": "execute", "type": "main", "index": 0 }]] },
+    "execute": { "main": [[{ "node": "verify", "type": "main", "index": 0 }]] },
+    "verify": { "main": [[{ "node": "report", "type": "main", "index": 0 }]] }
+  }
+}

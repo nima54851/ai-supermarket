@@ -1,0 +1,34 @@
+{
+  "name": "Feature Flag Automation",
+  "nodes": [
+    {
+      "parameters": {"httpMethod": "POST", "path": "feature-flag", "responseMode": "lastNode"},
+      "name": "Webhook (PR Merged)", "type": "n8n-nodes-base.webhook", "typeVersion": 1, "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const { suggestFlags } = require('feature-flag-automation');\nconst pr = $input.item.json;\nconst flags = await suggestFlags(pr.diff || '', pr.context || '');\nreturn [{json: {pr, suggestedFlags: flags}}];"
+      },
+      "name": "AI Flag Recommendation", "type": "n8n-nodes-base.function", "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const flags = $input.item.json.suggestedFlags;\nconst created = [];\nfor (const flag of flags) {\n  const result = await require('feature-flag-automation').createFlag('default', flag.flag_key, flag.name, `AI-suggested: ${flag.name}`);\n  await require('feature-flag-automation').setPercentageRollout(flag.flag_key, 5);\n  created.push(flag.flag_key);\n}\nreturn [{json: {createdFlags: created}}];"
+      },
+      "name": "Create Flags in LD", "type": "n8n-nodes-base.function", "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "channel": "feature-flags",
+        "text": "=🚀 New flags created:\n{{$json.createdFlags.join('\\n')}}",
+        "options": {}
+      },
+      "name": "Slack Notification", "type": "n8n-nodes-base.slack", "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "Webhook (PR Merged)": {"main": [[{"node": "AI Flag Recommendation", "type": "main"}]]},
+    "AI Flag Recommendation": {"main": [[{"node": "Create Flags in LD", "type": "main"}]]},
+    "Create Flags in LD": {"main": [[{"node": "Slack Notification", "type": "main"}]]}
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "Blockchain Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {"interval": [{"field": "cronExpression", "expression": "*/15 * * * *"}]},
+        "triggerField": "wallet"
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "={{$vars.CHAIN_EXPLORER_API}}/api?module=account&action=txlist&address={{$node.Schedule Trigger.json.wallet || $vars.DEFAULT_WALLET}}&sort=desc&apikey={{$vars.ETHERSCAN_KEY}}",
+        "options": {"timeout": 30000}
+      },
+      "id": "fetch-transactions",
+      "name": "Fetch Transactions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "jsCode": "const txs = $input.first().json.result || [];\nconst largeTxs = txs.filter(tx => parseFloat(tx.value) > 0.1);\nconst gasAvg = txs.slice(0,5).reduce((a,b) => a + parseFloat(b.gasprice), 0) / 5;\n\nreturn {\n  wallet: $node.Schedule Trigger.json.wallet || $vars.DEFAULT_WALLET,\n  txCount: txs.length,\n  largeTxs,\n  avgGasGwei: (gasAvg / 1e9).toFixed(2),\n  lastTx: txs[0]\n};"
+      },
+      "id": "process-data",
+      "name": "Process & Analyze",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "channel": "blockchain-alerts",
+        "text": "=🔔 Blockchain Alert\nWallet: `{{$node['Process & Analyze'].json.wallet}}`\nTX Count (24h): {{$node['Process & Analyze'].json.txCount}}\nAvg Gas: {{$node['Process & Analyze'].json.avgGasGwei}} Gwei\nLarge Transfers: {{$node['Process & Analyze'].json.largeTxs.length}}"
+      },
+      "id": "discord-alert",
+      "name": "Discord Alert",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 1.1,
+      "webhookId": "{{$vars.DISCORD_WEBHOOK}}"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {"main": [[{"node": "Fetch Transactions", "type": "main", "index": 0}]]},
+    "Fetch Transactions": {"main": [[{"node": "Process & Analyze", "type": "main", "index": 0}]]},
+    "Process & Analyze": {"main": [[{"node": "Discord Alert", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "tags": ["blockchain", "automation", "agent-studio"]
+}

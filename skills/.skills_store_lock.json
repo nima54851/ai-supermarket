@@ -112,6 +112,27 @@
       "source": "community",
       "version": "2.0.2",
       "installedAt": "2026-06-28T04:29:36Z"
+    },
+    "hy-3d-generation": {
+      "name": "HY 3D Generation",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=hy-3d-generation",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-07-02T01:40:13Z"
+    },
+    "skill-vetter": {
+      "name": "Skill Vetter",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=skill-vetter",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-07-06T04:08:49Z"
+    },
+    "architecture-diagram": {
+      "name": "架构图生成器",
+      "zip_url": "https://api.skillhub.cn/api/v1/download?slug=architecture-diagram",
+      "source": "community",
+      "version": "1.0.0",
+      "installedAt": "2026-07-06T04:09:19Z"
     }
   }
 }

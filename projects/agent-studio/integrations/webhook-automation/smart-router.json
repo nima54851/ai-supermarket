@@ -1,0 +1,48 @@
+{
+  "name": "AI Smart Webhook Router",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "router", "responseMode": "responseNode" },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Classify this webhook event. Return JSON: { \"source\": \"github|stripe|slack|custom\", \"type\": \"issue|pr|star|payment|alert|unknown\", \"priority\": \"high|medium|low\", \"summary\": \"one line\" }"
+            }
+          ]
+        },
+        "options": { "maxTokens": 200 }
+      },
+      "name": "AI Classifier",
+      "type": "openai",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            { "id": "priority-high", "leftValue": "={{ $json.text }}", "rightValue": "high", " "operation": "contains" },
+            { "id": "priority-medium", "leftValue": "={{ $json.text }}", "rightValue": "medium", "operation": "contains" }
+          ],
+          "combinator": "or"
+        },
+        "fallbackOutputs": ["low"]
+      },
+      "name": "Priority Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [[{ "node": "AI Classifier", "type": "main", "index": 0 }]] },
+    "AI Classifier": { "main": [[{ "node": "Priority Switch", "type": "main", "index": 0 }]] }
+  }
+}

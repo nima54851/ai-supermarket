@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>架构图</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,300;1,14..32,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  :root {
+    /* ── Surfaces ── */
+    --bg: #edebe1;
+    --bg-warm: #e8e5da;
+    --surface: #f5f3eb;
+    --surface-hover: #faf8f2;
+
+    /* ── Text ── */
+    --text-primary: #1a1a18;
+    --text-secondary: #6b6961;
+    --text-tertiary: #9c9a90;
+
+    /* ── Borders ── */
+    --border: #d4d1c7;
+    --border-light: #e0ddd4;
+
+    /* ── Accent palette ── */
+    --accent-blue: #3d5af1;
+    --accent-green: #2d8a56;
+    --accent-amber: #c47d1a;
+    --accent-purple: #7c4dff;
+    --accent-indigo: #4f57f1;
+    --accent-teal: #1a8a7a;
+    --accent-red: #d44332;
+    --accent-pink: #d1478a;
+
+    /* ── Tokens ── */
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow-sm: 0 1px 3px rgba(26,26,24,0.04), 0 1px 2px rgba(26,26,24,0.03);
+    --shadow-md: 0 4px 16px rgba(26,26,24,0.06), 0 2px 6px rgba(26,26,24,0.04);
+    --shadow-lg: 0 12px 40px rgba(26,26,24,0.08), 0 4px 12px rgba(26,26,24,0.04);
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 48px 32px 64px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+  .header h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 42px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.15;
+  }
+  .header .tagline {
+    font-size: 15px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.02em;
+    font-weight: 400;
+  }
+  .header .tagline code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+  }
+
+  /* ── Canvas ── */
+  .canvas {
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+
+  /* ── Users Row ── */
+  .users-row {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.1s forwards;
+  }
+  .user-card {
+    text-align: center;
+    transition: transform var(--transition);
+    cursor: default;
+  }
+  .user-card:hover { transform: translateY(-3px); }
+  .user-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    font-size: 26px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition);
+    border: 2px solid var(--bg);
+  }
+  .user-card:hover .user-avatar { box-shadow: var(--shadow-md); }
+  .avatar-author  { background: linear-gradient(145deg, #ede7f6, #d1c4e9); }
+  .avatar-nontech { background: linear-gradient(145deg, #e0f2f1, #b2dfdb); }
+  .avatar-tech    { background: linear-gradient(145deg, #e3f2fd, #bbdefb); }
+  .avatar-admin   { background: linear-gradient(145deg, #fce4ec, #f8bbd0); }
+  .user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  .user-desc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    max-width: 140px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* ── Flow Arrow (vertical) ── */
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.2s forwards;
+  }
+  .flow-arrow .arrow-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .flow-arrow .line {
+    width: 1.5px;
+    height: 22px;
+    background: var(--border);
+  }
+  .flow-arrow .arrow-head {
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--border);
+  }
+  .flow-arrow .label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-left: 14px;
+    letter-spacing: 0.04em;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* ── Section ── */
+  .section {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 32px 28px 26px;
+    margin-bottom: 6px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition);
+  }
+  .section:hover { box-shadow: var(--shadow-md); }
+
+  .section-tag {
+    position: absolute;
+    top: -11px;
+    left: 28px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 14px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+  .tag-marketplace { background: #eef2ff; color: var(--accent-blue);   border-color: #c7d2fe; }
+  .tag-pipeline    { background: #f3e8ff; color: var(--accent-purple); border-color: #ddd6fe; }
+  .tag-infra       { background: #ecfdf5; color: var(--accent-green);  border-color: #a7f3d0; }
+  .tag-data        { background: #fffbeb; color: var(--accent-amber);  border-color: #fde68a; }
+
+  /* Staggered entrance per section */
+  .section-1 { opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards; }
+  .section-2 { opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards; }
+  .section-3 { opacity: 0; animation: fadeUp 0.8s ease 0.7s forwards; }
+  .section-4 { opacity: 0; animation: fadeUp 0.8s ease 0.9s forwards; }
+
+  /* ── Cards Row ── */
+  .cards-row {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Card ── */
+  .card {
+    flex: 1;
+    min-width: 200px;
+    max-width: 320px;
+    background: var(--surface-hover);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    opacity: 0.85;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border);
+  }
+
+  .card-icon  { font-size: 22px; margin-bottom: 8px; display: block; }
+  .card-title { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 600; margin-bottom: 2px; }
+  .card-route { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-tertiary); margin-bottom: 14px; letter-spacing: 0.02em; }
+
+  .card-list { list-style: none; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .card-list li { display: flex; align-items: baseline; gap: 8px; }
+  .card-list li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+
+  /* Card color themes */
+  .card-web::before    { background: var(--accent-blue); }
+  .card-web .card-title { color: var(--accent-blue); }
+  .card-web .card-list li::before { background: var(--accent-blue); }
+
+  .card-api::before    { background: var(--accent-green); }
+  .card-api .card-title { color: var(--accent-green); }
+  .card-api .card-list li::before { background: var(--accent-green); }
+
+  .card-db::before     { background: var(--accent-amber); }
+  .card-db .card-title  { color: var(--accent-amber); }
+  .card-db .card-list li::before { background: var(--accent-amber); }
+
+  .card-git::before    { background: var(--accent-purple); }
+  .card-git .card-title { color: var(--accent-purple); }
+  .card-git .card-list li::before { background: var(--accent-purple); }
+
+  .card-cli::before    { background: var(--accent-indigo); }
+  .card-cli .card-title { color: var(--accent-indigo); }
+  .card-cli .card-list li::before { background: var(--accent-indigo); }
+
+  .card-feishu::before    { background: var(--accent-teal); }
+  .card-feishu .card-title { color: var(--accent-teal); }
+  .card-feishu .card-list li::before { background: var(--accent-teal); }
+
+  .card-red::before    { background: var(--accent-red); }
+  .card-red .card-title { color: var(--accent-red); }
+  .card-red .card-list li::before { background: var(--accent-red); }
+
+  .card-pink::before    { background: var(--accent-pink); }
+  .card-pink .card-title { color: var(--accent-pink); }
+  .card-pink .card-list li::before { background: var(--accent-pink); }
+
+  /* ── Horizontal connector ── */
+  .h-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    flex-shrink: 0;
+  }
+  .h-connector .h-line {
+    width: 100%;
+    height: 1.5px;
+    background: var(--border);
+    position: relative;
+  }
+  .h-connector .h-line::after {
+    content: '';
+    position: absolute;
+    right: -1px; top: -3.5px;
+    width: 0; height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 5px solid var(--border);
+  }
+  /* Bidirectional variant */
+  .h-connector.bidirectional .h-line::before {
+    content: '';
+    position: absolute;
+    left: -1px; top: -3.5px;
+    width: 0; height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 5px solid var(--border);
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s ease 0.7s forwards;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.02em;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    body { padding: 24px 16px 48px; }
+    .header h1 { font-size: 32px; }
+    .users-row { gap: 20px; }
+    .cards-row { flex-direction: column; align-items: center; }
+    .card { max-width: 100%; min-width: 0; width: 100%; }
+    .h-connector { display: none; }
+    .section { padding: 28px 20px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 使用示例：替换为实际架构内容 -->
+
+<div class="header">
+  <h1>系统架构</h1>
+  <p class="tagline">项目名称</p>
+</div>
+
+<div class="canvas">
+
+  <!-- 用户角色（可选） -->
+  <div class="users-row">
+    <div class="user-card">
+      <div class="user-avatar avatar-tech">💻</div>
+      <div class="user-name">角色名</div>
+      <div class="user-desc">简短描述</div>
+    </div>
+  </div>
+
+  <!-- 垂直箭头 -->
+  <div class="flow-arrow">
+    <div class="arrow-col">
+      <div class="line"></div>
+      <div class="arrow-head"></div>
+    </div>
+  </div>
+
+  <!-- 分组区块 -->
+  <div class="section section-1">
+    <div class="section-tag tag-marketplace">分组名</div>
+    <div class="cards-row">
+
+      <div class="card card-web">
+        <span class="card-icon">🌐</span>
+        <div class="card-title">模块名</div>
+        <div class="card-route">/path</div>
+        <ul class="card-list">
+          <li>功能点 1</li>
+          <li>功能点 2</li>
+        </ul>
+      </div>
+
+      <div class="h-connector"><div class="h-line"></div></div>
+
+      <div class="card card-api">
+        <span class="card-icon">⚙️</span>
+        <div class="card-title">模块名</div>
+        <div class="card-route">/api/*</div>
+        <ul class="card-list">
+          <li>功能点 1</li>
+          <li>功能点 2</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 图例 -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-blue)"></div>前端</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--accent-green)"></div>后端</div>
+  </div>
+
+</div>
+
+</body>
+</html>

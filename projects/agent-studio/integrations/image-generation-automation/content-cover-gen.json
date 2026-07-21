@@ -1,0 +1,118 @@
+{
+  "name": "Content Cover Image Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-cover",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "resource": "json",
+        "operation": "parse",
+        "jsonOutput": "={{JSON.parse($json.body)}}"
+      },
+      "name": "Parse Request Body",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [250, 0]
+    },
+    {
+      "parameters": {
+        "resource": "aiLanguageModel",
+        "operation": "complete",
+        "model": "gpt-4o",
+        "prompt": "=You are a professional image prompt engineer. Convert this article title into a compelling DALL·E 3 image prompt.\n\nArticle title: {{ $json.title }}\nStyle: {{ $json.style || 'cinematic' }}\n\nReturn ONLY the prompt text, nothing else. Make it vivid, specific, and optimized for DALL·E 3."
+      },
+      "name": "GPT Prompt Engineer",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [500, 0]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "generate",
+        "model": "dall-e-3",
+        "prompt": "={{ $json.prompt }}",
+        "size": "1792x1024",
+        "quality": "hd",
+        "responseFormat": "url"
+      },
+      "name": "DALL·E 3 Generate",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [750, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "response": {
+          "response": {
+            "fileName": "=cover-{{ $('Parse Request Body').item.json.title | slugify }}-{{ $now | dateISO }}.png"
+          }
+        },
+        "options": {}
+      },
+      "name": "Download Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 0]
+    },
+    {
+      "parameters": {
+        "bucket": "={{ $env.OSS_BUCKET }}",
+        "remotePath": "=covers/{{ $('Parse Request Body').item.json.title | slugify }}.png",
+        "fileName": "={{ $json.fileName }}"
+      },
+      "name": "Upload to OSS",
+      "type": "n8n-nodes-base.aliyunOSS",
+      "typeVersion": 1,
+      "position": [1250, 0]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "idField": "={{ $json.id }}",
+        "fields": {
+          "values": {
+            "coverImageUrl": "={{ $json.publicUrl }}"
+          }
+        }
+      },
+      "name": "Update Notion Page",
+      "type": "n8n-nodes-notion",
+      "typeVersion": 1,
+      "position": [1500, 0]
+    },
+    {
+      "parameters": {
+        "to": "={{ $json.notifyEmail || 'admin@example.com' }}",
+        "subject": "=Cover Generated: {{ $('Parse Request Body').item.json.title }}",
+        "body": "=Cover image generated successfully!\n\nImage URL: {{ $('Upload to OSS').item.json.publicUrl }}\nTitle: {{ $('Parse Request Body').item.json.title }}"
+      },
+      "name": "Send Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [1750, 0]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [[{ "node": "Parse Request Body", "type": "main", "index": 0 }]] },
+    "Parse Request Body": { "main": [[{ "node": "GPT Prompt Engineer", "type": "main", "index": 0 }]] },
+    "GPT Prompt Engineer": { "main": [[{ "node": "DALL·E 3 Generate", "type": "main", "index": 0 }]] },
+    "DALL·E 3 Generate": { "main": [[{ "node": "Download Image", "type": "main", "index": 0 }]] },
+    "Download Image": { "main": [[{ "node": "Upload to OSS", "type": "main", "index": 0 }]] },
+    "Upload to OSS": { "main": [[{ "node": "Update Notion Page", "type": "main", "index": 0 }]] },
+    "Update Notion Page": { "main": [[{ "node": "Send Email Notification", "type": "main", "index": 0 }]] }
+  },
+  "settings": {},
+  "description": "Auto-generate cover images from article titles using DALL·E 3"
+}

@@ -1,0 +1,67 @@
+{
+  "name": "MCP Server Tool Dispatcher",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mcp-tool",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook (MCP In)",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "functionCode": "const { tool_name, params } = $input.item.json;\n\nconst toolRegistry = {\n  'github_activity_summary': { webhook: 'http://localhost:5678/webhook/github-activity', field: 'repo' },\n  'send_notification': { webhook: 'http://localhost:5678/webhook/notify', field: 'channel' },\n  'search_knowledge_base': { webhook: 'http://localhost:5678/webhook/rag-search', field: 'query' },\n  'run_data_pipeline': { webhook: 'http://localhost:5678/webhook/data-pipeline', field: 'pipeline_id' },\n  'get_system_health': { webhook: 'http://localhost:5678/webhook/health-check', field: null },\n};\n\nconst tool = toolRegistry[tool_name];\nif (!tool) {\n  return [{ json: { error: `Unknown tool: ${tool_name}`, available: Object.keys(toolRegistry) } }];\n}\n\nconst payload = tool.field && params[tool.field] ? { [tool.field]: params[tool.field], ...params } : params;\n\nreturn [{ json: { tool_name, payload, webhook_url: tool.webhook } }];"
+      },
+      "name": "Route Tool",
+      "type": "n8n-nodes-base.function",
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.payload.webhook_url }}",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "source",
+              "value": "mcp"
+            },
+            {
+              "name": "tool",
+              "value": "={{ $json.tool_name }}"
+            },
+            {
+              "name": "params",
+              "value": "={{ $json.payload.params }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "name": "Call n8n Sub-Workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const result = $input.item.json;\nreturn [{\n  json: {\n    status: 'ok',\n    tool: result.tool_name,\n    result: result.data || result,\n    used_mcp: true,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "name": "Format MCP Response",
+      "type": "n8n-nodes-base.function",
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook (MCP In)": { "main": [[{ "node": "Route Tool", "type": "main", "index": 0 }]] },
+    "Route Tool": { "main": [[{ "node": "Call n8n Sub-Workflow", "type": "main", "index": 0 }]] },
+    "Call n8n Sub-Workflow": { "main": [[{ "node": "Format MCP Response", "type": "main", "index": 0 }]] }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "name": "REST API Generator Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Generate CRUD API from schema\nconst schema = {\n  resource: 'products',\n  fields: ['id', 'name', 'price', 'category', 'stock'],\n  auth: 'jwt'\n};\n\nconst endpoints = [\n  { method: 'GET', path: `/api/v1/${schema.resource}`, handler: 'list' },\n  { method: 'GET', path: `/api/v1/${schema.resource}/:id`, handler: 'get' },\n  { method: 'POST', path: `/api/v1/${schema.resource}`, handler: 'create' },\n  { method: 'PUT', path: `/api/v1/${schema.resource}/:id`, handler: 'update' },\n  { method: 'DELETE', path: `/api/v1/${schema.resource}/:id`, handler: 'delete' }\n];\n\nconst code = `const express = require('express');\nconst router = express.Router();\nconst { ${schema.fields.join(', ')} } = require('./models/${schema.resource}');\n\n${endpoints.map(e => `\n// ${e.method} ${e.path}\nrouter.${e.method.toLowerCase()}('${e.path.replace(`/${schema.resource}/:id`, '')}/:id?', async (req, res) => {\n  try {\n    const { id } = req.params;\n    const body = req.body;\n    let result;\n    switch (req.method) {\n      case 'GET':\n        result = id ? await ${schema.resource}.findById(id) : await ${schema.resource}.findAll(req.query);\n        break;\n      case 'POST':\n        result = await ${schema.resource}.create(body);\n        break;\n      case 'PUT':\n        result = await ${schema.resource}.update(id, body);\n        break;\n      case 'DELETE':\n        result = await ${schema.resource}.delete(id);\n        break;\n    }\n    res.status(200).json({ data: result });\n  } catch (err) {\n    res.status(500).json({ error: err.message });\n  }\n});`).join('')}\n\nmodule.exports = router;`;\n\nreturn [{ json: { schema, endpoints, code } }];"
+      },
+      "name": "Generate Code",
+      "type": "n8n-nodes-base.code",
+      "position": [300, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate OpenAPI 3.0 spec from schema\nconst data = $input.first().json;\nconst spec = {\n  openapi: '3.0.3',\n  info: { title: `${data.schema.resource} API`, version: '1.0.0' },\n  paths: {}\n};\n\nfor (const endpoint of data.endpoints) {\n  const path = endpoint.path.replace(':id', '{id}');\n  spec.paths[path] = {\n    [endpoint.method.toLowerCase()]: {\n      summary: `${endpoint.method} ${data.schema.resource}`,\n      responses: { '200': { description: 'Success' } }\n    }\n  };\n}\n\nreturn [{ json: { spec } }];"
+      },
+      "name": "Generate OpenAPI",
+      "type": "n8n-nodes-base.code",
+      "position": [550, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/nima54851/agent-studio/contents",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "method": "PUT",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "feat: add REST API generator + OpenAPI spec"
+            },
+            {
+              "name": "content",
+              "value": "={{ $json.spec | string }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Save to GitHub",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [800, 300]
+    }
+  ],
+  "connections": {
+    "Generate Code": {
+      "main": [["Generate OpenAPI"]]
+    },
+    "Generate OpenAPI": {
+      "main": [["Save to GitHub"]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "rest-api-generator"
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Incident Response Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "incident-response",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const payload = $input.item.json;\nconst classification = await require('ai-agent').classifyIncident(payload);\nreturn [{json: {payload, classification}}];"
+      },
+      "name": "AI Classify Severity",
+      "type": "n8n-nodes-base.function",
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+          "conditions": [
+            {"id": "severity", "leftValue": "{{$json.classification.severity}}", "rightValue": "P1", "operator": {"type": "string", "operation": "equals"}}
+          ]
+        }
+      },
+      "name": "P1 Alert?",
+      "type": "n8n-nodes-base.if",
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "channel": "incident-war-room",
+        "text": "=🚨 P1 INCIDENT: {{$json.classification.summary}}",
+        "options": {}
+      },
+      "name": "Slack P1 Alert",
+      "type": "n8n-nodes-base.slack",
+      "position": [1000, 200]
+    },
+    {
+      "parameters": {
+        "channel": "incident-notifications",
+        "text": "=🔔 Alert Classified: {{$json.classification.severity}} - {{$json.classification.summary}}",
+        "options": {}
+      },
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "position": [1000, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {"main": [[{"node": "AI Classify Severity", "type": "main"}]]},
+    "AI Classify Severity": {"main": [[{"node": "P1 Alert?", "type": "main"}]]},
+    "P1 Alert?": {"main": [[{"node": "Slack P1 Alert", "type": "main"}], [{"node": "Slack Notification", "type": "main"}]]}
+  }
+}

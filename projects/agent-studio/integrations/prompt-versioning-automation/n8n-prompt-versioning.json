@@ -1,0 +1,117 @@
+{
+  "name": "Prompt Versioning Hub",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "prompt/save",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Save Prompt (POST)",
+      "type": "n8n-nodes-base.webhook",
+      "position": [200, 150],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "prompt/get",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Get Prompt (GET)",
+      "type": "n8n-nodes-base.webhook",
+      "position": [200, 350],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "prompt/rollback",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Rollback (POST)",
+      "type": "n8n-nodes-base.webhook",
+      "position": [200, 550],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "prompt/promote",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Promote (POST)",
+      "type": "n8n-nodes-base.webhook",
+      "position": [200, 750],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "functionCode": "// Save prompt version via Python script\nconst { name, content, environment, commit_message, model, temperature, max_tokens } = $input.item.json;\n\n// In production, call prompt_store.py via child_process or subprocess node\n// This returns the new version number\nconst newVersion = Math.floor(Math.random() * 100) + 1; // Placeholder: integrate with Python\n\nreturn [{ json: { status: 'saved', name, version: newVersion, environment, commit_message } }];"
+      },
+      "name": "Python: Save Version",
+      "type": "n8n-nodes-base.function",
+      "position": [450, 150]
+    },
+    {
+      "parameters": {
+        "functionCode": "const { name, version, environment } = $input.item.json;\n\n// Return prompt content — integrate with Python/prompt_store.py\nreturn [{ json: {\n  name,\n  version: version || 'latest',\n  environment: environment || 'dev',\n  content: 'Prompt content loaded — connect to prompt_store.py for real data',\n  variables: ['var1', 'var2'],\n  hash: 'abc123',\n  status: 'retrieved'\n}}];"
+      },
+      "name": "Python: Get Prompt",
+      "type": "n8n-nodes-base.function",
+      "position": [450, 350]
+    },
+    {
+      "parameters": {
+        "functionCode": "const { name, target_version, environment, commit_message } = $input.item.json;\n\n// Rollback: re-save the content from target_version as new version\nreturn [{ json: {\n  status: 'rolled_back',\n  name,\n  from_version: 'current',\n  to_version: target_version,\n  new_version_created: Math.floor(Math.random() * 100) + 1,\n  environment,\n  commit_message: commit_message || `Rollback to v${target_version}`\n}}];"
+      },
+      "name": "Python: Rollback",
+      "type": "n8n-nodes-base.function",
+      "position": [450, 550]
+    },
+    {
+      "parameters": {
+        "functionCode": "const { name, from_env, to_env, commit_message } = $input.item.json;\n\nreturn [{ json: {\n  status: 'promoted',\n  name,\n  from_environment: from_env,\n  to_environment: to_env,\n  new_version: Math.floor(Math.random() * 100) + 1,\n  commit_message: commit_message || `Promoted from ${from_env} to ${to_env}`\n}}];"
+      },
+      "name": "Python: Promote",
+      "type": "n8n-nodes-base.function",
+      "position": [450, 750]
+    },
+    {
+      "parameters": {
+        "functionCode": "const { name, v1, v2, environment } = $input.item.json;\n\n// Diff two versions\nreturn [{ json: {\n  name,\n  v1,\n  v2,\n  environment: environment || 'dev',\n  diff: '--- v' + v1 + '\\n+++ v' + v2 + '\\n- Old line\\n+ New line',\n  status: 'diff_generated'\n}}];"
+      },
+      "name": "Python: Diff Versions",
+      "type": "n8n-nodes-base.function",
+      "position": [450, 950]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "prompt/diff",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Diff Versions (POST)",
+      "type": "n8n-nodes-base.webhook",
+      "position": [200, 950],
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Save Prompt (POST)": { "main": [[{ "node": "Python: Save Version", "type": "main", "index": 0 }]] },
+    "Get Prompt (GET)": { "main": [[{ "node": "Python: Get Prompt", "type": "main", "index": 0 }]] },
+    "Rollback (POST)": { "main": [[{ "node": "Python: Rollback", "type": "main", "index": 0 }]] },
+    "Promote (POST)": { "main": [[{ "node": "Python: Promote", "type": "main", "index": 0 }]] },
+    "Diff Versions (POST)": { "main": [[{ "node": "Python: Diff Versions", "type": "main", "index": 0 }]] }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": ["prompt", "versioning", "llm", "ai"],
+  "triggerCount": 5,
+  "updatedAt": "2026-07-21T01:00:00.000Z"
+}

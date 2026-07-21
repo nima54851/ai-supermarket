@@ -78,7 +78,7 @@ pkill -f "n8n start"                      # 停止
 - **Pages**: https://nima54851.github.io/agent-studio ✅
 - **产品页**: https://nima54851.github.io/agent-studio/product.html ✅
 - **Release v1.0.0**: https://github.com/nima54851/agent-studio/releases/tag/v1.0.0 ✅
-- **GitHub Token**: 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
+- **GitHub Token**: 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（完整 repo 权限）
 - **Scheduler PID**: 153290 (daily_scheduler.sh，等待每天09:00自动运行)
 
 ### 🛒 变现产品包
@@ -125,12 +125,20 @@ pkill -f "n8n start"                      # 停止
 - **启动命令:** `openclaw mcp serve --url wss://175.27.140.23:20447 --token-file ~/.openclaw/gateway.token`
 - **⚠️ 警告:** 暴露公网需考虑安全边界，建议配合 IP 白名单或临时启动模式
 
+## 灵犀聊天室 ✅ 已上线（serveo.net）
+- **公网地址:** https://1218904c492159a4-1-13-80-87.serveousercontent.com
+- **本地:** http://localhost:6060
+- **技术栈:** Flask + Flask-SocketIO + WebSocket
+- **房间:** 大厅 / AI实验室 / 开发者区
+- **启动:** `cd chat && PORT=6060 python3 chat_server.py`
+- **隧道:** `ssh -R 80:localhost:6060 serveo.net`
+
 ## 灵犀全球 A2A Registry ✅ 已上线
-- **GitHub:** https://github.com/nima54851/lingxi-a2a-registry
-- **本地 API:** http://localhost:18432
-- **公网 API:** http://175.27.140.23:18432
-- **Agent Card:** http://175.27.140.23:18432/.well-known/agent.json
-- **功能:** Agent 注册/发现/A2A路由/心跳/Agent Card
+- **GitHub:** https://github.com/nima54851/a2a-platform
+- **公网 API (serveo.net):** https://1163726e1814c7a7-1-13-80-87.serveousercontent.com
+- **Agent Card:** https://75ff77104f99a347-1-13-80-87.serveousercontent.com/.well-known/agent.json
+- **隧道守护:** `bash a2a-platform/tunnel.sh`（serveo.net SSH 反向隧道，URL 可能会变）
+- **本地开发:** `cd a2a-platform && python3 api.py`（端口 8080）
 - **技术栈:** FastAPI + SQLite + 原生 HTML/JS
 - **已注册 Agent:** 灵犀全球 A2A Registry、代码审查 Agent、网页爬虫 Agent、GitHub Trending 监控
 
@@ -152,8 +160,22 @@ daily_scheduler.sh: 每日调度脚本
 ## TTS 语音
 - saga / sag: ElevenLabs TTS，讲故事/语音播报用
 
+## Serper.dev Google Search API ✅ 已接入
+- **API Key:** `a1e27f773565e1f150d753e3f8b2b889012434a3`
+- **Base URL:** `https://google.serper.dev`
+- **Endpoints:**
+  - `POST /search` — 网页搜索
+  - `POST /images` — 图片搜索
+  - `POST /videos` — 视频搜索
+  - `POST /news` — 新闻搜索
+  - `POST /shopping` — 购物搜索
+- **免费额度:** 每月 2,500 次搜索
+- **Dashboard:** https://serper.dev/dashboard
+- **注意:** Header 用 `X-API-Key`（不是 Bearer token）
+- **Skill:** `skills/serper-search/`
+
 ## GitHub 推送备注
-- **origin URL 问题：** agent-studio 仓库的 origin 曾错误指向 coursepay-sales。已修正：`https://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@github.com/nima54851/agent-studio.git`
+- **origin URL 问题：** agent-studio 仓库的 origin 曾错误指向 coursepay-sales。已修正：`https://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@github.com/nima54851/agent-studio.git`
 - **git push 网络问题：** github.com:443 端口不可达（2026-06-20），GitHub API (api.github.com) 正常。推送需等网络恢复。
 
 ---
@@ -171,3 +193,8 @@ daily_scheduler.sh: 每日调度脚本
 | agent-skills-kit | AI Agent 技能开发框架 | BuilderIO/skills |
 
 **打包文件：~/.openclaw/workspace/*.skill**
+
+## MCP Server Token（2026-07-20）
+- **Token:** eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0YjQwZDFkYi0zODM2LTQ3ZTEtYTViNC0xNjkxYmFiZjZlY2UiLCJpc3MiOiJuOG4iLCJhdWQiOiJtY3Atc2VydmVyLWFwaSIsImp0aSI6ImJlYTUwMmY2LTkwYzktNGRlYy1hMjMzLWE1N2I4NWQzNWMzYSIsImlhdCI6MTc4NDUxNTgzMX0.6rtIv-Jjho4wl2gkDSYa-TLw-SnmBJjD-mqyHQTYm0s
+- **JWT 解析：** sub=4b40d1db-3836-47e1-a5b4-1691babf6ece, iss=n8n, aud=mcp-server-api, jti=bea502f6-90c9-4dec-a233-a57b85d35c3a, iat=1784515831
+- **用途:** MCP Server API 身份认证（n8n MCP 集成）

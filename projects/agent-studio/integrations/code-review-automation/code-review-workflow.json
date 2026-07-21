@@ -1,0 +1,129 @@
+{
+  "name": "Code Review Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "github-pr-review",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "GitHub Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/{{ $json.body.repository.full_name }}/pulls/{{ $json.body.pull_request.number }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{ $env.GITHUB_TOKEN }}" },
+            { "name": "Accept", "value": "application/vnd.github.v3+json" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get PR Details",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [500, 300],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/repos/{{ $json.body.repository.full_name }}/pulls/{{ $json.body.pull_request.number }}/files",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{ $env.GITHUB_TOKEN }}" },
+            { "name": "Accept", "value": "application/vnd.github.v3+json" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Get PR Files",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [750, 300],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate all changed files into a unified diff\nconst files = $input.all();\nconst pr = $('Get PR Details').first().json;\n\nlet diff = `PR #${pr.number}: ${pr.title}\\n`;\ndiff += `Author: ${pr.user.login}\\n`;\ndiff += `Files changed: ${files.length}\\n\\n`;\n\nfor (const item of files) {\n  const file = item.json;\n  diff += `\\n=== ${file.filename} (+${file additions} -${file.deletions}) ===\\n`;\n  if (file.patch) diff += file.patch.slice(0, 3000);\n  if (file.patch && file.patch.length > 3000) diff += '\\n... (truncated)';\n}\n\n// Detect language from files\nconst langs = files.map(f => {\n  const ext = f.filename.split('.').pop();\n  const map = { py: 'Python', ts: 'TypeScript', js: 'JavaScript', go: 'Go', rs: 'Rust', java: 'Java', rb: 'Ruby', cs: 'C#', php: 'PHP', sql: 'SQL' };\n  return map[ext] || ext;\n});\nconst uniqueLangs = [...new Set(langs)];\n\nreturn [{ json: { diff: diff.slice(0, 15000), languages: uniqueLangs, pr } }];"
+      },
+      "name": "Aggregate Diff",
+      "type": "n8n-nodes-base.code",
+      "position": [1000, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{ $env.OPENAI_API_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "model", "value": "gpt-4o" },
+            { "name": "max_tokens", "value": 3000 },
+            {
+              "name": "messages",
+              "value": [
+                { "role": "system", "content": "You are an expert code reviewer. Analyze PR changes for security vulnerabilities (OWASP Top 10), bugs, performance issues, and code quality problems. Respond ONLY with valid JSON." },
+                { "role": "user", "content": "Review this PR:\n\nLanguage: {{ $json.languages }}\nTitle: {{ $json.pr.title }}\nDescription: {{ $json.pr.body || 'No description' }}\n\nDIFF:\n{{ $json.diff }}\n\nReturn JSON:\n{\n  \"overall_score\": 1-10,\n  \"summary\": \"2-3 sentence summary\",\n  \"issues\": [{\"file\": \"path\", \"line\": 1, \"severity\": \"high|medium|low\", \"category\": \"security|bug|performance|style\", \"description\": \"what's wrong\", \"suggestion\": \"how to fix\"}],\n  \"approved\": boolean,\n  \"blocking_issues\": 0\n}" }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "AI Code Review",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1250, 300],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/repos/{{ $json.body.repository.full_name }}/pulls/{{ $json.body.pull_request.number }}/comments",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{ $env.GITHUB_TOKEN }}" },
+            { "name": "Accept", "value": "application/vnd.github.v3+json" },
+            { "name": "Content-Type", "value": "application/vnd.github.v3+json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "body", "value": "## 🤖 AI Code Review\n\n**Overall Score: {{ $json(\"$.overall_score\") }}/10**\n\n{{ $json(\"$.summary\") }}\n\n{{ $json(\"$.approved\") ? '✅ Approved — ready to merge' : '⛔ Blocking — please address issues before merge' }}\n\n### Issues Found: {{ $json(\"$.issues\").length }}\n\n{{ $json(\"$.issues\").map(i => '**[' + i.severity.toUpperCase() + ']** `' + i.file + '` line ' + i.line + '\\n' + i.description + '\\n→ ' + i.suggestion).join('\\n\\n') }}\n\n---\n*Reviewed by AI Code Review Agent | agent-studio*" },
+            { "name": "commit_id", "value": "{{ $json.body.pull_request.head.sha }}" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Post Review Comment",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1500, 200],
+      "typeVersion": 3
+    }
+  ],
+  "connections": {
+    "GitHub Webhook": { "main": [[{ "node": "Get PR Details", "type": "main", "index": 0 }]] },
+    "Get PR Details": { "main": [[{ "node": "Get PR Files", "type": "main", "index": 0 }]] },
+    "Get PR Files": { "main": [[{ "node": "Aggregate Diff", "type": "main", "index": 0 }]] },
+    "Aggregate Diff": { "main": [[{ "node": "AI Code Review", "type": "main", "index": 0 }]] },
+    "AI Code Review": { "main": [[{ "node": "Post Review Comment", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {},
+  "id": "code-review-automation"
+}

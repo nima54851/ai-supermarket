@@ -1,0 +1,116 @@
+{
+  "name": "GraphQL API Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "graphql-schema-generator",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Generate a complete GraphQL schema and Apollo Server setup for the following API description:\n\n{{ $json.body.schema_description }}\n\nRequirements:\n1. Full GraphQL schema (typeDefs) with all types, queries, mutations, subscriptions\n2. TypeScript resolver file with proper typing\n3. Apollo Server main file (index.ts)\n4. package.json with all dependencies\n5. README with setup instructions\n\nReturn all files clearly labeled with filename headers.",
+        "options": {
+          "systemMessage": "You are an expert GraphQL API engineer. Output ONLY the complete code files as requested."
+        }
+      },
+      "name": "LLM Schema Generator",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [500, 300],
+      "typeVersion": 1.5
+    },
+    {
+      "parameters": {
+        "fileName": "/tmp/graphql-api/{{ $json.filename }}"
+      },
+      "name": "Write Schema File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "position": [750, 200],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "command": "mkdir -p /tmp/graphql-api && cd /tmp/graphql-api && npm init -y > /dev/null 2>&1 && npm install @apollo/server graphql graphql-yoga typescript ts-node @types/node --save > /dev/null 2>&1 && echo 'Dependencies installed'"
+      },
+      "name": "Setup Apollo Project",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [750, 400],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/repos/nima54851/agent-studio/contents",
+        "options": {
+          "bodyParameters": {
+            "parameters": []
+          }
+        }
+      },
+      "name": "Check Repo Structure",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1000, 300],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/repos/nima54851/agent-studio/contents/skills/graphql-api-automation",
+        "method": "PUT",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "message",
+              "value": "feat: add GraphQL API automation skill"
+            },
+            {
+              "name": "content",
+              "value": "{{ $json.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Push to GitHub",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1250, 300],
+      "typeVersion": 3
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [[{ "node": "LLM Schema Generator", "type": "main", "index": 0 }]]
+    },
+    "LLM Schema Generator": {
+      "main": [[{ "node": "Write Schema File", "type": "main", "index": 0 }], [{ "node": "Setup Apollo Project", "type": "main", "index": 0 }]]
+    },
+    "Setup Apollo Project": {
+      "main": [[{ "node": "Check Repo Structure", "type": "main", "index": 0 }]]
+    },
+    "Check Repo Structure": {
+      "main": [[{ "node": "Push to GitHub", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "graphql-api-automation"
+}

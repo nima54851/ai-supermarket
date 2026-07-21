@@ -1,0 +1,59 @@
+{
+  "name": "AI Test Generation Pipeline",
+  "nodes": [
+    {
+      "name": "GitHub Webhook (PR)",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-test-gen"
+      },
+      "webhookId": "ai-test-gen"
+    },
+    {
+      "name": "Filter: PR Opened",
+      "type": "n8n-nodes-base.filter",
+      "parameters": {
+        "conditions": {
+          "options": {},
+          "conditions": [
+            { "id": "action", "type": "string", "operation": "equals", "value": "opened" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Changed Files",
+      "type": "@n8n-io/n8n-nodes-github",
+      "parameters": {
+        "operation": "getFile",
+        "repository": "{{ $json.repository.full_name }}",
+        "filePath": "{{ $json.pull_request.head.ref }}"
+      }
+    },
+    {
+      "name": "AI Generate Tests",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "parameters": {
+        "operation": "complete",
+        "prompt": "Generate pytest test cases for the following Python code. Include edge cases and error conditions. Output only the test file content.\n\nCode:\n{{ $json.content }}"
+      }
+    },
+    {
+      "name": "Create PR Comment",
+      "type": "@n8n-io/n8n-nodes-github",
+      "parameters": {
+        "operation": "createComment",
+        "repository": "{{ $json.repository.full_name }}",
+        "issueNumber": "{{ $json.pull_request.number }}",
+        "body": "## 🤖 AI Generated Tests\n\n```python\n{{ $json.generated_tests }}\n```"
+      }
+    }
+  ],
+  "connections": {
+    "GitHub Webhook (PR)": { "main": [[{ "node": "Filter: PR Opened" }]] },
+    "Filter: PR Opened": { "main": [[{ "node": "Get Changed Files" }]] },
+    "Get Changed Files": { "main": [[{ "node": "AI Generate Tests" }]] },
+    "AI Generate Tests": { "main": [[{ "node": "Create PR Comment" }]] }
+  }
+}

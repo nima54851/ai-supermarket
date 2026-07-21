@@ -1,0 +1,75 @@
+{
+  "name": "Workflow Orchestrator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "task-orchestrate",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "jsCode": "const task = $input.first().json;\nconst priority = task.priority || 'normal';\nconst type = task.task || 'unknown';\n\n// AI routing decision\nconst routes = {\n  'analyze_github_trending': ['fetch-github', 'ai-analyze', 'format-report'],\n  'code_review': ['clone-repo', 'ai-review', 'post-comment'],\n  'web_scrape': ['fetch-page', 'extract-data', 'save-to-db'],\n  'send_digest': ['aggregate-data', 'ai-summarize', 'send-email']\n};\n\nreturn {\n  taskId: task.task_id || Date.now().toString(),\n  type,\n  priority,\n  steps: routes[type] || ['generic-step'],\n  inputParams: task.params || {}\n};"
+      },
+      "id": "ai-router",
+      "name": "AI Intent Router",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const steps = $node['AI Intent Router'].json.steps;\nconst results = [];\n\n// Fan-out: execute steps in parallel (simulated)\nfor (const step of steps) {\n  results.push({\n    step,\n    status: 'pending',\n    startTime: new Date().toISOString()\n  });\n}\nreturn results;"
+      },
+      "id": "fan-out",
+      "name": "Fan-Out Steps",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Step executor with retry logic\nconst item = $input.first().json;\nconst maxRetries = 3;\n\n// Simulate step execution\nconst stepResults = {\n  'fetch-github': { data: { repos: ['repo1', 'repo2'] } },\n  'ai-analyze': { data: { summary: 'AI summary here' } },\n  'format-report': { data: { markdown: '# Daily Report' } },\n  'clone-repo': { data: { success: true } },\n  'ai-review': { data: { comments: [] } },\n  'post-comment': { data: { posted: true } },\n  'fetch-page': { data: { html: '<html/>' } },\n  'extract-data': { data: { items: [] } },\n  'save-to-db': { data: { saved: 10 } },\n  'aggregate-data': { data: { aggregated: true } },\n  'ai-summarize': { data: { summary: 'Digest ready' } },\n  'send-email': { data: { sent: true } },\n  'generic-step': { data: { done: true } }\n};\n\nconst result = stepResults[item.step] || { data: { done: true } };\nreturn { ...item, ...result, status: 'completed', endTime: new Date().toISOString() };"
+      },
+      "id": "execute-step",
+      "name": "Execute Step",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge all step results\nconst allResults = $input.all();\nconst taskId = $node['AI Intent Router'].json.taskId;\n\nconst successful = allResults.filter(r => r.json.status === 'completed');\nconst failed = allResults.filter(r => r.json.status === 'failed');\n\nreturn {\n  workflowId: taskId,\n  totalSteps: allResults.length,\n  completed: successful.length,\n  failed: failed.length,\n  results: allResults.map(r => ({ step: r.json.step, status: r.json.status, data: r.json.data })),\n  summary: failed.length > 0 ? 'PARTIAL' : 'SUCCESS',\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "merge-results",
+      "name": "Merge Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "channel": "task-orchestrator",
+        "text": "=✅ Workflow Complete\nTask ID: `{{$node['Merge Results'].json.workflowId}}`\nSteps: {{$node['Merge Results'].json.completed}}/{{$node['Merge Results'].json.totalSteps}}\nStatus: **{{$node['Merge Results'].json.summary}}**"
+      },
+      "id": "slack-notify",
+      "name": "Slack Notify",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "webhookId": "{{$vars.SLACK_WEBHOOK}}"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {"main": [[{"node": "AI Intent Router", "type": "main", "index": 0}]]},
+    "AI Intent Router": {"main": [[{"node": "Fan-Out Steps", "type": "main", "index": 0}]]},
+    "Fan-Out Steps": {"main": [[{"node": "Execute Step", "type": "main", "index": 0}]]},
+    "Execute Step": {"main": [[{"node": "Merge Results", "type": "main", "index": 0}]]},
+    "Merge Results": {"main": [[{"node": "Slack Notify", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1", "saveManualExecutions": true},
+  "staticData": null,
+  "tags": ["orchestration", "workflow", "agent-studio"]
+}

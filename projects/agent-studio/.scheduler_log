@@ -13,3 +13,4 @@ ERROR: GITHUB_TOKEN environment variable not set
 [Fri Jun 26 09:00:38 CST 2026] 🕘 Running daily ops...
 ERROR: GITHUB_TOKEN environment variable not set
 [Fri Jun 26 09:00:38 CST 2026] ✅ Daily ops complete
+bash: daily_scheduler.sh: No such file or directory

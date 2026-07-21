@@ -1,0 +1,93 @@
+{
+  "name": "AI Model Router Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {"js": "return true;"},
+        "triggerField": "incoming_request"
+      },
+      "id": "webhook-trigger",
+      "name": "Request Webhook",
+      "type": "n8n-nodes-base.trigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Classify task type and select optimal model\nconst req = $input.first().json;\nconst { task_type, prompt, budget = 10.0, max_latency_sec = 5 } = req;\n\nconst models = {\n  'code':      { id: 'claude-sonnet-4-20250514', provider: 'anthropic', cost_per_1k: 0.015, speed: 'medium', context: 200000 },\n  'writing':   { id: 'gpt-4o-2024-08-06',       provider: 'openai',    cost_per_1k: 0.015, speed: 'slow',   context: 128000 },\n  'quick':     { id: 'gpt-4o-mini-2024-07-18',  provider: 'openai',    cost_per_1k: 0.0004, speed: 'fast', context: 128000 },\n  'analysis':  { id: 'gpt-4o-2024-08-06',       provider: 'openai',    cost_per_1k: 0.015, speed: 'slow',   context: 128000 },\n  'creative':  { id: 'claude-sonnet-4-20250514', provider: 'anthropic', cost_per_1k: 0.015, speed: 'medium', context: 200000 },\n  'default':   { id: 'gpt-4o-mini-2024-07-18',  provider: 'openai',    cost_per_1k: 0.0004, speed: 'fast', context: 128000 },\n};\n\nconst selected = models[task_type] || models['default'];\n\n// Budget check\nconst estimated_cost = (prompt.length / 4) * selected.cost_per_1k / 1000;\nif (estimated_cost > budget) {\n  return [{ json: { error: 'Budget exceeded', estimated_cost, budget } }];\n}\n\nreturn [{ json: { selected_model: selected.id, provider: selected.provider, prompt, estimated_cost, context_window: selected.context } }];"
+      },
+      "id": "classify-route",
+      "name": "Classify & Route",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true},
+          "conditions": [{"id": "has-model", "leftValue": "{{ $json.selected_model }}", "rightValue": "", "operator": {"type": "string", "operation": "exists"}}],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "has-model-check",
+      "name": "Model Selected?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.anthropic.com/v1/messages",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [
+          {"name": "x-api-key", "value": "{{ $env.ANTHROPIC_API_KEY }}"},
+          {"name": "anthropic-version", "value": "2023-06-01"},
+          {"name": "Content-Type", "value": "application/json"}
+        ]},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"{{ $json.selected_model }}\",\n  \"max_tokens\": 4096,\n  \"messages\": [{\"role\": \"user\", \"content\": \"{{ $json.prompt }}\"}]\n}"
+      },
+      "id": "call-anthropic",
+      "name": "Call Anthropic",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1000, 200]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [
+          {"name": "Authorization", "value": "Bearer {{ $env.OPENAI_API_KEY }}"},
+          {"name": "Content-Type", "value": "application/json"}
+        ]},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"{{ $json.selected_model }}\",\n  \"messages\": [{\"role\": \"user\", \"content\": \"{{ $json.prompt }}\"}],\n  \"max_tokens\": 4096\n}"
+      },
+      "id": "call-openai",
+      "name": "Call OpenAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1000, 400]
+    }
+  ],
+  "connections": {
+    "Classify & Route": {
+      "main": [[{"node": "Model Selected?", "type": "main", "index": 0}]]
+    },
+    "Model Selected?": {
+      "main": [
+        [{"node": "Call Anthropic", "type": "main", "index": 0}],
+        [{"node": "Call OpenAI",     "type": "main", "index": 0}]
+      ]
+    }
+  },
+  "settings": {},
+  "description": "Smart LLM router: classifies task type and routes to optimal OpenAI/Anthropic model based on cost and latency"
+}

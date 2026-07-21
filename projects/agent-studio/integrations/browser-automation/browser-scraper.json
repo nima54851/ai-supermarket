@@ -1,0 +1,81 @@
+{
+  "name": "Browser Scraper Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "scrape",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "webhookId": "browser-scraper"
+    },
+    {
+      "parameters": {
+        "url": "={{$json.body.url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseTimeout": 30000
+            }
+          }
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse HTML and extract structured data\nconst html = $input.first().json.body;\nconst selectors = $input.first().json.body.selectors || ['h1', 'p'];\n\n// Simple HTML parser (use Playwright for complex pages)\nfunction extractText(html, selector) {\n  const regex = new RegExp(`<${selector}[^>]*>([^<]*)</${selector}>`, 'gi');\n  const matches = [];\n  let match;\n  while ((match = regex.exec(html)) !== null) {\n    matches.push(match[1].trim());\n  }\n  return matches;\n}\n\nconst result = {};\nfor (const sel of selectors) {\n  result[sel] = extractText(html, sel);\n}\n\nreturn [{ json: { url: $input.first().json.body.url, extracted: result, timestamp: new Date().toISOString() } }];"
+      },
+      "name": "Extract Data",
+      "type": "n8n-nodes-base.code",
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "format",
+              "leftValue": "={{$json.body.format}}",
+              "rightValue": "json",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Format Check",
+      "type": "n8n-nodes-base.if",
+      "position": [1000, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [["HTTP Request"]]
+    },
+    "HTTP Request": {
+      "main": [["Extract Data"]]
+    },
+    "Extract Data": {
+      "main": [["Format Check"]]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "browser-scraper-workflow"
+}

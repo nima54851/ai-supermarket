@@ -1,0 +1,134 @@
+{
+  "name": "Fine-Tuning Automation Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {"js": "return true;"},
+        "triggerField": "dataset_ready"
+      },
+      "id": "dataset-trigger",
+      "name": "Dataset Ready Trigger",
+      "type": "n8n-nodes-base.trigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/fine_tuning/jobs",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [{"name": "Authorization", "value": "Bearer {{ $env.OPENAI_API_KEY }}"}]},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "training_file", "value": "{{ $json.training_file_id }}"},
+            {"name": "model", "value": "{{ $node.Dataset Ready Trigger.json.model || 'gpt-4o-mini' }}"},
+            {"name": "hyperparameters", "value": {"n_epochs": 4, "batch_size": "auto", "learning_rate_multiplier": "auto"}}
+          ]
+        }
+      },
+      "id": "create-finetune-job",
+      "name": "Create Fine-Tune Job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://slack.com/api/chat.postMessage",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [
+          {"name": "Authorization", "value": "Bearer {{ $env.SLACK_BOT_TOKEN }}"},
+          {"name": "Content-Type", "value": "application/json"}
+        ]},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "channel", "value": "{{ $env.SLACK_CHANNEL_ID }}"},
+            {"name": "text", "value": "🎓 Fine-tuning job started: {{ $json.id }} — Model: {{ $json.model }}"}
+          ]
+        }
+      },
+      "id": "notify-start",
+      "name": "Notify Training Started",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "rule": {"interval": [{"field": "minutes", "minutesInterval": 5}]}
+      },
+      "id": "check-status",
+      "name": "Poll Fine-Tune Status",
+      "type": "n8n-nodes-base.trigger",
+      "typeVersion": 1,
+      "position": [250, 500]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/fine_tuning/jobs/{{ $json.job_id }}",
+        "method": "GET",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [{"name": "Authorization", "value": "Bearer {{ $env.OPENAI_API_KEY }}"}]}
+      },
+      "id": "get-status",
+      "name": "Get Fine-Tune Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [500, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "strict"},
+          "conditions": [{"id": "status-check", "leftValue": "{{ $json.status }}", "rightValue": "succeeded", "operator": {"type": "string", "operation": "equals"}}],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "status-conditional",
+      "name": "Check if Complete",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [750, 500]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://slack.com/api/chat.postMessage",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [
+          {"name": "Authorization", "value": "Bearer {{ $env.SLACK_BOT_TOKEN }}"},
+          {"name": "Content-Type", "value": "application/json"}
+        ]},
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "channel", "value": "{{ $env.SLACK_CHANNEL_ID }}"},
+            {"name": "text", "value": "✅ Fine-tuning complete! Model: ft:{{ $json.fine_tuned_model }} — Trained on {{ $json.training_tokens }} tokens. Use it in production!"}
+          ]
+        }
+      },
+      "id": "notify-success",
+      "name": "Notify Training Complete",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1000, 400]
+    }
+  ],
+  "connections": {
+    "Create Fine-Tune Job": {
+      "main": [[{"node": "Notify Training Started", "type": "main", "index": 0}]]
+    },
+    "Get Fine-Tune Status": {
+      "main": [[{"node": "Check if Complete", "type": "main", "index": 0}]]
+    },
+    "Check if Complete": {
+      "main": [[{"node": "Notify Training Complete", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {},
+  "description": "Automates OpenAI fine-tuning: creates job → monitors status → notifies on completion"
+}

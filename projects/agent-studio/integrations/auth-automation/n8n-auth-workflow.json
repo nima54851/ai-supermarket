@@ -1,0 +1,142 @@
+{
+  "name": "Auth Patterns Workflow",
+  "nodes": [
+    {
+      "id": "auth-trigger",
+      "name": "Auth Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [200, 300],
+      "parameters": {
+        "path": "auth",
+        "httpMethod": "POST",
+        "responseMode": "lastNode"
+      }
+    },
+    {
+      "id": "parse-auth",
+      "name": "Parse Auth Request",
+      "type": "n8n-nodes-base.set",
+      "position": [420, 300],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {"name": "auth_type", "value": "={{ $json.body.auth_type }}"},
+            {"name": "token", "value": "={{ $json.body.token || null }}"},
+            {"name": "api_key", "value": "={{ $json.body.api_key || null }}"},
+            {"name": "code", "value": "={{ $json.body.code || null }}"},
+            {"name": "provider", "value": "={{ $json.body.provider || 'github' }}"},
+            {"name": "redirect_uri", "value": "={{ $json.body.redirect_uri || '' }}"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "route-auth",
+      "name": "Route by Auth Type",
+      "type": "n8n-nodes-base.switch",
+      "position": [640, 300],
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.auth_type }}",
+        "rules": {
+          "rules": [
+            {"value2": "jwt", "output": 0},
+            {"value2": "apikey", "output": 1},
+            {"value2": "oauth", "output": 2},
+            {"value2": "oauth_callback", "output": 3}
+          ]
+        },
+        "fallbackOutput": 4
+      }
+    },
+    {
+      "id": "jwt-verify",
+      "name": "JWT Verify",
+      "type": "n8n-nodes-base.code",
+      "position": [860, 200],
+      "parameters": {
+        "jsCode": "// JWT verification — replace with actual PyJWT call via n8n Python node\nconst token = $('Parse Auth Request').first().json.token;\ntry {\n  // In production: jwt.decode(token, SECRET, algorithms=['HS256'])\n  const payload = { sub: 'user_123', exp: Date.now() / 1000 + 1800 };\n  return [{ json: { valid: true, user_id: payload.sub, auth_type: 'jwt' } }];\n} catch(e) {\n  return [{ json: { valid: false, error: e.message } }];\n}"
+      }
+    },
+    {
+      "id": "apikey-verify",
+      "name": "API Key Verify",
+      "type": "n8n-nodes-base.redis",
+      "position": [860, 400],
+      "parameters": {
+        "operation": "get",
+        "resource": "hash",
+        "hashField": "user_id",
+        "hashKey": "={{ 'apikey:' + require('crypto').createHash('sha256').update($('Parse Auth Request').first().json.api_key).digest('hex') }}"
+      }
+    },
+    {
+      "id": "oauth-init",
+      "name": "OAuth Redirect URL",
+      "type": "n8n-nodes-base.code",
+      "position": [860, 600],
+      "parameters": {
+        "jsCode": "// Generate OAuth authorization URL\nconst provider = $('Parse Auth Request').first().json.provider;\nconst redirect_uri = $('Parse Auth Request').first().json.redirect_uri;\nconst state = require('crypto').randomBytes(16).toString('hex');\n\nconst urls = {\n  github: `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=read:user&state=${state}`,\n  google: `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirect_uri)}&scope=openid+email+profile&response_type=code&state=${state}`\n};\n\nreturn [{ json: { auth_url: urls[provider] || urls.github, state, provider } }];"
+      }
+    },
+    {
+      "id": "create-session",
+      "name": "Create Session (Redis)",
+      "type": "n8n-nodes-base.redis",
+      "position": [1080, 300],
+      "parameters": {
+        "operation": "set",
+        "resource": "hash",
+        "hashKey": "={{ 'session:' + $json.user_id }}",
+        "hashFields": {
+          "fields": [
+            {"field": "user_id", "value": "={{ $json.user_id }}"},
+            {"field": "auth_type", "value": "={{ $json.auth_type }}"},
+            {"field": "created", "value": "={{ $now.toISO() }}"}
+          ]
+        },
+        "ttl": 604800,
+        "ttlUnit": "seconds"
+      }
+    },
+    {
+      "id": "return-success",
+      "name": "Return Auth Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1300, 300],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { authenticated: true, user_id: $json.user_id, session_ttl: 604800 } }}"
+      }
+    },
+    {
+      "id": "return-error",
+      "name": "Return Auth Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1080, 750],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"authenticated\": false, \"error\": \"Invalid credentials\", \"statusCode\": 401}"
+      }
+    }
+  ],
+  "connections": {
+    "Auth Webhook": {"main": [[{"node": "Parse Auth Request", "type": "main", "index": 0}]]},
+    "Parse Auth Request": {"main": [[{"node": "Route by Auth Type", "type": "main", "index": 0}]]},
+    "Route by Auth Type": {
+      "main": [
+        [{"node": "JWT Verify", "type": "main", "index": 0}],
+        [{"node": "API Key Verify", "type": "main", "index": 0}],
+        [{"node": "OAuth Redirect URL", "type": "main", "index": 0}],
+        [{"node": "OAuth Redirect URL", "type": "main", "index": 0}],
+        [{"node": "Return Auth Error", "type": "main", "index": 0}]
+      ]
+    },
+    "JWT Verify": {"main": [[{"node": "Create Session (Redis)", "type": "main", "index": 0}]]},
+    "API Key Verify": {"main": [[{"node": "Create Session (Redis)", "type": "main", "index": 0}]]},
+    "Create Session (Redis)": {"main": [[{"node": "Return Auth Success", "type": "main", "index": 0}]]}
+  },
+  "staticData": null,
+  "tags": ["auth", "jwt", "oauth", "api-key", "security"]
+}

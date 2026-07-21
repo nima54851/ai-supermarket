@@ -1,0 +1,96 @@
+{
+  "name": "AI Sentiment Analysis Pipeline",
+  "nodes": [
+    {
+      "id": "data-source",
+      "name": "Data Source (HTTP/Webhook)",
+      "type": "n8n-nodes-base WEBHOOK",
+      "parameters": {
+        "path": "sentiment-input"
+      },
+      "position": [250, 300]
+    },
+    {
+      "id": "classify",
+      "name": "AI Sentiment Classifier",
+      "type": "HTTP Request",
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "sendBody": true,
+        "bodyContentType": "json"
+      },
+      "position": [450, 300]
+    },
+    {
+      "id": "router",
+      "name": "Router (Urgency Check)",
+      "type": "n8n-nodes-base SWITCH",
+      "parameters": {
+        "dataType": "number",
+        "value1": "{{$json.urgency}}",
+        "rules": {
+          "rules": [
+            { "value2": "high", "operation": "equals" },
+            { "value2": "critical", "operation": "equals" }
+          ]
+        },
+        "fallbackOutput": "normal"
+      },
+      "position": [650, 300]
+    },
+    {
+      "id": "alert-negative",
+      "name": "Alert on Negative",
+      "type": "Slack",
+      "parameters": {
+        "channel": "{{$env.NOTIFY_CHANNEL}}",
+        "text": "🚨 High urgency feedback detected: {{$json.text}} (sentiment: {{$json.sentiment}}, score: {{$json.score}})"
+      },
+      "position": [850, 200]
+    },
+    {
+      "id": "store",
+      "name": "Store in Database",
+      "type": "PostgreSQL",
+      "parameters": {
+        "operation": "insert",
+        "table": "sentiment_logs",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "text": "{{$json.text}}",
+            "sentiment": "{{$json.sentiment}}",
+            "score": "{{$json.score}}",
+            "topics": "{{$json.topics}}",
+            "urgency": "{{$json.urgency}}",
+            "source": "{{$json.source}}"
+          }
+        }
+      },
+      "position": [850, 400]
+    },
+    {
+      "id": "dashboard",
+      "name": "Update Dashboard",
+      "type": "HTTP Request",
+      "parameters": {
+        "url": "{{$env.DASHBOARD_URL}}/api/update",
+        "method": "POST"
+      },
+      "position": [1050, 400]
+    }
+  ],
+  "connections": {
+    "data-source": { "main": [[{ "node": "classify", "type": "main", "index": 0 }]] },
+    "classify": { "main": [[{ "node": "router", "type": "main", "index": 0 }]] },
+    "router": {
+      "main": [
+        [{ "node": "alert-negative", "type": "main", "index": 0 }],
+        [{ "node": "alert-negative", "type": "main", "index": 1 }],
+        [{ "node": "store", "type": "main", "index": 2 }]
+      ]
+    },
+    "store": { "main": [[{ "node": "dashboard", "type": "main", "index": 0 }]] }
+  }
+}

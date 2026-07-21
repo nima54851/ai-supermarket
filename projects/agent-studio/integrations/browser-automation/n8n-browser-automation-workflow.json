@@ -1,0 +1,65 @@
+{
+  "name": "Browser Automation Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "browser-automation",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json;\nconst actions = body.actions || [];\n\n// Validate actions\nconst validTypes = ['goto', 'click', 'fill', 'screenshot', 'wait', 'extract', 'scroll', 'select', 'upload'];\nconst validActions = actions.filter(a => validTypes.includes(a.type));\n\nreturn {\n  url: body.url,\n  actions: validActions,\n  userAgent: body.userAgent || 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36',\n  taskId: Date.now().toString()\n};"
+      },
+      "id": "parse-actions",
+      "name": "Parse Actions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "command": "=node -e \"\nconst { chromium } = require('playwright');\n(async () => {\n  const browser = await chromium.launch();\n  const page = await browser.newPage();\n  const actions = $node['Parse Actions'].json.actions;\n  const results = [];\n  await page.goto('{{$node['Parse Actions'].json.url}}');\n  for (const action of actions) {\n    switch(action.type) {\n      case 'wait': await page.waitForSelector(action.selector, {timeout: 10000}); break;\n      case 'click': await page.click(action.selector); break;\n      case 'fill': await page.fill(action.selector, action.text || ''); break;\n      case 'screenshot': \n        await page.screenshot({path: action.path || '/tmp/screenshot.png', fullPage: action.fullPage || false}); \n        break;\n      case 'scroll': await page.evaluate((y) => window.scrollBy(0, y), action.y || 500); break;\n      case 'extract': \n        const els = await page.$$(action.selector);\n        const data = await Promise.all(els.map(el => action.attr ? el.getAttribute(action.attr) : el.textContent()));\n        results.push({type: action.type, selector: action.selector, data});\n        break;\n    }\n  }\n  await browser.close();\n  console.log(JSON.stringify({success: true, results}));\n})();\""
+      },
+      "id": "playwright-execute",
+      "name": "Playwright Execute",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = $input.all();\nconst parsed = $node['Parse Actions'].json;\n\nconst extracted = results\n  .filter(r => r.json && r.json.type === 'extract')\n  .map(r => r.json.data)\n  .flat();\n\nreturn {\n  taskId: parsed.taskId,\n  url: parsed.url,\n  actionsCount: parsed.actions.length,\n  extractedData: extracted,\n  results,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "aggregate-results",
+      "name": "Aggregate Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "channel": "browser-automation",
+        "text": "=🌐 Browser Automation Done\nTask ID: `{{$node['Aggregate Results'].json.taskId}}`\nURL: {{$node['Aggregate Results'].json.url}}\nActions: {{$node['Aggregate Results'].json.actionsCount}}\nExtracted: {{$node['Aggregate Results'].json.extractedData.length}} items"
+      },
+      "id": "slack-notify",
+      "name": "Slack Notify",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "webhookId": "{{$vars.SLACK_WEBHOOK}}"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {"main": [[{"node": "Parse Actions", "type": "main", "index": 0}]]},
+    "Parse Actions": {"main": [[{"node": "Playwright Execute", "type": "main", "index": 0}]]},
+    "Playwright Execute": {"main": [[{"node": "Aggregate Results", "type": "main", "index": 0}]]},
+    "Aggregate Results": {"main": [[{"node": "Slack Notify", "type": "main", "index": 0}]]}
+  },
+  "settings": {"executionOrder": "v1"},
+  "staticData": null,
+  "tags": ["browser", "automation", "playwright", "agent-studio"]
+}

@@ -1,0 +1,69 @@
+{
+  "name": "Sentry Error Tracking Pipeline",
+  "nodes": [
+    {
+      "name": "Sentry Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sentry-alert"
+      },
+      "webhookId": "sentry-alert"
+    },
+    {
+      "name": "AI Error Classifier",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "parameters": {
+        "operation": "complete",
+        "prompt": "Classify this Sentry error event. Response format: {\"severity\": \"fatal|critical|error|warning\", \"team\": \"frontend|backend|devops|data\", \"summary\": \"one sentence\"}\n\nEvent: {{ $json }}"
+      }
+    },
+    {
+      "name": "Switch by Severity",
+      "type": "n8n-nodes-base.switch",
+      "parameters": {
+        "dataType": "string",
+        "valueComparison": {
+          "mode": "equals",
+          "value": "{{ $json.severity }}"
+        },
+        "rules": {
+          "rules": [
+            { "value2": "fatal", "output": 0 },
+            { "value2": "critical", "output": 1 },
+            { "value2": "error", "output": 2 },
+            { "value2": "warning", "output": 3 }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Slack Notify (Fatal)",
+      "type": "n8n-nodes-base.slack",
+      "parameters": {
+        "channel": "#incidents",
+        "text": "🚨 FATAL ERROR: {{ $json.summary }}"
+      }
+    },
+    {
+      "name": "GitHub Issue (Critical)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "parameters": {
+        "operation": "complete",
+        "prompt": "Generate a GitHub issue body for: {{ $json.summary }}"
+      }
+    }
+  ],
+  "connections": {
+    "Sentry Webhook": { "main": [[{ "node": "AI Error Classifier" }]] },
+    "AI Error Classifier": { "main": [[{ "node": "Switch by Severity" }]] },
+    "Switch by Severity": {
+      "main": [
+        [{ "node": "Slack Notify (Fatal)" }],
+        [{ "node": "GitHub Issue (Critical)" }],
+        [null],
+        [null]
+      ]
+    }
+  }
+}

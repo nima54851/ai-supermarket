@@ -1,0 +1,118 @@
+{
+  "name": "AI Document Intelligence Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": "whenAnyFile",
+        "path": "/tmp/documents/incoming"
+      },
+      "name": "File Watcher",
+      "type": "n8n-nodes-base.watchOnFileSystem",
+      "position": [250, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "command": "python3 -c \"\nimport fitz, sys\ndoc = fitz.open('{{ $json.filePath }}')\ntext = chr(10).join(p.get_text() for p in doc)\nprint(text[:15000] if text else 'EMPTY')\n\""
+      },
+      "name": "PDF Text Extractor",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [500, 300],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// OCR for scanned PDFs\nconst text = $input.item.json.stdout;\n\n// If text is empty/too short, run OCR\nif (text.trim().length < 100) {\n  const fs = require('fs');\n  const { execSync } = require('child_process');\n  // Use OCRmyPDF or Tesseract\n  try {\n    execSync('ocrmypdf --skip-text {{ $json.filePath }} /tmp/documents/ocr_temp.pdf', { timeout: 30000 });\n    return [{ json: { needsOcr: true, originalText: text } }];\n  } catch(e) {\n    return [{ json: { needsOcr: false, originalText: text, ocrError: e.message } }];\n  }\n}\nreturn [{ json: { needsOcr: false, text } }];"
+      },
+      "name": "OCR Check",
+      "type": "n8n-nodes-base.code",
+      "position": [750, 300],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "select",
+        "node": "postgres-db",
+        "table": "document_types",
+        "columns": {
+          "mappings": { "properties": { "type": "type", "schema": "schema" } },
+          "ui": { "schema": { "rg_key": "", "rg_value": "" } }
+        }
+      },
+      "name": "Get Document Schema",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1000, 200],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{ $env.OPENAI_API_KEY }}" },
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "model", "value": "gpt-4o" },
+            { "name": "max_tokens", "value": 2048 },
+            {
+              "name": "messages",
+              "value": [{ "role": "system", "content": "You are a document intelligence AI. Extract structured data from the document text. Return valid JSON matching the schema. If extraction is uncertain, include a confidence score." }, { "role": "user", "content": "Document text:\\n{{ $json.text || $json.originalText }}" }]
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "LLM Extract Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1000, 400],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "insert",
+        "node": "postgres-db",
+        "table": "extracted_documents",
+        "columns": {
+          "mappings": { "properties": { "filename": "filename", "doc_type": "type", "extracted_data": "data", "confidence": "confidence", "source_path": "path" } },
+          "ui": { "schema": { "rg_key": "", "rg_value": "" } }
+        }
+      },
+      "name": "Store in Database",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1250, 400],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "to": "{{ $json.reviewEmail }}",
+        "subject": "Document Processed: {{ $json.filename }}",
+        "text": "Document processed successfully.\\n\\nExtracted data: {{ $json.extracted_data }}\\n\\nConfidence: {{ $json.confidence }}"
+      },
+      "name": "Confirmation Email",
+      "type": "n8n-nodes-base.emailSend",
+      "position": [1500, 400],
+      "typeVersion": 3
+    }
+  ],
+  "connections": {
+    "File Watcher": { "main": [[{ "node": "PDF Text Extractor", "type": "main", "index": 0 }]] },
+    "PDF Text Extractor": { "main": [[{ "node": "OCR Check", "type": "main", "index": 0 }]] },
+    "OCR Check": { "main": [[{ "node": "Get Document Schema", "type": "main", "index": 0 }], [{ "node": "LLM Extract Data", "type": "main", "index": 0 }]] },
+    "Get Document Schema": { "main": [[{ "node": "LLM Extract Data", "type": "main", "index": 0 }]] },
+    "LLM Extract Data": { "main": [[{ "node": "Store in Database", "type": "main", "index": 0 }]] },
+    "Store in Database": { "main": [[{ "node": "Confirmation Email", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {},
+  "id": "ai-document-intelligence"
+}

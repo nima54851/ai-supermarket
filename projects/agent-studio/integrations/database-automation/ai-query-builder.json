@@ -1,0 +1,48 @@
+{
+  "name": "AI Database Query Builder",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-query",
+        "responseMode": "responseNode"
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a SQL expert. Generate safe PostgreSQL queries. Always use parameterized queries. Add LIMIT 1000."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.body.prompt }}"
+            }
+          ]
+        }
+      },
+      "name": "AI Agent (SQL Generator)",
+      "type": "openai",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.text.replace(/['`;]/g, '') }}"
+      },
+      "name": "PostgreSQL (Read Only)",
+      "type": "postgres",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "AI Agent (SQL Generator)", "type": "main", "index": 0 }]] },
+    "AI Agent (SQL Generator)": { "main": [[{ "node": "PostgreSQL (Read Only)", "type": "main", "index": 0 }]] }
+  }
+}

@@ -1,55 +1,55 @@
-# 📊 GitHub Trending Report — 2026-06-29
+# 📊 GitHub Trending Report — 2026-07-18
 
 ## 🤖 AI/ML 热门
 
 | # | 项目 | ⭐ | 🍴 | 简介 |
 |---|------|----|----|------|
-| 1 | [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | 185,202 | 46,128 | AutoGPT is the vision of accessible AI f |
-| 2 | [f/prompts.chat](https://github.com/f/prompts.chat) | 164,477 | 21,289 | f.k.a. Awesome ChatGPT Prompts. Share, d |
-| 3 | [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | 98,088 | 15,040 | Implement a ChatGPT-like LLM in PyTorch  |
-| 4 | [hacksider/Deep-Live-Cam](https://github.com/hacksider/Deep-Live-Cam) | 94,392 | 13,760 | real time face swap and one-click video  |
-| 5 | [thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) | 84,899 | 7,328 | Persistent Context Across Sessions for E |
-| 6 | [OpenHands/OpenHands](https://github.com/OpenHands/OpenHands) | 78,594 | 10,001 | 🙌 OpenHands: AI-Driven Development |
-| 7 | [FlowiseAI/Flowise](https://github.com/FlowiseAI/Flowise) | 54,089 | 24,607 | Build AI Agents, Visually |
-| 8 | [jingyaogong/minimind](https://github.com/jingyaogong/minimind) | 52,288 | 6,733 | 🧠「大模型」2小时完全从0训练64M的小参数LLM！Train a 64M-pa |
+| 1 | [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | 185,587 | 46,077 | AutoGPT is the vision of accessible AI f |
+| 2 | [f/prompts.chat](https://github.com/f/prompts.chat) | 165,921 | 21,460 | f.k.a. Awesome ChatGPT Prompts. Share, d |
+| 3 | [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | 99,269 | 15,236 | Implement a ChatGPT-like LLM in PyTorch  |
+| 4 | [hacksider/Deep-Live-Cam](https://github.com/hacksider/Deep-Live-Cam) | 94,975 | 13,831 | real time face swap and one-click video  |
+| 5 | [thedotmack/claude-mem](https://github.com/thedotmack/claude-mem) | 87,642 | 7,599 | Persistent Context Across Sessions for E |
+| 6 | [OpenHands/OpenHands](https://github.com/OpenHands/OpenHands) | 81,130 | 10,372 | 🙌 OpenHands: AI-Driven Development |
+| 7 | [FlowiseAI/Flowise](https://github.com/FlowiseAI/Flowise) | 54,697 | 24,726 | Build AI Agents, Visually |
+| 8 | [jingyaogong/minimind](https://github.com/jingyaogong/minimind) | 53,531 | 6,934 | 🧠「大模型」2小时完全从0训练64M的小参数LLM！Train a 64M-pa |
 
 ## 🐍 Python 新势力
 
 | # | 项目 | ⭐ | 🍴 | 简介 |
 |---|------|----|----|------|
-| 1 | [public-apis/public-apis](https://github.com/public-apis/public-apis) | 444,782 | 48,788 | A collective list of free APIs |
-| 2 | [EbookFoundation/free-programming-books](https://github.com/EbookFoundation/free-programming-books) | 390,917 | 66,454 | :books: Freely available programming boo |
-| 3 | [donnemartin/system-design-primer](https://github.com/donnemartin/system-design-primer) | 355,309 | 56,951 | Learn how to design large-scale systems. |
-| 4 | [vinta/awesome-python](https://github.com/vinta/awesome-python) | 305,313 | 28,174 | An opinionated list of Python frameworks |
-| 5 | [TheAlgorithms/Python](https://github.com/TheAlgorithms/Python) | 222,277 | 50,798 | All Algorithms implemented in Python |
-| 6 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 204,976 | 36,958 | The agent that grows with you |
-| 7 | [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | 185,202 | 46,128 | AutoGPT is the vision of accessible AI f |
-| 8 | [yt-dlp/yt-dlp](https://github.com/yt-dlp/yt-dlp) | 174,006 | 14,675 | A feature-rich command-line audio/video  |
+| 1 | [public-apis/public-apis](https://github.com/public-apis/public-apis) | 451,010 | 49,611 | A collective list of free APIs |
+| 2 | [EbookFoundation/free-programming-books](https://github.com/EbookFoundation/free-programming-books) | 392,341 | 66,538 | :books: Freely available programming boo |
+| 3 | [donnemartin/system-design-primer](https://github.com/donnemartin/system-design-primer) | 358,002 | 57,250 | Learn how to design large-scale systems. |
+| 4 | [vinta/awesome-python](https://github.com/vinta/awesome-python) | 308,753 | 28,339 | An opinionated list of Python frameworks |
+| 5 | [practical-tutorials/project-based-learning](https://github.com/practical-tutorials/project-based-learning) | 273,786 | 35,311 | Curated list of project-based tutorials |
+| 6 | [TheAlgorithms/Python](https://github.com/TheAlgorithms/Python) | 222,821 | 50,860 | All Algorithms implemented in Python |
+| 7 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 216,463 | 40,565 | The agent that grows with you |
+| 8 | [Significant-Gravitas/AutoGPT](https://github.com/Significant-Gravitas/AutoGPT) | 185,587 | 46,077 | AutoGPT is the vision of accessible AI f |
 
 ## 🔥 全站上升项目
 
 | # | 项目 | ⭐ | 🍴 | 简介 |
 |---|------|----|----|------|
-| 1 | [codecrafters-io/build-your-own-x](https://github.com/codecrafters-io/build-your-own-x) | 520,594 | 49,241 | Master programming by recreating your fa |
-| 2 | [sindresorhus/awesome](https://github.com/sindresorhus/awesome) | 479,647 | 35,594 | 😎 Awesome lists about all kinds of inter |
-| 3 | [freeCodeCamp/freeCodeCamp](https://github.com/freeCodeCamp/freeCodeCamp) | 450,692 | 45,279 | freeCodeCamp.org's open-source codebase  |
-| 4 | [public-apis/public-apis](https://github.com/public-apis/public-apis) | 444,782 | 48,788 | A collective list of free APIs |
-| 5 | [EbookFoundation/free-programming-books](https://github.com/EbookFoundation/free-programming-books) | 390,917 | 66,454 | :books: Freely available programming boo |
-| 6 | [openclaw/openclaw](https://github.com/openclaw/openclaw) | 380,876 | 79,783 | Your own personal AI assistant. Any OS.  |
-| 7 | [nilbuild/developer-roadmap](https://github.com/nilbuild/developer-roadmap) | 358,550 | 44,291 | Interactive roadmaps, guides and other e |
-| 8 | [donnemartin/system-design-primer](https://github.com/donnemartin/system-design-primer) | 355,309 | 56,951 | Learn how to design large-scale systems. |
-| 9 | [jwasham/coding-interview-university](https://github.com/jwasham/coding-interview-university) | 354,426 | 83,970 | A complete computer science study plan t |
-| 10 | [vinta/awesome-python](https://github.com/vinta/awesome-python) | 305,313 | 28,174 | An opinionated list of Python frameworks |
+| 1 | [codecrafters-io/build-your-own-x](https://github.com/codecrafters-io/build-your-own-x) | 527,366 | 49,904 | Master programming by recreating your fa |
+| 2 | [sindresorhus/awesome](https://github.com/sindresorhus/awesome) | 486,145 | 35,925 | 😎 Awesome lists about all kinds of inter |
+| 3 | [freeCodeCamp/freeCodeCamp](https://github.com/freeCodeCamp/freeCodeCamp) | 451,974 | 45,575 | freeCodeCamp.org's open-source codebase  |
+| 4 | [public-apis/public-apis](https://github.com/public-apis/public-apis) | 451,010 | 49,611 | A collective list of free APIs |
+| 5 | [EbookFoundation/free-programming-books](https://github.com/EbookFoundation/free-programming-books) | 392,341 | 66,538 | :books: Freely available programming boo |
+| 6 | [openclaw/openclaw](https://github.com/openclaw/openclaw) | 383,291 | 80,520 | Your own personal AI assistant. Any OS.  |
+| 7 | [nilbuild/developer-roadmap](https://github.com/nilbuild/developer-roadmap) | 361,363 | 44,561 | Interactive roadmaps, guides and other e |
+| 8 | [donnemartin/system-design-primer](https://github.com/donnemartin/system-design-primer) | 358,002 | 57,250 | Learn how to design large-scale systems. |
+| 9 | [jwasham/coding-interview-university](https://github.com/jwasham/coding-interview-university) | 356,482 | 84,311 | A complete computer science study plan t |
+| 10 | [vinta/awesome-python](https://github.com/vinta/awesome-python) | 308,753 | 28,339 | An opinionated list of Python frameworks |
 
 ## 🆕 近期新项目
 
 | # | 项目 | ⭐ | 🍴 | 简介 |
 |---|------|----|----|------|
-| 1 | [baidu/Unlimited-OCR](https://github.com/baidu/Unlimited-OCR) | 11,566 | 907 | Unlimited OCR Works: Welcome the Era of  |
-| 2 | [zhongerxin/Cowart](https://github.com/zhongerxin/Cowart) | 3,243 | 252 | — |
-| 3 | [vercel/eve](https://github.com/vercel/eve) | 2,860 | 214 | The Framework for Building Agents |
-| 4 | [bozhouDev/codex-orange-book](https://github.com/bozhouDev/codex-orange-book) | 2,281 | 228 | Codex 橙皮书：从安装到实战案例的全链路 Codex 使用指南（非官方开源， |
-| 5 | [deepseek-ai/DeepSpec](https://github.com/deepseek-ai/DeepSpec) | 2,175 | 203 | DeepSpec: a full-stack codebase for trai |
-| 6 | [bikini/exploitarium](https://github.com/bikini/exploitarium) | 2,133 | 495 | A single archive of public exploit PoCs  |
+| 1 | [xai-org/grok-build](https://github.com/xai-org/grok-build) | 16,482 | 3,027 | SpaceXAI's coding agent harness and TUI. |
+| 2 | [Fei-Away/Codex-Dream-Skin](https://github.com/Fei-Away/Codex-Dream-Skin) | 8,682 | 924 | Codex Dream Skin |
+| 3 | [withmarbleapp/os-taxonomy](https://github.com/withmarbleapp/os-taxonomy) | 3,239 | 561 | — |
+| 4 | [oso95/scroll-world](https://github.com/oso95/scroll-world) | 3,239 | 410 | A skill that turn any brand into a scrol |
+| 5 | [Shpigford/knockoff](https://github.com/Shpigford/knockoff) | 1,936 | 70 | Chrome extension that filters pseudo-bra |
+| 6 | [MDX-Tom/gpt-5.6-instruct](https://github.com/MDX-Tom/gpt-5.6-instruct) | 1,882 | 353 | A Codex CLI jailbreak prompt and test pa |
 
-*Generated by agent-studio · 2026-06-29T09:06:51.215361*
+*Generated by agent-studio · 2026-07-18T09:03:52.947967*

@@ -1,0 +1,88 @@
+{
+  "name": "Event-Driven Architecture Router",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "=http://localhost:9092",
+        "options": {"topic": "ai-agent-events"},
+        "action": "subscribe"
+      },
+      "id": "kafka-trigger",
+      "name": "Kafka Event Trigger",
+      "type": "n8n-nodes-kafka.trigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true},
+          "conditions": [
+            {"id": "event-type", "leftValue": "{{ $json.event_type }}", "rightValue": "agent.reasoning.start", "operator": {"type": "string", "operation": "equals"}},
+            {"id": "event-type-2", "leftValue": "{{ $json.event_type }}", "rightValue": "agent.tool.call", "operator": {"type": "string", "operation": "equals"}}
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "event-filter",
+      "name": "Filter AI Events",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enrich event with timestamp and route\nconst event = $input.first().json;\n\nconst routingRules = {\n  'agent.reasoning.start': { target: 'reasoning-processor', priority: 'high' },\n  'agent.tool.call':       { target: 'tool-executor',        priority: 'high' },\n  'agent.output':         { target: 'response-router',      priority: 'medium' },\n  'user.message':         { target: 'agent-intake',         priority: 'high' },\n};\n\nconst route = routingRules[event.event_type] || { target: 'unknown', priority: 'low' };\nreturn [{ json: { ...event, ...route, processed_at: new Date().toISOString() } }];"
+      },
+      "id": "route-event",
+      "name": "Route Event to Processor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "webhookUrl": "=http://localhost:9092",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [
+          {"name": "Content-Type", "value": "application/json"},
+          {"name": "X-Target-Processor", "value": "{{ $json.target }}"}
+        ]},
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}"
+      },
+      "id": "kafka-producer",
+      "name": "Publish to Kafka",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log event for monitoring\nconst event = $input.first().json;\nconsole.log(`[EDA] Event: ${event.event_type} → ${event.target} [${event.priority}]`);\nreturn [{ json: { logged: true, event_id: event.event_id || Date.now() } }];"
+      },
+      "id": "event-logger",
+      "name": "Log Event",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [750, 500]
+    }
+  ],
+  "connections": {
+    "Kafka Event Trigger": {
+      "main": [[{"node": "Filter AI Events", "type": "main", "index": 0}]]
+    },
+    "Filter AI Events": {
+      "main": [
+        [{"node": "Route Event to Processor", "type": "main", "index": 0}],
+        [{"node": "Event Logger", "type": "main", "index": 0}]
+      ]
+    },
+    "Route Event to Processor": {
+      "main": [[{"node": "Publish to Kafka", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {},
+  "description": "Kafka-based event router for AI Agent event streams: filters, enriches, and routes events to processors"
+}

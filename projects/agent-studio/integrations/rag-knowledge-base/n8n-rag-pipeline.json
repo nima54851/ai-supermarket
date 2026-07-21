@@ -1,0 +1,149 @@
+{
+  "name": "RAG Knowledge Base Pipeline",
+  "nodes": [
+    {
+      "id": "webhook-trigger",
+      "name": "RAG Query Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "parameters": {
+        "path": "rag-query",
+        "httpMethod": "POST",
+        "responseMode": "lastNode",
+        "options": {
+          "rawBody": false
+        }
+      }
+    },
+    {
+      "id": "parse-query",
+      "name": "Parse Query",
+      "type": "n8n-nodes-base.set",
+      "position": [470, 300],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {"name": "query", "value": "={{ JSON.parse($json.body).query }}"},
+            {"name": "top_k", "value": "={{ $json.body.top_k || 5 }}"},
+            {"name": "user_id", "value": "={{ $json.body.user_id || 'anonymous' }}"}
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "embed-query",
+      "name": "Embed Query (Ollama)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [690, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "=http://localhost:11434/api/embeddings",
+        "authentication": "genericCredentialType",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "model", "value": "nomic-embed-text"},
+            {"name": "prompt", "value": "={{ $json.query }}"}
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "vector-search",
+      "name": "Chroma Vector Search",
+      "type": "n8n-nodes-base.code",
+      "position": [910, 300],
+      "parameters": {
+        "jsCode": "// Chroma / FAISS semantic search\n// Returns top-k relevant chunks\nconst query = $('Parse Query').first().json.query;\nconst topK = $('Parse Query').first().json.top_k || 5;\n\n// Mock results — replace with actual Chroma/FAISS call\nconst results = [\n  { text: 'OpenClaw supports MCP (Model Context Protocol) for tool integration.', source: 'docs/openclaw-mcp.md', score: 0.94 },\n  { text: 'Configure skills in ~/.openclaw/workspace/skills/', source: 'docs/setup.md', score: 0.89 },\n  { text: 'n8n can be triggered via webhooks from OpenClaw.', source: 'docs/n8n-integration.md', score: 0.85 }\n].slice(0, topK);\n\nreturn [{ json: { results, query, topK } }];"
+      }
+    },
+    {
+      "id": "build-context",
+      "name": "Build Context",
+      "type": "n8n-nodes-base.code",
+      "position": [1130, 300],
+      "parameters": {
+        "jsCode": "const { results } = $input.first().json;\n\nconst context = results\n  .map(r => `[Source: ${r.source}]\\n${r.text}`)\n  .join('\\n\\n---\\n\\n');\n\nconst hasResults = results.length > 0;\n\nreturn [{ json: { context, hasResults, results, query: $input.first().json.query } }];"
+      }
+    },
+    {
+      "id": "llm-answer",
+      "name": "LLM Answer (Ollama)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1350, 300],
+      "parameters": {
+        "method": "POST",
+        "url": "=http://localhost:11434/api/generate",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {"name": "model", "value": "llama3.2"},
+            {"name": "prompt", "value": "={{ $json.context ? 'You are a helpful AI. Answer based ONLY on the provided context. If unsure, say you don\\'t know.\\n\\nCONTEXT:\\n' + $json.context + '\\n\\nQUESTION:\\n' + $json.query + '\\n\\nANSWER:' : 'Sorry, I couldn\\'t find relevant information.' }}"},
+            {"name": "stream", "value": false},
+            {"name": "options", "value": "{\"temperature\": 0.3}"}
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "format-response",
+      "name": "Format Response",
+      "type": "n8n-nodes-base.set",
+      "position": [1570, 300],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {"name": "answer", "value": "={{ JSON.parse($('LLM Answer').first().json.response).response || $('LLM Answer').first().json.response }}"},
+            {"name": "sources", "value": "={{ $('Build Context').first().json.results.map(r => ({ source: r.source, score: r.score })) }}"},
+            {"name": "query", "value": "={{ $('Build Context').first().json.query }}"},
+            {"name": "found", "value": "={{ $('Build Context').first().json.hasResults }}"}
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1790, 300],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $('Format Response').first().json }}"
+      }
+    }
+  ],
+  "connections": {
+    "RAG Query Webhook": {
+      "main": [[{"node": "Parse Query", "type": "main", "index": 0}]]
+    },
+    "Parse Query": {
+      "main": [[{"node": "Embed Query (Ollama)", "type": "main", "index": 0}]]
+    },
+    "Embed Query (Ollama)": {
+      "main": [[{"node": "Vector Search", "type": "main", "index": 0}]]
+    },
+    "Vector Search": {
+      "main": [[{"node": "Build Context", "type": "main", "index": 0}]]
+    },
+    "Build Context": {
+      "main": [[{"node": "LLM Answer (Ollama)", "type": "main", "index": 0}]]
+    },
+    "LLM Answer (Ollama)": {
+      "main": [[{"node": "Format Response", "type": "main", "index": 0}]]
+    },
+    "Format Response": {
+      "main": [[{"node": "Respond", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["rag", "knowledge-base", "llm", "embeddings", "chroma", "ollama"]
+}

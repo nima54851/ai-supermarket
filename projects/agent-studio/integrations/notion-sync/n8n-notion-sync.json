@@ -1,0 +1,37 @@
+{
+  "name": "Notion ↔ OpenClaw AI Sync",
+  "nodes": [
+    {
+      "name": "Notion Trigger",
+      "type": "n8n-nodes-base.notionTrigger",
+      "parameters": {
+        "operation": "watchDatabaseItems",
+        "database": "{{$env.NOTION_DATABASE_ID}}"
+      }
+    },
+    {
+      "name": "OpenClaw Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "url": "http://localhost:5678/webhook-test/lingxi-process",
+        "method": "POST",
+        "bodyParameters": {
+          "action": "analyze",
+          "content": "={{$json.properties.title.title[0].plain_text}}"
+        }
+      }
+    },
+    {
+      "name": "Update Notion Page",
+      "type": "n8n-nodes-base.notion",
+      "parameters": {
+        "operation": "updatePage",
+        "pageId": "={{$json.id}}",
+        "propertiesToSet": {
+          "AI Tags": "={{$json.lastNode.json.tags}}",
+          "Priority": "={{$json.lastNode.json.priority}}"
+        }
+      }
+    }
+  ]
+}

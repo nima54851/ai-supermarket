@@ -1,0 +1,109 @@
+{
+  "name": "Workflow Orchestration",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "workflow-orchestrate",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "workflow_orchestrate"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Classify user intent and route to appropriate pipeline\nconst body = $input.first().json;\nconst intent = (body.intent || body.message || '').toLowerCase();\n\nlet pipeline = 'generic';\nlet steps = [];\n\nif (intent.includes('blockchain') || intent.includes('wallet') || intent.includes('eth')) {\n  pipeline = 'blockchain';\n  steps = ['parse_wallet', 'fetch_balance', 'send_alert'];\n} else if (intent.includes('github') || intent.includes('repo')) {\n  pipeline = 'github';\n  steps = ['fetch_repo', 'analyze_trending', 'post_comment'];\n} else if (intent.includes('image') || intent.includes('generate')) {\n  pipeline = 'image_gen';\n  steps = ['parse_prompt', 'call_dalle', 'return_url'];\n} else {\n  steps = ['classify', 'route', 'execute', 'aggregate'];\n}\n\nreturn [{ json: { ...body, pipeline, steps, intent } }];"
+      },
+      "id": "classify-intent",
+      "name": "Classify Intent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            { "id": "cond-blockchain", "leftValue": "={{ $json.pipeline }}", "rightValue": "blockchain", "operator": { "type": "string", "operation": "equals" } },
+            { "id": "cond-github", "leftValue": "={{ $json.pipeline }}", "rightValue": "github", "operator": { "type": "string", "operation": "equals" } },
+            { "id": "cond-image", "leftValue": "={{ $json.pipeline }}", "rightValue": "image_gen", "operator": { "type": "string", "operation": "equals" } }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "route-pipeline",
+      "name": "Route Pipeline",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.ETH_RPC_URL }}",
+        "method": "POST",
+        "body": { "json": { "jsonrpc": "2.0", "method": "eth_getBalance", "params": ["={{ $json.address || '0x0000000000000000000000000000000000000000' }}", "latest"], "id": 1 } },
+        "options": {}
+      },
+      "id": "blockchain-step",
+      "name": "Blockchain Step",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.GITHUB_API_URL }}/repos/={{ $json.repo || 'openclaw/openclaw' }}",
+        "options": {}
+      },
+      "id": "github-step",
+      "name": "GitHub Step",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate results from all steps\nreturn [{ json: { success: true, result: $input.all(), timestamp: new Date().toISOString() } }];"
+      },
+      "id": "aggregate",
+      "name": "Aggregate Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 250]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1250, 250]
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Classify Intent", "type": "main", "index": 0 }]] },
+    "Classify Intent": { "main": [[{ "node": "Route Pipeline", "type": "main", "index": 0 }]] },
+    "Route Pipeline": {
+      "main": [
+        [{ "node": "Blockchain Step", "type": "main", "index": 0 }],
+        [{ "node": "GitHub Step", "type": "main", "index": 0 }],
+        [{ "node": "Aggregate Result", "type": "main", "index": 0 }]
+      ]
+    },
+    "Blockchain Step": { "main": [[{ "node": "Aggregate Result", "type": "main", "index": 0 }]] },
+    "GitHub Step": { "main": [[{ "node": "Aggregate Result", "type": "main", "index": 0 }]] },
+    "Aggregate Result": { "main": [[{ "node": "Respond", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": ["workflow", "orchestration", "agent"]
+}

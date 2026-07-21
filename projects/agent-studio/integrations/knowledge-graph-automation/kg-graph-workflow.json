@@ -1,0 +1,71 @@
+{
+  "name": "Knowledge Graph Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kg-extract",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Webhook: Document Input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "resource": "完",
+        "operation": "extract",
+        "text": "={{$json.body.text}}",
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "name": "AI: Extract Entities",
+      "type": "@n8n/n8n-nodes-langchain.chatOpenAi",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "execute",
+        "cypher": "WITH {{$json.entities}} as entities\nUNWIND entities as entity\nMERGE (n {name: entity.name, type: entity.type})\nRETURN count(n) as nodes_created",
+        "options": {}
+      },
+      "name": "Neo4j: Create Nodes",
+      "type": "n8n-nodes-base.neo4j",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "execute",
+        "cypher": "MATCH (n) RETURN n LIMIT 100",
+        "options": {}
+      },
+      "name": "Neo4j: Verify Graph",
+      "type": "n8n-nodes-base.neo4j",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{{\"status\": \"ok\", \"nodes_created\": $json.nodes_created}}}"
+      },
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Document Input": { "main": [[{ "node": "AI: Extract Entities", "type": "main", "index": 0 }]] },
+    "AI: Extract Entities": { "main": [[{ "node": "Neo4j: Create Nodes", "type": "main", "index": 0 }]] },
+    "Neo4j: Create Nodes": { "main": [[{ "node": "Neo4j: Verify Graph", "type": "main", "index": 0 }]] },
+    "Neo4j: Verify Graph": { "main": [[{ "node": "Respond", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {},
+  "id": "kg-automation-workflow"
+}

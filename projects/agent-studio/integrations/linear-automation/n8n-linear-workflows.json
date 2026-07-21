@@ -1,0 +1,71 @@
+[
+  {
+    "name": "Linear Issue Triage & Assignment",
+    "description": "AI 自动分流 Linear Issue，识别类型、优先级，并分配给对应负责人",
+    "version": "1.0.0",
+    "trigger": {
+      "type": "LinearWebhook",
+      "events": ["IssueCreated", "IssueUpdated"]
+    },
+    "steps": [
+      {
+        "id": 1,
+        "name": "Receive Linear Webhook",
+        "type": "webhook",
+        "node": "Linear",
+        "output": "issue_data"
+      },
+      {
+        "id": 2,
+        "name": "AI Triage",
+        "type": "AI/OpenAI",
+        "prompt": "分析以下 Linear Issue 内容，JSON输出：\n- type: bug|feature|docs|infra\n- priority: 0-4\n- estimate_points: 1|2|3|5|8\n- assignee_team: dev|product|docs|infra\n- summary: 一句话描述\n\nIssue: {{ $json.issue.title }}\n{{ $json.issue.description }}",
+        "output": "triage_result"
+      },
+      {
+        "id": 3,
+        "name": "Update Issue Priority",
+        "type": "Linear",
+        "operation": "updateIssue",
+        "priority": "{{ $json.triage_result.priority }}",
+        "estimate": "{{ $json.triage_result.estimate_points }}"
+      },
+      {
+        "id": 4,
+        "name": "Notify Team",
+        "type": "Slack/Discord",
+        "message": "📋 New {{ $json.triage_result.type }} assigned to {{ $json.triage_result.assignee_team }}: {{ $json.issue.title }}"
+      }
+    ]
+  },
+  {
+    "name": "Linear-GitHub PR Sync",
+    "description": "GitHub PR 合并后自动关闭对应的 Linear Issue",
+    "trigger": {
+      "type": "GitHubWebhook",
+      "events": ["pull_request.closed"]
+    },
+    "steps": [
+      {
+        "id": 1,
+        "name": "PR Merged Check",
+        "type": "GitHub",
+        "condition": "{{ $json.action === 'closed' && $json.pull_request.merged }}"
+      },
+      {
+        "id": 2,
+        "name": "Find Linear Issue",
+        "type": "Linear",
+        "operation": "searchIssues",
+        "query": "{{ $json.pull_request.title }}"
+      },
+      {
+        "id": 3,
+        "name": "Close Linear Issue",
+        "type": "Linear",
+        "operation": "closeIssue",
+        "comment": "✅ Resolved by PR #{{ $json.pull_request.number }}: {{ $json.pull_request.html_url }}"
+      }
+    ]
+  }
+]

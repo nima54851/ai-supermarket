@@ -1,0 +1,103 @@
+name: Daily Anime Episode
+
+on:
+  schedule:
+    # 每天 08:00 / 14:00 / 20:00 UTC = 北京 16:00 / 22:00 / 次日04:00
+    # 调整为更适合北京时间：
+    # 早上08:00 UTC = 16:00 北京  ← 傍晚
+    # 14:00 UTC = 22:00 北京    ← 深夜
+    # 04:00 UTC = 12:00 北京    ← 中午
+    - cron: '0 8,14,20 * * *'
+  workflow_dispatch:
+    inputs:
+      episode:
+        description: 'Episode number (e.g. 03)'
+        required: false
+        default: ''
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  generate-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install Pillow numpy requests
+
+      - name: Download FFmpeg static
+        run: |
+          curl -sL "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz" | tar xJ
+          FFmpeg_BIN=$(find . -name 'ffmpeg' -type f) || true
+          echo "FFMPEG_BIN=$FFMPEG_BIN" >> $GITHUB_ENV
+
+      - name: Determine episode number
+        id: episode
+        run: |
+          if [ -n "${{ github.event.inputs.episode }}" ]; then
+            EP=${{ github.event.inputs.episode }}
+          else
+            # 读取当前已发布的最大集数
+            EP=$(ls docs/anime_ep*.mp4 2>/dev/null | sed 's/docs\/anime_ep//;s/.mp4//' | sort -n | tail -1)
+            EP=$(printf '%02d' $((10#${EP:-0}+1)))
+          fi
+          echo "Generating EP${EP}"
+          echo "ep=$EP" >> $GITHUB_OUTPUT
+
+      - name: Generate episode video
+        run: |
+          python3 .github/workflows/generate_episode.py ${{ steps.episode.outputs.ep }} 60
+
+      - name: Upload to GitHub Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          API: "https://api.github.com/repos/${{ github.repository }}/contents/docs/anime_ep${{ steps.episode.outputs.ep }}.mp4"
+        run: |
+          EP=${{ steps.episode.outputs.ep }}
+          
+          # Base64 编码视频
+          CONTENT=$(base64 -w0 /tmp/jujutsu_ep${EP}.mp4)
+          
+          # 检查是否已存在
+          SHA=$(curl -s "$API" -H "Authorization: Bearer $GH_TOKEN" | python3 -c "import sys,json;print(json.load(sys.stdin).get('sha',''))" 2>/dev/null)
+          
+          PAYLOAD=$(python3 -c "
+          import json, sys
+          data={'message':'Add EP${EP} anime video','content':'''${CONTENT}'''}
+          if '''${SHA}''': data['sha']='''${SHA}'''
+          print(json.dumps(data))
+          ")
+          
+          curl -s -X PUT "$API" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" | python3 -c "import sys,json;d=json.load(sys.stdin);print('✅ Uploaded EP${EP}' if 'content' in d else '⚠️ '+str(d))"
+
+      - name: Trigger Pages rebuild
+        run: |
+          sleep 5
+          curl -s -X POST "https://api.github.com/repos/${{ github.repository }}/pages/builds" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            | python3 -c "import sys,json;d=json.load(sys.stdin);print('Pages rebuild:', d.get('status','queued'))"
+
+      - name: Update episode index
+        run: |
+          EP=${{ steps.episode.outputs.ep }}
+          EP_URL="https://nima54851.github.io/agent-studio/anime_ep${EP}.html"
+          echo "## EP${EP} — $(date +%Y-%m-%d)" >> docs/anime-index.md
+          echo "![EP${EP}](anime_ep${EP}.png)" >> docs/anime-index.md
+          echo "[▶ 观看 EP${EP}](${EP_URL})" >> docs/anime-index.md
+          echo "Generated: $(date)" >> docs/anime-index.md
+          echo "---" >> docs/anime-index.md

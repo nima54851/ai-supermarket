@@ -1,0 +1,92 @@
+{
+  "name": "Resilient LLM Pipeline",
+  "nodes": [
+    {
+      "id": "req-in",
+      "name": "Request In",
+      "type": "n8n-nodes-base.webhook",
+      "position": [100, 300],
+      "parameters": {"httpMethod": "POST", "path": "resilient-llm"}
+    },
+    {
+      "id": "rate-limit",
+      "name": "Rate Limit (Sliding Window)",
+      "type": "n8n-nodes-base.code",
+      "position": [300, 300],
+      "parameters": {
+        "jsCode": "// Sliding window rate limiter (60 RPM)\nconst WINDOW_MS = 60000;\nconst MAX_RPM = 60;\nconst now = Date.now();\nconst cacheKey = 'rate_limit_' + $input.first().json.userId;\nconst window = (($vars[cacheKey] || []).filter(t => now - t < WINDOW_MS));\nif (window.length >= MAX_RPM) {\n  throw new Error('RATE_LIMITED');\n}\nwindow.push(now);\n$vars[cacheKey] = window;\nreturn [{rpm: window.length, allowed: true}];"
+      }
+    },
+    {
+      "id": "primary-llm",
+      "name": "Primary LLM (GPT-4o-mini)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [500, 200],
+      "parameters": {"resource": "chat", "model": "gpt-4o-mini"}
+    },
+    {
+      "id": "fallback-llm",
+      "name": "Fallback LLM (Claude Haiku)",
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "position": [500, 400],
+      "parameters": {"resource": "chat", "model": "claude-3-haiku-20240307"}
+    },
+    {
+      "id": "circuit-check",
+      "name": "Circuit Breaker Check",
+      "type": "n8n-nodes-base.switch",
+      "position": [300, 200],
+      "parameters": {
+        "dataType": "string",
+        "valueComparison": {
+          "value": "={{ $vars.circuit_state || 'closed' }}",
+          "cases": {
+            "closed": {"output": 0},
+            "half-open": {"output": 1},
+            "open": {"output": 2}
+          }
+        }
+      }
+    },
+    {
+      "id": "cache-check",
+      "name": "Cache Lookup",
+      "type": "n8n-nodes-base.redis",
+      "position": [700, 500],
+      "parameters": {"operation": "get", "key": "={{ md5($json.body.messages) }}"}
+    },
+    {
+      "id": "graceful-fallback",
+      "name": "Graceful Fallback Response",
+      "type": "n8n-nodes-base.set",
+      "position": [900, 500],
+      "parameters": {
+        "values": {
+          "string": [{"name": "response", "value": "⚠️ All LLM providers unavailable. Please try again later."}]
+        }
+      }
+    },
+    {
+      "id": "error-log",
+      "name": "Log Error",
+      "type": "n8n-nodes-base.code",
+      "position": [900, 300],
+      "parameters": {
+        "jsCode": "// Log to monitoring\nconst err = $json.error || $json.message;\nconsole.error(`[${new Date().toISOString()}] ${err}`);\nreturn {error: err, ts: new Date().toISOString()};"
+      }
+    }
+  ],
+  "connections": {
+    "req-in": {"main": [[{"node": "rate-limit", "type": "main"}]]},
+    "rate-limit": {"main": [[{"node": "circuit-check", "type": "main"}]]},
+    "circuit-check": {"main": [
+      [{"node": "primary-llm", "type": "main"}],
+      [{"node": "fallback-llm", "type": "main"}],
+      [{"node": "cache-check", "type": "main"}]
+    ]},
+    "primary-llm": {"main": [[{"node": "error-log", "type": "main"}]]},
+    "fallback-llm": {"main": [[{"node": "error-log", "type": "main"}]]},
+    "cache-check": {"main": [[{"node": "graceful-fallback", "type": "main"}]]}
+  },
+  "settings": {"executionOrder": "v1"}
+}

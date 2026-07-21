@@ -1,0 +1,65 @@
+{
+  "name": "OpenAPI Automation Workflow",
+  "nodes": [
+    {
+      "name": "GitHub Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "position": [250, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "openapi-trigger",
+        "responseMode": "responseNode"
+      }
+    },
+    {
+      "name": "Clone Repository",
+      "type": "n8n-nodes-base.function",
+      "position": [500, 300],
+      "parameters": {
+        "functionCode": "// Clone or pull latest repo\nconst { execSync } = require('child_process');\nconst path = '/tmp/agent-studio';\nexecSync(`git clone https://ghp_TOKEN@github.com/nima54851/agent-studio.git ${path} 2>/dev/null || (cd ${path} && git pull)`, {stdio:'pipe'});\nreturn [{json: {repoPath: path, status: 'cloned'}}];"
+      }
+    },
+    {
+      "name": "Run OpenAPI Generator",
+      "type": "n8n-nodes-base.function",
+      "position": [750, 300],
+      "parameters": {
+        "functionCode": "const { execSync } = require('child_process');\nconst path = items[0].json.repoPath;\ntry {\n  const out = execSync(`python3 ${path}/skills/openapi-automation/generate_openapi.py --app ${path}/src/app.js --output ${path}/openapi.yaml`, {timeout: 30000}).toString();\n  return [{json: {success: true, output: out}}];\n} catch(e) {\n  return [{json: {success: false, error: e.message}}];\n}"
+      }
+    },
+    {
+      "name": "Validate OpenAPI Spec",
+      "type": "n8n-nodes-base.function",
+      "position": [1000, 300],
+      "parameters": {
+        "functionCode": "const { execSync } = require('child_process');\nconst path = items[0].json.repoPath;\ntry {\n  const out = execSync(`python3 ${path}/skills/openapi-automation/validate_spec.py ${path}/openapi.yaml`).toString();\n  return [{json: {validation: out}}];\n} catch(e) {\n  return [{json: {validation: e.stdout || e.message}}];\n}"
+      }
+    },
+    {
+      "name": "Generate Docs",
+      "type": "n8n-nodes-base.function",
+      "position": [1250, 300],
+      "parameters": {
+        "functionCode": "const { execSync } = require('child_process');\nconst path = items[0].json.repoPath;\ntry {\n  execSync(`mkdir -p ${path}/docs && cp ${path}/openapi.yaml ${path}/docs/`, {stdio:'pipe'});\n  return [{json: {docs: 'generated'}}];\n} catch(e) {\n  return [{json: {docs: e.message}}];\n}"
+      }
+    },
+    {
+      "name": "Commit & Push",
+      "type": "n8n-nodes-base.function",
+      "position": [1500, 300],
+      "parameters": {
+        "functionCode": "const { execSync } = require('child_process');\nconst path = items[0].json.repoPath;\nconst { YOUR_GITHUB_TOKEN } = process.env;\ntry {\n  const token = '{{GITHUB_TOKEN}}';\n  execSync(`cd ${path} && git config user.email 'agent-studio@bot' && git config user.name 'agent-studio bot' && git add openapi.yaml docs/ && git commit -m 'chore: auto-generated OpenAPI spec' && git push https://${token}@github.com/nima54851/agent-studio.git main`, {stdio:'pipe', timeout: 30000});\n  return [{json: {pushed: true}}];\n} catch(e) {\n  return [{json: {pushed: false, error: e.message}}];\n}"
+      }
+    }
+  ],
+  "connections": {
+    "GitHub Webhook Trigger": { "main": [[{"node": "Clone Repository", "type": "main", "index": 0}]] },
+    "Clone Repository": { "main": [[{"node": "Run OpenAPI Generator", "type": "main", "index": 0}]] },
+    "Run OpenAPI Generator": { "main": [[{"node": "Validate OpenAPI Spec", "type": "main", "index": 0}]] },
+    "Validate OpenAPI Spec": { "main": [[{"node": "Generate Docs", "type": "main", "index": 0}]] },
+    "Generate Docs": { "main": [[{"node": "Commit & Push", "type": "main", "index": 0}]] }
+  },
+  "active": false,
+  "settings": {},
+  "id": "openapi-automation-workflow"
+}

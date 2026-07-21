@@ -1,0 +1,41 @@
+name: Deploy to Railway
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install python-telegram-bot flask --break-system-packages -q
+
+      - name: Quick smoke test
+        run: |
+          python3 -c "from phone_data import get_db_stats; s=get_db_stats(); print(f'DB OK: {s[\"total_7digit\"]} entries')"
+
+      - name: Railway CLI
+        uses: railway-cli/setup@v3
+        with:
+          token: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deploy to Railway
+        run: |
+          cd $GITHUB_WORKSPACE
+          railway link --project ${{ vars.RAILWAY_PROJECT_ID }} --environment production
+          railway up --service phone-lookup-bot --detach
+          railway variables set BOT_TOKEN=${{ secrets.BOT_TOKEN }} --service phone-lookup-bot
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

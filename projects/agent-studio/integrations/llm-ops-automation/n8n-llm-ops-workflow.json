@@ -1,0 +1,91 @@
+{
+  "name": "LLM Ops Pipeline",
+  "nodes": [
+    {
+      "id": "webhook-in",
+      "name": "Webhook In",
+      "type": "n8n-nodes-base.webhook",
+      "position": [100, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "llm-ops"
+      }
+    },
+    {
+      "id": "rate-limit",
+      "name": "Rate Limit Check",
+      "type": "n8n-nodes-base.set",
+      "position": [300, 300],
+      "parameters": {
+        "values": {
+          "number": [{"name": "rpm", "value": 60}]
+        }
+      }
+    },
+    {
+      "id": "cost-estimator",
+      "name": "Cost Estimator",
+      "type": "n8n-nodes-base.code",
+      "position": [500, 300],
+      "parameters": {
+        "jsCode": "// Estimate token cost based on model\nconst model = $json.body?.model || 'gpt-4o-mini';\nconst inputTokens = ($json.body?.messages || []).join('').length / 4;\nconst priceMap = {\n  'gpt-4o': {in: 2.5, out: 10.0},\n  'gpt-4o-mini': {in: 0.15, out: 0.60},\n  'claude-3-5-sonnet': {in: 3.0, out: 15.0}\n};\nconst p = priceMap[model] || priceMap['gpt-4o-mini'];\nconst costUSD = (inputTokens / 1000000) * p.in;\nreturn {model, inputTokens: Math.round(inputTokens), estimatedCostUSD: costUSD};"
+      }
+    },
+    {
+      "id": "budget-check",
+      "name": "Budget Check",
+      "type": "n8n-nodes-base.if",
+      "position": [700, 300],
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true},
+          "conditions": [
+            {"id": "budget", "leftValue": "={{ $json.estimatedCostUSD }}", "rightValue": 0.50, "operator": "less"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "call-openai",
+      "name": "Call OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [900, 200],
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o-mini"
+      }
+    },
+    {
+      "id": "log-db",
+      "name": "Log to DB",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1100, 300],
+      "parameters": {
+        "operation": "insert",
+        "table": "llm_ops_log"
+      }
+    },
+    {
+      "id": "slack-alert",
+      "name": "Budget Alert → Slack",
+      "type": "n8n-nodes-base.slack",
+      "position": [900, 450],
+      "parameters": {
+        "channel": "#ai-alerts",
+        "text": "⚠️ LLM Budget Alert: Cost estimate exceeded $0.50"
+      }
+    }
+  ],
+  "connections": {
+    "webhook-in": {"main": [[{"node": "cost-estimator", "type": "main"}]]},
+    "cost-estimator": {"main": [[{"node": "budget-check", "type": "main"}]]},
+    "budget-check": {"main": [
+      [{"node": "call-openai", "type": "main"}],
+      [{"node": "slack-alert", "type": "main"}]
+    ]},
+    "call-openai": {"main": [[{"node": "log-db", "type": "main"}]]}
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

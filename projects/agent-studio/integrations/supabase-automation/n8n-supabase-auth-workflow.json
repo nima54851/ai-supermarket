@@ -1,0 +1,53 @@
+{
+  "name": "Supabase Auth Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "supabase-auth",
+        "responseMode": "lastNode"
+      },
+      "name": "Auth Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 400]
+    },
+    {
+      "parameters": {
+        "functionCode": "const body = $input.first().json;\nconst action = body.action; // 'register' | 'magic-link' | 'oauth-callback'\n\nconst responses = {\n  register: {\n    url: 'https://{{ $env.SUPABASE_PROJECT_ID }}.supabase.co/auth/v1/signup',\n    method: 'POST',\n    headers: { 'apikey': '{{ $env.SUPABASE_ANON_KEY }}', 'Content-Type': 'application/json' },\n    body: { email: body.email, password: body.password, data: { full_name: body.name } }\n  },\n  'magic-link': {\n    url: 'https://{{ $env.SUPABASE_PROJECT_ID }}.supabase.co/auth/v1/otp',\n    method: 'POST',\n    headers: { 'apikey': '{{ $env.SUPABASE_ANON_KEY }}', 'Content-Type': 'application/json' },\n    body: { email: body.email, options: { email_redirect_to: body.redirect_to || 'https://yourapp.com/callback' } }\n  }\n};\n\nreturn [{ json: { action, ...responses[action] || responses.register } }];"
+      },
+      "name": "Build Auth Request",
+      "type": "n8n-nodes-base.function",
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "method": "={{ $json.method }}",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [] },
+        "sendBody": true,
+        "bodyParameters": { "parameters": [] },
+        "body": "={{ $json.body }}",
+        "options": {}
+      },
+      "name": "Supabase Auth API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [750, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1000, 400]
+    }
+  ],
+  "connections": {
+    "Auth Trigger": { "main": [[{ "node": "Build Auth Request", "type": "main", "index": 0 }]] },
+    "Build Auth Request": { "main": [[{ "node": "Supabase Auth API", "type": "main", "index": 0 }]] },
+    "Supabase Auth API": { "main": [[{ "node": "Respond", "type": "main", "index": 0 }]] }
+  }
+}

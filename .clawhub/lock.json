@@ -344,6 +344,26 @@
     "frontend-slides": {
       "version": "2.0.2",
       "installedAt": 1782620976633
+    },
+    "hy-3d-generation": {
+      "version": "1.0.0",
+      "installedAt": 1782956413985
+    },
+    "skill-vetter": {
+      "version": "1.0.0",
+      "installedAt": 1783310929025
+    },
+    "architecture-diagram": {
+      "version": "1.0.0",
+      "installedAt": 1783310959677
+    },
+    "ffmpeg": {
+      "version": "1.0.0",
+      "installedAt": 1784464853740
+    },
+    "lh-video-gen": {
+      "version": "1.0.0",
+      "installedAt": 1784464864307
     }
   }
 }

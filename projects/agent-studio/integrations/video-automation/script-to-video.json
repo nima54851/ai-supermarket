@@ -1,0 +1,140 @@
+{
+  "name": "Script to Video Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "script-to-video",
+        "responseMode": "lastNode"
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "resource": "aiLanguageModel",
+        "operation": "complete",
+        "model": "gpt-4o",
+        "prompt": "=Split this script into scenes. For each scene return:\n{\n  \"scenes\": [\n    {\n      \"scene_number\": 1,\n      \"duration_seconds\": 5,\n      \"prompt\": \"DALL·E / video gen prompt for this scene\",\n      \"voiceover\": \"narration text for this scene\"\n    }\n  ]\n}\n\nScript:\n{{ JSON.parse($json.body).script }}"
+      },
+      "name": "GPT Scene Planner",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [250, 0]
+    },
+    {
+      "parameters": {
+        "mode": "manualMapping",
+        "fieldName": "scenes",
+        "jsonOutput": "={{ JSON.parse($json.gpt_output).scenes }}"
+      },
+      "name": "Loop Over Scenes",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 1,
+      "position": [500, 0]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "generate",
+        "model": "dall-e-3",
+        "prompt": "={{ $json.prompt }}",
+        "size": "1024x1024",
+        "quality": "standard",
+        "responseFormat": "url"
+      },
+      "name": "Generate Scene Image",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [750, 0]
+    },
+    {
+      "parameters": {
+        "model": "kling-video-v1",
+        "input": "={{ $('Generate Scene Image').item.json.url }}",
+        "prompt": "={{ $json.prompt }}",
+        "duration": "=5"
+      },
+      "name": "Kling Video Gen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1000, 0]
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.voiceover }}",
+        "voiceId": "={{ $env.ELEVENLABS_VOICE_ID }}"
+      },
+      "name": "ElevenLabs TTS",
+      "type": "n8n-nodes-base.elevenLabs",
+      "typeVersion": 1,
+      "position": [1250, 0]
+    },
+    {
+      "parameters": {
+        "resource": "transcription",
+        "operation": "create",
+        "audioUrl": "={{ $json.audioUrl }}"
+      },
+      "name": "Whisper Transcript",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [1500, 0]
+    },
+    {
+      "parameters": {
+        "model": "whisper-1",
+        "fileInput": "={{ $('Whisper Transcript').item.json }}"
+      },
+      "name": "Merge Clips + Subtitle",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [1750, 0]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.videoUrl }}",
+        "method": "POST",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "title", "value": "={{ JSON.parse($json.body).title || 'AI Generated Video' }}" },
+            { "name": "description", "value": "={{ JSON.parse($json.body).description || '' }}" },
+            { "name": "videoPath", "value": "={{ $json.finalVideoPath }}" }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Upload to YouTube",
+      "type": "n8n-nodes-base.googleYouTube",
+      "typeVersion": 1,
+      "position": [2000, 0]
+    },
+    {
+      "parameters": {
+        "message": "=✅ Video generated and uploaded to YouTube!\nTitle: {{ JSON.parse($json.body).title }}\nDuration: {{ $json.totalDuration }}s\nScenes: {{ $json.sceneCount }}"
+      },
+      "name": "Slack Notify",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [2250, 0]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [[{ "node": "GPT Scene Planner", "type": "main", "index": 0 }]] },
+    "GPT Scene Planner": { "main": [[{ "node": "Loop Over Scenes", "type": "main", "index": 0 }]] },
+    "Loop Over Scenes": { "main": [
+      [{ "node": "Generate Scene Image", "type": "main", "index": 0 }],
+      [{ "node": "Merge Clips + Subtitle", "type": "main", "index": 0 }]
+    ]},
+    "Generate Scene Image": { "main": [[{ "node": "Kling Video Gen", "type": "main", "index": 0 }]] },
+    "Kling Video Gen": { "main": [[{ "node": "ElevenLabs TTS", "type": "main", "index": 0 }]] },
+    "ElevenLabs TTS": { "main": [[{ "node": "Whisper Transcript", "type": "main", "index": 0 }]] },
+    "Whisper Transcript": { "main": [[{ "node": "Merge Clips + Subtitle", "type": "main", "index": 0 }]] },
+    "Merge Clips + Subtitle": { "main": [[{ "node": "Upload to YouTube", "type": "main", "index": 0 }]] },
+    "Upload to YouTube": { "main": [[{ "node": "Slack Notify", "type": "main", "index": 0 }]] }
+  },
+  "settings": {},
+  "description": "Full pipeline: script → AI images → video generation → subtitles → YouTube upload"
+}

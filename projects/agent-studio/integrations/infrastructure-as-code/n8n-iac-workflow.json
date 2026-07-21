@@ -1,0 +1,45 @@
+{
+  "name": "IaC Generation Pipeline",
+  "nodes": [
+    {
+      "name": "Requirements Input",
+      "type": "n8n-nodes-base.webhook",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "iac-gen"
+      },
+      "webhookId": "iac-gen"
+    },
+    {
+      "name": "AI Terraform Generator",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "parameters": {
+        "operation": "complete",
+        "prompt": "Generate Terraform HCL for the following requirements. Include provider, resources, variables, and outputs. Use best practices.\n\nRequirements:\n{{ $json.requirements }}\n\nProvider: {{ $json.provider || 'aws' }}"
+      }
+    },
+    {
+      "name": "AI Ansible Generator",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "parameters": {
+        "operation": "complete",
+        "prompt": "Generate an Ansible playbook (YAML) for the following server requirements. Include tasks, handlers, and vars.\n\nRequirements:\n{{ $json.requirements }}"
+      }
+    },
+    {
+      "name": "Create GitHub PR",
+      "type": "@n8n-io/n8n-nodes-github",
+      "parameters": {
+        "operation": "create",
+        "repository": "{{ $json.repository }}",
+        "title": "feat: IaC - {{ $json.environment }} environment",
+        "body": "## 🤖 AI Generated Infrastructure\n\n**Generated from requirements:**\n{{ $json.requirements }}\n\n**Provider:** {{ $json.provider || 'aws' }}\n\n### Files Changed\n- `infrastructure/terraform/`\n- `infrastructure/ansible/`"
+      }
+    }
+  ],
+  "connections": {
+    "Requirements Input": { "main": [[{ "node": "AI Terraform Generator" }]] },
+    "AI Terraform Generator": { "main": [[{ "node": "AI Ansible Generator" }]] },
+    "AI Ansible Generator": { "main": [[{ "node": "Create GitHub PR" }]] }
+  }
+}

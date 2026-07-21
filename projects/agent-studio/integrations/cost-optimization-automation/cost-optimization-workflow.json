@@ -1,0 +1,60 @@
+{
+  "name": "Cost Optimization Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "cronExpression", "properties": { "cronExpression": "0 9 * * *" } }
+          ]
+        }
+      },
+      "name": "Schedule: Daily Cost Check",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://api.openai.com/v1/usage",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "name": "OpenAI: Get Usage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "resource": "complete",
+        "prompt": "Analyze this cost data and identify:\n1. Anomalies or unexpected spikes\n2. Top cost drivers\n3. Specific optimization recommendations with estimated savings\n\nData: {{$json}}",
+        "options": {}
+      },
+      "name": "AI: Cost Analysis",
+      "type": "@n8n/n8n-nodes-langchain.chatOpenAi",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "channel": "={{$json.slack_channel}}",
+        "text": "💰 *Daily Cost Report*\n\n{{$json.message}}",
+        "options": {}
+      },
+      "name": "Slack: Send Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Schedule: Daily Cost Check": { "main": [[{ "node": "OpenAI: Get Usage", "type": "main", "index": 0 }]] },
+    "OpenAI: Get Usage": { "main": [[{ "node": "AI: Cost Analysis", "type": "main", "index": 0 }]] },
+    "AI: Cost Analysis": { "main": [[{ "node": "Slack: Send Alert", "type": "main", "index": 0 }]] }
+  },
+  "active": false,
+  "settings": {},
+  "id": "cost-optimization-workflow"
+}

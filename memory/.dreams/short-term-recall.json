@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-06-30T03:04:19.020Z",
+  "updatedAt": "2026-07-21T02:30:12.848Z",
   "entries": {
     "memory:memory/2026-06-19.md:1:36": {
       "key": "memory:memory/2026-06-19.md:1:36",
@@ -45,22 +45,24 @@
       "endLine": 65,
       "source": "memory",
       "snippet": "- Pages: https://nima54851.github.io/agent-studio ✅ 在线 - Stars: 1 | Issues: 1 | Release: v0.1.0 - 内容: skills(x3) + scripts(x3) + workflows + docs 2. **lingxi-agent-demos** — 自动化示例仓库 - URL: https://github.com/nima54851/lingxi-agent-demos ### agent-studio 项目内容 - `skills/agent-memory/` — Agent 长期记忆系统 - `skills/github-trending-monitor/` — GitHub 热点追踪 Skill - `skills/webhook-dispatcher/` — Webhook 分发器 Skill - `scripts/github_trending.py` — 爬虫脚本 - `scripts/webhook_dispatcher.py` — 事件分发器 - `scripts/memory.py` — AgentMemory 类实现 - `.github/workflows/daily-report.yml` — 每日 CI ### GitHub 互动记录 - ponytail #185 评论 ✅ - hermes-agent #30179 评论 ✅ - vercel/eve #67 评论 ✅ - Starred: ponytail, herme",
-      "recallCount": 3,
+      "recallCount": 4,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 3,
+      "totalScore": 4,
       "maxScore": 1,
       "firstRecalledAt": "2026-06-20T01:54:36.997Z",
-      "lastRecalledAt": "2026-06-22T02:42:18.274Z",
+      "lastRecalledAt": "2026-07-19T02:19:18.928Z",
       "queryHashes": [
         "870725b24adc",
         "b2315f8c4426",
-        "ebaf062779ca"
+        "ebaf062779ca",
+        "285d4c70787c"
       ],
       "recallDays": [
         "2026-06-20",
         "2026-06-21",
-        "2026-06-22"
+        "2026-06-22",
+        "2026-07-19"
       ],
       "conceptTags": [
         "nima54851.github.io/agent-studio",
@@ -80,25 +82,27 @@
       "endLine": 80,
       "source": "memory",
       "snippet": "- https://github.com/nima54851/nima54851 ✅ 创建 + README 上传 - GitHub 主页现在有完整自我介绍 ### agent-studio 新增内容 - `skills/mcp-integration/` — MCP 协议集成指南 - `scripts/mcp_client.py` — MCP Python 客户端 - `workflows/github-ai-digest.json` — n8n 工作流（需手动导入） - `workflows/github-ai-digest-runbook.md` — 完整使用手册 ### 自动化调度 - PID: 153290 | 每天 09:00 北京时间触发 - 任务：爬 GitHub Trending → 发评论 → Star → 更新报告 ### 每日提醒 - yuanbao_remind 设置完成：每天 09:00 检查账号状态 ### 整体资产状态 - GitHub 主页：https://github.com/nima54851 ✅ - agent-studio: https://github.com/nima54851/agent-studio ✅ - GitHub Pages: https://nima54851.github.io/agent-studio ✅ - Profile README: https://github.com/nima54851/nima54851 ✅",
-      "recallCount": 5,
+      "recallCount": 6,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 4.973893203853654,
+      "totalScore": 5.973893203853654,
       "maxScore": 1,
       "firstRecalledAt": "2026-06-20T01:54:36.997Z",
-      "lastRecalledAt": "2026-06-23T06:00:21.564Z",
+      "lastRecalledAt": "2026-07-19T02:19:18.928Z",
       "queryHashes": [
         "870725b24adc",
         "2441bfc81cff",
         "b2315f8c4426",
         "ebaf062779ca",
-        "962a74f3b60c"
+        "962a74f3b60c",
+        "285d4c70787c"
       ],
       "recallDays": [
         "2026-06-20",
         "2026-06-21",
         "2026-06-22",
-        "2026-06-23"
+        "2026-06-23",
+        "2026-07-19"
       ],
       "conceptTags": [
         "github.com/nima54851/nima54851",
@@ -155,24 +159,26 @@
       "endLine": 29,
       "source": "memory",
       "snippet": "## June 14, 2026 - Skills Installation & Development Session ### 📦 Major Skills Installation Completed - Installed 44 high-quality skills from ClawHub platform - Focus areas: development, design, memory management, security - Successfully tested Tavily API integration (API key: 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) - Verified Miaoda App Builder functionality (API key: sk_3e0joqg5_oydlxelgac5iqgbeja1w9cr2aaxqemj2) ### 🚀 Project Development Achievements **Football Prediction Aggregation Platform created and deployed:** - Application ID: app-cbu3gzz6j4ld - Production URL: https://app-cbu3gzz6j4ld.appmiaoda.com - Preview URL: https://www.miaoda.cn/projects/app-cbu3gzz6j",
-      "recallCount": 4,
+      "recallCount": 5,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 3.953749816238105,
+      "totalScore": 4.953749816238105,
       "maxScore": 1,
       "firstRecalledAt": "2026-06-20T01:54:36.997Z",
-      "lastRecalledAt": "2026-06-29T03:32:17.044Z",
+      "lastRecalledAt": "2026-07-19T02:19:18.928Z",
       "queryHashes": [
         "870725b24adc",
         "b2315f8c4426",
         "ebaf062779ca",
-        "670cbc6ad088"
+        "670cbc6ad088",
+        "285d4c70787c"
       ],
       "recallDays": [
         "2026-06-20",
         "2026-06-21",
         "2026-06-22",
-        "2026-06-29"
+        "2026-06-29",
+        "2026-07-19"
       ],
       "conceptTags": [
         "high-quality",
@@ -192,23 +198,25 @@
       "endLine": 68,
       "source": "memory",
       "snippet": "1. Tech Dashboard Application (RELEASED) - https://app-c7sde3g57sap.appmiaoda.com 2. Arcade Plane Shooter Game (DESIGNING) 3. Tactical Shooter Mini Program Game (DESIGNING) 4. 3D Sandbox Building Game (DESIGNING) 5. NEW: Football Prediction Aggregation Platform (RELEASED) - https://app-cbu3gzz6j4ld.appmiaoda.com ### 🔄 Technical Lessons Learned 1. Skills installation requires correct directory placement (~/.openclaw/skills/) 2. API keys need proper environment variable configuration 3. Miaoda platform has specific workflow: chat → generate-app → publish 4. Tavily API works best with proper error handling and key format validation 5. OpenClaw gateway restart may be needed for skill recogniti",
-      "recallCount": 4,
+      "recallCount": 5,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 4,
+      "totalScore": 5,
       "maxScore": 1,
       "firstRecalledAt": "2026-06-22T02:42:18.274Z",
-      "lastRecalledAt": "2026-06-28T02:05:11.773Z",
+      "lastRecalledAt": "2026-07-07T01:49:45.796Z",
       "queryHashes": [
         "ebaf062779ca",
         "98805c716a47",
         "c1012fdeaf95",
-        "569a205669f9"
+        "569a205669f9",
+        "f976512c64f7"
       ],
       "recallDays": [
         "2026-06-22",
         "2026-06-26",
-        "2026-06-28"
+        "2026-06-28",
+        "2026-07-07"
       ],
       "conceptTags": [
         "gateway",
@@ -259,13 +267,13 @@
       "endLine": 27,
       "source": "memory",
       "snippet": "# 2026-06-22 工作日志 ## 灵犀全球 A2A Registry 完成上线 ### 平台信息 - 本地API: http://localhost:18432 - 管理后台: http://localhost:18433/admin.html - GitHub Pages: https://nima54851.github.io/lingxi-a2a-registry/ - GitHub仓库: https://github.com/nima54851/lingxi-a2a-registry ### 已注册Agent（5个） - 灵犀全球 A2A Registry (agent_id: b69a5f9f11702aef) - 代码审查 Agent - 网页爬虫 Agent - GitHub Trending 监控 - 万の个人助手 ### 技术栈 - 后端: FastAPI + aiosqlite + uvicorn - 前端: 原生HTML/JS（无框架） - 端口: 18432（API）, 18433（静态文件） ### 待完成 - AgentGateway v1.3.0 下载（ghproxy.net镜像，速度慢约10KB/s，后台PID 79355） - 公网穿透（18432端口对外不可达，需要cloudflare tunnel或其他方案） - UUMit设备授权（待用户完成link操作）",
-      "recallCount": 8,
+      "recallCount": 11,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 8,
+      "totalScore": 10.266156066656071,
       "maxScore": 1,
       "firstRecalledAt": "2026-06-23T06:00:21.564Z",
-      "lastRecalledAt": "2026-06-29T03:32:17.044Z",
+      "lastRecalledAt": "2026-07-19T02:19:18.928Z",
       "queryHashes": [
         "962a74f3b60c",
         "245e9e1f5f39",
@@ -274,13 +282,18 @@
         "569a205669f9",
         "f22bb0f2e8a1",
         "02ea477114b8",
-        "670cbc6ad088"
+        "670cbc6ad088",
+        "04a0cf476b4c",
+        "a879278b5be0",
+        "285d4c70787c"
       ],
       "recallDays": [
         "2026-06-23",
         "2026-06-27",
         "2026-06-28",
-        "2026-06-29"
+        "2026-06-29",
+        "2026-07-07",
+        "2026-07-19"
       ],
       "conceptTags": [
         "gateway",
@@ -333,20 +346,22 @@
       "endLine": 154,
       "source": "memory",
       "snippet": "- 为收款账户 yinanzo@hotmail.com 专门设计支付系统 - 实现了完整的订单流程：创建、支付、捕获、退款 - 考虑了 Webhook 异步通知，确保支付状态同步 ## 下一步计划 1. **CoursePay 项目部署** - 配置 PayPal 生产环境 - 部署到服务器或云平台 - 测试完整的支付流程 2. **用户指导** - 指导用户创建 PayPal 应用并获取 API 凭证 - 帮助用户上传课程内容 - 配置自动化交付系统 3. **功能扩展** - 添加更多支付方式（微信、支付宝、信用卡） - 开发管理后台 - 集成邮件通知系统 ## 技术要点总结 1. **PayPal SDK**：使用 @paypal/checkout-server-sdk 服务器端集成 2. **订单管理**：支持虚拟商品的特殊交付逻辑 3. **安全设计**：Webhook 签名验证、JWT 认证、数据库安全 4. **部署友好**：支持 Docker、PM2、云平台部署 ## 用户偏好洞察 - 用户偏好虚拟商品销售（课程、电子书） - 需要使用 PayPal 收款（账户：yinanzo@hotmail.com） - 需要完整的项目结构和部署指南 - 重视实际可行的商业模式 ## 时间线 - 09:00-11:00：coze-bridge、技能安装、GitHub CLI修复 - 11:00-12:00：NewAPI 项目创建、GitHub 认证",
-      "recallCount": 2,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 1.9681830888274239,
+      "totalScore": 2.6007157864899106,
       "maxScore": 1,
       "firstRecalledAt": "2026-06-23T06:00:21.564Z",
-      "lastRecalledAt": "2026-06-30T03:04:19.020Z",
+      "lastRecalledAt": "2026-07-19T01:49:53.822Z",
       "queryHashes": [
         "962a74f3b60c",
-        "136e990f60a9"
+        "136e990f60a9",
+        "a879278b5be0"
       ],
       "recallDays": [
         "2026-06-23",
-        "2026-06-30"
+        "2026-06-30",
+        "2026-07-19"
       ],
       "conceptTags": [
         "hotmail.com",
@@ -473,19 +488,21 @@
       "endLine": 45,
       "source": "memory",
       "snippet": "# 2026-06-23 工作日志 ## 今日主要成果 ### 新建技能（6个，全部验证通过） | 技能 | 功能 | 来源 | |---|---|---| | skill-builder | 从零创建 AI Agent 技能 | obra/superpowers | | self-hosted-ai | 部署 Ollama / N8N / nginx | ollama/n8n | | coding-tutor | 编程学习路线 | freeCodeCamp | | n8n-workflow-builder | n8n 工作流设计 | n8n-io/n8n | | career-roadmap | 程序员成长规划 | developer-roadmap | | agent-skills-kit | AI Agent 技能开发框架 | BuilderIO/skills | 打包文件：~/.openclaw/workspace/*.skill ### A2A 公网暴露（暂缓） - 本地 API localhost:18432 ✅ 正常运行 - 公网暴露：localtunnel 抽风、cloudflared 装不了（github.com:443 不通）、localhost.run 需要 SSH key - 结论：无公网服务器，暂缓 ### UUMit（暂缓） - 万说注册不了 UUMit - 暂缓 ### GitHub 热门项目参考 - ollama/ollama ⭐174K — 本地大模型 - n8n-io/n8n ⭐193K — 工作流自动化 - nilbuild/",
-      "recallCount": 2,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 2,
+      "totalScore": 2.6322997545873,
       "maxScore": 1,
       "firstRecalledAt": "2026-06-28T02:05:06.367Z",
-      "lastRecalledAt": "2026-06-28T02:05:11.773Z",
+      "lastRecalledAt": "2026-07-19T01:49:53.822Z",
       "queryHashes": [
         "2a8470afb9fa",
-        "569a205669f9"
+        "569a205669f9",
+        "a879278b5be0"
       ],
       "recallDays": [
-        "2026-06-28"
+        "2026-06-28",
+        "2026-07-19"
       ],
       "conceptTags": [
         "skill-builder",
@@ -568,18 +585,21 @@
       "endLine": 158,
       "source": "memory",
       "snippet": "- 用户偏好虚拟商品销售（课程、电子书） - 需要使用 PayPal 收款（账户：yinanzo@hotmail.com） - 需要完整的项目结构和部署指南 - 重视实际可行的商业模式 ## 时间线 - 09:00-11:00：coze-bridge、技能安装、GitHub CLI修复 - 11:00-12:00：NewAPI 项目创建、GitHub 认证 - 13:00-14:00：PayPal 项目搜索、CoursePay 项目规划 - 14:00-现在：CoursePay 项目核心代码开发 项目已具备立即启动的基础，可以快速进入开发部署阶段。",
-      "recallCount": 1,
+      "recallCount": 3,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 1,
+      "totalScore": 2.2717680054764724,
       "maxScore": 1,
       "firstRecalledAt": "2026-06-30T03:04:19.020Z",
-      "lastRecalledAt": "2026-06-30T03:04:19.020Z",
+      "lastRecalledAt": "2026-07-07T01:49:45.796Z",
       "queryHashes": [
-        "136e990f60a9"
+        "136e990f60a9",
+        "04a0cf476b4c",
+        "f976512c64f7"
       ],
       "recallDays": [
-        "2026-06-30"
+        "2026-06-30",
+        "2026-07-07"
       ],
       "conceptTags": [
         "hotmail.com",
@@ -599,18 +619,24 @@
       "endLine": 43,
       "source": "memory",
       "snippet": "# 2026-06-12 记忆记录 ## 上午工作 ### 1. coze-bridge 安装和配对 - 成功执行了 coze-bridge 安装命令：`npx -y --registry=https://registry.npmmirror.com coze-bridge@latest --pat-token=sat_zTOdwfbmOht1981k3lwHpdCHNDoBHqrwJYARfzOpdQQn45tC9HExPqdQbfI2lEZa --pair-code=9d1bc803-2689-4389-bf0e-ac41b9b1943997cd3f4d` - coze-bridge 版本：0.1.100 - 配对成功完成 ### 2. 技能安装 - 使用 skillhub 安装了多个核心技能： - web-tools-guide - web - web-development - web-search - ai - docker - db - docker-compose - ai-persona-os - database-design - 用户要求\"全部要\"，解释为按类别安装代表性核心技能 ### 3. GitHub CLI 修复 - 修复了有问题的 npm gh CLI 包（版本 2.8.9） - 通过 apt 安装了官方 GitHub CLI（版本 2.45.0） - 提供了中文的 GitHub 个人访问令牌创建教程 ### 4. NewAPI 项目创建 - 在 `/root/.openclaw/workspace",
-      "recallCount": 1,
+      "recallCount": 4,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 1,
+      "totalScore": 4,
       "maxScore": 1,
       "firstRecalledAt": "2026-06-30T03:04:19.020Z",
-      "lastRecalledAt": "2026-06-30T03:04:19.020Z",
+      "lastRecalledAt": "2026-07-07T01:49:45.796Z",
       "queryHashes": [
-        "136e990f60a9"
+        "136e990f60a9",
+        "85ca33f8689f",
+        "316528a05242",
+        "f976512c64f7"
       ],
       "recallDays": [
-        "2026-06-30"
+        "2026-06-30",
+        "2026-07-01",
+        "2026-07-06",
+        "2026-07-07"
       ],
       "conceptTags": [
         "coze-bridge",
@@ -621,6 +647,399 @@
         "web-tools-guide",
         "web-development",
         "web-search"
+      ]
+    },
+    "memory:memory/2026-07-04.md:1:37": {
+      "key": "memory:memory/2026-07-04.md:1:37",
+      "path": "memory/2026-07-04.md",
+      "startLine": 1,
+      "endLine": 37,
+      "source": "memory",
+      "snippet": "# 2026-07-04 Daily Memory ## Tinode on Railway 部署进展 ### 当前状态 - Railway project: `d1579da0-7d89-452a-8997-6745ba7720d7` (tinode-chat) - Railway service: `973ee986-c996-40cc-ad46-6e6ec2db8ca0` - Public URL: https://tinode-chat-production.up.railway.app - GitHub repo: https://github.com/nima54851/tinode-railway ### 核心问题：Tinode 启动后5秒崩溃 日志显示： ``` DB adapter postgres 113 ← DB连接成功 Failed to initialize push notifications: failed to parse config: unexpected end of JSON input tinode died after 5s ← 静默退出，无panic，无signal ``` ### 最新修复方案（start.sh） 1. 去掉后台 `&`，改用 `exec` 等待 2. 10秒后检测 tinode 存活，如死亡则 `exit 1` 3. tinode 监听 6061，Python 代理监听 6060（Railway端口）并返回 HTTP 200 给健康检查 4. 所有其他请求转发到 tinode:6061 ###",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 2,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-07T01:49:40.823Z",
+      "lastRecalledAt": "2026-07-07T01:49:45.796Z",
+      "queryHashes": [
+        "04a0cf476b4c",
+        "f976512c64f7"
+      ],
+      "recallDays": [
+        "2026-07-07"
+      ],
+      "conceptTags": [
+        "tinode-chat",
+        "start.sh",
+        "tinode",
+        "railway",
+        "部署",
+        "进展",
+        "当前",
+        "状态"
+      ]
+    },
+    "memory:memory/2026-07-04.md:32:39": {
+      "key": "memory:memory/2026-07-04.md:32:39",
+      "path": "memory/2026-07-04.md",
+      "startLine": 32,
+      "endLine": 39,
+      "source": "memory",
+      "snippet": "- Python 代理：GET / → 200 OK，其他 → 转发到 tinode:6061 - 如 tinode 10秒内死亡，start.sh 退出 → Railway 判为 Crashed（可以看到更多日志） ### 下一步（如果还是崩溃） - 去掉 `--static_data=/app/uploads` 参数测试 - 用 strace 或添加 debug 日志看 tinode 为什么退出 - 考虑用 tinode:latest 官方镜像代替自编译二进制",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 2,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-07T01:49:40.823Z",
+      "lastRecalledAt": "2026-07-07T01:49:45.796Z",
+      "queryHashes": [
+        "04a0cf476b4c",
+        "f976512c64f7"
+      ],
+      "recallDays": [
+        "2026-07-07"
+      ],
+      "conceptTags": [
+        "start.sh",
+        "static-data",
+        "app/uploads",
+        "python",
+        "代理",
+        "get",
+        "其他",
+        "转发"
+      ]
+    },
+    "memory:memory/2026-06-26.md:27:59": {
+      "key": "memory:memory/2026-06-26.md:27:59",
+      "path": "memory/2026-06-26.md",
+      "startLine": 27,
+      "endLine": 59,
+      "source": "memory",
+      "snippet": "2. 下载 basketball.html → 修复canvas尺寸 3. 改进 space-shooter.html 视觉效果 + 修复return URL 4. 重新上传 basketball.html, space-shooter.html ## 晚间更新（续） ### 游戏修复完成 - basketball: 轨迹预览物理计算修复（simVY累加重力，正确抛物线） - bubble: H变量重复声明导致Three.js崩溃，合并为一行 - billiards: 口袋检测半径0.5x→0.8x，进袋更灵敏 - pinball: /键→X键，更顺手 - dino/survivor/connect4: 代码检查正常 - 所有修复已上传 game-platform GitHub ### 首页新功能 - 导航栏：登录后显示 🔔通知铃铛 + 头像按钮 + 玩家信息 - 通知面板：右上角弹出式，显示官方/活动/紧急通知 - 个人资料弹窗：改昵称 + 24个emoji头像可选 - 备用内容：API不可用时显示内置通知列表 - API: GET /api/notifications（需Bearer token） - API: PUT /api/profile（需Bearer token, body:{nickname, avatar}） ### 技术细节 - game-platform 无独立.git目录，是workspace子目录 - 推送用 GitHub Contents API: PUT /repos/{owner}/{repo}/contents/{path} - 上",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.632199574889218,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-07T01:49:40.823Z",
+      "lastRecalledAt": "2026-07-19T01:49:53.822Z",
+      "queryHashes": [
+        "04a0cf476b4c",
+        "a879278b5be0"
+      ],
+      "recallDays": [
+        "2026-07-07",
+        "2026-07-19"
+      ],
+      "conceptTags": [
+        "basketball.html",
+        "space-shooter.html",
+        "h变量重复声明导致three.js崩溃",
+        "口袋检测半径0.5x",
+        "0.8x",
+        "dino/survivor/connect4",
+        "game-platform",
+        "显示官方/活动/紧急通知"
+      ]
+    },
+    "memory:memory/2026-06-26.md:1:35": {
+      "key": "memory:memory/2026-06-26.md:1:35",
+      "path": "memory/2026-06-26.md",
+      "startLine": 1,
+      "endLine": 35,
+      "source": "memory",
+      "snippet": "## 2026-06-26 夜战记录 ### 当前任务：游戏画质升级 + PayPal支付页面 **vip.html 已生成**（路径: /tmp/vip.html，内容14798字节） - 完整VIP充值页面：金币充值 + VIP会员 - PayPal集成：business=yinanzo@hotmail.com - 套餐：6元/18元/38元/68元 + VIP永久29元 - 需要上传到 nima54851/game-platform 根目录 **space-shooter.html 分析完成**（已下载到内存） - 游戏质量：中等偏上，有粒子爆炸、渐变、星空背景 - 视觉改进点：增加飞船细节、UFO加LED动画、Boss加眼睛和细节 - PayPal支付URL已存在，return URL指向 lingxi-games 需要改成 game-platform - 需要改：return URL从 `lingxi-games` → `nima54851.github.io/game-platform` **待修游戏清单（需从GitHub下载后处理）：** - games/basketball.html（canvas 300x150 太小，需放大） - games/pinball.html（需美化视觉效果） - games/bubble.html（需修复格式） - games/survivor.html（3D游戏，需升级Three.js材质/光照） **下一步：** 1. 上传 vip.html（Python脚本已在 /tmp/game_improver.py，但写入",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-07T01:49:40.823Z",
+      "lastRecalledAt": "2026-07-07T01:49:40.823Z",
+      "queryHashes": [
+        "04a0cf476b4c"
+      ],
+      "recallDays": [
+        "2026-07-07"
+      ],
+      "conceptTags": [
+        "vip.html",
+        "tmp/vip.html",
+        "hotmail.com",
+        "6元/18元/38元/68元",
+        "nima54851/game-platform",
+        "space-shooter.html",
+        "lingxi-games",
+        "game-platform"
+      ]
+    },
+    "memory:memory/2026-06-30.md:1:15": {
+      "key": "memory:memory/2026-06-30.md:1:15",
+      "path": "memory/2026-06-30.md",
+      "startLine": 1,
+      "endLine": 15,
+      "source": "memory",
+      "snippet": "## 2026-06-30 下午：游戏平台紧急修复 ### 当前状态（CDN + 本地均为旧版本，尚未推送） - survivor.html：黑屏问题未修复 - dino.html：星空不滚动问题未修复 - index.html：铃铛未显示 ### 待修复内容 1. survivor.html：加上 setClearColor + 敌人光源 + 更亮背景 2. dino.html：星空水平滚动 + 速度线 + 恐龙方向 3. index.html：铃铛改为登录前后都显示 + 通知面板 ### 执行计划 使用 exec 写文件并通过 GitHub API 推送",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 1.906670648304472,
+      "maxScore": 0.6355568847328731,
+      "firstRecalledAt": "2026-07-07T01:49:45.796Z",
+      "lastRecalledAt": "2026-07-19T02:19:18.928Z",
+      "queryHashes": [
+        "f976512c64f7",
+        "a879278b5be0",
+        "285d4c70787c"
+      ],
+      "recallDays": [
+        "2026-07-07",
+        "2026-07-19"
+      ],
+      "conceptTags": [
+        "survivor.html",
+        "dino.html",
+        "index.html",
+        "下午",
+        "游戏",
+        "平台",
+        "紧急",
+        "修复"
+      ]
+    },
+    "memory:memory/2026-06-26.md:52:79": {
+      "key": "memory:memory/2026-06-26.md:52:79",
+      "path": "memory/2026-06-26.md",
+      "startLine": 52,
+      "endLine": 79,
+      "source": "memory",
+      "snippet": "- 推送用 GitHub Contents API: PUT /repos/{owner}/{repo}/contents/{path} - 上传前需先 GET 获取当前SHA（避免冲突） ## 游戏重制（完整重写） ### 跑酷恐龙 — 完全重写 - 改用透视摄像机（视角更像 Chrome Dino） - **星空水平滚动**（之前完全静止，现在和障碍同步移动） - **速度线特效**（随速度加快变亮，增强速度感） - **远山/近山滚动**（0.25x 和 0.55x 速度，背景层次感） - 恐龙朝向修正（头朝右，面向障碍物方向） - 地面装饰线（dash marks 增加地面速度感） - 速度显示条（实时显示当前倍速） ### 深渊幸存者 — 完全重写 - **摄像机：俯视正交**（camera.position.y = 80，清楚看到全场） - **所有敌人自带 PointLight 光源**（球体自发光，不再和地板混为一体） - **敌人有 BackSide 黑色描边**（轮廓清晰可见） - **场景整体亮度大幅提升**（AmbientLight ×2.5，ACES色调映射） - 四角彩色辅助光（紫/蓝/红/绿四种） - XP光球、八角形自旋转 ### 其他游戏（确认正常） - basketball: 轨迹预测修复 ✅ - bubble: H重复声明修复 ✅ - billiards: 口袋检测 0.5x→0.8x ✅ - pinball: /键→X键 ✅",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.6323266586976017,
+      "maxScore": 0.6323266586976017,
+      "firstRecalledAt": "2026-07-19T01:49:53.822Z",
+      "lastRecalledAt": "2026-07-19T01:49:53.822Z",
+      "queryHashes": [
+        "a879278b5be0"
+      ],
+      "recallDays": [
+        "2026-07-19"
+      ],
+      "conceptTags": [
+        "远山/近山滚动",
+        "0.25x",
+        "0.55x",
+        "camera.position.y",
+        "2.5",
+        "紫/蓝/红/绿四种",
+        "0.5x",
+        "0.8x"
+      ]
+    },
+    "memory:memory/2026-07-08.md:1:19": {
+      "key": "memory:memory/2026-07-08.md:1:19",
+      "path": "memory/2026-07-08.md",
+      "startLine": 1,
+      "endLine": 19,
+      "source": "memory",
+      "snippet": "# 2026-07-08 Daily Memory ## GitHub 账号运营日检 - **Stars:** 1 | **Forks:** 0 | **Issues:** 2（#1 Roadmap, #3 Cloudflare Bot） - **GitHub Pages:** 200 ✅ - **新增内容（4新技能 + 2集成包）：** - `skills/rag-knowledge-base/` — RAG pipeline: Chroma/FAISS, Ollama embeddings, n8n workflow + rag-qa-bot.py - `skills/auth-automation/` — JWT/OAuth2/API key, Redis sessions, n8n auth workflow + api_key_manager.py - `skills/data-processing-automation/` — CSV/Excel/PDF/JSON ETL, AI enrichment - `skills/multi-agent-coordination/` — Supervisor/debate/voting patterns, shared memory - `integrations/rag-knowledge-base/` — n8n RAG workflow - `integrations/auth-automation/` — n8n auth workflow - **已推送** 8个文件 via GitHu",
+      "recallCount": 4,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 3.6326683682158394,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-19T02:19:18.928Z",
+      "lastRecalledAt": "2026-07-21T02:30:12.848Z",
+      "queryHashes": [
+        "285d4c70787c",
+        "da674db3a707",
+        "78cb82797eec",
+        "520b8686737d"
+      ],
+      "recallDays": [
+        "2026-07-19",
+        "2026-07-21"
+      ],
+      "conceptTags": [
+        "embedding",
+        "embeddings",
+        "skills/rag-knowledge-base",
+        "chroma/faiss",
+        "rag-qa-bot.py",
+        "skills/auth-automation",
+        "jwt/oauth2/api",
+        "api-key-manager.py"
+      ]
+    },
+    "memory:memory/2026-07-20.md:71:113": {
+      "key": "memory:memory/2026-07-20.md:71:113",
+      "path": "memory/2026-07-20.md",
+      "startLine": 71,
+      "endLine": 113,
+      "source": "memory",
+      "snippet": "- **网页订阅页：** https://a1d4a2bb3a60b6f2-1-13-80-87.serveousercontent.com - **API：** https://a1d4a2bb3a60b6f2-1-13-80-87.serveousercontent.com/api/trending - **Tunnel PID：** 822016（serveo） ### 技术栈 - Flask + Gunicorn - GitHub API（带 Token，无速率限制） - Telegram Bot API - 订阅系统（内存存储） ### 文件位置 - saas/trending_saas.py（主程序） - saas/index.html（订阅网页） - saas/requirements.txt - saas/railway.toml（Railway 部署配置） - saas/Procfile（Railway 兼容） ### 变现路径 用户访问网页 → 填 Telegram Bot Token + Chat ID → 点订阅 → 立即收到今日热门推送 无安装门槛，社交媒体推广首选 ### 本地测试端口：5000 ## SaaS 启动验证（2026-07-20 夜） ### 待验证项 - [ ] 本地 Flask 测试：`python3 saas/trending_saas.py` → 端口 5000 - [ ] Railway 部署：需 railway login → railway init → railway up - [ ] 隧道转发：serve",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 3,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-21T02:30:01.146Z",
+      "lastRecalledAt": "2026-07-21T02:30:12.848Z",
+      "queryHashes": [
+        "da674db3a707",
+        "78cb82797eec",
+        "520b8686737d"
+      ],
+      "recallDays": [
+        "2026-07-21"
+      ],
+      "conceptTags": [
+        "saas/trending-saas.py",
+        "saas/index.html",
+        "saas/requirements.txt",
+        "saas/railway.toml",
+        "saas/procfile",
+        "网页",
+        "订阅",
+        "https"
+      ]
+    },
+    "memory:memory/2026-07-20.md:1:39": {
+      "key": "memory:memory/2026-07-20.md:1:39",
+      "path": "memory/2026-07-20.md",
+      "startLine": 1,
+      "endLine": 39,
+      "source": "memory",
+      "snippet": "## n8n 工作流已创建 ### 工作流：GitHub Trending 每日推送 - **ID:** S4akSQ13a6K5cFuS - **节点：** 1. 每日早9点触发（cron: 0 9 * * *） 2. 获取 GitHub 热门（API: stars>500, 近30天新建） 3. 解析项目数据（取前8个） 4. 生成格式化推送内容 5. Telegram 推送 ### 待用户配置（n8n界面操作） 1. 打开工作流 → Telegram 节点 → 填入 Chat ID 2. 凭证 Telegram Bot → 填入 Bot Token（placeholder 已创建，ID: VOWUbKjAOi0xxvXX） 3. 激活工作流（右上角 toggle） ### Telegram Bot 创建步骤 1. @BotFather 发 /newbot 2. 记下 Token 3. @userinfobot 获取自己的 Chat ID ## GitHub B2B n8n 产品页已上线 ### 已完成 - ✅ README.md 新增「B2B n8n 自动化服务」板块（¥299/¥999/¥2,999） - ✅ products/n8n-workflow-builder/README.md 重写（完整 B2B 产品页） - ✅ products/n8n-workflow-builder/github-trending-workflow.json 已推送（可导入模板） - ✅ products/n8n-workflow-builder/SET",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 3,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-21T02:30:01.146Z",
+      "lastRecalledAt": "2026-07-21T02:30:12.848Z",
+      "queryHashes": [
+        "da674db3a707",
+        "78cb82797eec",
+        "520b8686737d"
+      ],
+      "recallDays": [
+        "2026-07-21"
+      ],
+      "conceptTags": [
+        "readme.md",
+        "n8n",
+        "工作",
+        "创建",
+        "github",
+        "trending",
+        "每日",
+        "推送"
+      ]
+    },
+    "memory:memory/2026-07-10.md:1:30": {
+      "key": "memory:memory/2026-07-10.md:1:30",
+      "path": "memory/2026-07-10.md",
+      "startLine": 1,
+      "endLine": 30,
+      "source": "memory",
+      "snippet": "# 2026-07-10 Daily Log ## GitHub 每日运营检查 (2026-07-10 09:00) ### GitHub Pages - https://nima54851.github.io/agent-studio → 200 ✅ ### 仓库数据 - Stars: 1 | Forks: 0 | Watchers: 1 | Open Issues: 2 - Issues: #1 Roadmap v0.2 (nima54851), #3 Cloudflare Workers Bot (cloudflare-workers-and-pages[bot]) - 无新增 star/fork/comment（与昨天相同） ### 推送内容（12 个文件） - skills/fine-tuning-automation/SKILL.md - skills/event-driven-architecture/SKILL.md - skills/ai-model-router/SKILL.md - integrations/fine-tuning-automation/n8n-fine-tuning-workflow.json - integrations/event-driven-architecture/kafka-event-router.json - integrations/ai-model-router/model-router-workflow.json - scripts/prepare_dataset.py - scripts/event_sim",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 3,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-21T02:30:01.146Z",
+      "lastRecalledAt": "2026-07-21T02:30:12.848Z",
+      "queryHashes": [
+        "da674db3a707",
+        "78cb82797eec",
+        "520b8686737d"
+      ],
+      "recallDays": [
+        "2026-07-21"
+      ],
+      "conceptTags": [
+        "router",
+        "nima54851.github.io/agent-studio",
+        "v0.2",
+        "cloudflare-workers-and-pages",
+        "star/fork/comment",
+        "skills/ai-model-router/skill.md",
+        "scripts/prepare-dataset.py",
+        "scripts/event-sim"
+      ]
+    },
+    "memory:memory/2026-07-20.md:34:81": {
+      "key": "memory:memory/2026-07-20.md:34:81",
+      "path": "memory/2026-07-20.md",
+      "startLine": 34,
+      "endLine": 81,
+      "source": "memory",
+      "snippet": "- 产品目录：https://github.com/nima54851/agent-studio/tree/main/products/n8n-workflow-builder - GitHub Pages：https://nima54851.github.io/agent-studio ### 待做 - [ ] GitHub Pages product.html 同步更新（minified HTML，较难编辑） - [ ] 在 GitHub Marketplace / README 加上 Buy Me a Coffee 或赞助链接 - [ ] 录制 n8n 演示视频 - [ ] 在 Reddit/n8n 社区发帖推广 ## SaaS 产品已上线 ### 访问地址 - **网页订阅页：** https://a1d4a2bb3a60b6f2-1-13-80-87.serveousercontent.com - **API：** https://a1d4a2bb3a60b6f2-1-13-80-87.serveousercontent.com/api/trending - **Tunnel PID：** 822016（serveo） ### 技术栈 - Flask + Gunicorn - GitHub API（带 Token，无速率限制） - Telegram Bot API - 订阅系统（内存存储） ### 文件位置 - saas/trending_saas.py（主程序） - saas/index.html（订阅网页） - saas/requirements.txt",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 3,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-21T02:30:01.146Z",
+      "lastRecalledAt": "2026-07-21T02:30:12.848Z",
+      "queryHashes": [
+        "da674db3a707",
+        "78cb82797eec",
+        "520b8686737d"
+      ],
+      "recallDays": [
+        "2026-07-21"
+      ],
+      "conceptTags": [
+        "nima54851.github.io/agent-studio",
+        "product.html",
+        "reddit/n8n",
+        "saas/trending-saas.py",
+        "saas/index.html",
+        "saas/requirements.txt",
+        "产品",
+        "目录"
+      ]
+    },
+    "memory:memory/2026-07-01.md:1:30": {
+      "key": "memory:memory/2026-07-01.md:1:30",
+      "path": "memory/2026-07-01.md",
+      "startLine": 1,
+      "endLine": 30,
+      "source": "memory",
+      "snippet": "# 2026-07-01 Daily Log ## 每日运营检查 (09:00) ### GitHub 账号 nima54851 | 项目 | 状态 | |------|------| | GitHub Pages | ✅ 200 OK | | Stars | 1 | | Forks | 0 | | Open Issues | 2 (#1 Roadmap v0.2, #3 Cloudflare Workers Bot) | | 新 star/fork/comment | 无变化 | ### 新增内容 (✅ 已推送 commit 8f7c81ee, 98 files) - `skills/analytics-dashboard/` — HTML analytics dashboard (GitHub stats, OpenClaw usage) - `skills/ab-testing-workflow/` — A/B test framework for n8n workflows & OpenClaw prompts - `skills/seo-automation/` — GitHub Pages SEO: sitemap, robots.txt, OG tags, JSON-LD - `integrations/notion-sync/` — Notion ↔ OpenClaw AI sync via n8n - `README.md` 更新：加入新技能和 Featured Workflows 章节 ### GitHub 网络状态 - github.com:44",
+      "recallCount": 3,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 3,
+      "maxScore": 1,
+      "firstRecalledAt": "2026-07-21T02:30:01.146Z",
+      "lastRecalledAt": "2026-07-21T02:30:12.848Z",
+      "queryHashes": [
+        "da674db3a707",
+        "78cb82797eec",
+        "520b8686737d"
+      ],
+      "recallDays": [
+        "2026-07-21"
+      ],
+      "conceptTags": [
+        "网络",
+        "v0.2",
+        "star/fork/comment",
+        "skills/analytics-dashboard",
+        "skills/ab-testing-workflow",
+        "a/b",
+        "skills/seo-automation",
+        "robots.txt"
       ]
     }
   }

@@ -1,0 +1,10 @@
+[railway]
+name = "phone-lookup-bot"
+builder = "nixpacks"
+
+[build]
+builder = "python"
+
+[deploy]
+startCommand = "gunicorn server:app --bind 0.0.0.0:$PORT"
+healthCheckPath = "/health"

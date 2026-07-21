@@ -1,0 +1,109 @@
+{
+  "name": "Cross-Platform Notification Router",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "notify",
+        "responseMode": "lastNode"
+      },
+      "name": "Notify Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 400]
+    },
+    {
+      "parameters": {
+        "functionCode": "const alert = $input.first().json;\n\nconst SEVERITY_LEVELS = { p1: 4, p2: 3, p3: 2, p4: 1 };\nconst severity = alert.severity?.toLowerCase() || 'p3';\nconst level = SEVERITY_LEVELS[severity] || 2;\n\n// Determine channels by severity\nconst channelMap = {\n  slack:  { p1: true, p2: true, p3: true,  p4: false },\n  discord: { p1: true, p2: true, p3: true,  p4: false },\n  telegram: { p1: true, p2: true, p3: false, p4: false },\n  email: { p1: true, p2: true, p3: true,  p4: true },\n  sms:   { p1: true, p2: false, p3: false, p4: false },\n};\n\nconst channels = alert.channels || Object.entries(channelMap)\n  .filter(([_, levels]) => levels[severity])\n  .map(([ch]) => ch);\n\n// Format Slack Block Kit\nconst emoji = severity === 'p1' ? '🔴' : severity === 'p2' ? '🟠' : severity === 'p3' ? '🟡' : '🟢';\nconst slackPayload = {\n  blocks: [\n    { type: 'header', text: { type: 'plain_text', text: `${emoji} [${severity.toUpperCase()}] ${alert.title}` } },\n    { type: 'section', fields: [\n      { type: 'mrkdwn', text: `*Source:*\\n${alert.source || 'unknown'}` },\n      { type: 'mrkdwn', text: `*Severity:*\\n${severity.toUpperCase()}` },\n      { type: 'mrkdwn', text: `*Body:*\\n${alert.body}` },\n      ...(alert.tags ? [{ type: 'mrkdwn', text: `*Tags:*\\n${alert.tags.join(', ')}` }] : [])\n    ]},\n    ...(alert.runbook_url ? [{ type: 'actions', elements: [{ type: 'button', text: { type: 'plain_text', text: '📖 Runbook' }, url: alert.runbook_url, action_id: 'runbook' }] }] : [])\n  ]\n};\n\nreturn [{ json: { ...alert, channels, slackPayload, severity_level: level } }];"
+      },
+      "name": "Route & Format Alert",
+      "type": "n8n-nodes-base.function",
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.slack_webhook_url }}",
+        "method": "POST",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "body": "={{ $json.slackPayload }}"
+      },
+      "name": "Send to Slack",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [750, 200]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.discord_webhook_url }}",
+        "method": "POST",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "body": "={\n  \"embeds\": [{\n    \"title\": \"{{ $json.severity.toUpperCase() }}: {{ $json.title }}\",\n    \"description\": \"{{ $json.body }}\",\n    \"color\": {{ $json.severity_level === 4 ? 15158332 : $json.severity_level === 3 ? 15105570 : 16776960 }},\n    \"fields\": [\n      { \"name\": \"Source\", \"value\": \"{{ $json.source || 'unknown' }}\", \"inline\": true },\n      { \"name\": \"Tags\", \"value\": \"{{ $json.tags?.join(', ') || 'none' }}\", \"inline\": true }\n    ]\n  }]\n}"
+      },
+      "name": "Send to Discord",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [750, 400]
+    },
+    {
+      "parameters": {
+        "url": "https://api.telegram.org/bot={{ $env.TELEGRAM_BOT_TOKEN }}/sendMessage",
+        "method": "POST",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "body": "={\n  \"chat_id\": \"{{ $env.TELEGRAM_CHAT_ID }}\",\n  \"text\": \"⚠️ [{{ $json.severity.toUpperCase() }}] {{ $json.title }}\\n\\n{{ $json.body }}\\n\\n📍 Source: {{ $json.source || 'unknown' }}\",\n  \"parse_mode\": \"Markdown\"\n}"
+      },
+      "name": "Send to Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [750, 600]
+    },
+    {
+      "parameters": {
+        "functionCode": "const alert = $input.first().json;\nconst channels = alert.channels || [];\n\n// Only proceed if this channel is requested\nreturn channels.includes('slack') ? $input.all() : [];"
+      },
+      "name": "Filter: Slack",
+      "type": "n8n-nodes-base.function",
+      "position": [500, 200]
+    },
+    {
+      "parameters": {
+        "functionCode": "const alert = $input.first().json;\nconst channels = alert.channels || [];\nreturn channels.includes('discord') ? $input.all() : [];"
+      },
+      "name": "Filter: Discord",
+      "type": "n8n-nodes-base.function",
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "functionCode": "const alert = $input.first().json;\nconst channels = alert.channels || [];\nreturn channels.includes('telegram') ? $input.all() : [];"
+      },
+      "name": "Filter: Telegram",
+      "type": "n8n-nodes-base.function",
+      "position": [500, 600]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { sent: true, channels: $json.channels, title: $json.title, severity: $json.severity } }}"
+      },
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1000, 400]
+    }
+  ],
+  "connections": {
+    "Notify Trigger": { "main": [[{ "node": "Route & Format Alert", "type": "main", "index": 0 }]] },
+    "Route & Format Alert": {
+      "main": [
+        [{ "node": "Filter: Slack", "type": "main", "index": 0 }],
+        [{ "node": "Filter: Discord", "type": "main", "index": 0 }],
+        [{ "node": "Filter: Telegram", "type": "main", "index": 0 }]
+      ]
+    },
+    "Filter: Slack": { "main": [[{ "node": "Send to Slack", "type": "main", "index": 0 }]] },
+    "Filter: Discord": { "main": [[{ "node": "Send to Discord", "type": "main", "index": 0 }]] },
+    "Filter: Telegram": { "main": [[{ "node": "Send to Telegram", "type": "main", "index": 0 }]] },
+    "Send to Slack": { "main": [[{ "node": "Respond OK", "type": "main", "index": 0 }]] },
+    "Send to Discord": { "main": [[]] },
+    "Send to Telegram": { "main": [[]] }
+  }
+}

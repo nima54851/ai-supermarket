@@ -1,0 +1,83 @@
+{
+  "name": "AI Video Processing Pipeline",
+  "nodes": [
+    {
+      "id": "video-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base MANUAL_TRIGGER",
+      "position": [250, 300]
+    },
+    {
+      "id": "watch-folder",
+      "name": "Watch Folder",
+      "type": "n8n-nodes-base WATCH_FOLDER",
+      "parameters": {
+        "folderPath": "/videos/raw",
+        "watchEvents": ["add"]
+      },
+      "position": [450, 300]
+    },
+    {
+      "id": "whisper-caption",
+      "name": "AI Caption Extraction",
+      "type": "HTTP Request",
+      "parameters": {
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "method": "POST",
+        "sendBody": true,
+        "bodyContentType": "multipart-form-data",
+        "options": {}
+      },
+      "position": [650, 300]
+    },
+    {
+      "id": "llm-script",
+      "name": "AI Script Generator",
+      "type": "HTTP Request",
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "sendBody": true,
+        "bodyContentType": "json"
+      },
+      "position": [850, 300]
+    },
+    {
+      "id": "ffmpeg-process",
+      "name": "FFmpeg Processor",
+      "type": "EXEC",
+      "parameters": {
+        "command": "ffmpeg -i {{$json.input}} -vf \"subtitles=srt.srt\" -c:v libx265 -crf 23 output.mp4"
+      },
+      "position": [1050, 300]
+    },
+    {
+      "id": "upload-cdn",
+      "name": "Upload to CDN",
+      "type": "HTTP Request",
+      "parameters": {
+        "url": "{{$env.CDN_UPLOAD_URL}}",
+        "method": "POST"
+      },
+      "position": [1250, 300]
+    },
+    {
+      "id": "notify",
+      "name": "Notify (Slack/Discord)",
+      "type": "Slack",
+      "parameters": {
+        "channel": "{{$env.NOTIFY_CHANNEL}}",
+        "text": "✅ Video processed: {{$json.filename}}"
+      },
+      "position": [1450, 300]
+    }
+  ],
+  "connections": {
+    "video-trigger": { "main": [[{ "node": "watch-folder", "type": "main", "index": 0 }]] },
+    "watch-folder": { "main": [[{ "node": "whisper-caption", "type": "main", "index": 0 }]] },
+    "whisper-caption": { "main": [[{ "node": "llm-script", "type": "main", "index": 0 }]] },
+    "llm-script": { "main": [[{ "node": "ffmpeg-process", "type": "main", "index": 0 }]] },
+    "ffmpeg-process": { "main": [[{ "node": "upload-cdn", "type": "main", "index": 0 }]] },
+    "upload-cdn": { "main": [[{ "node": "notify", "type": "main", "index": 0 }]] }
+  }
+}

@@ -1,0 +1,36 @@
+name: Run Phone Lookup Bot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install python-telegram-bot flask --break-system-packages -q
+
+      - name: Verify DB
+        run: python3 -c "from phone_data import get_db_stats; s=get_db_stats(); print(f'✅ DB: {s[\"total_7digit\"]} entries, {s[\"covered_cities\"]} cities')"
+
+      - name: Run bot + web
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        run: |
+          echo "🤖 Bot starting on GitHub Actions (can reach Telegram!)"
+          python3 server.py &
+          sleep 3
+          curl -s http://localhost:8080/health | python3 -m json.tool || echo "Web check done"
+          echo "Bot running... will stay alive for $(ps -o etime= -p $$) or 6h"
+          # Keep alive - wait for timeout
+          tail -f /dev/null --pid=$$

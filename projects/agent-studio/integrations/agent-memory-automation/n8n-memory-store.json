@@ -1,0 +1,78 @@
+{
+  "name": "Agent Memory Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "memory-store",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Memory Store Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const input = $input.first().json;\n\n// Extract and structure memory entry\nconst entry = {\n  agent_id: input.agent_id,\n  user_id: input.user_id,\n  session_id: input.session_id,\n  content: input.content,\n  type: input.metadata?.type || 'context',\n  importance: input.metadata?.importance || 0.5,\n  created_at: new Date().toISOString(),\n  expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days\n};\n\nreturn [{ json: entry }];"
+      },
+      "name": "Extract Memory Entry",
+      "type": "n8n-nodes-base.function",
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO agent_memories (agent_id, user_id, session_id, content, type, importance, created_at, expires_at)\nVALUES ({{ $json.agent_id }}, {{ $json.user_id }}, {{ $json.session_id }}, {{ $json.content }}, {{ $json.type }}, {{ $json.importance }}, {{ $json.created_at }}, {{ $json.expires_at }});\nSELECT id FROM agent_memories ORDER BY id DESC LIMIT 1;"
+      },
+      "name": "Store in PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const entry = $input.first().json;\n\n// Generate embedding for vector search\n// In production: call OpenAI / Ollama embedding API\nconst text = entry.content;\n\n// Simple hash-based mock embedding (replace with real embeddings)\nconst embedding = Array.from({ length: 1536 }, (_, i) =>\n  Math.sin(i * 0.1 + text.length) * 0.1\n);\n\nreturn [{ json: { ...entry, embedding } }];"
+      },
+      "name": "Generate Embedding",
+      "type": "n8n-nodes-base.function",
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO memory_vectors (memory_id, agent_id, user_id, embedding)\nVALUES ({{ $json.id }}, '{{ $json.agent_id }}', '{{ $json.user_id }}', '{{ JSON.stringify($json.embedding) }}');"
+      },
+      "name": "Store Vector in pgvector",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "responseData": "json",
+        "respondWith": "json",
+        "responseBody": "={{ { status: 'stored', memory_id: $json.id, agent_id: $json.agent_id } }}"
+      },
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1500, 300]
+    }
+  ],
+  "connections": {
+    "Memory Store Trigger": {
+      "main": [[{ "node": "Extract Memory Entry", "type": "main", "index": 0 }]]
+    },
+    "Extract Memory Entry": {
+      "main": [[{ "node": "Store in PostgreSQL", "type": "main", "index": 0 }]]
+    },
+    "Store in PostgreSQL": {
+      "main": [[{ "node": "Generate Embedding", "type": "main", "index": 0 }]]
+    },
+    "Generate Embedding": {
+      "main": [[{ "node": "Store Vector in pgvector", "type": "main", "index": 0 }]]
+    },
+    "Store Vector in pgvector": {
+      "main": [[{ "node": "Respond Success", "type": "main", "index": 0 }]]
+    }
+  }
+}

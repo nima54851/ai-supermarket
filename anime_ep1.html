@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JUJUTSU KAISEN — 第1話</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; overflow: hidden; }
+  canvas { display: block; }
+
+  /* 集数标题 */
+  .episode-badge {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 20;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.5s forwards;
+  }
+  .episode-badge .ep {
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: #ff4020;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    border-left: 2px solid #ff4020;
+    padding-left: 10px;
+  }
+
+  /* 主标题 */
+  .main-title {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 20;
+    opacity: 0;
+    animation: titleReveal 1.5s ease 1s forwards;
+    pointer-events: none;
+  }
+  .main-title .jp {
+    display: block;
+    font-size: clamp(48px, 10vw, 100px);
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 1.5px #ff4020;
+    letter-spacing: 12px;
+    text-transform: uppercase;
+    font-family: 'Arial Black', sans-serif;
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(255,64,32,0.5);
+    animation: titleGlow 3s ease-in-out infinite;
+  }
+  .main-title .sub {
+    display: block;
+    font-size: clamp(14px, 3vw, 22px);
+    color: #fff;
+    letter-spacing: 8px;
+    margin-top: 16px;
+    font-family: 'Courier New', monospace;
+    opacity: 0.7;
+  }
+
+  /* 底部信息栏 */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 28px 14px;
+    z-index: 20;
+    opacity: 0;
+    animation: fadeIn 1s ease 2s forwards;
+  }
+  .bottom-bar .left {
+    font-size: 11px;
+    color: #ff4020;
+    letter-spacing: 3px;
+    font-family: 'Courier New', monospace;
+  }
+  .bottom-bar .right {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    font-family: monospace;
+  }
+
+  /* 裂纹覆盖层 */
+  .crack-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 15;
+    opacity: 0;
+    animation: fadeIn 0.3s ease 3.5s forwards;
+  }
+  .crack-overlay svg { width: 100%; height: 100%; }
+
+  /* 弹幕文字 */
+  .danmaku {
+    position: fixed;
+    right: -400px;
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+    font-family: 'SimHei', 'Microsoft YaHei', sans-serif;
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000;
+    z-index: 30;
+    white-space: nowrap;
+    animation: danmakuMove linear forwards;
+    letter-spacing: 2px;
+  }
+
+  /* 右下角集名 */
+  .title-bottom {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #ff4020;
+    letter-spacing: 6px;
+    font-family: 'Courier New', monospace;
+    z-index: 20;
+    opacity: 0;
+    animation: fadeIn 1s ease 4s forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes titleReveal {
+    0% { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+  @keyframes titleGlow {
+    0%, 100% { -webkit-text-stroke-color: #ff4020; text-shadow: 0 0 60px rgba(255,64,32,0.5); }
+    50% { -webkit-text-stroke-color: #ff6030; text-shadow: 0 0 100px rgba(255,64,32,0.8), 0 0 200px rgba(255,64,32,0.3); }
+  }
+  @keyframes danmakuMove {
+    0% { right: -400px; }
+    100% { right: 110%; }
+  }
+
+  /* 加载 */
+  #loading {
+    position: fixed; inset: 0;
+    background: #000;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 100;
+    transition: opacity 1s;
+  }
+  #loading.hidden { opacity: 0; pointer-events: none; }
+  .loading-text {
+    color: #ff4020;
+    font-size: 13px;
+    letter-spacing: 8px;
+    font-family: 'Courier New', monospace;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loading-text">L O A D I N G . . .</div>
+</div>
+
+<!-- 集数徽章 -->
+<div class="episode-badge">
+  <div class="ep">EPISODE 01 &nbsp;—&nbsp; 第壱話</div>
+</div>
+
+<!-- 主标题 -->
+<div class="main-title">
+  <span class="jp">JUJUTSU KAISEN</span>
+  <span class="sub">呪術廻戦 &nbsp;·&nbsp; 虎杖悠仁</span>
+</div>
+
+<!-- 底部栏 -->
+<div class="bottom-bar">
+  <div class="left">監督：朴性厚 &nbsp;/&nbsp; MAPPA</div>
+  <div class="right">© 芥見下々／集英社</div>
+</div>
+
+<!-- 裂纹效果 SVG -->
+<div class="crack-overlay">
+  <svg viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg" id="crackSvg">
+    <style>
+      .crack { stroke: rgba(255,64,32,0.6); stroke-width: 1.5; fill: none; }
+    </style>
+  </svg>
+</div>
+
+<!-- 集名 -->
+<div class="title-bottom">第壱話「头来」</div>
+
+<script src="three.min.js"></script>
+<script>
+// ========== 咒术回战风格 Three.js 场景 ==========
+
+const W = window.innerWidth, H = window.innerHeight;
+
+// 渲染器
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setSize(W, H);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+document.body.appendChild(renderer.domElement);
+
+// 场景
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x030308);
+scene.fog = new THREE.FogExp2(0x030308, 0.04);
+
+const camera = new THREE.PerspectiveCamera(55, W/H, 0.1, 200);
+camera.position.set(0, 0, 25);
+
+const clock = new THREE.Clock();
+
+// ========== 灯光 ==========
+const ambient = new THREE.AmbientLight(0x0a0a20, 0.5);
+scene.add(ambient);
+
+const mainLight = new THREE.DirectionalLight(0xff3010, 3);
+mainLight.position.set(-5, 10, 8);
+scene.add(mainLight);
+
+const rimLight = new THREE.PointLight(0x00aaff, 2, 30);
+rimLight.position.set(10, 5, -5);
+scene.add(rimLight);
+
+const curseLight = new THREE.PointLight(0xff2010, 2.5, 20);
+curseLight.position.set(-8, -3, 5);
+scene.add(curseLight);
+
+// ========== 地面 ==========
+const groundGeo = new THREE.PlaneGeometry(60, 60, 30, 30);
+const gPos = groundGeo.attributes.position;
+for (let i = 0; i < gPos.count; i++) {
+  const x = gPos.getX(i), z = gPos.getZ(i);
+  gPos.setY(i, Math.sin(x*0.2)*0.3 + Math.cos(z*0.15)*0.3);
+}
+groundGeo.computeVertexNormals();
+const groundMat = new THREE.MeshStandardMaterial({
+  color: 0x08080f,
+  roughness: 0.95,
+  metalness: 0.05,
+});
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI/2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// 网格
+const grid = new THREE.GridHelper(60, 60, 0x1a0020, 0x0a0015);
+scene.add(grid);
+
+// ========== 咒力圆环（诅咒领域） ==========
+const domainGroup = new THREE.Group();
+scene.add(domainGroup);
+
+// 外环
+const outerRingGeo = new THREE.TorusGeometry(8, 0.08, 8, 128);
+const outerRingMat = new THREE.MeshBasicMaterial({ color: 0xff3010, transparent: true, opacity: 0.7 });
+const outerRing = new THREE.Mesh(outerRingGeo, outerRingMat);
+outerRing.rotation.x = Math.PI/2;
+domainGroup.add(outerRing);
+
+// 内环
+const innerRingGeo = new THREE.TorusGeometry(5.5, 0.05, 8, 128);
+const innerRingMat = new THREE.MeshBasicMaterial({ color: 0xff6020, transparent: true, opacity: 0.5 });
+const innerRing = new THREE.Mesh(innerRingGeo, innerRingMat);
+innerRing.rotation.x = Math.PI/2;
+domainGroup.add(innerRing);
+
+// 符文文字（用线条代替）
+const runeCount = 8;
+const runes = [];
+for (let i = 0; i < runeCount; i++) {
+  const angle = (i / runeCount) * Math.PI * 2;
+  const rGeo = new THREE.TorusGeometry(6.5, 0.03, 4, 32, Math.PI * 0.3);
+  const rMat = new THREE.MeshBasicMaterial({ color: 0xff4020, transparent: true, opacity: 0.6 });
+  const rune = new THREE.Mesh(rGeo, rMat);
+  rune.position.set(Math.cos(angle)*6.5, 0, Math.sin(angle)*6.5);
+  rune.rotation.y = -angle;
+  domainGroup.add(rune);
+  runes.push(rune);
+}
+
+// 地面符文阵
+const runeRingGeo = new THREE.TorusGeometry(7, 0.04, 4, 64);
+const runeRingMat = new THREE.MeshBasicMaterial({ color: 0xff3010, transparent: true, opacity: 0.4 });
+const runeRing = new THREE.Mesh(runeRingGeo, runeRingMat);
+runeRing.rotation.x = -Math.PI/2;
+runeRing.position.y = 0.02;
+domainGroup.add(runeRing);
+
+// ========== 咒力粒子 ==========
+const curseParticleCount = 600;
+const curseGeo = new THREE.BufferGeometry();
+const cursePos = new Float32Array(curseParticleCount * 3);
+const curseColors = new Float32Array(curseParticleCount * 3);
+const curseVelocities = [];
+
+for (let i = 0; i < curseParticleCount; i++) {
+  const theta = Math.random() * Math.PI * 2;
+  const r = Math.random() * 12;
+  cursePos[i*3]   = Math.cos(theta) * r;
+  cursePos[i*3+1] = Math.random() * 10;
+  cursePos[i*3+2] = Math.sin(theta) * r;
+  curseVelocities.push({
+    vx: (Math.random()-0.5)*0.02,
+    vy: Math.random()*0.03+0.01,
+    vz: (Math.random()-0.5)*0.02,
+    base: Math.random() * Math.PI * 2
+  });
+  // 橙红色系
+  const isRed = Math.random() > 0.5;
+  curseColors[i*3]   = isRed ? 1.0 : 0.8;
+  curseColors[i*3+1] = isRed ? 0.2 : 0.3;
+  curseColors[i*3+2] = isRed ? 0.1 : 0.0;
+}
+
+curseGeo.setAttribute('position', new THREE.BufferAttribute(cursePos, 3));
+curseGeo.setAttribute('color', new THREE.BufferAttribute(curseColors, 3));
+
+const curseMat = new THREE.PointsMaterial({
+  size: 0.12,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.85,
+  blending: THREE.AdditiveBlending,
+  sizeAttenuation: true,
+});
+const curseParticles = new THREE.Points(curseGeo, curseMat);
+scene.add(curseParticles);
+
+// ========== 咒力闪电 ==========
+const lightningGroup = new THREE.Group();
+scene.add(lightningGroup);
+
+function createLightning() {
+  const points = [];
+  let x = (Math.random()-0.5)*10;
+  let z = (Math.random()-0.5)*10;
+  let y = Math.random() * 8 + 2;
+  points.push(new THREE.Vector3(x, y, z));
+  for (let i = 0; i < 6; i++) {
+    x += (Math.random()-0.5)*2;
+    y -= 1.2 + Math.random()*0.8;
+    z += (Math.random()-0.5)*2;
+    points.push(new THREE.Vector3(x, y, z));
+  }
+  const geo = new THREE.BufferGeometry().setFromPoints(points);
+  const mat = new THREE.LineBasicMaterial({
+    color: 0xff3010,
+    transparent: true,
+    opacity: 0.8,
+    blending: THREE.AdditiveBlending,
+  });
+  const line = new THREE.Line(geo, mat);
+  lightningGroup.add(line);
+  return line;
+}
+
+const lightnings = [];
+for (let i = 0; i < 3; i++) {
+  lightnings.push(createLightning());
+}
+
+// ========== 字符群（咒文字符） ==========
+const symbolChars = ['呪', '術', '廻', '戦', '虎', '杖', '伏', '黒'];
+const symbols = [];
+for (let i = 0; i < 20; i++) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 128; canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'transparent';
+  ctx.clearRect(0, 0, 128, 128);
+  ctx.fillStyle = `rgba(255, ${50+Math.random()*80}, 20, ${0.3+Math.random()*0.5})`;
+  ctx.font = `bold ${60+Math.random()*40}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(symbolChars[Math.floor(Math.random()*symbolChars.length)], 64, 64);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  const mat = new THREE.SpriteMaterial({
+    map: texture,
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    opacity: 0.6,
+  });
+  const sprite = new THREE.Sprite(mat);
+  sprite.position.set(
+    (Math.random()-0.5)*16,
+    Math.random()*8+1,
+    (Math.random()-0.5)*16
+  );
+  sprite.scale.setScalar(1 + Math.random()*2);
+  scene.add(sprite);
+  symbols.push({
+    sprite,
+    vx: (Math.random()-0.5)*0.02,
+    vy: (Math.random()-0.5)*0.01,
+    base: Math.random()*Math.PI*2,
+  });
+}
+
+// ========== 裂纹效果 ==========
+function drawCrack() {
+  const svg = document.getElementById('crackSvg');
+  svg.innerHTML = '';
+  const numCracks = 8 + Math.floor(Math.random()*5);
+  for (let i = 0; i < numCracks; i++) {
+    const cx = Math.random() * window.innerWidth;
+    const cy = Math.random() * window.innerHeight;
+    const angle = Math.random() * Math.PI * 2;
+    let path = `M ${cx} ${cy}`;
+    let x = cx, y = cy;
+    const steps = 5 + Math.floor(Math.random()*8);
+    for (let j = 0; j < steps; j++) {
+      const step = 30 + Math.random()*60;
+      x += Math.cos(angle + (Math.random()-0.5)*0.8) * step;
+      y += Math.sin(angle + (Math.random()-0.5)*0.8) * step;
+      path += ` L ${x} ${y}`;
+    }
+    const el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    el.setAttribute('d', path);
+    el.setAttribute('stroke', `rgba(255,64,32,${0.3+Math.random()*0.4})`);
+    el.setAttribute('stroke-width', 1);
+    el.setAttribute('fill', 'none');
+    svg.appendChild(el);
+  }
+}
+
+// ========== 弹幕 ==========
+function spawnDanmaku(text, delay, duration) {
+  setTimeout(() => {
+    const el = document.createElement('div');
+    el.className = 'danmaku';
+    el.textContent = text;
+    el.style.top = (Math.random()*70 + 10) + '%';
+    el.style.animationDuration = duration + 's';
+    el.style.color = Math.random()>0.7 ? '#ff4020' : '#fff';
+    if (Math.random()>0.8) el.style.fontSize = '22px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), duration*1000);
+  }, delay*1000);
+}
+
+// 弹幕文本
+const danmakuTexts = [
+  ['呪術回戦！！！', 3.5, 6],
+  ['虎杖悠仁', 4.2, 5],
+  ['宿儺おいしい', 5, 6],
+  ['五条悟最強', 5.5, 5],
+  ['懐かしすぎる', 6, 5.5],
+  ['このアニメ最高', 6.5, 5],
+  ['第1話やっぱり名作', 7.2, 6],
+  ['呪術廻戦好き', 8, 5],
+  ['作画，神', 8.5, 5],
+  [' MAPPAありがとう', 9, 6],
+  ['懐かしすぎる😭', 9.5, 5.5],
+  ['虎杖悠仁最高すぎる', 10, 6],
+];
+
+// ========== 鼠标交互 ==========
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', (e) => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ========== 动画 ==========
+let lightningTimer = 0;
+let crackTimer = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  // 相机轻微环绕
+  camera.position.x += (mouseX * 3 - camera.position.x) * 0.01;
+  camera.position.y += (2 + mouseY * 1.5 - camera.position.y) * 0.01;
+  camera.lookAt(0, 2, 0);
+
+  // 领域旋转
+  domainGroup.rotation.y = t * 0.15;
+
+  // 外环脉冲
+  const pulse = 0.5 + Math.sin(t * 2) * 0.5;
+  outerRingMat.opacity = 0.5 + pulse * 0.3;
+  outerRing.scale.setScalar(1 + pulse * 0.03);
+  innerRingMat.opacity = 0.3 + pulse * 0.3;
+
+  // 诅咒粒子上升
+  const cPos = curseGeo.attributes.position;
+  for (let i = 0; i < curseParticleCount; i++) {
+    cPos.setY(i, cPos.getY(i) + curseVelocities[i].vy);
+    cPos.setX(i, cPos.getX(i) + curseVelocities[i].vx);
+    cPos.setZ(i, cPos.getZ(i) + curseVelocities[i].vz);
+    if (cPos.getY(i) > 12) {
+      const theta = curseVelocities[i].base;
+      const r = Math.random() * 10;
+      cPos.setX(i, Math.cos(theta)*r);
+      cPos.setY(i, 0);
+      cPos.setZ(i, Math.sin(theta)*r);
+    }
+  }
+  cPos.needsUpdate = true;
+  curseParticles.rotation.y = t * 0.05;
+
+  // 闪电闪烁
+  lightningTimer += 0.016;
+  if (lightningTimer > 0.5 + Math.random() * 2) {
+    lightningTimer = 0;
+    lightnings.forEach(l => {
+      l.material.opacity = 0.8;
+      l.visible = true;
+      setTimeout(() => { l.visible = false; }, 100 + Math.random()*150);
+    });
+  }
+
+  // 符文旋转
+  runes.forEach((r, i) => {
+    r.rotation.y = t * (0.3 + i*0.05);
+    r.material.opacity = 0.4 + Math.sin(t*2 + i) * 0.3;
+  });
+
+  // 字符飘浮
+  symbols.forEach(s => {
+    s.sprite.position.x += s.vx;
+    s.sprite.position.y += Math.sin(t + s.base) * 0.005;
+    s.sprite.position.z += s.vz;
+    if (s.sprite.position.x > 12 || s.sprite.position.x < -12) s.vx *= -1;
+  });
+
+  // 灯光呼吸
+  curseLight.intensity = 2 + Math.sin(t*3) * 1.0;
+  rimLight.intensity = 1.5 + Math.sin(t*2 + 1) * 0.8;
+  mainLight.intensity = 2.5 + Math.sin(t*1.5) * 0.5;
+
+  // 裂纹随机出现
+  crackTimer += 0.016;
+  if (crackTimer > 4) {
+    crackTimer = 0;
+    if (Math.random() > 0.6) drawCrack();
+  }
+
+  renderer.render(scene, camera);
+}
+
+// ========== 启动 ==========
+setTimeout(() => {
+  document.getElementById('loading').classList.add('hidden');
+  // 启动弹幕
+  danmakuTexts.forEach(([text, delay, dur]) => spawnDanmaku(text, delay, dur));
+  // 初始裂纹
+  setTimeout(drawCrack, 3500);
+}, 1500);
+
+animate();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[build]
+builder = "python"
+buildCommand = "pip install -r requirements.txt"
+
+[deploy]
+startCommand = "gunicorn trending_saas:app --bind 0.0.0.0:$PORT"
+healthCheckPath = "/"
+
+[environment.variables]
+PORT = "5000"
