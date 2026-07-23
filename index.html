@@ -522,7 +522,7 @@
           <span class="price-amount">¥29</span>
           <span class="price-unit">/月 · 订阅制</span>
         </div>
-        <button class="card-btn" onclick="openModal('Telegram号码查询机器人', '¥29/月')">咨询购买</button>
+        <button class="card-btn" onclick="payWithPaypal('Telegram号码查询机器人', 29)">💳 购买</button>
       </div>
     </div>
 
@@ -547,7 +547,7 @@
           <span class="price-amount">¥99</span>
           <span class="price-unit">/月 · 专业版</span>
         </div>
-        <button class="card-btn" onclick="openModal('GitHub Agent 自动化系统', '¥99/月')">咨询购买</button>
+        <button class="card-btn" onclick="payWithPaypal('GitHub Agent自动化系统', 99)">💳 购买</button>
       </div>
     </div>
 
@@ -572,7 +572,7 @@
           <span class="price-amount">¥199</span>
           <span class="price-unit">/月 · 专业版</span>
         </div>
-        <button class="card-btn" onclick="openModal('AI内容推流系统', '¥199/月')">咨询购买</button>
+        <button class="card-btn" onclick="payWithPaypal('AI内容推流系统', 199)">💳 购买</button>
       </div>
     </div>
 
@@ -597,7 +597,7 @@
           <span class="price-amount">¥149</span>
           <span class="price-unit">/月 · 专业版</span>
         </div>
-        <button class="card-btn" onclick="openModal('n8n工作流自动化系统', '¥149/月')">咨询购买</button>
+        <button class="card-btn" onclick="payWithPaypal('n8n工作流自动化系统', 149)">💳 购买</button>
       </div>
     </div>
 
@@ -755,15 +755,15 @@
       <div class="contact-item">
         <span class="contact-icon">📱</span>
         <div>
-          <div class="contact-label">Telegram</div>
+          <div class="contact-label">Telegram 客服</div>
           <div class="contact-value">@diquchaxun78_bot</div>
         </div>
       </div>
       <div class="contact-item">
-        <span class="contact-icon">💬</span>
+        <span class="contact-icon">💳</span>
         <div>
-          <div class="contact-label">微信</div>
-          <div class="contact-value">扫码联系（加群）</div>
+          <div class="contact-label">PayPal 收款</div>
+          <div class="contact-value">paypalyinanzo@hotmail.com</div>
         </div>
       </div>
       <div class="contact-item">
@@ -773,7 +773,22 @@
           <div class="contact-value">nima54851@gmail.com</div>
         </div>
       </div>
+      <div class="contact-item">
+        <span class="contact-icon">📦</span>
+        <div>
+          <div class="contact-label">商品包下载地址</div>
+          <div class="contact-value" style="font-size:0.75rem;line-height:1.8;">
+            <a href="https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/telegram-bot.zip" target="_blank" style="color:#22d3ee">📱 Telegram Bot (¥29)</a><br>
+            <a href="https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/github-automation.zip" target="_blank" style="color:#22d3ee">⚡ GitHub自动化 (¥99)</a><br>
+            <a href="https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/content-promoter.zip" target="_blank" style="color:#22d3ee">📣 内容推流 (¥199)</a><br>
+            <a href="https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/n8n-workflow.zip" target="_blank" style="color:#22d3ee">🔗 n8n工作流 (¥149)</a>
+          </div>
+        </div>
+      </div>
     </div>
+    <p style="background:#1a2540;border-radius:10px;padding:1rem;font-size:0.85rem;line-height:1.8;color:#94a3b8;">
+      💡 <strong style="color:#fff">购买流程：</strong>1️⃣ 点击上方💳购买按钮付款 → 2️⃣ 联系Telegram客服发送付款截图 → 3️⃣ 客服确认后发送商品下载链接
+    </p>
 
     <div class="modal-label">你的需求（选填）</div>
     <input class="modal-input" id="needInput" placeholder="简单描述你需要什么AI能力...">
@@ -817,11 +832,23 @@
     document.getElementById('modalOverlay').classList.remove('open');
   }
 
+  function payWithPaypal(product, priceUSD) {
+    // PayPal.me direct payment link
+    const amount = priceUSD;
+    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=paypalyinanzo@hotmail.com&item_name=${encodeURIComponent(product)}&amount=${amount}&currency_code=USD`;
+    // Fallback: PayPal.me
+    const paypalMeUrl = `https://paypal.me/paypalyinanzo/${amount}USD?note=${encodeURIComponent(product)}`;
+    
+    const confirmed = confirm(`💳 确认购买：${product}\n\n金额：$${amount} USD\n收款人：paypalyinanzo@hotmail.com\n\n点击确定将跳转到 PayPal 完成付款，\n付款完成后联系 @diquchaxun78_bot 发送付款截图获取下载链接。`);
+    if (confirmed) {
+      window.open(paypalUrl, '_blank');
+    }
+  }
+
   function sendContact() {
     const need = document.getElementById('needInput').value.trim();
     const title = document.getElementById('modalTitle').textContent;
     const msg = `【AI超市咨询】\n商品: ${title}\n需求: ${need || '未填写'}`;
-    // Try to open Telegram
     window.open('https://t.me/diquchaxun78_bot?text=' + encodeURIComponent(msg), '_blank');
     closeModal();
     alert('已打开 Telegram 发送咨询消息！');
