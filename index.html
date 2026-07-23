@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛒 AI超市 - 买AI能力，像买菜一样简单</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050810;
+      --bg2: #0a0f1e;
+      --card: #0f1629;
+      --border: #1a2540;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --accent: #6366f1;
+      --accent2: #8b5cf6;
+      --cyan: #22d3ee;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --pink: #ec4899;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans SC', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(5, 8, 16, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logo span { font-size: 0.75rem; opacity: 0.6; display: block; }
+    nav { display: flex; gap: 2rem; }
+    nav a { color: var(--muted); font-size: 0.9rem; transition: color 0.2s; }
+    nav a:hover { color: var(--text); }
+    .header-cta {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .header-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(99,102,241,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.3);
+      color: var(--accent);
+      padding: 0.3rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, #fff 40%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.4); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); background: rgba(99,102,241,0.05); }
+
+    /* ── STATS ── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      padding: 3rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-n { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, var(--cyan), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-l { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* ── CATEGORIES ── */
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0 2rem 3rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: rgba(99,102,241,0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── GRID ── */
+    .grid-section { padding: 0 2rem 5rem; max-width: 1200px; margin: 0 auto; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      border-color: rgba(99,102,241,0.4);
+    }
+    .card-top {
+      padding: 1.5rem 1.5rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .card-icon {
+      width: 52px; height: 52px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .card-icon.automation { background: rgba(99,102,241,0.15); }
+    .card-icon.dev { background: rgba(34,211,238,0.15); }
+    .card-icon.content { background: rgba(245,158,11,0.15); }
+    .card-icon.data { background: rgba(16,185,129,0.15); }
+    .card-icon.platform { background: rgba(236,72,153,0.15); }
+
+    .card-info { flex: 1; min-width: 0; }
+    .card-cat {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+    .cat-automation { background: rgba(99,102,241,0.15); color: var(--accent); }
+    .cat-dev { background: rgba(34,211,238,0.15); color: var(--cyan); }
+    .cat-content { background: rgba(245,158,11,0.15); color: var(--orange); }
+    .cat-data { background: rgba(16,185,129,0.15); color: var(--green); }
+    .cat-platform { background: rgba(236,72,153,0.15); color: var(--pink); }
+
+    .card-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+    .card-features {
+      padding: 0 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .card-feat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+    .card-feat::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .card-footer {
+      padding: 1.2rem 1.5rem;
+      margin-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .card-price { }
+    .price-amount { font-size: 1.5rem; font-weight: 900; color: #fff; }
+    .price-unit { font-size: 0.75rem; color: var(--muted); }
+    .price-free { font-size: 1.2rem; font-weight: 900; color: var(--green); }
+
+    .card-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.3rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+    .card-btn:hover { opacity: 0.85; }
+    .card-btn.outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .card-btn.outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      background: var(--bg2);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+    .section-title { font-size: 2.5rem; font-weight: 900; margin-bottom: 3rem; }
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      max-width: 900px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+    .step { text-align: center; flex: 1; min-width: 200px; }
+    .step-num {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; font-weight: 900;
+      margin: 0 auto 1rem;
+    }
+    .step-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .step-desc { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      padding: 6rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 { font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; }
+    .cta-section p { color: var(--muted); margin-bottom: 2rem; font-size: 1.1rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    footer a { color: var(--accent); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card { animation: fadeUp 0.5s ease both; }
+    .grid .card:nth-child(1) { animation-delay: 0.05s; }
+    .grid .card:nth-child(2) { animation-delay: 0.1s; }
+    .grid .card:nth-child(3) { animation-delay: 0.15s; }
+    .grid .card:nth-child(4) { animation-delay: 0.2s; }
+    .grid .card:nth-child(5) { animation-delay: 0.25s; }
+    .grid .card:nth-child(6) { animation-delay: 0.3s; }
+    .grid .card:nth-child(7) { animation-delay: 0.35s; }
+    .grid .card:nth-child(8) { animation-delay: 0.4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { display: none; }
+      .grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2.2rem; }
+      .stats { gap: 1.5rem; }
+    }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      max-width: 480px;
+      width: 100%;
+      padding: 2rem;
+      animation: fadeUp 0.3s ease;
+    }
+    .modal h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .modal-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.3rem; }
+    .modal-input {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      font-family: inherit;
+    }
+    .modal-input:focus { outline: none; border-color: var(--accent); }
+    .modal-actions { display: flex; gap: 0.75rem; }
+    .modal-actions button { flex: 1; }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .contact-channels {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+    }
+    .contact-icon { font-size: 1.2rem; }
+    .contact-label { color: var(--muted); font-size: 0.75rem; }
+    .contact-value { font-weight: 600; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      🤖 AI超市
+      <span>AI Agent Marketplace</span>
+    </div>
+    <nav>
+      <a href="#products">商品</a>
+      <a href="#how">如何使用</a>
+      <a href="#contact">联系购买</a>
+    </nav>
+    <button class="header-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">立即咨询</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🎉 AI能力即服务 · 按需购买</div>
+  <h1>买AI能力<br>像买菜一样简单</h1>
+  <p>告别从零开发。精选AI Agent，付费即用，覆盖自动化、开发、内容、数据全场景。</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">浏览商品 →</button>
+    <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">了解流程</button>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-n">8</div><div class="stat-l">精选AI Agent</div></div>
+  <div class="stat"><div class="stat-n">3</div><div class="stat-l">定价档次</div></div>
+  <div class="stat"><div class="stat-n">24h</div><div class="stat-l">自动化交付</div></div>
+  <div class="stat"><div class="stat-n">100%</div><div class="stat-l">自定义开发</div></div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters" id="products">
+  <button class="filter-btn active" onclick="filterCards('all', this)">全部</button>
+  <button class="filter-btn" onclick="filterCards('automation', this)">🤖 自动化</button>
+  <button class="filter-btn" onclick="filterCards('dev', this)">💻 开发</button>
+  <button class="filter-btn" onclick="filterCards('content', this)">✍️ 内容</button>
+  <button class="filter-btn" onclick="filterCards('data', this)">📊 数据</button>
+  <button class="filter-btn" onclick="filterCards('platform', this)">🛠️ 平台</button>
+</div>
+
+<!-- PRODUCT GRID -->
+<section class="grid-section">
+  <div class="grid" id="productGrid">
+
+    <!-- Card 1: Telegram Bot -->
+    <div class="card" data-cat="automation">
+      <div class="card-top">
+        <div class="card-icon automation">📱</div>
+        <div class="card-info">
+          <span class="card-cat cat-automation">自动化</span>
+          <div class="card-title">Telegram号码查询机器人</div>
+          <div class="card-desc">基于Telegram的实时号码归属查询Bot，支持批量查询、数据库缓存、7×24小时运行。</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="card-feat">实时查询，响应&lt;2秒</div>
+        <div class="card-feat">号码数据库覆盖全国</div>
+        <div class="card-feat">Telegram Bot Token即部署</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">
+          <span class="price-amount">¥29</span>
+          <span class="price-unit">/月 · 订阅制</span>
+        </div>
+        <button class="card-btn" onclick="openModal('Telegram号码查询机器人', '¥29/月')">咨询购买</button>
+      </div>
+    </div>
+
+    <!-- Card 2: GitHub Automation -->
+    <div class="card" data-cat="dev">
+      <div class="card-top">
+        <div class="card-icon dev">⚡</div>
+        <div class="card-info">
+          <span class="card-cat cat-dev">开发</span>
+          <div class="card-title">GitHub Agent 自动化系统</div>
+          <div class="card-desc">全自动GitHub运营助手：自动Star、评论、追踪Trending、生成AI日报，一条命令启动。</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="card-feat">GitHub Actions 云端运行</div>
+        <div class="card-feat">每日自动发评论+Star</div>
+        <div class="card-feat">AI日报自动生成推送</div>
+        <div class="card-feat">含完整n8n工作流</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">
+          <span class="price-amount">¥99</span>
+          <span class="price-unit">/月 · 专业版</span>
+        </div>
+        <button class="card-btn" onclick="openModal('GitHub Agent 自动化系统', '¥99/月')">咨询购买</button>
+      </div>
+    </div>
+
+    <!-- Card 3: Content Promoter -->
+    <div class="card" data-cat="content">
+      <div class="card-top">
+        <div class="card-icon content">📣</div>
+        <div class="card-info">
+          <span class="card-cat cat-content">内容</span>
+          <div class="card-title">AI Agent 内容推流系统</div>
+          <div class="card-desc">一键生成多平台推广文案，覆盖掘金、V2EX、Twitter、Reddit、CSDN，批量发布+数据追踪。</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="card-feat">6大平台同时发布</div>
+        <div class="card-feat">AI批量生成适配文案</div>
+        <div class="card-feat">定时自动推流</div>
+        <div class="card-feat">效果数据看板</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">
+          <span class="price-amount">¥199</span>
+          <span class="price-unit">/月 · 专业版</span>
+        </div>
+        <button class="card-btn" onclick="openModal('AI内容推流系统', '¥199/月')">咨询购买</button>
+      </div>
+    </div>
+
+    <!-- Card 4: n8n Workflow Builder -->
+    <div class="card" data-cat="automation">
+      <div class="card-top">
+        <div class="card-icon automation">🔗</div>
+        <div class="card-info">
+          <span class="card-cat cat-automation">自动化</span>
+          <div class="card-title">n8n 工作流自动化系统</div>
+          <div class="card-desc">拖拽式n8n工作流设计器，500+预置模板，覆盖CRM、社交媒体、数据处理全场景。</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="card-feat">500+ 开源工作流模板</div>
+        <div class="card-feat">Webhook 触发+定时调度</div>
+        <div class="card-feat">支持自定义Python节点</div>
+        <div class="card-feat">一键导入n8n</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">
+          <span class="price-amount">¥149</span>
+          <span class="price-unit">/月 · 专业版</span>
+        </div>
+        <button class="card-btn" onclick="openModal('n8n工作流自动化系统', '¥149/月')">咨询购买</button>
+      </div>
+    </div>
+
+    <!-- Card 5: Coding Tutor -->
+    <div class="card" data-cat="dev">
+      <div class="card-top">
+        <div class="card-icon dev">🎓</div>
+        <div class="card-info">
+          <span class="card-cat cat-dev">开发</span>
+          <div class="card-title">AI 编程导师（Coding Tutor）</div>
+          <div class="card-desc">从零到高级的AI编程学习路径，覆盖Python/JS/AI/全栈，含项目实战和代码评审。</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="card-feat">个性化学习路线图</div>
+        <div class="card-feat">代码1对1评审反馈</div>
+        <div class="card-feat">实战项目驱动学习</div>
+        <div class="card-feat">面试模拟+求职指导</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">
+          <span class="price-free">免费</span>
+          <span class="price-unit"> 开源技能</span>
+        </div>
+        <button class="card-btn outline" onclick="window.open('https://github.com/nima54851/agent-studio', '_blank')">GitHub获取</button>
+      </div>
+    </div>
+
+    <!-- Card 6: Self-hosted AI -->
+    <div class="card" data-cat="platform">
+      <div class="card-top">
+        <div class="card-icon platform">🖥️</div>
+        <div class="card-info">
+          <span class="card-cat cat-platform">平台</span>
+          <div class="card-title">自托管AI系统（Ollama+n8n）</div>
+          <div class="card-desc">零成本搭建本地AI服务：Ollama大模型 + n8n工作流自动化 + Nginx反向代理，一键部署。</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="card-feat">Docker一键启动</div>
+        <div class="card-feat">Llama3/Mistral等开源模型</div>
+        <div class="card-feat">完全私有，数据不出本地</div>
+        <div class="card-feat">OpenAI兼容API</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">
+          <span class="price-free">免费</span>
+          <span class="price-unit"> 开源技能</span>
+        </div>
+        <button class="card-btn outline" onclick="window.open('https://github.com/nima54851/agent-studio', '_blank')">GitHub获取</button>
+      </div>
+    </div>
+
+    <!-- Card 7: Agent Skills Kit -->
+    <div class="card" data-cat="platform">
+      <div class="card-top">
+        <div class="card-icon platform">🧰</div>
+        <div class="card-info">
+          <span class="card-cat cat-platform">平台</span>
+          <div class="card-title">AI Agent 技能开发框架</div>
+          <div class="card-desc">从零构建AI Agent技能（Skill）的完整框架，含工具定义、内存管理、多Agent协作。</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="card-feat">SKILL.md 规范编写指南</div>
+        <div class="card-feat">MCP协议集成模板</div>
+        <div class="card-feat">长期记忆系统实现</div>
+        <div class="card-feat">A2A Agent间通信</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">
+          <span class="price-free">免费</span>
+          <span class="price-unit"> 开源技能</span>
+        </div>
+        <button class="card-btn outline" onclick="window.open('https://github.com/nima54851/agent-studio', '_blank')">GitHub获取</button>
+      </div>
+    </div>
+
+    <!-- Card 8: Career Roadmap -->
+    <div class="card" data-cat="dev">
+      <div class="card-top">
+        <div class="card-icon dev">🗺️</div>
+        <div class="card-info">
+          <span class="card-cat cat-dev">开发</span>
+          <div class="card-title">程序员成长路线图</div>
+          <div class="card-desc">AI驱动的程序员成长规划，覆盖前端/后端/AI/DevOps，实时更新最新技术栈。</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="card-feat">2026最新技术栈路线</div>
+        <div class="card-feat">按阶段拆解学习目标</div>
+        <div class="card-feat">AI面试题库+实战项目</div>
+        <div class="card-feat">薪资行情分析</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-price">
+          <span class="price-free">免费</span>
+          <span class="price-unit"> 开源技能</span>
+        </div>
+        <button class="card-btn outline" onclick="window.open('https://github.com/nima54851/agent-studio', '_blank')">GitHub获取</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-label">购买流程</div>
+  <h2 class="section-title">3步搞定AI能力</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">浏览选购</div>
+      <div class="step-desc">浏览商品列表，找到你需要的AI能力，确定价格套餐</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">联系定制</div>
+      <div class="step-desc">扫码联系客服，说明需求，免费获取定制方案和报价</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">快速交付</div>
+      <div class="step-desc">付款后24小时内完成交付，支持私有部署和技术支持</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <h2>找不到想要的？</h2>
+  <p>告诉我你的需求，我来帮你定制专属AI Agent</p>
+  <div class="hero-actions" style="justify-content: center;">
+    <button class="btn-primary" onclick="openContact()">🤙 联系我们</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>🤖 AI超市 · 由 <a href="https://github.com/nima54851">@nima54851</a> 提供 · 技术支持响应 24h内</p>
+  <p style="margin-top:0.5rem; opacity: 0.5;">© 2026 AI超市 · 精选AI Agent，按需购买</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div style="position:relative;">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <h3 id="modalTitle">咨询购买</h3>
+    <p id="modalSub">留下联系方式，我们会尽快联系你</p>
+
+    <div class="contact-channels">
+      <div class="contact-item">
+        <span class="contact-icon">📱</span>
+        <div>
+          <div class="contact-label">Telegram</div>
+          <div class="contact-value">@diquchaxun78_bot</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon">💬</span>
+        <div>
+          <div class="contact-label">微信</div>
+          <div class="contact-value">扫码联系（加群）</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="contact-icon">📧</span>
+        <div>
+          <div class="contact-label">邮箱</div>
+          <div class="contact-value">nima54851@gmail.com</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-label">你的需求（选填）</div>
+    <input class="modal-input" id="needInput" placeholder="简单描述你需要什么AI能力...">
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal()" style="padding:0.7rem;">关闭</button>
+      <button class="btn-primary" onclick="sendContact()" style="padding:0.7rem;">发送需求</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Filter
+  function filterCards(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.card').forEach(card => {
+      if (cat === 'all' || card.dataset.cat === cat) {
+        card.style.display = '';
+        card.style.animation = 'none';
+        card.offsetHeight;
+        card.style.animation = 'fadeUp 0.4s ease both';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Modal
+  function openModal(product, price) {
+    document.getElementById('modalTitle').textContent = product;
+    document.getElementById('modalSub').textContent = price + ' · 留下联系方式，我们会尽快联系你';
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('needInput').focus();
+  }
+
+  function openContact() {
+    openModal('定制AI Agent', '按需定价');
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+
+  function sendContact() {
+    const need = document.getElementById('needInput').value.trim();
+    const title = document.getElementById('modalTitle').textContent;
+    const msg = `【AI超市咨询】\n商品: ${title}\n需求: ${need || '未填写'}`;
+    // Try to open Telegram
+    window.open('https://t.me/diquchaxun78_bot?text=' + encodeURIComponent(msg), '_blank');
+    closeModal();
+    alert('已打开 Telegram 发送咨询消息！');
+  }
+
+  // ESC to close modal
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+</script>
+
+</body>
+</html>
