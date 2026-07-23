@@ -1,0 +1,61 @@
+name: AI超市每日运营
+
+on:
+  schedule:
+    # 每天 09:00 上架一个新技能
+    - cron: '0 1 * * *'   # UTC 09:00 北京时间
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '运行模式'
+        required: false
+        default: 'publish'
+        type: choice
+        options:
+          - publish
+          - maintain
+          - health
+          - package_all
+          - upload_all
+
+jobs:
+  daily-ops:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests -q
+
+      - name: Run daily operation
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+          OPERATION_MODE: ${{ inputs.mode || 'publish' }}
+        run: |
+          cd scripts
+          python3 ai_supermarket_ops.py $OPERATION_MODE
+
+  health-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # 早中晚各一次健康检查（北京时间 8:00 / 13:00 / 20:00）
+    schedule:
+      - cron: '0 0 * * *'     # UTC 00:00 = 北京 08:00
+      - cron: '0 5 * * *'     # UTC 05:00 = 北京 13:00
+      - cron: '0 12 * * *'    # UTC 12:00 = 北京 20:00
+
+    steps:
+      - name: Health check
+        run: |
+          echo "🔍 AI超市健康检查 $(date)"
+          curl -s --max-time 10 -o /dev/null -w "GitHub Pages: %{http_code}\n" https://nima54851.github.io/ai-supermarket/
+          curl -s --max-time 10 -o /dev/null -w "jsDelivr CDN: %{http_code}\n" https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@main/index.html
+          curl -s --max-time 10 -o /dev/null -w "GitHub API: %{http_code}\n" https://api.github.com/repos/nima54851/ai-supermarket
