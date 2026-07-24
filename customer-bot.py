@@ -15,7 +15,7 @@ from datetime import datetime
 BOT_TOKEN = "8979991426:AAEtgWjhF1KV_pJZVwzjk-ZE2_Yf1-W4RDU"
 
 # Admin User IDs (你的 Telegram User ID，设置后只有你能用管理命令)
-ADMIN_IDS = []
+ADMIN_IDS = [7668716558]
 
 # 商品数据
 PRODUCTS = {
