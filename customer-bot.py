@@ -3,6 +3,10 @@
 AI超市 客服机器人
 用法: python3 customer-bot.py
 依赖: pip install python-telegram-bot
+
+环境变量（可选）:
+  TELEGRAM_PROXY  — 例如 socks5://127.0.0.1:1080
+  TELEGRAM_API_ID  — Telegram API ID（从 https://my.telegram.org 获取）
 """
 
 import os
@@ -10,9 +14,15 @@ import sys
 import json
 import logging
 from datetime import datetime
+from functools import lru_cache
 
 # Telegram Bot Token
 BOT_TOKEN = "8979991426:AAEtgWjhF1KV_pJZVwzjk-ZE2_Yf1-W4RDU"
+
+# ── 代理配置 ──
+#   如果服务器无法直连 Telegram，在此填入你的代理地址
+#   例如：socks5://127.0.0.1:1080  或  http://127.0.0.1:7890
+PROXY_URL = os.environ.get("TELEGRAM_PROXY", "")  # ← 填你的代理地址
 
 # Admin User IDs (你的 Telegram User ID，设置后只有你能用管理命令)
 ADMIN_IDS = [7668716558]
@@ -389,7 +399,20 @@ def main():
         await update.message.reply_text(ADMIN_HELP, parse_mode="Markdown")
 
     # ── 构建并启动 Bot ──
-    app = Application.builder().token(BOT_TOKEN).build()
+    from telegram.error import NetworkError
+    import telegram
+
+    builder = Application.builder().token(BOT_TOKEN)
+
+    # 如果配置了代理，使用代理
+    if PROXY_URL:
+        proxy_type = "socks5" if "socks5" in PROXY_URL else "http"
+        builder = builder(
+            request=httpx.Client(proxy=PROXY_URL)
+        )
+        print(f"🔗 代理已启用: {PROXY_URL}")
+
+    app = builder.build()
 
     app.add_handler(CommandHandler("start", start_cmd))
     app.add_handler(CommandHandler("help", help_cmd))
