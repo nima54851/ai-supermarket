@@ -20,9 +20,12 @@ from functools import lru_cache
 BOT_TOKEN = "8979991426:AAEtgWjhF1KV_pJZVwzjk-ZE2_Yf1-W4RDU"
 
 # ── 代理配置 ──
-#   如果服务器无法直连 Telegram，在此填入你的代理地址
-#   例如：socks5://127.0.0.1:1080  或  http://127.0.0.1:7890
-PROXY_URL = os.environ.get("TELEGRAM_PROXY", "")  # ← 填你的代理地址
+#   服务器无法直连 Telegram，在此填入你的 MTProxy 地址
+#   万提供的代理: socks5://ee29044830465c5171f152ab7d07ccfc89617a7572652e6d6963726f736f66742e636f6d@18.139.137.172:443
+PROXY_URL = os.environ.get(
+    "TELEGRAM_PROXY",
+    "socks5://ee29044830465c5171f152ab7d07ccfc89617a7572652e6d6963726f736f66742e636f6d@18.139.137.172:443"
+)
 
 # Admin User IDs (你的 Telegram User ID，设置后只有你能用管理命令)
 ADMIN_IDS = [7668716558]
@@ -399,21 +402,29 @@ def main():
         await update.message.reply_text(ADMIN_HELP, parse_mode="Markdown")
 
     # ── 构建并启动 Bot ──
-    from telegram.error import NetworkError
-    import telegram
+    import httpx
+    from telegram import Bot
+    from telegram.request import HTTPXRequest
+    from telegram.ext import Updater
 
-    builder = Application.builder().token(BOT_TOKEN)
-
-    # 如果配置了代理，使用代理
     if PROXY_URL:
-        proxy_type = "socks5" if "socks5" in PROXY_URL else "http"
-        builder = builder(
-            request=httpx.Client(proxy=PROXY_URL)
+        print(f"🔗 通过代理连接 Telegram...")
+        proxies = {"http://": PROXY_URL, "https://": PROXY_URL}
+        http_client = httpx.AsyncClient(
+            timeout=httpx.Timeout(30.0, connect=20.0),
+            proxies=proxies, trust_env=False
         )
-        print(f"🔗 代理已启用: {PROXY_URL}")
+        proxy_req = HTTPXRequest(httpx_client=http_client)
+        bot = Bot(token=BOT_TOKEN, request=proxy_req)
+        updater = Updater(bot=bot)
+        app = updater.updater.application
+        print("✅ 代理配置成功！")
+    else:
+        print("🌐 直连模式启动...")
+        updater = Updater(token=BOT_TOKEN)
+        app = updater.updater.application
 
-    app = builder.build()
-
+    # 注册所有 Handler
     app.add_handler(CommandHandler("start", start_cmd))
     app.add_handler(CommandHandler("help", help_cmd))
     app.add_handler(CommandHandler("list", list_cmd))
@@ -427,9 +438,9 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     print("🤖 AI超市客服机器人启动中...")
-    print(f"📱 Bot Token: {BOT_TOKEN[:20]}...")
     print("💬 等待消息...")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    updater.start_polling(allowed_updates=Update.ALL_TYPES)
+    updater.idle()
 
 if __name__ == "__main__":
     main()
