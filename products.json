@@ -1,0 +1,342 @@
+[
+  {
+    "id": "telegram-bot",
+    "name": "Telegram号码查询机器人",
+    "emoji": "📱",
+    "price": 29,
+    "period": "月",
+    "category": "自动化",
+    "desc": "实时手机号码归属地查询，批量查询，7×24小时云端运行。",
+    "features": [
+      "实时查询 < 2秒",
+      "全国号码数据库",
+      "批量查询",
+      "自动更新"
+    ],
+    "skill_path": "skills/telegram-bot",
+    "icon": "📱",
+    "color": "#22d3ee",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "github-automation",
+    "name": "GitHub Agent自动化系统",
+    "emoji": "⚡",
+    "price": 99,
+    "period": "月",
+    "category": "自动化",
+    "desc": "全自动GitHub运营：自动Star、评论、追踪Trending、AI日报。",
+    "features": [
+      "GitHub Actions 7×24",
+      "自动Star热门项目",
+      "AI生成评论",
+      "Trending追踪"
+    ],
+    "skill_path": "skills/github",
+    "icon": "⚡",
+    "color": "#f59e0b",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "content-promoter",
+    "name": "AI内容推流系统",
+    "emoji": "📣",
+    "price": 199,
+    "period": "月",
+    "category": "内容",
+    "desc": "一键生成多平台推广文案，批量发布，效果追踪。",
+    "features": [
+      "6平台同时发布",
+      "AI批量生成文案",
+      "定时自动推流",
+      "数据看板"
+    ],
+    "skill_path": "skills/content-promoter",
+    "icon": "📣",
+    "color": "#ec4899",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "n8n-workflow",
+    "name": "n8n工作流自动化系统",
+    "emoji": "🔗",
+    "price": 149,
+    "period": "月",
+    "category": "自动化",
+    "desc": "拖拽式n8n工作流，500+模板，CRM+社交媒体全场景。",
+    "features": [
+      "500+开源模板",
+      "Webhook+定时调度",
+      "自定义Python节点",
+      "一键导入"
+    ],
+    "skill_path": "skills/n8n-workflow-automation",
+    "icon": "🔗",
+    "color": "#8b5cf6",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "video-gen",
+    "name": "AI视频生成助手",
+    "emoji": "🎬",
+    "price": 99,
+    "period": "月",
+    "category": "内容",
+    "desc": "AI驱动的视频批量生成，支持多种风格和文案自动配音。",
+    "features": [
+      "文字转视频",
+      "AI配音",
+      "多风格模板",
+      "批量导出"
+    ],
+    "skill_path": "skills/lh-video-gen",
+    "icon": "🎬",
+    "color": "#22d3ee",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "ai-manga",
+    "name": "AI漫剧生成系统",
+    "emoji": "🎭",
+    "price": 149,
+    "period": "月",
+    "category": "内容",
+    "desc": "AI自动生成漫画/漫剧，脚本→分镜→渲染一条龙。",
+    "features": [
+      "脚本自动生成",
+      "AI分镜",
+      "风格迁移",
+      "批量渲染"
+    ],
+    "skill_path": "skills/ai-intelligent-3d-model-generation",
+    "icon": "🎭",
+    "color": "#ec4899",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "idea-generator",
+    "name": "脑洞助手/创意生成器",
+    "emoji": "🧠",
+    "price": 39,
+    "period": "月",
+    "category": "效率",
+    "desc": "AI创意头脑风暴工具，文案、选题、产品创意一键生成。",
+    "features": [
+      "头脑风暴",
+      "文案生成",
+      "选题推荐",
+      "创意拓展"
+    ],
+    "skill_path": "skills/ai-persona-os",
+    "icon": "🧠",
+    "color": "#10b981",
+    "type": "web",
+    "is_web": true
+  },
+  {
+    "id": "ppt-generator",
+    "name": "PPT智能生成器",
+    "emoji": "📊",
+    "price": 79,
+    "period": "月",
+    "category": "效率",
+    "desc": "AI一键生成PPT，输入主题自动排版，支持模板自定义。",
+    "features": [
+      "主题→PPT",
+      "多模板",
+      "支持导出",
+      "在线编辑"
+    ],
+    "skill_path": "skills/openclaw-slides",
+    "icon": "📊",
+    "color": "#f59e0b",
+    "type": "web",
+    "is_web": true
+  },
+  {
+    "id": "ai-writing",
+    "name": "AI代写定制服务系统",
+    "emoji": "✍️",
+    "price": 59,
+    "period": "月",
+    "category": "内容",
+    "desc": "AI文章/文案/报告代写，定制风格与格式，支持中英文。",
+    "features": [
+      "文章代写",
+      "报告生成",
+      "风格定制",
+      "多语言"
+    ],
+    "skill_path": "skills/code-review",
+    "icon": "✍️",
+    "color": "#6366f1",
+    "type": "web",
+    "is_web": true
+  },
+  {
+    "id": "cross-border-ai",
+    "name": "跨境电商AI助手",
+    "emoji": "🌐",
+    "price": 199,
+    "period": "月",
+    "category": "电商",
+    "desc": "AI驱动的跨境电商运营助手：商品描述翻译、SEO优化、竞品分析。",
+    "features": [
+      "商品描述AI生成",
+      "多语言翻译",
+      "SEO优化",
+      "竞品分析"
+    ],
+    "skill_path": "skills/translate",
+    "icon": "🌐",
+    "color": "#6366f1",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "ai-agent",
+    "name": "多平台AI Agent助手",
+    "emoji": "🤖",
+    "price": 129,
+    "period": "月",
+    "category": "自动化",
+    "desc": "通用的AI Agent框架，可对接微信、Discord、Slack等多平台。",
+    "features": [
+      "多平台接入",
+      "插件系统",
+      "记忆持久化",
+      "自定义技能"
+    ],
+    "skill_path": "skills/agent-development",
+    "icon": "🤖",
+    "color": "#22d3ee",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "3d-generator",
+    "name": "3D模型生成系统",
+    "emoji": "🎨",
+    "price": 129,
+    "period": "月",
+    "category": "开发",
+    "desc": "AI文本→3D模型生成，支持导出GLTF/OBJ，游戏开发利器。",
+    "features": [
+      "文本生成3D",
+      "多格式导出",
+      "纹理自动生成",
+      "游戏引擎对接"
+    ],
+    "skill_path": "skills/3d-model-generator",
+    "icon": "🎨",
+    "color": "#8b5cf6",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "web-scraper",
+    "name": "AI智能网页爬虫",
+    "emoji": "🕷️",
+    "price": 69,
+    "period": "月",
+    "category": "数据",
+    "desc": "AI驱动的智能网页数据采集，自动解析结构化数据。",
+    "features": [
+      "自动抓取",
+      "智能解析",
+      "结构化导出",
+      "定时采集"
+    ],
+    "skill_path": "skills/web-scraping",
+    "icon": "🕷️",
+    "color": "#10b981",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "database-toolkit",
+    "name": "AI数据库管理工具包",
+    "emoji": "🗄️",
+    "price": 89,
+    "period": "月",
+    "category": "开发",
+    "desc": "AI辅助的数据库查询、优化、迁移工具，降低数据库使用门槛。",
+    "features": [
+      "自然语言查询",
+      "SQL优化",
+      "数据迁移",
+      "ER图生成"
+    ],
+    "skill_path": "skills/database-operations",
+    "icon": "🗄️",
+    "color": "#6366f1",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "security-scanner",
+    "name": "AI代码安全审计系统",
+    "emoji": "🔒",
+    "price": 149,
+    "period": "月",
+    "category": "安全",
+    "desc": "AI驱动的代码安全审计，自动检测漏洞、依赖风险、CI/CD集成。",
+    "features": [
+      "漏洞扫描",
+      "依赖分析",
+      "CI/CD集成",
+      "自动修复建议"
+    ],
+    "skill_path": "skills/security-auditor",
+    "icon": "🔒",
+    "color": "#ec4899",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "design-toolkit",
+    "name": "AI设计素材生成器",
+    "emoji": "🖌️",
+    "price": 79,
+    "period": "月",
+    "category": "设计",
+    "desc": "AI生成Logo、UI设计等设计素材，快速原型设计。",
+    "features": [
+      "Logo自动生成",
+      "UI素材生成",
+      "设计推荐",
+      "批量导出"
+    ],
+    "skill_path": "skills/design",
+    "icon": "🖌️",
+    "color": "#22d3ee",
+    "type": "tool",
+    "is_web": false
+  },
+  {
+    "id": "game-dev-kit",
+    "name": "AI游戏开发工具包",
+    "emoji": "🎮",
+    "price": 199,
+    "period": "月",
+    "category": "开发",
+    "desc": "AI辅助游戏开发，代码生成、美术资源生成、关卡设计。",
+    "features": [
+      "代码生成",
+      "美术资源AI生成",
+      "关卡设计",
+      "游戏AI"
+    ],
+    "skill_path": "skills/build-game",
+    "icon": "🎮",
+    "color": "#f59e0b",
+    "type": "tool",
+    "is_web": false
+  }
+]
