@@ -27,20 +27,59 @@
   <style>
 
 :root{
-  --bg:#ffffff;
-  --bg2:#f5f5f5;
-  --surface:#ffffff;
-  --surface2:#f0f0f0;
-  --border:#e0e0e0;
-  --border2:#c0c0c0;
-  --text:#111111;
-  --text2:#555555;
-  --muted:#999999;
-  --shadow:rgba(0,0,0,0.12);
-  --glass:rgba(0,0,0,0.04);
+  --bg:#03060f;
+  --bg2:#050a14;
+  --glass-1:rgba(255,255,255,0.04);
+  --glass-2:rgba(255,255,255,0.06);
+  --glass-border:rgba(255,255,255,0.09);
+  --glass-shine:rgba(255,255,255,0.15);
+  --text:#e8edf8;
+  --text2:#8896b0;
+  --muted:#4e6080;
+  --muted2:#2a3a55;
+  --accent:#6366f1;
+  --accent2:#8b5cf6;
+  --accent3:#c084fc;
+  --cyan:#22d3ee;
+  --green:#10b981;
+  --orange:#f59e0b;
+  --pink:#ec4899;
+  --red:#ef4444;
+  --shadow:rgba(0,0,0,0.4);
+  --surface:#0a1020;
+  --surface2:#0d1525;
+  --border:rgba(255,255,255,0.09);
+  --border2:rgba(255,255,255,0.15);
   --radius:20px;
   --radius2:14px;
 }
+/* 浅色模式 - 跟随系统 */
+@media(prefers-color-scheme:light){
+ :root{
+  --bg:#f4f5f7;
+  --bg2:#ebedf2;
+  --glass-1:rgba(0,0,0,0.04);
+  --glass-2:rgba(0,0,0,0.07);
+  --glass-border:rgba(0,0,0,0.10);
+  --glass-shine:rgba(255,255,255,0.6);
+  --text:#1a1f2e;
+  --text2:#4a5568;
+  --muted:#9ba8ba;
+  --muted2:#c4cdd9;
+  --accent:#5b4fcf;
+  --accent2:#7c3cf0;
+  --accent3:#9f75f5;
+  --cyan:#0891b2;
+  --green:#059669;
+  --orange:#d97706;
+  --pink:#db2777;
+  --red:#dc2626;
+  --shadow:rgba(0,0,0,0.12);
+  --surface:#ffffff;
+  --surface2:#f0f1f5;
+  --border:rgba(0,0,0,0.10);
+  --border2:rgba(0,0,0,0.16);
+ }}
 @media(prefers-color-scheme:dark){
  :root{
   --bg:#111111;
@@ -106,6 +145,24 @@ button{font-family:inherit;cursor:pointer;}
 @media(prefers-color-scheme:light){
   .bg-canvas{
     background:
+      radial-gradient(ellipse 80% 60% at 20% 10%,rgba(91,79,207,0.10) 0%,transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 30%,rgba(124,60,240,0.08) 0%,transparent 50%),
+      radial-gradient(ellipse 50% 50% at 60% 80%,rgba(8,145,178,0.07) 0%,transparent 50%),
+      var(--bg);
+  }
+  .bg-grid{
+    background-image:
+      linear-gradient(rgba(91,79,207,0.06) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(91,79,207,0.06) 1px,transparent 1px);
+  }
+  .bg-orb{opacity:0.18;}
+  header{background:rgba(244,245,247,0.82);}
+  header.scrolled{box-shadow:0 4px 20px rgba(0,0,0,0.12);}
+  .particle{background:rgba(91,79,207,0.5);}
+}
+@media(prefers-color-scheme:light){
+  .bg-canvas{
+    background:
       radial-gradient(ellipse 80% 60% at 20% 10%,rgba(91,79,207,0.08) 0%,transparent 50%),
       radial-gradient(ellipse 60% 40% at 80% 30%,rgba(124,60,240,0.06) 0%,transparent 50%),
       radial-gradient(ellipse 50% 50% at 60% 80%,rgba(8,145,178,0.06) 0%,transparent 50%),
@@ -158,10 +215,9 @@ header{
 .logo-mark{
   width:40px;height:40px;
   border-radius:12px;
-  background:var(--text);
-  border:1px solid rgba(0,0,0,0.4);
+  background:var(--accent);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 20px rgba(0,0,0,0.25),inset 0 1px 0 rgba(0,0,0,0.1);
+  box-shadow:0 0 20px rgba(99,102,241,0.4),inset 0 1px 0 rgba(255,255,255,0.15);
   position:relative;overflow:hidden;flex-shrink:0;
 }
 .logo-mark::after{
@@ -180,7 +236,7 @@ header{
   display:flex;align-items:center;gap:0.4rem;
   transition:all 0.25s;backdrop-filter:blur(12px);
 }
-.notif-btn:hover{border-color:rgba(0,0,0,0.35);color:var(--text2);}
+.notif-btn:hover{border-color:var(--accent);color:var(--accent);}
 .notif-dot{
   width:7px;height:7px;border-radius:50%;background:var(--text2);
   box-shadow:0 0 4px rgba(0,0,0,0.2);
@@ -230,8 +286,8 @@ header{
 .social-text strong{color:var(--text);}
 .rating-stars{color:var(--text2);font-size:0.8rem;}
 .hero-actions{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.8rem;}
-.btn-primary{background:linear-gradient(135deg,var(--text),var(--text));color:#fff;border:none;padding:0.8rem 1.8rem;border-radius:14px;font-size:0.9rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;box-shadow:0 8px 30px rgba(0,0,0,0.4);transition:all 0.3s;}
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,0.6);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.8rem 1.8rem;border-radius:14px;font-size:0.9rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;box-shadow:0 8px 30px rgba(0,0,0,0.4);transition:all 0.3s;}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 50px rgba(99,102,241,0.5);}
 .btn-primary:active{transform:translateY(-1px);}
 .btn-outline{background:var(--surface);color:var(--text);border:1px solid var(--border2);padding:0.8rem 1.8rem;border-radius:14px;font-size:0.9rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;backdrop-filter:blur(16px);transition:all 0.25s;}
 .btn-outline:hover{border-color:rgba(0,0,0,0.4);color:var(--text2);}
@@ -567,7 +623,7 @@ header{
 .featured-card{position:relative;background:rgba(0,0,0,0.04);border:1px solid var(--border);border-radius:24px;padding:1.5rem;cursor:pointer;transition:all 0.35s;backdrop-filter:blur(20px);display:flex;flex-direction:column;gap:0.8rem;overflow:hidden;}
 .featured-card:hover{border-color:rgba(0,0,0,0.35);transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,0.5);}
 .featured-card-lg{min-height:220px;}
-.fc-ribbon{position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--text),var(--text));color:#fff;font-size:0.62rem;font-weight:800;padding:0.3rem 1rem;border-radius:0 24px 0 16px;letter-spacing:0.05em;}
+.fc-ribbon{position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.62rem;font-weight:800;padding:0.3rem 1rem;border-radius:0 24px 0 16px;letter-spacing:0.05em;}
 .fc-icon{font-size:2.2rem;line-height:1;}
 .fc-body{flex:1;}
 .fc-cat{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:0.3rem;}
@@ -578,7 +634,7 @@ header{
 .fc-footer{display:flex;align-items:center;justify-content:space-between;}
 .fc-price{font-size:2rem;font-weight:900;color:#fff;}
 .fc-price span{font-size:0.75rem;color:var(--muted);font-weight:500;}
-.fc-btn{background:linear-gradient(135deg,var(--text),var(--text));color:#fff;border:none;padding:0.55rem 1.2rem;border-radius:12px;font-size:0.82rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.4);}
+.fc-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.55rem 1.2rem;border-radius:12px;font-size:0.82rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.4);}
 .fc-btn-sm{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:0.4rem 0.8rem;border-radius:10px;font-size:0.8rem;cursor:pointer;backdrop-filter:blur(12px);}
 .fc-badge-sm{position:absolute;top:12px;right:12px;background:rgba(128,128,128,0.15);color:var(--text2);font-size:0.6rem;font-weight:800;text-transform:uppercase;padding:0.15rem 0.5rem;border-radius:100px;border:1px solid rgba(128,128,128,0.2);}
 .featured-col{display:flex;flex-direction:column;gap:1rem;}
@@ -743,7 +799,7 @@ footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transpare
 .btn-modal-close:hover{border-color:rgba(0,0,0,0.3);color:var(--text2);}
 .btn-modal-detail{background:rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.2);color:var(--text2);padding:0.65rem 1.1rem;border-radius:13px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(12px);}
 .btn-modal-detail:hover{border-color:rgba(0,0,0,0.35);background:rgba(0,0,0,0.14);}
-.btn-modal-buy{background:linear-gradient(135deg,var(--text),var(--text));color:#fff;border:none;padding:0.65rem 1.4rem;border-radius:13px;font-size:0.88rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.45);transition:all 0.25s;display:flex;align-items:center;gap:0.4rem;}
+.btn-modal-buy{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.65rem 1.4rem;border-radius:13px;font-size:0.88rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.45);transition:all 0.25s;display:flex;align-items:center;gap:0.4rem;}
 .btn-modal-buy:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,0.6);}
 .btn-modal-buy:active{transform:scale(0.97);}
 .btn-modal-close:hover{border-color:rgba(0,0,0,0.3);color:var(--text2);}
