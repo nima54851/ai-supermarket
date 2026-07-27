@@ -859,6 +859,38 @@ footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transpare
 .usdt-close-btn{width:100%;padding:0.65rem;border-radius:12px;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.78rem;margin-top:0.6rem;transition:background 0.2s;}
 .usdt-close-btn:hover{background:var(--border);}
 
+/* ════════════════════════════════════
+   PAYPAL QR MODAL
+════════════════════════════════════ */
+.pp-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px);}
+.pp-modal-overlay.show{display:flex;}
+.pp-modal{background:var(--surface);border:1px solid var(--border);border-radius:24px;width:100%;max-width:360px;overflow:hidden;animation:modalIn 0.25s ease;}
+.pp-header{background:linear-gradient(135deg,#0070ba,#003087);padding:1.25rem;color:#fff;text-align:center;}
+.pp-header-title{font-size:1.1rem;font-weight:900;margin-bottom:0.2rem;}
+.pp-header-sub{font-size:0.72rem;opacity:0.85;}
+.pp-body{padding:1.5rem;text-align:center;}
+.pp-qr-box{background:#fff;border-radius:16px;padding:1rem;display:inline-block;margin-bottom:1.2rem;}
+.pp-qr-box img{display:block;width:180px;height:180px;}
+.pp-addr-label{font-size:0.65rem;font-weight:700;color:var(--accent3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.pp-addr-box{display:flex;align-items:center;gap:0.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.6rem 0.75rem;margin-bottom:0.5rem;}
+.pp-addr-text{flex:1;font-size:0.72rem;font-family:monospace;color:var(--text);word-break:break-all;line-height:1.4;}
+.pp-note{font-size:0.68rem;color:var(--text2);margin-bottom:1rem;line-height:1.5;}
+.pp-amount-hint{background:rgba(0,112,186,0.08);border:1px solid rgba(0,112,186,0.2);border-radius:10px;padding:0.7rem;margin-bottom:1rem;text-align:left;}
+.pp-amount-hint .pp-amount-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;font-size:0.72rem;color:var(--text2);}
+.pp-amount-hint .pp-amount-val{font-weight:700;color:var(--text);font-size:0.88rem;}
+.pp-note-hint{font-size:0.65rem;color:var(--text2);opacity:0.8;margin-top:0.3rem;}
+.pp-after{background:rgba(0,112,186,0.08);border:1px solid rgba(0,112,186,0.2);border-radius:12px;padding:0.8rem;margin-bottom:1rem;text-align:left;}
+.pp-after-title{font-size:0.65rem;font-weight:700;color:#0070ba;margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.08em;}
+.pp-after-step{display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--text2);margin-bottom:0.25rem;}
+.pp-after-step .step-n{width:16px;height:16px;border-radius:50%;background:rgba(0,112,186,0.15);color:#0070ba;font-size:0.58rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pp-contact{display:flex;gap:0.5rem;}
+.pp-contact-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0.3rem;padding:0.6rem;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--text);transition:all 0.2s;text-decoration:none;}
+.pp-contact-btn:hover{background:#0070ba;border-color:#0070ba;color:#fff;}
+.pp-contact-btn.telegram{color:#229ED9;}
+.pp-contact-btn.telegram:hover{background:#229ED9;border-color:#229ED9;color:#fff;}
+.pp-close-btn{width:100%;padding:0.65rem;border-radius:12px;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.78rem;margin-top:0.6rem;transition:background 0.2s;}
+.pp-close-btn:hover{background:var(--border);}
+
 /* ═══════════════════════════════
    BOTTOM NAV
 ═══════════════════════════════ */
@@ -1266,11 +1298,11 @@ footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transpare
     </div>
     <div class="pay-body">
       <div class="pay-methods">
-        <a class="pay-method" id="pay-btn-paypal" href="#" target="_blank" rel="noopener">
+        <a class="pay-method" id="pay-btn-paypal" href="#" href="#" onclick="showPayPalQR(payId);return false;">
           <div class="pay-method-icon" style="background:#e8f0ff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#0070ba"/><path d="M7.5 18c.9 0 1.8-.7 2.3-1.7H12c1.4 0 2.8-.5 3.8-1.4.9-.9 1.4-2.1 1.4-3.4 0-.5 0-1-.1-1.4H20c.3 1.6.3 3.3-.3 4.8-.5 1.3-1.5 2.4-2.8 3.1H10.8c-.5 1-1.3 1.7-2.3 1.7s-1.7-.6-1.7-1.5c0-.4.1-.8.3-1.1l.7-1.5.7-1.5c.2-.3.3-.7.3-1.1 0-.9-.7-1.6-1.6-1.6C5.3 13.9 4 15.3 4 17c0 2 1.6 3.5 3.5 3.5zm0 0c-.9 0-1.8-.7-2.3-1.7H2c0 2.1 1.5 3.8 3.5 4.2V18z" fill="white"/></svg></div>
           <div class="pay-method-info">
-            <div class="pay-method-name">💳 PayPal 国际支付</div>
-            <div class="pay-method-desc">信用卡 / PayPal余额，直接扣 USD</div>
+            <div class="pay-method-name">💳 PayPal 扫码支付</div>
+            <div class="pay-method-desc">扫码打开 PayPal，确认金额即可付款</div>
           </div>
           <div class="pay-method-arrow">›</div>
         </a>
@@ -1312,6 +1344,43 @@ footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transpare
         </div>
       </div>
       <button class="pay-close-btn" onclick="closePayModal()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAYPAL QR MODAL -->
+<div class="pp-modal-overlay" id="pp-modal">
+  <div class="pp-modal">
+    <div class="pp-header">
+      <div class="pp-header-title">💳 PayPal 安全支付</div>
+      <div class="pp-header-sub">扫码打开 PayPal · 确认金额即可付款</div>
+    </div>
+    <div class="pp-body">
+      <div class="pp-qr-box">
+        <img id="pp-qr-img" src="" alt="PayPal QR" />
+      </div>
+      <div class="pp-addr-label">收款邮箱</div>
+      <div class="pp-addr-box">
+        <div class="pp-addr-text">yinanzo@hotmail.com</div>
+      </div>
+      <div class="pp-amount-hint">
+        <div class="pp-amount-row">
+          <span>应付金额（自动计算）</span>
+          <span class="pp-amount-val" id="pp-amount-display">≈ $13.66 USD</span>
+        </div>
+        <div class="pp-note-hint">扫码后在 PayPal 确认金额即可</div>
+      </div>
+      <div class="pp-after">
+        <div class="pp-after-title">⏱️ 付款后如何获取下载链接</div>
+        <div class="pp-after-step"><span class="step-n">1</span> PayPal 付款完成后，截图保存支付凭证</div>
+        <div class="pp-after-step"><span class="step-n">2</span> 联系客服确认到账，发送截图</div>
+        <div class="pp-after-step"><span class="step-n">3</span> 客服确认后立即发送 GitHub 下载链接</div>
+      </div>
+      <div class="pp-contact">
+        <a class="pp-contact-btn telegram" href="https://t.me/diquchaxun78_bot" target="_blank" rel="noopener">💬 Telegram客服</a>
+        <a class="pp-contact-btn" href="https://paypal.me/yinanzo" target="_blank" rel="noopener">🌐 浏览器打开</a>
+      </div>
+      <button class="pp-close-btn" onclick="closePpModal()">关闭</button>
     </div>
   </div>
 </div>
@@ -1432,6 +1501,7 @@ var searchQ = '';
 var sortMode = 'default';
 var currentView = 'grid';
 var deferredPrompt = null;
+var payId = null;
 
 // ═══════════════════════════════
 // STARS BACKGROUND
@@ -1669,6 +1739,7 @@ function pay(id){
   for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){p=PRODUCTS[i];break;}
   if(!p) return;
   closeModal();
+  closePayModal();
   var usd = (p.price / 7.25).toFixed(2);
   var paypalUrl = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business='+encodeURIComponent(PAYPAL_EMAIL)+'&item_name=AI超市 - '+encodeURIComponent(p.name)+'&amount='+usd+'&currency_code=USD&no_note=1&cn=注明商品名称';
   document.getElementById('pay-product-name').textContent = p.emoji + ' ' + p.name;
@@ -1678,6 +1749,23 @@ function pay(id){
   document.getElementById('pay-btn-paypal').href = paypalUrl;
   document.getElementById('pay-modal').classList.add('show');
   document.body.style.overflow = 'hidden';
+  payId = id;
+}
+function showPayPalQR(id){
+  var p = null;
+  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){p=PRODUCTS[i];break;}
+  if(!p) return;
+  closePayModal();
+  var usd = (p.price / 7.25).toFixed(2);
+  document.getElementById('pp-amount-display').textContent = '≈ $'+usd+' USD  ('+p.name+')';
+  var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent('https://paypal.me/yinanzo/'+usd)+'&margin=0';
+  document.getElementById('pp-qr-img').src = qrUrl;
+  document.getElementById('pp-modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closePpModal(){
+  document.getElementById('pp-modal').classList.remove('show');
+  document.body.style.overflow = '';
 }
 function copyUSDT(e){
   e.preventDefault();
@@ -1792,6 +1880,7 @@ document.addEventListener('keydown',function(e){
     closeModal();
     closePayModal();
     closeUsdtModal();
+    closePpModal();
   }
 });
 
