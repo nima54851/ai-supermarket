@@ -73,11 +73,51 @@ button{font-family:inherit;cursor:pointer;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}
 
 /* ── BACKGROUND ── */
-.bg{
+.bg-canvas{
   position:fixed;inset:0;z-index:0;
-  background:var(--bg);
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(99,102,241,0.15) 0%,transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 30%,rgba(139,92,246,0.12) 0%,transparent 50%),
+    radial-gradient(ellipse 50% 50% at 60% 80%,rgba(34,211,238,0.08) 0%,transparent 50%),
+    var(--bg);
+  overflow:hidden;
 }
-.bg::before{display:none;}
+.bg-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(99,102,241,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(99,102,241,0.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 80%);
+}
+.bg-orb{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);opacity:0.5;
+  animation:floatOrb 8s ease-in-out infinite;
+}
+.bg-orb-1{width:400px;height:400px;background:rgba(99,102,241,0.3);top:-100px;left:-100px;animation-delay:0s;}
+.bg-orb-2{width:300px;height:300px;background:rgba(139,92,246,0.25);bottom:-50px;right:-50px;animation-delay:-3s;}
+.bg-orb-3{width:200px;height:200px;background:rgba(34,211,238,0.2);top:50%;left:60%;animation-delay:-5s;}
+@keyframes floatOrb{
+  0%,100%{transform:translate(0,0) scale(1);}
+  33%{transform:translate(30px,-20px) scale(1.05);}
+  66%{transform:translate(-20px,15px) scale(0.95);}
+}
+@media(prefers-color-scheme:light){
+  .bg-canvas{
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%,rgba(91,79,207,0.08) 0%,transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 30%,rgba(124,60,240,0.06) 0%,transparent 50%),
+      radial-gradient(ellipse 50% 50% at 60% 80%,rgba(8,145,178,0.06) 0%,transparent 50%),
+      var(--bg);
+  }
+  .bg-grid{
+    background-image:
+      linear-gradient(rgba(91,79,207,0.06) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(91,79,207,0.06) 1px,transparent 1px);
+  }
+  .bg-orb{opacity:0.25;}
+}
 
 /* ── STAR FIELD ── */
 .stars{display:none;}
@@ -92,13 +132,19 @@ button{font-family:inherit;cursor:pointer;}
 /* ═══════════════════════════════
    HEADER — scroll shadow
 ═══════════════════════════════ */
-header.scrolled{box-shadow:0 4px 40px rgba(0,0,0,0.6);}
+header.scrolled{box-shadow:0 4px 40px rgba(0,0,0,0.5);}
 header{
   position:sticky;top:0;z-index:200;
-  background:rgba(0,0,0,0.8);
+  background:rgba(3,6,15,0.72);
   backdrop-filter:blur(24px) saturate(180%);
   -webkit-backdrop-filter:blur(24px) saturate(180%);
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid var(--glass-border);
+}
+@media(prefers-color-scheme:light){
+  header{
+    background:rgba(244,245,247,0.8);
+  }
+  header.scrolled{box-shadow:0 4px 20px rgba(0,0,0,0.12);}
 }
 .header-inner{
   max-width:1240px;margin:0 auto;
@@ -931,7 +977,13 @@ footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transpare
   </style>
 </head>
 <body>
-<div class="bg"></div>
+<div class="bg-canvas">
+  <div class="bg-grid"></div>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+</div>
+<div id="particles"></div>
 <div class="stars" id="stars"></div>
 
 <div class="app">
@@ -2162,6 +2214,23 @@ if('serviceWorker' in navigator){
 renderTabs();
 renderGrid();
 updateTrialButtons();
+
+// Particles
+function createParticles() {
+  var container = document.getElementById('particles');
+  if(!container) return;
+  for (var i = 0; i < 30; i++) {
+    var p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (Math.random() * 10 + 8) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.width = (Math.random() * 2 + 1) + 'px';
+    p.style.height = p.style.width;
+    container.appendChild(p);
+  }
+}
+createParticles();
 
 // Show notify banner after delay
 if(!localStorage.getItem('ai_market_notify_dismissed') && !localStorage.getItem('ai_market_notify')){
