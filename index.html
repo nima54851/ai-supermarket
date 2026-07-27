@@ -828,6 +828,37 @@ footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transpare
 .pay-close-btn{width:100%;padding:0.7rem;border-radius:12px;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.8rem;margin-top:0.7rem;transition:background 0.2s;}
 .pay-close-btn:hover{background:var(--border);}
 
+/* ════════════════════════════════════
+   USDT QR MODAL
+════════════════════════════════════ */
+.usdt-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px);}
+.usdt-modal-overlay.show{display:flex;}
+.usdt-modal{background:var(--surface);border:1px solid var(--border);border-radius:24px;width:100%;max-width:360px;overflow:hidden;animation:modalIn 0.25s ease;}
+.usdt-header{background:linear-gradient(135deg,#26a17b,#1a7a5e);padding:1.25rem;color:#fff;text-align:center;}
+.usdt-header-title{font-size:1.1rem;font-weight:900;margin-bottom:0.2rem;}
+.usdt-header-sub{font-size:0.72rem;opacity:0.8;}
+.usdt-body{padding:1.5rem;text-align:center;}
+.usdt-qr-box{background:#fff;border-radius:16px;padding:1rem;display:inline-block;margin-bottom:1.2rem;}
+.usdt-qr-box img{display:block;width:180px;height:180px;}
+.usdt-addr-label{font-size:0.65rem;font-weight:700;color:var(--accent3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.usdt-addr-box{display:flex;align-items:center;gap:0.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.6rem 0.75rem;margin-bottom:0.4rem;}
+.usdt-addr-text{flex:1;font-size:0.72rem;font-family:monospace;color:var(--text);word-break:break-all;line-height:1.4;}
+.usdt-copy-btn{flex-shrink:0;background:linear-gradient(135deg,#26a17b,#1a7a5e);color:#fff;border:none;padding:0.35rem 0.75rem;border-radius:7px;font-size:0.7rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;}
+.usdt-copy-btn:hover{opacity:0.85;}
+.usdt-copy-btn.copied{background:#10b981;}
+.usdt-note{font-size:0.68rem;color:var(--text2);margin-bottom:1rem;line-height:1.5;}
+.usdt-after{background:rgba(38,161,123,0.08);border:1px solid rgba(38,161,123,0.2);border-radius:12px;padding:0.8rem;margin-bottom:1rem;text-align:left;}
+.usdt-after-title{font-size:0.65rem;font-weight:700;color:#26a17b;margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.08em;}
+.usdt-after-step{display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--text2);margin-bottom:0.25rem;}
+.usdt-after-step .step-n{width:16px;height:16px;border-radius:50%;background:rgba(38,161,123,0.15);color:#26a17b;font-size:0.58rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.usdt-contact{display:flex;gap:0.5rem;}
+.usdt-contact-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0.3rem;padding:0.6rem;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--text);transition:all 0.2s;text-decoration:none;}
+.usdt-contact-btn:hover{background:#26a17b;border-color:#26a17b;color:#fff;}
+.usdt-contact-btn.telegram{color:#229ED9;}
+.usdt-contact-btn.telegram:hover{background:#229ED9;border-color:#229ED9;color:#fff;}
+.usdt-close-btn{width:100%;padding:0.65rem;border-radius:12px;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.78rem;margin-top:0.6rem;transition:background 0.2s;}
+.usdt-close-btn:hover{background:var(--border);}
+
 /* ═══════════════════════════════
    BOTTOM NAV
 ═══════════════════════════════ */
@@ -1285,6 +1316,38 @@ footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transpare
   </div>
 </div>
 
+<!-- USDT QR MODAL -->
+<div class="usdt-modal-overlay" id="usdt-modal">
+  <div class="usdt-modal">
+    <div class="usdt-header">
+      <div class="usdt-header-title">🪙 USDT (TRC20) 收款</div>
+      <div class="usdt-header-sub">扫码转账 · 安全可靠 · 即时到账</div>
+    </div>
+    <div class="usdt-body">
+      <div class="usdt-qr-box">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy&margin=0" alt="USDT QR" />
+      </div>
+      <div class="usdt-addr-label">钱包地址</div>
+      <div class="usdt-addr-box">
+        <div class="usdt-addr-text">TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy</div>
+        <button class="usdt-copy-btn" id="usdt-copy-btn" onclick="copyUsdtAddr()">复制</button>
+      </div>
+      <div class="usdt-note">⚠️ 请确保钱包支持 TRC20 网络，转账前仔细核对地址</div>
+      <div class="usdt-after">
+        <div class="usdt-after-title">⏱️ 转账后如何获取下载链接</div>
+        <div class="usdt-after-step"><span class="step-n">1</span> 完成USDT转账后，截图保存交易凭证</div>
+        <div class="usdt-after-step"><span class="step-n">2</span> 联系客服确认到账，发送转账截图</div>
+        <div class="usdt-after-step"><span class="step-n">3</span> 客服确认后立即发送 GitHub 下载链接</div>
+      </div>
+      <div class="usdt-contact">
+        <a class="usdt-contact-btn telegram" href="https://t.me/diquchaxun78_bot" target="_blank" rel="noopener">💬 Telegram客服</a>
+        <a class="usdt-contact-btn" href="https://wa.me/" target="_blank" rel="noopener">📱 微信/WhatsApp</a>
+      </div>
+      <button class="usdt-close-btn" onclick="closeUsdtModal()">关闭</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="toast"></div>
 
@@ -1618,16 +1681,24 @@ function pay(id){
 }
 function copyUSDT(e){
   e.preventDefault();
+  closePayModal();
+  document.getElementById('usdt-modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function copyUsdtAddr(){
   var addr = USDT_ADDR;
+  var btn = document.getElementById('usdt-copy-btn');
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(addr).then(function(){
-      toast('✅ 钱包地址已复制：' + addr);
-    }).catch(function(){
-      fallbackCopy(addr);
-    });
-  } else {
-    fallbackCopy(addr);
-  }
+      btn.textContent = '已复制!';
+      btn.classList.add('copied');
+      setTimeout(function(){ btn.textContent='复制'; btn.classList.remove('copied'); }, 2000);
+    }).catch(function(){ fallbackCopy(addr); });
+  } else { fallbackCopy(addr); }
+}
+function closeUsdtModal(){
+  document.getElementById('usdt-modal').classList.remove('show');
+  document.body.style.overflow = '';
 }
 function fallbackCopy(text){
   var ta = document.createElement('textarea');
@@ -1720,6 +1791,7 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
     closeModal();
     closePayModal();
+    closeUsdtModal();
   }
 });
 
