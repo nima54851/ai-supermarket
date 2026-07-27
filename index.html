@@ -1229,6 +1229,7 @@ footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transpare
       <div class="pay-price-line">
         <span class="pay-cny" id="pay-cny-price">¥—</span>
         <span class="pay-usd" id="pay-usd-price">≈ $— USD</span>
+        <span class="pay-usd" id="pay-usdt-price" style="opacity:0.75;">≈ — USDT</span>
       </div>
       <div class="pay-period">月付 · 随时可续 · 自动发货</div>
     </div>
@@ -1255,6 +1256,14 @@ footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transpare
           <div class="pay-method-info">
             <div class="pay-method-name">🔵 支付宝</div>
             <div class="pay-method-desc">联系客服发收款码，付款后立即发货</div>
+          </div>
+          <div class="pay-method-arrow">›</div>
+        </a>
+        <a class="pay-method" href="#" onclick="copyUSDT(event)">
+          <div class="pay-method-icon" style="background:#e8f4f0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#26a17b"/><path d="M13.5 8.5c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5zm-2.5 0c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5z" fill="white"/><path d="M11 6.5C7 6.5 4 8.5 4 11s3 4.5 7 4.5 7-2 7-4.5-3-4.5-7-4.5zm0 7.5c-3 0-5.5-1.5-5.5-3.5s2.5-3.5 5.5-3.5 5.5 1.5 5.5 3.5-2.5 3.5-5.5 3.5z" fill="white" opacity=".5"/><path d="M11 5.5C6.5 5.5 3 8 3 11s3.5 5.5 8 5.5 8-2.5 8-5.5S15.5 5.5 11 5.5zm0 9.5c-3.5 0-6.5-2-6.5-4s3-4 6.5-4 6.5 2 6.5 4-3 4-6.5 4z" fill="white" opacity=".3"/></svg></div>
+          <div class="pay-method-info">
+            <div class="pay-method-name">🪙 USDT（TRC20）</div>
+            <div class="pay-method-desc">复制钱包地址转账，联系客服确认后发货</div>
           </div>
           <div class="pay-method-arrow">›</div>
         </a>
@@ -1591,20 +1600,41 @@ function closeModal(){
   document.body.style.overflow = '';
 }
 
+var USDT_ADDR = 'TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy';
 function pay(id){
   var p = null;
   for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){p=PRODUCTS[i];break;}
   if(!p) return;
   closeModal();
-  // CNY → USD conversion (approx rate 7.25)
   var usd = (p.price / 7.25).toFixed(2);
   var paypalUrl = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business='+encodeURIComponent(PAYPAL_EMAIL)+'&item_name=AI超市 - '+encodeURIComponent(p.name)+'&amount='+usd+'&currency_code=USD&no_note=1&cn=注明商品名称';
   document.getElementById('pay-product-name').textContent = p.emoji + ' ' + p.name;
   document.getElementById('pay-cny-price').textContent = '¥'+p.price;
   document.getElementById('pay-usd-price').textContent = '≈ $'+usd+' USD';
+  document.getElementById('pay-usdt-price').textContent = '≈ '+usd+' USDT';
   document.getElementById('pay-btn-paypal').href = paypalUrl;
   document.getElementById('pay-modal').classList.add('show');
   document.body.style.overflow = 'hidden';
+}
+function copyUSDT(e){
+  e.preventDefault();
+  var addr = USDT_ADDR;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(addr).then(function(){
+      toast('✅ 钱包地址已复制：' + addr);
+    }).catch(function(){
+      fallbackCopy(addr);
+    });
+  } else {
+    fallbackCopy(addr);
+  }
+}
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{document.execCommand('copy'); toast('✅ 钱包地址已复制：' + text);}catch(e){toast('⚠️ 请手动复制：' + text);}
+  document.body.removeChild(ta);
 }
 function closePayModal(){
   document.getElementById('pay-modal').classList.remove('show');
