@@ -75,28 +75,12 @@ button{font-family:inherit;cursor:pointer;}
 /* ── BACKGROUND ── */
 .bg{
   position:fixed;inset:0;z-index:0;
-  background:
-    radial-gradient(ellipse 70% 50% at 15% 5%,rgba(0,0,0,0.18) 0%,transparent 60%),
-    radial-gradient(ellipse 60% 45% at 85% 20%,rgba(128,128,128,0.14) 0%,transparent 60%),
-    radial-gradient(ellipse 80% 60% at 50% 95%,rgba(128,128,128,0.06) 0%,transparent 60%),
-    var(--bg);
+  background:var(--bg);
 }
-.bg::before{
-  content:'';position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(0,0,0,0.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,0,0,0.03) 1px,transparent 1px);
-  background-size:50px 50px;
-  mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 30%,transparent 80%);
-}
+.bg::before{display:none;}
 
 /* ── STAR FIELD ── */
-.stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.star{
-  position:absolute;border-radius:50%;
-  background:#fff;
-  animation:twinkle linear infinite;
-}
+.stars{display:none;}
 @keyframes twinkle{
   0%,100%{opacity:0.1;}
   50%{opacity:0.8;}
@@ -153,7 +137,7 @@ header{
 .notif-btn:hover{border-color:rgba(0,0,0,0.35);color:var(--text2);}
 .notif-dot{
   width:7px;height:7px;border-radius:50%;background:var(--text2);
-  box-shadow:0 0 6px var(--text2);
+  box-shadow:0 0 4px rgba(0,0,0,0.2);
   animation:livePulse 2s infinite;
 }
 @keyframes livePulse{0%,100%{opacity:1}50%{opacity:0.3}}
@@ -186,7 +170,7 @@ header{
 }
 .hero-inner{position:relative;z-index:1;}
 .hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.2);color:var(--text2);padding:0.35rem 1rem;border-radius:100px;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;margin-bottom:1.5rem;}
-.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--text2);box-shadow:0 0 6px var(--text2);animation:livePulse 2s infinite;}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:livePulse 2s infinite;}@media(prefers-color-scheme:dark){.hero-badge .dot{background:var(--text2);}}
 .hero-title{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.08;letter-spacing:-0.02em;margin-bottom:1rem;}
 .hero-highlight{background:linear-gradient(135deg,var(--text2),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
 .hero-sub{font-size:1rem;color:var(--text2);line-height:1.8;margin-bottom:1.5rem;}
