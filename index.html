@@ -2,2177 +2,1075 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>AI超市 - 买AI能力，像买菜一样简单</title>
-  <meta name="description" content="一站式AI能力交易市场，全息玻璃界面，新品推送通知，支持APP安装。"/>
-  <meta name="theme-color" content="#111111"/>
+  <meta name="description" content="一站式AI能力交易市场，购买后直接对话使用"/>
+  <meta name="theme-color" content="#6366f1"/>
   <meta property="og:title" content="AI超市 - 买AI能力，像买菜一样简单"/>
-  <meta property="og:description" content="一站式AI能力交易市场，17款+AI工具，覆盖自动化、内容创作、电商、开发等10大领域。"/>
+  <meta property="og:description" content="一站式AI能力交易市场，17款+AI工具"/>
   <meta property="og:image" content="https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@main/og-image.png"/>
   <meta property="og:url" content="https://nima54851.github.io/ai-supermarket/"/>
-  <meta property="og:type" content="website"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="AI超市 - 买AI能力，像买菜一样简单"/>
-  <meta name="twitter:description" content="一站式AI能力交易市场，17款+AI工具"/>
-  <meta name="keywords" content="AI工具,AI超市,买AI,AI能力交易,GitHub自动化,n8n工作流,AI内容创作,电商AI,AI开发工具,AI安全,Telegram Bot,AI Agent,AI视频生成,AI爬虫,AI数据库,AI赚钱,AI变现"/>
-
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="AI超市"/>
-  <link rel="manifest" href="manifest.json"/>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%230a0e1a'/%3E%3Ccircle cx='256' cy='256' r='180' fill='none' stroke='%236366f1' stroke-width='24'/%3E%3Cpath d='M176 256 L236 316 L336 196' stroke='%2322d3ee' stroke-width='24' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%230a0e1a'/%3E%3Ccircle cx='256' cy='256' r='180' fill='none' stroke='%236366f1' stroke-width='24'/%3E%3Cpath d='M176 256 L236 316 L336 196' stroke='%2322d3ee' stroke-width='24' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet"/>
   <style>
-
 :root{
-  --bg:#03060f;
-  --bg2:#050a14;
-  --glass-1:rgba(255,255,255,0.04);
-  --glass-2:rgba(255,255,255,0.06);
-  --glass-border:rgba(255,255,255,0.09);
-  --glass-shine:rgba(255,255,255,0.15);
-  --text:#e8edf8;
+  --bg:#060a14;
+  --bg2:#090d1e;
+  --surface:#0d1428;
+  --surface2:#111933;
+  --surface3:#162040;
+  --text:#e2e8f8;
   --text2:#8896b0;
   --muted:#4e6080;
-  --muted2:#2a3a55;
   --accent:#6366f1;
   --accent2:#8b5cf6;
-  --accent3:#c084fc;
   --cyan:#22d3ee;
   --green:#10b981;
   --orange:#f59e0b;
-  --pink:#ec4899;
   --red:#ef4444;
-  --shadow:rgba(0,0,0,0.4);
-  --surface:#0a1020;
-  --surface2:#0d1525;
   --border:rgba(255,255,255,0.09);
-  --border2:rgba(255,255,255,0.15);
-  --radius:20px;
-  --radius2:14px;
+  --border2:rgba(255,255,255,0.16);
+  --radius:16px;
+  --radius2:12px;
+  --shadow:rgba(0,0,0,0.5);
+  --header-h:58px;
 }
-/* 浅色模式 - 跟随系统 */
 @media(prefers-color-scheme:light){
- :root{
-  --bg:#f4f5f7;
-  --bg2:#ebedf2;
-  --glass-1:rgba(0,0,0,0.04);
-  --glass-2:rgba(0,0,0,0.07);
-  --glass-border:rgba(0,0,0,0.10);
-  --glass-shine:rgba(255,255,255,0.6);
+:root{
+  --bg:#f0f2f8;
+  --bg2:#e8ebf4;
+  --surface:#ffffff;
+  --surface2:#f5f6fb;
+  --surface3:#eceef6;
   --text:#1a1f2e;
   --text2:#4a5568;
   --muted:#9ba8ba;
-  --muted2:#c4cdd9;
   --accent:#5b4fcf;
   --accent2:#7c3cf0;
-  --accent3:#9f75f5;
   --cyan:#0891b2;
   --green:#059669;
   --orange:#d97706;
-  --pink:#db2777;
   --red:#dc2626;
-  --shadow:rgba(0,0,0,0.12);
-  --surface:#ffffff;
-  --surface2:#f0f1f5;
   --border:rgba(0,0,0,0.10);
-  --border2:rgba(0,0,0,0.16);
- }}
-@media(prefers-color-scheme:dark){
- :root{
-  --bg:#111111;
-  --bg2:#1a1a1a;
-  --surface:#1a1a1a;
-  --surface2:#222222;
-  --border:#333333;
-  --border2:#444444;
-  --text:#eeeeee;
-  --text2:#aaaaaa;
-  --muted:#666666;
-  --shadow:rgba(0,0,0,0.5);
-  --glass:rgba(0,0,0,0.04);
- }}
+  --border2:rgba(0,0,0,0.20);
+  --shadow:rgba(0,0,0,0.12);
+}}
 *{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:'Noto Sans SC',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.65;
-  overflow-x:hidden;
-}
+html,body{height:100%;}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow:hidden;}
 a{color:inherit;text-decoration:none;}
-button{font-family:inherit;cursor:pointer;}
+button{font-family:inherit;cursor:pointer;border:none;}
+input,textarea{font-family:inherit;}
 
 /* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}
 
-/* ── BACKGROUND ── */
-.bg-canvas{
-  position:fixed;inset:0;z-index:0;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(99,102,241,0.15) 0%,transparent 50%),
-    radial-gradient(ellipse 60% 40% at 80% 30%,rgba(139,92,246,0.12) 0%,transparent 50%),
-    radial-gradient(ellipse 50% 50% at 60% 80%,rgba(34,211,238,0.08) 0%,transparent 50%),
-    var(--bg);
-  overflow:hidden;
-}
-.bg-grid{
-  position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(99,102,241,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(99,102,241,0.04) 1px,transparent 1px);
-  background-size:60px 60px;
-  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 0%,transparent 80%);
-}
-.bg-orb{
-  position:absolute;border-radius:50%;
-  filter:blur(80px);opacity:0.5;
-  animation:floatOrb 8s ease-in-out infinite;
-}
-.bg-orb-1{width:400px;height:400px;background:rgba(99,102,241,0.3);top:-100px;left:-100px;animation-delay:0s;}
-.bg-orb-2{width:300px;height:300px;background:rgba(139,92,246,0.25);bottom:-50px;right:-50px;animation-delay:-3s;}
-.bg-orb-3{width:200px;height:200px;background:rgba(34,211,238,0.2);top:50%;left:60%;animation-delay:-5s;}
-@keyframes floatOrb{
-  0%,100%{transform:translate(0,0) scale(1);}
-  33%{transform:translate(30px,-20px) scale(1.05);}
-  66%{transform:translate(-20px,15px) scale(0.95);}
-}
-@media(prefers-color-scheme:light){
-  .bg-canvas{
-    background:
-      radial-gradient(ellipse 80% 60% at 20% 10%,rgba(91,79,207,0.10) 0%,transparent 50%),
-      radial-gradient(ellipse 60% 40% at 80% 30%,rgba(124,60,240,0.08) 0%,transparent 50%),
-      radial-gradient(ellipse 50% 50% at 60% 80%,rgba(8,145,178,0.07) 0%,transparent 50%),
-      var(--bg);
-  }
-  .bg-grid{
-    background-image:
-      linear-gradient(rgba(91,79,207,0.06) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(91,79,207,0.06) 1px,transparent 1px);
-  }
-  .bg-orb{opacity:0.18;}
-  header{background:rgba(244,245,247,0.82);}
-  header.scrolled{box-shadow:0 4px 20px rgba(0,0,0,0.12);}
-  .particle{background:rgba(91,79,207,0.5);}
-}
-@media(prefers-color-scheme:light){
-  .bg-canvas{
-    background:
-      radial-gradient(ellipse 80% 60% at 20% 10%,rgba(91,79,207,0.08) 0%,transparent 50%),
-      radial-gradient(ellipse 60% 40% at 80% 30%,rgba(124,60,240,0.06) 0%,transparent 50%),
-      radial-gradient(ellipse 50% 50% at 60% 80%,rgba(8,145,178,0.06) 0%,transparent 50%),
-      var(--bg);
-  }
-  .bg-grid{
-    background-image:
-      linear-gradient(rgba(91,79,207,0.06) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(91,79,207,0.06) 1px,transparent 1px);
-  }
-  .bg-orb{opacity:0.25;}
+/* ── LAYOUT ── */
+.app{
+  display:flex;flex-direction:column;
+  height:100vh;position:relative;z-index:1;
 }
 
-/* ── STAR FIELD ── */
-.stars{display:none;}
-@keyframes twinkle{
-  0%,100%{opacity:0.1;}
-  50%{opacity:0.8;}
-}
-
-/* ── APP SHELL ── */
-.app{position:relative;z-index:10;min-height:100vh;}
-
-/* ═══════════════════════════════
-   HEADER — scroll shadow
-═══════════════════════════════ */
-header.scrolled{box-shadow:0 4px 40px rgba(0,0,0,0.5);}
-header{
-  position:sticky;top:0;z-index:200;
-  background:rgba(3,6,15,0.72);
-  backdrop-filter:blur(24px) saturate(180%);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
-  border-bottom:1px solid var(--glass-border);
-}
-@media(prefers-color-scheme:light){
-  header{
-    background:rgba(244,245,247,0.8);
-  }
-  header.scrolled{box-shadow:0 4px 20px rgba(0,0,0,0.12);}
-}
-.header-inner{
-  max-width:1240px;margin:0 auto;
+/* ── HEADER ── */
+.header{
+  height:var(--header-h);flex-shrink:0;
   display:flex;align-items:center;justify-content:space-between;
-  height:64px;padding:0 1.5rem;gap:1rem;
+  padding:0 1.2rem;
+  background:rgba(6,10,20,0.88);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(16px);
+  position:fixed;top:0;left:0;right:0;z-index:100;
 }
-.logo{
-  display:flex;align-items:center;gap:0.75rem;
-  text-decoration:none;
-}
-.logo-mark{
-  width:40px;height:40px;
-  border-radius:12px;
-  background:var(--accent);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 20px rgba(99,102,241,0.4),inset 0 1px 0 rgba(255,255,255,0.15);
-  position:relative;overflow:hidden;flex-shrink:0;
-}
-.logo-mark::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(0,0,0,0.06),transparent);
-}
-.logo-mark svg{width:22px;height:22px;}
-.logo-text{font-size:1.05rem;font-weight:900;letter-spacing:-0.01em;}
-.logo-sub{font-size:0.6rem;color:var(--muted);font-weight:500;display:block;letter-spacing:0.06em;margin-top:1px;}
-
-.header-right{display:flex;align-items:center;gap:0.6rem;}
-.notif-btn{
-  background:var(--surface);border:1px solid var(--border);
-  color:var(--text2);padding:0.45rem 0.9rem;border-radius:100px;
-  font-size:0.78rem;font-weight:600;cursor:pointer;
-  display:flex;align-items:center;gap:0.4rem;
-  transition:all 0.25s;backdrop-filter:blur(12px);
-}
-.notif-btn:hover{border-color:var(--accent);color:var(--accent);}
-.notif-dot{
-  width:8px;height:8px;border-radius:50%;
-  animation:notifBounce 2.4s ease infinite, notifColor 3s ease infinite;
-}
-@keyframes livePulse{0%,100%{opacity:1}50%{opacity:0.3}}
+@media(prefers-color-scheme:light){.header{background:rgba(240,242,248,0.90);border-bottom:1px solid var(--border);}}
+.header-logo{display:flex;align-items:center;gap:0.6rem;font-size:1.05rem;font-weight:900;}
+.header-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.header-logo-text span{background:linear-gradient(90deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gradShift 4s ease infinite;}
 @keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-@keyframes notifBounce{0%,100%{transform:scale(1);opacity:1}40%{transform:scale(1.4);opacity:1}60%{transform:scale(0.85);opacity:0.7}80%{transform:scale(1.15);opacity:1}90%{transform:scale(1)}}
-@keyframes notifColor{0%,100%{background:var(--accent)}50%{background:var(--accent2)}}
-
-.install-btn{
-  display:none;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.45rem 1rem;border-radius:100px;
-  font-size:0.78rem;font-weight:700;cursor:pointer;
-  align-items:center;gap:0.35rem;
-  box-shadow:0 4px 20px rgba(0,0,0,0.4);
-  transition:all 0.25s;
+.header-nav{display:flex;align-items:center;gap:0.3rem;}
+.header-nav-btn{
+  padding:0.4rem 0.9rem;border-radius:9px;
+  font-size:0.78rem;font-weight:600;color:var(--text2);
+  background:transparent;transition:all 0.2s;
 }
-.install-btn.show{display:flex;}
-.install-btn:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(0,0,0,0.55);}
-
-/* ═══════════════════════════════
-   HERO — completely redesigned (A+B)
-═══════════════════════════════ */
-.hero{
-  padding:3rem 1.5rem 4rem;
-  position:relative;overflow:hidden;
-  max-width:1240px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;
-}
-.hero-glow{
-  position:absolute;top:-50%;left:-20%;width:80%;height:150%;
-  background:radial-gradient(ellipse,rgba(0,0,0,0.12) 0%,transparent 65%);
-  pointer-events:none;z-index:0;
-}
-.hero-inner{position:relative;z-index:1;}
-.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.2);color:var(--text2);padding:0.35rem 1rem;border-radius:100px;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;margin-bottom:1.5rem;}
-.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:livePulse 2s infinite;}@media(prefers-color-scheme:dark){.hero-badge .dot{background:var(--text2);}}
-.hero-title{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.08;letter-spacing:-0.02em;margin-bottom:1rem;}
-.hero-highlight{
-  background:linear-gradient(90deg,var(--accent),var(--accent2),#f59e0b,var(--accent));
-  background-size:300% 100%;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  animation:gradShift 4s ease infinite;
-  font-weight:900;
-}
-.hero-sub{font-size:1rem;color:var(--text2);line-height:1.8;margin-bottom:1.5rem;}
-.hero-sub strong{color:var(--text2);}
-/* Social proof bar */
-.hero-social{display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;padding:0.8rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:16px;backdrop-filter:blur(12px);width:fit-content;}
-.social-avatars{display:flex;}
-.s-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;color:#fff;border:2px solid var(--bg2);margin-left:-8px;}
-.s-avatar:first-child{margin-left:0;}
-.social-text{font-size:0.75rem;color:var(--text2);line-height:1.5;}
-.social-text strong{color:var(--text);}
-.rating-stars{color:var(--text2);font-size:0.8rem;}
-.hero-actions{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:1.8rem;}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.8rem 1.8rem;border-radius:14px;font-size:0.9rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;box-shadow:0 8px 30px rgba(0,0,0,0.4);transition:all 0.3s;}
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 50px rgba(99,102,241,0.5);}
-.btn-primary:active{transform:translateY(-1px);}
-.btn-outline{background:var(--surface);color:var(--text);border:1px solid var(--border2);padding:0.8rem 1.8rem;border-radius:14px;font-size:0.9rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:0.5rem;backdrop-filter:blur(16px);transition:all 0.25s;}
-.btn-outline:hover{border-color:rgba(0,0,0,0.4);color:var(--text2);}
-.trust-tags{display:flex;justify-content:flex-start;gap:0.6rem;flex-wrap:wrap;}
-.trust-tag{display:flex;align-items:center;gap:0.3rem;font-size:0.72rem;color:var(--text2);background:var(--surface);border:1px solid var(--border);padding:0.3rem 0.7rem;border-radius:100px;backdrop-filter:blur(12px);transition:all 0.2s;}
-.trust-tag:hover{border-color:rgba(0,0,0,0.3);color:var(--text2);}
-.trust-tag svg{width:12px;height:12px;flex-shrink:0;opacity:0.7;}
-
-/* Hero visual — product showcase */
-.hero-visual{position:relative;z-index:1;}
-.product-showcase{position:relative;min-height:320px;}
-.showcase-card{position:absolute;border-radius:20px;padding:1rem 1.2rem;display:flex;align-items:center;gap:0.8rem;background:rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.1);backdrop-filter:blur(20px);animation:floatCard 4s ease-in-out infinite;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
-.showcase-card-1{top:0;left:10%;animation-delay:0s;}
-.showcase-card-2{top:40%;right:5%;animation-delay:1.2s;}
-.showcase-card-3{top:75%;left:20%;animation-delay:2.4s;}
-@keyframes floatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.showcase-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:250px;height:250px;background:radial-gradient(circle,rgba(0,0,0,0.15),transparent 70%);border-radius:50%;pointer-events:none;}
-.sc-emoji{font-size:1.8rem;}
-.sc-info{flex:1;}
-.sc-name{font-size:0.82rem;font-weight:700;}
-.sc-price{font-size:0.75rem;color:var(--text2);font-weight:700;}
-.sc-badge{font-size:0.6rem;font-weight:800;background:rgba(128,128,128,0.15);color:var(--text2);padding:0.1rem 0.5rem;border-radius:100px;}
-.sc-badge-new{background:rgba(128,128,128,0.15);color:var(--text2);}
-.showcase-card-1{background:linear-gradient(135deg,rgba(0,0,0,0.12),rgba(0,0,0,0.08));border-color:rgba(0,0,0,0.2);}
-.showcase-card-2{background:linear-gradient(135deg,rgba(128,128,128,0.12),rgba(128,128,128,0.06));border-color:rgba(128,128,128,0.2);}
-.showcase-card-3{background:linear-gradient(135deg,rgba(128,128,128,0.12),rgba(128,128,128,0.06));border-color:rgba(128,128,128,0.2);}
-
-@media(max-width:900px){
-  .hero{grid-template-columns:1fr;gap:2rem;padding:2rem 1.5rem 3rem;}
-  .hero-visual{display:none;}
-  .br-desktop{display:none;}
-}
-/* ═══════════════════════════════
-   STATS
-═══════════════════════════════ */
-.stats{
-  max-width:1000px;margin:0 auto 3rem;
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:1px;background:var(--border);
-  border:1px solid var(--border);
-  border-radius:20px;overflow:hidden;
-  backdrop-filter:blur(12px);
-}
-.stat-cell{
-  background:rgba(0,0,0,0.02);
-  padding:1.8rem 1rem;text-align:center;
-  transition:background 0.25s;position:relative;
-}
-.stat-cell::after{
-  content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);
-  width:0;height:2px;background:linear-gradient(90deg,transparent,var(--text),transparent);
-  transition:width 0.4s;
-}
-.stat-cell:hover{background:rgba(0,0,0,0.05);}
-.stat-cell:hover::after{width:60%;}
-.stat-cell:hover .stat-val{filter:drop-shadow(0 0 16px rgba(0,0,0,0.4));}
-.stat-val{
-  font-size:2.4rem;font-weight:900;line-height:1;
-  background:linear-gradient(135deg,var(--text2),var(--text));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  transition:filter 0.3s;
-}
-.stat-icon-sm{font-size:1.4rem;margin-bottom:0.4rem;}
-.stat-label{font-size:0.72rem;color:var(--muted);margin-top:0.3rem;letter-spacing:0.04em;}
-
-/* ═══════════════════════════════
-   SEARCH & FILTERS
-═══════════════════════════════ */
-.filter-bar{
-  max-width:1240px;margin:0 auto 1.5rem;
-  padding:0 1.5rem;
-}
-.filter-inner{display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;}
-.search-wrap{
-  flex:1;min-width:240px;position:relative;
-}
-.search-input{
-  width:100%;
-  background:rgba(0,0,0,0.03);
-  border:1px solid var(--border);
-  border-radius:14px;padding:0.75rem 1rem 0.75rem 3rem;
-  font-size:0.88rem;color:var(--text);outline:none;
-  transition:all 0.3s;backdrop-filter:blur(16px);
-  font-family:inherit;
-}
-.search-input::placeholder{color:var(--muted);}
-.search-input:focus{
-  border-color:rgba(0,0,0,0.45);
-  box-shadow:0 0 0 3px rgba(0,0,0,0.08);
-}
-.search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;font-size:0.9rem;}
-.search-clear{position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.08);border:1px solid var(--border);color:var(--muted);width:20px;height:20px;border-radius:50%;font-size:0.65rem;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all 0.2s;line-height:1;}
-.search-clear.show{display:flex;}
-.search-clear:hover{background:rgba(0,0,0,0.14);color:var(--text);}
-.sort-select{
-  background:rgba(0,0,0,0.03);border:1px solid var(--border);
-  color:var(--text2);padding:0.65rem 1rem;border-radius:14px;
-  font-size:0.82rem;font-weight:600;cursor:pointer;outline:none;
-  backdrop-filter:blur(16px);font-family:inherit;
-  transition:border-color 0.25s;
-}
-.sort-select:focus{border-color:rgba(0,0,0,0.35);}
-.view-toggle{display:flex;gap:0.35rem;}
-.view-btn{
-  background:var(--surface);border:1px solid var(--border);
-  color:var(--muted);padding:0.5rem 0.65rem;border-radius:10px;
-  font-size:0.82rem;cursor:pointer;transition:all 0.2s;
-  display:flex;align-items:center;
-}
-.view-btn.active{background:rgba(0,0,0,0.1);border-color:rgba(0,0,0,0.3);color:var(--text2);}
-
-/* ═══════════════════════════════
-   CATEGORY TABS
-═══════════════════════════════ */
-.cat-section{
-  max-width:1240px;margin:0 auto 2rem;padding:0 1.5rem;
-  overflow-x:auto;scrollbar-width:none;
-}
-.cat-section::-webkit-scrollbar{display:none;}
-.cat-tabs{
-  display:flex;gap:0.4rem;white-space:nowrap;width:max-content;
-}
-.cat-tab{
-  background:var(--surface);border:1px solid var(--border);
-  color:var(--text2);padding:0.45rem 0.9rem;border-radius:100px;
-  font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.25s;
-  display:flex;align-items:center;gap:0.35rem;
-  backdrop-filter:blur(12px);flex-shrink:0;
-  position:relative;z-index:1;
-}
-.cat-tab.active,.cat-tab:hover{
-  background:rgba(0,0,0,0.12);
-  border-color:rgba(0,0,0,0.35);
-  color:var(--text2);
-}
-.cat-tab.active{
-  box-shadow:0 0 20px rgba(0,0,0,0.18),0 2px 8px rgba(0,0,0,0.3);
-}
-.cat-tab .emoji{font-size:0.85rem;}
-
-/* ═══════════════════════════════
-   GRID
-═══════════════════════════════ */
-.main{padding:0 1.5rem 5rem;}
-.grid-wrap{max-width:1240px;margin:0 auto;}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(370px,1fr));
-  gap:1rem;
-}
-@media(max-width:420px){.grid{grid-template-columns:1fr;}}
-
-.no-results{
-  display:none;text-align:center;padding:5rem 1rem;
-}
-.no-results.show{display:block;}
-.no-results .icon{font-size:3.5rem;margin-bottom:1rem;}
-.no-results .title{font-size:1.1rem;font-weight:700;color:var(--text2);}
-.no-results .sub{font-size:0.82rem;color:var(--muted);margin-top:0.5rem;line-height:1.7;}
-.no-results .reset-btn{
-  display:inline-flex;align-items:center;gap:0.4rem;
-  margin-top:1.2rem;background:var(--surface);
-  border:1px solid var(--border2);color:var(--text2);
-  padding:0.5rem 1.2rem;border-radius:100px;
-  font-size:0.82rem;font-weight:600;cursor:pointer;
-  transition:all 0.25s;backdrop-filter:blur(12px);
-}
-.no-results .reset-btn:hover{border-color:rgba(0,0,0,0.4);}
-
-/* ═══════════════════════════════
-   PRODUCT CARD (PREMIUM)
-═══════════════════════════════ */
-.card{
-  position:relative;
-  background:rgba(0,0,0,0.025);
-  border:1px solid var(--border);
-  border-radius:24px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:all 0.35s cubic-bezier(0.23,1,0.32,1);
-  backdrop-filter:blur(24px);
-  -webkit-backdrop-filter:blur(24px);
-  animation:cardIn 0.5s ease backwards;
-}
-.card::after{
-  content:'';position:absolute;inset:-1px;
-  border-radius:inherit;
-  background:linear-gradient(135deg,rgba(0,0,0,0.3),rgba(0,0,0,0.2),rgba(128,128,128,0.15));
-  opacity:0;transition:opacity 0.35s;z-index:-1;
-  filter:blur(16px);
-}
-.card:hover{
-  transform:translateY(-8px) scale(1.008);
-  border-color:rgba(0,0,0,0.35);
-  box-shadow:0 32px 80px rgba(0,0,0,0.75),0 0 50px rgba(0,0,0,0.1);
-}
-.card:hover::after{opacity:0.5;}
-
-@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-/* Card ribbon */
-.card-ribbon{
-  position:absolute;top:14px;right:-8px;
-  background:linear-gradient(135deg,var(--text2),var(--text2));
-  color:#fff;font-size:0.62rem;font-weight:800;
-  padding:0.2rem 0.8rem;border-radius:4px 0 0 4px;
-  letter-spacing:0.04em;text-transform:uppercase;
-  box-shadow:0 2px 8px rgba(128,128,128,0.4);
-}
-.card-ribbon::after{
-  content:'';position:absolute;right:0;bottom:-5px;
-  border:2.5px solid transparent;
-  border-top-color:var(--border);border-right-color:var(--border);
-}
-
-/* Card top */
-.card-top{
-  padding:1.5rem 1.5rem 1rem;
-  display:flex;align-items:flex-start;gap:1rem;
-}
-.card-icon{
-  width:72px;height:72px;border-radius:20px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:2rem;position:relative;overflow:hidden;
-  flex-direction:column;gap:0;
-  border:1px solid var(--glass-border);
-  box-shadow:0 4px 16px var(--shadow),inset 0 1px 0 var(--glass-shine);
-  padding:0;
-}
-.card-icon::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(0,0,0,0.08),transparent);
-  pointer-events:none;z-index:1;
-}
-.card-icon img{
-  width:100%;height:100%;object-fit:cover;
-  border-radius:inherit;display:block;
-}
-.card-icon-name{
-  display:none;
-}
-.card-meta{flex:1;min-width:0;}
-.card-badges{display:flex;gap:0.4rem;margin-bottom:0.5rem;flex-wrap:wrap;}
-.badge{
-  display:inline-flex;align-items:center;gap:0.2rem;
-  font-size:0.58rem;font-weight:800;text-transform:uppercase;
-  letter-spacing:0.06em;padding:0.18rem 0.55rem;border-radius:100px;
-}
-.badge-hot{background:rgba(245,158,11,0.12);color:#f59e0b;border:1px solid rgba(245,158,11,0.2);}
-.badge-new{background:rgba(99,102,241,0.12);color:var(--accent3);border:1px solid rgba(99,102,241,0.2);}
-.badge-pop{background:rgba(99,102,241,0.12);color:var(--accent3);border:1px solid rgba(99,102,241,0.2);}
-.card-cat{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.35rem;}
-.cat-automation{color:var(--accent3);}.cat-content{color:var(--accent);}.cat-productivity{color:var(--accent);}.cat-ecommerce{color:var(--pink);}.cat-dev{color:var(--cyan);}.cat-security{color:var(--red);}.cat-design{color:var(--accent2);}.cat-game{color:var(--orange);}.cat-data{color:#229ED9;}
-.card-name{font-size:0.97rem;font-weight:800;line-height:1.3;margin-bottom:0.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.card-desc{font-size:0.75rem;color:var(--text2);line-height:1.6;}
-
-/* Rating row */
-.rating-row{display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;}
-.stars{display:flex;gap:1px;}
-.star-icon{color:var(--text2);font-size:0.7rem;}
-.star-icon.empty{color:var(--muted);}
-.rating-count{font-size:0.65rem;color:var(--muted);}
-
-/* Card body */
-.card-body{padding:0 1.5rem;}
-.card-divider{height:1px;background:var(--border);margin:0.8rem 0;}
-.card-features{display:flex;flex-direction:column;gap:0.3rem;}
-.card-feat{
+.header-nav-btn:hover{background:var(--surface2);color:var(--text);}
+.header-nav-btn.active{background:var(--accent);color:white;}
+.header-right{display:flex;align-items:center;gap:0.6rem;}
+.header-status{
   display:flex;align-items:center;gap:0.4rem;
-  font-size:0.74rem;color:var(--text2);
+  font-size:0.7rem;color:var(--green);
 }
-.card-feat::before{content:'→';color:var(--text2);font-weight:700;font-size:0.75rem;flex-shrink:0;}
+.header-status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:livePulse 2s infinite;}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* Card footer */
-.card-footer{
-  padding:0.85rem 1.5rem 1rem;
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;gap:0.8rem;
-  background:var(--surface2);
+/* ── MAIN ── */
+.main{
+  display:flex;height:100vh;padding-top:var(--header-h);
 }
-.card-actions{display:flex;gap:0.4rem;align-items:center;flex-shrink:0;}
 
-.price-info{
-  background:rgba(99,102,241,0.08);
-  border:1px solid rgba(99,102,241,0.15);
-  border-radius:12px;padding:0.35rem 0.7rem;
+/* ── SIDEBAR ── */
+.sidebar{
+  width:300px;flex-shrink:0;
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  background:var(--surface);
+  overflow:hidden;
 }
-.price-line{display:flex;align-items:baseline;gap:0.25rem;}
-.price{font-size:2rem;font-weight:900;line-height:1;color:#fff;}
-.price .sym{font-size:1rem;vertical-align:super;}
-.price .per{font-size:0.68rem;color:var(--muted);font-weight:500;}
-.price-label{
-  font-size:0.58rem;color:var(--text2);font-weight:800;
-  text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;
+@media(max-width:768px){
+  .sidebar{position:fixed;top:var(--header-h);bottom:0;left:-100%;width:85%;max-width:340px;z-index:200;transition:left 0.3s;box-shadow:4px 0 40px var(--shadow);}
+  .sidebar.open{left:0;}
 }
-.btn-buy-sm{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.6rem 1.1rem;border-radius:12px;
-  font-size:0.82rem;font-weight:700;cursor:pointer;
-  box-shadow:0 4px 16px rgba(99,102,241,0.35);
-  transition:all 0.25s;white-space:nowrap;
-  display:flex;align-items:center;gap:0.35rem;
-}
-.btn-buy-sm:hover{
-  transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.55);
-  background:linear-gradient(135deg,var(--text),var(--text));
-}
-.btn-buy-sm:active{transform:translateY(0) scale(0.98);}
-.btn-detail-sm{
-  background:var(--surface2);color:var(--text2);
-  border:1px solid var(--border);padding:0.6rem 0.8rem;border-radius:12px;
-  font-size:0.78rem;font-weight:600;cursor:pointer;
-  transition:all 0.25s;
-}
-.btn-detail-sm:hover{background:var(--border);color:var(--text);}
-.btn-detail-sm:hover{border-color:rgba(0,0,0,0.3);color:var(--text2);}
-
-/* Card animation delays */
-.card:nth-child(1){animation-delay:0.03s}.card:nth-child(2){animation-delay:0.06s}.card:nth-child(3){animation-delay:0.09s}.card:nth-child(4){animation-delay:0.12s}.card:nth-child(5){animation-delay:0.15s}.card:nth-child(6){animation-delay:0.18s}.card:nth-child(n+7){animation-delay:0.22s}
-
-/* ═══════════════════════════════
-   FEATURED SECTION (NEW!)
-═══════════════════════════════ */
-.featured-section{
-  padding:3rem 1.5rem 4rem;
-  background:rgba(0,0,0,0.15);
-  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  backdrop-filter:blur(16px);
-}
-.featured-inner{max-width:1100px;margin:0 auto;}
-.section-header{text-align:center;margin-bottom:2.5rem;}
-.section-eyebrow{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--text2);margin-bottom:0.5rem;}
-.section-title{font-size:2rem;font-weight:900;margin-bottom:0.5rem;background:linear-gradient(135deg,#fff,var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.section-sub{font-size:0.85rem;color:var(--text2);}
-.featured-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:1rem;}
-.featured-card{position:relative;background:rgba(0,0,0,0.04);border:1px solid var(--border);border-radius:24px;padding:1.5rem;cursor:pointer;transition:all 0.35s;backdrop-filter:blur(20px);display:flex;flex-direction:column;gap:0.8rem;overflow:hidden;}
-.featured-card:hover{border-color:rgba(0,0,0,0.35);transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,0.5);}
-.featured-card-lg{min-height:220px;}
-.fc-ribbon{position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:0.62rem;font-weight:800;padding:0.3rem 1rem;border-radius:0 24px 0 16px;letter-spacing:0.05em;}
-.fc-icon{font-size:2.2rem;line-height:1;}
-.fc-body{flex:1;}
-.fc-cat{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:0.3rem;}
-.fc-name{font-size:1rem;font-weight:800;margin-bottom:0.3rem;}
-.fc-desc{font-size:0.78rem;color:var(--text2);line-height:1.6;}
-.fc-rating{font-size:0.72rem;color:var(--text2);margin-top:0.4rem;}
-.fc-rating span{color:var(--text2);font-weight:700;}
-.fc-footer{display:flex;align-items:center;justify-content:space-between;}
-.fc-price{font-size:2rem;font-weight:900;color:#fff;}
-.fc-price span{font-size:0.75rem;color:var(--muted);font-weight:500;}
-.fc-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.55rem 1.2rem;border-radius:12px;font-size:0.82rem;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.4);}
-.fc-btn-sm{background:var(--surface2);border:1px solid var(--border);color:var(--accent);padding:0.4rem 0.8rem;border-radius:10px;font-size:0.8rem;cursor:pointer;backdrop-filter:blur(12px);}
-.fc-badge-sm{position:absolute;top:12px;right:12px;background:rgba(99,102,241,0.15);color:var(--accent3);font-size:0.6rem;font-weight:800;text-transform:uppercase;padding:0.15rem 0.5rem;border-radius:100px;border:1px solid rgba(128,128,128,0.2);}
-.featured-col{display:flex;flex-direction:column;gap:1rem;}
-
-@media(max-width:900px){.featured-grid{grid-template-columns:1fr;}}
-
-/* ═══════════════════════════════
-   TESTIMONIALS — more impactful
-═══════════════════════════════ */
-.testimonials{
-  background:rgba(0,0,0,0.25);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  padding:5rem 1.5rem;backdrop-filter:blur(16px);
-}
-.testi-eyebrow{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--text2);text-align:center;margin-bottom:0.5rem;}
-.testi-title{font-size:2.2rem;font-weight:900;text-align:center;margin-bottom:2.5rem;background:linear-gradient(135deg,#fff,var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.testi-grid{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;}
-.testi-card{
-  background:linear-gradient(135deg,rgba(0,0,0,0.04),rgba(0,0,0,0.02));
-  border:1px solid var(--border);
-  border-radius:24px;padding:1.8rem;backdrop-filter:blur(12px);
-  transition:all 0.35s;position:relative;overflow:hidden;
-}
-.testi-card::before{content:'"';position:absolute;top:-0.5rem;right:1.5rem;font-size:5rem;color:rgba(0,0,0,0.06);font-family:Georgia,serif;line-height:1;pointer-events:none;}
-.testi-card:hover{border-color:rgba(0,0,0,0.35);transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,0.5);}
-.testi-stars{display:flex;gap:2px;margin-bottom:0.8rem;}
-.testi-stars span{color:var(--text2);font-size:0.85rem;}
-.testi-text{font-size:0.88rem;color:var(--text2);line-height:1.75;margin-bottom:1rem;font-style:italic;}
-.testi-author{display:flex;align-items:center;gap:0.7rem;}
-.testi-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;font-weight:800;}
-.testi-name{font-size:0.85rem;font-weight:700;}
-.testi-role{font-size:0.7rem;color:var(--muted);}
-/* ═══════════════════════════════
-   HOW IT WORKS — bigger steps
-═══════════════════════════════ */
-.how{padding:5rem 1.5rem;text-align:center;max-width:1100px;margin:0 auto;}
-.how-eyebrow{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:var(--text2);margin-bottom:0.5rem;}
-.how-title{font-size:2.2rem;font-weight:900;margin-bottom:3rem;background:linear-gradient(135deg,#fff,var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.how-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;}
-.how-step{
-  background:linear-gradient(135deg,rgba(0,0,0,0.04),rgba(0,0,0,0.02));
-  border:1px solid var(--border);
-  border-radius:24px;padding:2.2rem 1.5rem;backdrop-filter:blur(12px);
-  transition:all 0.35s;position:relative;overflow:hidden;
-}
-.how-step::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--text),transparent);opacity:0;transition:opacity 0.3s;}
-.how-step:hover{border-color:rgba(0,0,0,0.3);transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,0.4);}
-.how-step:hover::before{opacity:1;}
-.step-num{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,rgba(0,0,0,0.2),rgba(0,0,0,0.1));border:1px solid rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin:0 auto 1.2rem;box-shadow:0 0 24px rgba(0,0,0,0.12);}
-.step-title{font-size:1rem;font-weight:800;margin-bottom:0.5rem;}
-.step-desc{font-size:0.8rem;color:var(--text2);line-height:1.7;}
-/* ═══════════════════════════════
-   CTA
-═══════════════════════════════ */
-.cta-section{
-  padding:6rem 1.5rem;text-align:center;
-  background:radial-gradient(ellipse 80% 80% at 50% 50%,rgba(0,0,0,0.08) 0%,transparent 70%);
-}
-.cta-section h2{
-  font-size:clamp(1.8rem,6vw,2.8rem);font-weight:900;
-  margin-bottom:0.8rem;line-height:1.1;
-  background:linear-gradient(135deg,#fff,var(--text2));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-}
-.cta-section p{color:var(--text2);font-size:1rem;margin-bottom:2rem;}
-.cta-actions{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;}
-.cta-note{font-size:0.72rem;color:var(--muted);}
-
-/* ═══════════════════════════════
-   FOOTER
-═══════════════════════════════ */
-footer{
-  background:rgba(0,0,0,0.4);border-top:1px solid var(--border);
-  padding:3rem 1.5rem;text-align:center;
-  backdrop-filter:blur(16px);
-}
-.footer-logo{
-  font-size:1.2rem;font-weight:900;margin-bottom:0.4rem;
-  background:linear-gradient(135deg,var(--text2),var(--text));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-}
-.footer-desc{
-  font-size:0.75rem;color:var(--muted);max-width:400px;
-  margin:0 auto 0.8rem;line-height:1.7;
-}
-.footer-links{display:flex;justify-content:center;gap:1.5rem;margin:0.8rem 0;flex-wrap:wrap;}
-.footer-links a{font-size:0.78rem;color:var(--text2);transition:color 0.2s;}
-.footer-links a:hover{color:var(--text2);}
-.footer-payments{
-  display:flex;justify-content:center;align-items:center;gap:0.5rem;
-  margin:0.8rem 0;flex-wrap:wrap;
-}
-.payment-badge{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:8px;padding:0.25rem 0.6rem;
-  font-size:0.65rem;font-weight:700;color:var(--text2);
-  backdrop-filter:blur(12px);
-}
-footer p{font-size:0.72rem;color:var(--muted);line-height:1.8;}
-footer .divider{width:40px;height:2px;background:linear-gradient(90deg,transparent,var(--text),transparent);margin:1rem auto;}
-.footer-contact{
-  display:flex;justify-content:center;gap:1.5rem;margin:0.5rem 0;flex-wrap:wrap;
-}
-.footer-contact a{
-  font-size:0.72rem;color:var(--text2);transition:color 0.2s;
-  display:flex;align-items:center;gap:0.3rem;
-}
-.footer-contact a:hover{color:var(--text2);}
-
-/* ═══════════════════════════════
-   MODAL
-═══════════════════════════════ */
-.modal-overlay{
-  display:none;position:fixed;inset:0;z-index:9999;
-  background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);
-  align-items:center;justify-content:center;padding:1rem;
-}
-.modal-overlay.show{display:flex;}
-.modal{
-  background:rgba(0,0,0,0.95);border:1px solid rgba(0,0,0,0.2);
-  border-radius:28px;max-width:520px;width:100%;max-height:92vh;overflow-y:auto;
-  animation:modalIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  backdrop-filter:blur(40px);
-  box-shadow:0 40px 100px rgba(0,0,0,0.9),0 0 80px rgba(0,0,0,0.08);
-  position:relative;
-}
-.modal::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(0,0,0,0.5),transparent);
-}
-@keyframes modalIn{from{opacity:0;transform:scale(0.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-hdr{
-  padding:1.6rem;display:flex;align-items:flex-start;gap:1rem;
+.sidebar-tabs{
+  display:flex;gap:0.3rem;padding:0.8rem;
   border-bottom:1px solid var(--border);
 }
-.modal-icon{
-  width:58px;height:58px;border-radius:16px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:1.5rem;
-  border:1px solid rgba(0,0,0,0.07);
+.sidebar-tab{
+  flex:1;padding:0.5rem;border-radius:10px;
+  font-size:0.75rem;font-weight:700;text-align:center;
+  color:var(--text2);background:transparent;transition:all 0.2s;
 }
-.modal-meta{flex:1;}
-.modal-name{font-size:1.1rem;font-weight:800;margin-bottom:0.3rem;}
-.modal-cat{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;}
-.modal-body{padding:1.2rem 1.6rem;}
-.modal-desc{font-size:0.88rem;color:var(--text2);line-height:1.8;margin-bottom:1.2rem;}
-.modal-section-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.6rem;}
-.modal-features{display:flex;flex-direction:column;gap:0.45rem;margin-bottom:1.2rem;}
-.modal-feat{display:flex;align-items:center;gap:0.5rem;font-size:0.84rem;}
-.modal-feat::before{content:'✓';color:var(--text2);font-weight:800;font-size:0.8rem;}
-.modal-footer{
-  padding:1.2rem 1.8rem 1.8rem;border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  background:rgba(0,0,0,0.25);border-radius:0 0 28px 28px;
+.sidebar-tab:hover{background:var(--surface2);}
+.sidebar-tab.active{background:var(--accent);color:white;}
+.sidebar-search{padding:0.7rem 0.8rem;border-bottom:1px solid var(--border);}
+.search-wrap{position:relative;}
+.search-input{
+  width:100%;padding:0.55rem 2.2rem 0.55rem 0.8rem;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-size:0.8rem;outline:none;
+  transition:border-color 0.2s;
 }
-.modal-price{font-size:2.4rem;font-weight:900;color:#fff;line-height:1;}
-.modal-price .sym{font-size:1.1rem;vertical-align:super;}
-.modal-price .per{font-size:0.9rem;color:var(--muted);font-weight:500;}
-.modal-price-note{font-size:0.7rem;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:0.3rem;}
-.modal-price-note::before{content:'✓';color:var(--text2);font-weight:800;}
-.modal-payment{font-size:0.68rem;color:var(--muted);margin-top:3px;}
-.modal-btns{display:flex;gap:0.6rem;align-items:center;}
-.btn-modal-close{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:0.65rem 1.1rem;border-radius:13px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(12px);}
-.btn-modal-close:hover{border-color:rgba(0,0,0,0.3);color:var(--text2);}
-.btn-modal-detail{background:rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.2);color:var(--text2);padding:0.65rem 1.1rem;border-radius:13px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(12px);}
-.btn-modal-detail:hover{border-color:rgba(0,0,0,0.35);background:rgba(0,0,0,0.14);}
-.btn-modal-buy{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.65rem 1.4rem;border-radius:13px;font-size:0.88rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.45);transition:all 0.25s;display:flex;align-items:center;gap:0.4rem;}
-.btn-modal-buy:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,0.6);}
-.btn-modal-buy:active{transform:scale(0.97);}
-.btn-modal-close:hover{border-color:rgba(0,0,0,0.3);color:var(--text2);}
-.btn-modal-buy{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.6rem 1.3rem;border-radius:12px;
-  font-size:0.85rem;font-weight:700;cursor:pointer;
-  box-shadow:0 4px 16px rgba(0,0,0,0.4);
-  transition:all 0.25s;display:flex;align-items:center;gap:0.4rem;
-}
-.btn-modal-buy:hover{
-  transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.55);
-}
-.btn-modal-buy:active{transform:translateY(0) scale(0.98);}
+.search-input::placeholder{color:var(--muted);}
+.search-input:focus{border-color:var(--accent);}
+.search-icon{position:absolute;right:0.7rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:0.8rem;}
 
-/* ═══════════════════════════════
-   BANNERS & TOAST
-═══════════════════════════════ */
-#install-banner{
-  display:none;position:fixed;bottom:0;left:0;right:0;z-index:800;
-  background:rgba(0,0,0,0.92);backdrop-filter:blur(30px);
-  border-top:1px solid rgba(0,0,0,0.2);
-  padding:1rem 1.5rem;align-items:center;justify-content:space-between;
-  gap:1rem;box-shadow:0 -10px 50px rgba(0,0,0,0.7);
+.sidebar-section{padding:0.6rem 0.8rem 0.4rem;font-size:0.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;}
+.sidebar-list{flex:1;overflow-y:auto;padding:0 0.5rem 0.8rem;}
+
+/* ── SKILL CARD (in sidebar) ── */
+.skill-item{
+  display:flex;align-items:center;gap:0.7rem;
+  padding:0.65rem 0.75rem;border-radius:12px;
+  cursor:pointer;transition:all 0.2s;margin-bottom:0.3rem;
+  border:1.5px solid transparent;
 }
-#install-banner.show{display:flex;}
-.banner-text{font-size:0.85rem;}
-.banner-text strong{display:block;font-size:0.95rem;font-weight:700;margin-bottom:0.1rem;}
-.banner-text span{font-size:0.73rem;color:var(--text2);}
-.banner-btns{display:flex;gap:0.5rem;}
-.btn-banner-install{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.55rem 1.2rem;border-radius:11px;
-  font-size:0.82rem;font-weight:700;cursor:pointer;
-  box-shadow:0 4px 16px rgba(0,0,0,0.4);
+.skill-item:hover{background:var(--surface2);}
+.skill-item.active{border-color:var(--accent);background:rgba(99,102,241,0.12);}
+.skill-item.locked{opacity:0.6;}
+.skill-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.skill-info{flex:1;min-width:0;}
+.skill-name{font-size:0.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.skill-desc{font-size:0.65rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:0.1rem;}
+.skill-badge{font-size:0.6rem;padding:0.15rem 0.4rem;border-radius:6px;font-weight:700;flex-shrink:0;}
+.skill-badge.owned{background:rgba(16,185,129,0.15);color:var(--green);}
+.skill-badge.lock{background:rgba(78,96,128,0.2);color:var(--muted);}
+
+/* ── PRODUCT CARD (in store) ── */
+.store-item{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:14px;padding:0.85rem;margin-bottom:0.6rem;
+  transition:all 0.2s;cursor:pointer;
 }
-.btn-banner-later{
-  background:var(--surface);border:1px solid var(--border);
-  color:var(--text2);padding:0.55rem 1rem;border-radius:11px;
-  font-size:0.78rem;cursor:pointer;backdrop-filter:blur(12px);
+.store-item:hover{border-color:var(--border2);box-shadow:0 4px 16px var(--shadow);}
+.store-item-top{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem;}
+.store-item-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.store-item-name{font-size:0.82rem;font-weight:800;flex:1;}
+.store-item-price{font-size:0.78rem;font-weight:900;color:var(--accent);}
+.store-item-desc{font-size:0.68rem;color:var(--text2);line-height:1.5;margin-bottom:0.6rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.store-item-tags{display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:0.6rem;}
+.store-tag{font-size:0.6rem;padding:0.15rem 0.45rem;border-radius:6px;background:var(--surface3);color:var(--text2);font-weight:600;}
+.store-item-actions{display:flex;gap:0.4rem;}
+.store-btn{
+  flex:1;padding:0.45rem;border-radius:9px;
+  font-size:0.72rem;font-weight:700;transition:all 0.2s;text-align:center;
+}
+.store-btn-buy{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;}
+.store-btn-buy:hover{opacity:0.88;transform:translateY(-1px);}
+.store-btn-trial{background:var(--surface3);border:1px solid var(--border);color:var(--text2);}
+.store-btn-trial:hover{border-color:var(--accent);color:var(--accent);}
+.store-btn-owned{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.3);}
+.store-btn-chat{background:rgba(99,102,241,0.12);color:var(--accent);border:1px solid rgba(99,102,241,0.3);}
+
+/* ── CHAT AREA ── */
+.chat-area{
+  flex:1;display:flex;flex-direction:column;
+  overflow:hidden;background:var(--bg);
+}
+.chat-header{
+  padding:0.7rem 1.2rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0.7rem;
+  background:var(--surface);flex-shrink:0;
+}
+.chat-header-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.chat-header-info{flex:1;}
+.chat-header-name{font-size:0.88rem;font-weight:800;}
+.chat-header-sub{font-size:0.65rem;color:var(--text2);}
+.chat-header-actions{display:flex;gap:0.4rem;}
+.chat-action-btn{
+  padding:0.35rem 0.7rem;border-radius:8px;
+  font-size:0.7rem;font-weight:600;background:var(--surface2);
+  color:var(--text2);border:1px solid var(--border);transition:all 0.2s;
+}
+.chat-action-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* Welcome state */
+.chat-welcome{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1rem;padding:2rem;text-align:center;
+}
+.chat-welcome-icon{font-size:3.5rem;line-height:1;}
+.chat-welcome-title{font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.chat-welcome-desc{font-size:0.85rem;color:var(--text2);max-width:380px;line-height:1.7;}
+.chat-welcome-hint{display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;max-width:400px;}
+.chat-welcome-chip{
+  padding:0.35rem 0.8rem;border-radius:20px;font-size:0.72rem;
+  background:var(--surface2);border:1px solid var(--border);color:var(--text2);
+}
+.chat-welcome-chip.active{border-color:var(--accent);color:var(--accent);background:rgba(99,102,241,0.1);}
+
+/* Messages */
+.chat-messages{
+  flex:1;overflow-y:auto;padding:1rem 1.2rem;
+  display:flex;flex-direction:column;gap:0.8rem;
+}
+.msg{
+  display:flex;gap:0.7rem;align-items:flex-start;animation:fadeInUp 0.25s ease;
+}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{flex-direction:row-reverse;}
+.msg-avatar{
+  width:32px;height:32px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:0.9rem;
+}
+.msg.user .msg-avatar{background:linear-gradient(135deg,var(--accent),var(--accent2));}
+.msg.ai .msg-avatar{background:var(--surface2);border:1px solid var(--border);}
+.msg-bubble{
+  max-width:68%;padding:0.7rem 0.95rem;border-radius:14px;
+  font-size:0.82rem;line-height:1.65;word-break:break-word;
+}
+.msg.ai .msg-bubble{background:var(--surface2);border:1px solid var(--border);border-radius:14px 14px 14px 4px;}
+.msg.user .msg-bubble{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border-radius:14px 14px 4px 14px;}
+.msg-typing{
+  display:flex;gap:0.35rem;padding:0.7rem 0.95rem;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:14px 14px 14px 4px;max-width:68%;
+}
+.msg-typing span{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typingBounce 1.2s ease infinite;}
+.msg-typing span:nth-child(2){animation-delay:0.2s;}
+.msg-typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* Chat input */
+.chat-input-area{
+  padding:0.8rem 1.2rem;
+  border-top:1px solid var(--border);
+  background:var(--surface);flex-shrink:0;
+}
+.chat-input-wrap{
+  display:flex;gap:0.6rem;align-items:flex-end;
+}
+.chat-input{
+  flex:1;padding:0.7rem 0.9rem;
+  background:var(--surface2);border:1.5px solid var(--border);
+  border-radius:13px;color:var(--text);font-size:0.85rem;
+  outline:none;resize:none;max-height:140px;line-height:1.5;
+  transition:border-color 0.2s;
+}
+.chat-input:focus{border-color:var(--accent);}
+.chat-input::placeholder{color:var(--muted);}
+.chat-send-btn{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:white;display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;transition:all 0.2s;flex-shrink:0;
+}
+.chat-send-btn:hover{opacity:0.88;transform:scale(1.05);}
+.chat-send-btn:active{transform:scale(0.95);}
+.chat-input-hint{font-size:0.62rem;color:var(--muted);margin-top:0.4rem;padding-left:0.2rem;}
+
+/* Empty store/owned list */
+.sidebar-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2rem;text-align:center;gap:0.6rem;
+}
+.sidebar-empty-icon{font-size:2.5rem;}
+.sidebar-empty-title{font-size:0.85rem;font-weight:700;color:var(--text2);}
+.sidebar-empty-desc{font-size:0.7rem;color:var(--muted);line-height:1.6;}
+.sidebar-empty-btn{
+  margin-top:0.5rem;padding:0.5rem 1.2rem;border-radius:10px;
+  background:var(--accent);color:white;font-size:0.75rem;font-weight:700;
 }
 
-#notify-banner{
-  display:none;position:fixed;bottom:5rem;left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,0.95);border:1px solid rgba(0,0,0,0.3);
-  border-radius:20px;padding:1.2rem 1.4rem;z-index:9999;
-  max-width:360px;width:calc(100% - 2rem);
-  box-shadow:0 20px 60px rgba(0,0,0,0.8);
-  animation:slideUp 0.4s ease;backdrop-filter:blur(30px);
-}
-#notify-banner.show{display:block;}
-@keyframes slideUp{from{transform:translateX(-50%) translateY(16px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
-.notify-row{display:flex;align-items:center;gap:0.8rem;}
-.notify-icon{font-size:1.4rem;flex-shrink:0;}
-.notify-body{flex:1;}
-.notify-body strong{display:block;font-size:0.88rem;font-weight:700;margin-bottom:0.2rem;}
-.notify-body span{font-size:0.78rem;color:var(--text2);}
-.notify-btns{display:flex;gap:0.4rem;margin-top:0.7rem;}
-.notify-yes{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;padding:0.4rem 1rem;border-radius:8px;
-  font-size:0.78rem;font-weight:700;cursor:pointer;flex:1;
-}
-.notify-no{
-  background:var(--surface);border:1px solid var(--border);
-  color:var(--text2);padding:0.4rem 1rem;border-radius:8px;
-  font-size:0.78rem;cursor:pointer;flex:1;backdrop-filter:blur(12px);
-}
+/* ── PAY MODAL ── */
+.pay-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:99999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);}
+.pay-modal-overlay.show{display:flex;}
+.pay-modal{background:var(--surface);border-radius:20px;width:100%;max-width:440px;padding:1.8rem;border:1px solid var(--border);box-shadow:0 24px 60px var(--shadow);}
+.pay-header{display:flex;flex-direction:column;gap:0.3rem;margin-bottom:1.4rem;}
+.pay-product-name{font-size:1rem;font-weight:800;}
+.pay-price-line{display:flex;align-items:center;gap:0.6rem;}
+.pay-cny{font-size:1.8rem;font-weight:900;color:var(--accent);}
+.pay-usd{font-size:0.75rem;color:var(--text2);}
+.pay-period{font-size:0.7rem;color:var(--muted);}
+.pay-methods{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1rem;}
+.pay-method{display:flex;align-items:center;gap:0.8rem;padding:0.8rem;border:1.5px solid var(--border);border-radius:12px;background:var(--surface2);cursor:pointer;transition:all 0.2s;text-decoration:none;color:inherit;}
+.pay-method:hover{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,0.12);}
+.pay-method-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.pay-method-info{flex:1;}
+.pay-method-name{font-size:0.82rem;font-weight:700;}
+.pay-method-desc{font-size:0.65rem;color:var(--text2);margin-top:0.1rem;}
+.pay-method-arrow{color:var(--muted);font-size:1rem;}
+.pay-divider{text-align:center;position:relative;margin:0.5rem 0;}
+.pay-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border);}
+.pay-divider span{background:var(--surface);padding:0 0.7rem;position:relative;font-size:0.65rem;color:var(--muted);}
+.pay-after{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:0.8rem;}
+.pay-after-title{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;}
+.pay-after-step{display:flex;align-items:flex-start;gap:0.4rem;font-size:0.73rem;color:var(--text2);margin-bottom:0.3rem;}
+.pay-contact{display:flex;gap:0.5rem;margin-top:0.7rem;}
+.pay-contact-btn{flex:1;text-align:center;padding:0.55rem;border-radius:9px;font-size:0.75rem;font-weight:700;text-decoration:none;transition:all 0.2s;}
+.pay-contact-btn.tg{background:var(--accent);color:white;}
+.pay-contact-btn.email{background:var(--surface3);border:1px solid var(--border);color:var(--text2);}
+.pay-close{width:100%;padding:0.65rem;border-radius:11px;border:none;background:var(--surface2);color:var(--text2);font-size:0.78rem;margin-top:0.7rem;transition:background 0.2s;}
+.pay-close:hover{background:var(--border);}
 
+/* PayPal / USDT QR modals */
+.pp-modal-overlay,.usdt-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:999999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);}
+.pp-modal-overlay.show,.usdt-modal-overlay.show{display:flex;}
+.pp-modal,.usdt-modal{background:var(--surface);border-radius:20px;width:100%;max-width:400px;padding:1.8rem;border:1px solid var(--border);box-shadow:0 24px 60px var(--shadow);}
+.pp-modal h3,.usdt-modal h3{font-size:1rem;font-weight:800;margin-bottom:1rem;text-align:center;}
+.pp-qr-box,.usdt-qr-box{text-align:center;margin-bottom:1rem;}
+.pp-qr-box img,.usdt-qr-box img{border-radius:12px;border:1px solid var(--border);}
+.pp-addr-box,.usdt-addr-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.6rem 0.8rem;display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;}
+.pp-addr-box div,.usdt-addr-box div{font-size:0.75rem;font-family:monospace;flex:1;word-break:break-all;}
+.copy-btn{padding:0.3rem 0.6rem;border-radius:7px;background:var(--accent);color:white;font-size:0.65rem;font-weight:700;flex-shrink:0;}
+.pp-after,.usdt-after{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:0.8rem;margin-top:0.8rem;}
+.pp-after-title,.usdt-after-title{font-size:0.68rem;font-weight:700;color:var(--muted);margin-bottom:0.4rem;}
+.pp-after-step,.usdt-after-step{display:flex;align-items:flex-start;gap:0.4rem;font-size:0.72rem;color:var(--text2);margin-bottom:0.25rem;}
+.pp-contact,.usdt-contact{display:flex;gap:0.5rem;margin-top:0.7rem;}
+.pp-contact a,.usdt-contact a{flex:1;text-align:center;padding:0.5rem;border-radius:9px;font-size:0.72rem;font-weight:700;text-decoration:none;}
+.pp-contact .tg,.usdt-contact .tg{background:var(--accent);color:white;}
+.pp-close,.usdt-close{width:100%;padding:0.6rem;border-radius:11px;border:none;background:var(--surface2);color:var(--text2);font-size:0.78rem;margin-top:0.5rem;}
+.step-n{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--accent);color:white;font-size:0.6rem;font-weight:800;flex-shrink:0;}
+
+/* Trial modal */
+.trial-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:999999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);}
+.trial-modal-overlay.show{display:flex;}
+.trial-modal{background:var(--surface);border-radius:20px;width:100%;max-width:480px;padding:1.8rem;border:1px solid var(--border);box-shadow:0 24px 60px var(--shadow);}
+.trial-header{text-align:center;margin-bottom:1.2rem;}
+.trial-header h3{font-size:1.1rem;font-weight:900;margin-bottom:0.2rem;}
+.trial-header p{font-size:0.72rem;color:var(--text2);}
+.trial-console{background:var(--bg);border:1px solid var(--border);border-radius:12px;height:160px;overflow-y:auto;padding:0.7rem;margin-bottom:0.8rem;font-family:monospace;font-size:0.72rem;}
+.trial-console-line{margin-bottom:0.25rem;line-height:1.5;}
+.trial-console-line.system{color:var(--cyan);}
+.trial-console-line.action{color:var(--accent);}
+.trial-console-line.result{color:var(--green);}
+.trial-dot-row{display:flex;justify-content:center;gap:0.4rem;margin-bottom:0.8rem;}
+.trial-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--border2);}
+.trial-dot.used{background:var(--muted);border-color:var(--muted);}
+.trial-dot.available{background:var(--green);border-color:var(--green);box-shadow:0 0 6px rgba(16,185,129,0.5);}
+.trial-actions{display:flex;gap:0.5rem;}
+.trial-run-btn{flex:1;padding:0.65rem;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-size:0.82rem;font-weight:700;}
+.trial-close-btn{flex:1;padding:0.65rem;border-radius:11px;background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:0.82rem;}
+.trial-tips{font-size:0.68rem;color:var(--muted);text-align:center;margin-top:0.5rem;}
+
+/* Secret key modal */
+.secret-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:999999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);}
+.secret-modal-overlay.show{display:flex;}
+.secret-modal{background:var(--surface);border-radius:20px;width:100%;max-width:420px;padding:1.8rem;border:1px solid var(--border);box-shadow:0 24px 60px var(--shadow);}
+.secret-header{text-align:center;margin-bottom:1.2rem;}
+.secret-header-icon{font-size:2.5rem;margin-bottom:0.3rem;}
+.secret-header h3{font-size:1.1rem;font-weight:900;}
+.secret-header p{font-size:0.7rem;color:var(--text2);margin-top:0.2rem;}
+.secret-product{font-size:0.8rem;font-weight:700;text-align:center;padding:0.5rem 0.8rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;margin-bottom:0.6rem;}
+.secret-price-row{display:flex;justify-content:center;gap:0.5rem;align-items:center;margin-bottom:1rem;}
+.secret-price{font-size:1.5rem;font-weight:900;color:var(--accent);}
+.secret-usd{font-size:0.75rem;color:var(--text2);}
+.secret-input{width:100%;padding:0.7rem 0.9rem;border:1.5px solid var(--border);border-radius:11px;background:var(--surface2);color:var(--text);font-size:0.82rem;font-family:monospace;letter-spacing:0.06em;outline:none;margin-bottom:0.5rem;box-sizing:border-box;}
+.secret-input:focus{border-color:var(--accent);}
+.secret-input::placeholder{font-family:inherit;letter-spacing:0;opacity:0.6;}
+.secret-error{font-size:0.72rem;color:#ef4444;display:flex;align-items:center;gap:0.4rem;padding:0.4rem 0.6rem;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;margin-bottom:0.5rem;}
+@media(prefers-color-scheme:dark){.secret-error{background:#1a0000;border-color:#7f1d1d;}}
+.secret-unlock{width:100%;padding:0.75rem;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-size:0.85rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:0.4rem;}
+.secret-steps{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:0.8rem;margin-bottom:1rem;}
+.secret-steps-title{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.4rem;}
+.secret-step{display:flex;align-items:flex-start;gap:0.4rem;font-size:0.72rem;color:var(--text2);margin-bottom:0.25rem;}
+.secret-buy-row{display:flex;justify-content:center;gap:0.5rem;align-items:center;margin-bottom:0.8rem;font-size:0.75rem;color:var(--text2);}
+.secret-buy-row a{color:var(--accent);font-weight:700;}
+.secret-close-btn{width:100%;padding:0.6rem;border-radius:11px;border:none;background:var(--surface2);color:var(--text2);font-size:0.78rem;}
+
+/* Toast */
 #toast{
-  position:fixed;bottom:6rem;left:50%;
-  transform:translateX(-50%) translateY(60px);
-  background:rgba(0,0,0,0.97);color:var(--text);
-  padding:0.8rem 1.5rem;border-radius:14px;
-  font-size:0.85rem;font-weight:600;
-  border:1px solid rgba(0,0,0,0.3);
-  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  z-index:99999;pointer-events:none;
-  white-space:nowrap;backdrop-filter:blur(20px);
-  box-shadow:0 10px 40px rgba(0,0,0,0.6);
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text);padding:0.65rem 1.2rem;border-radius:12px;
+  font-size:0.82rem;font-weight:600;z-index:9999999;
+  box-shadow:0 8px 32px var(--shadow);transition:transform 0.3s ease;
+  white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis;
 }
 #toast.show{transform:translateX(-50%) translateY(0);}
 
-/* ═══════════════════════════════
-   PAYMENT MODAL
-═══════════════════════════════ */
-.pay-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:99999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px);}
-.pay-modal-overlay.show{display:flex;}
-.pay-modal{background:var(--surface);border:1px solid var(--border);border-radius:24px;width:100%;max-width:440px;overflow:hidden;animation:modalIn 0.25s ease;}
-@keyframes modalIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
-.pay-header{background:linear-gradient(135deg,var(--text),var(--text));padding:1.5rem;color:#fff;text-align:center;}
-.pay-header .pay-product{font-size:1.05rem;font-weight:800;margin-bottom:0.3rem;}
-.pay-price-line{display:flex;align-items:center;justify-content:center;gap:0.75rem;}
-.pay-cny{font-size:1.6rem;font-weight:900;}
-.pay-usd{font-size:0.8rem;opacity:0.8;}
-.pay-period{font-size:0.75rem;opacity:0.7;margin-top:0.2rem;}
-.pay-body{padding:1.25rem;}
-.pay-methods{display:flex;flex-direction:column;gap:0.65rem;margin-bottom:0.85rem;}
-.pay-method{display:flex;align-items:center;gap:0.85rem;padding:0.8rem 1rem;border:1.5px solid var(--border);border-radius:14px;cursor:pointer;transition:all 0.2s;text-decoration:none;color:inherit;background:var(--surface2);}
-.pay-method:hover{border-color:var(--text);background:rgba(0,0,0,0.08);box-shadow:0 0 0 3px rgba(0,0,0,0.12);}
-.pay-method-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
-.pay-method-info{flex:1;}
-.pay-method-name{font-size:0.86rem;font-weight:700;margin-bottom:0.12rem;}
-.pay-method-desc{font-size:0.68rem;color:var(--text2);line-height:1.4;}
-.pay-method-arrow{color:var(--text2);font-size:1.1rem;}
-.pay-divider{text-align:center;position:relative;margin:0.4rem 0;}
-.pay-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border);}
-.pay-divider span{background:var(--surface);padding:0 0.75rem;position:relative;font-size:0.68rem;color:var(--text2);}
-.pay-after{background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.2);border-radius:14px;padding:0.85rem;}
-.pay-after-title{font-size:0.72rem;font-weight:700;color:var(--text2);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.08em;}
-.pay-after-steps{display:flex;flex-direction:column;gap:0.35rem;}
-.pay-after-step{display:flex;align-items:flex-start;gap:0.45rem;font-size:0.75rem;color:var(--text2);line-height:1.4;}
-.step-n{width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,0.15);color:var(--text2);font-size:0.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.pay-contact{display:flex;gap:0.55rem;margin-top:0.8rem;}
-.pay-contact-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0.35rem;padding:0.6rem;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;font-size:0.73rem;font-weight:600;color:var(--text);transition:all 0.2s;text-decoration:none;}
-.pay-contact-btn:hover{background:var(--text);border-color:var(--text);color:#fff;}
-.pay-contact-btn.telegram{color:#229ED9;}
-.pay-contact-btn.telegram:hover{background:#229ED9;border-color:#229ED9;color:#fff;}
-.pay-close-btn{width:100%;padding:0.7rem;border-radius:12px;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.8rem;margin-top:0.7rem;transition:background 0.2s;}
-.pay-close-btn:hover{background:var(--border);}
-
-/* ════════════════════════════════════
-   USDT QR MODAL
-════════════════════════════════════ */
-.secret-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px);}
-.secret-modal-overlay.show{display:flex;}
-.secret-modal{background:var(--surface);border-radius:20px;width:100%;max-width:420px;padding:1.8rem;box-shadow:0 24px 60px rgba(0,0,0,0.4);border:1px solid var(--border);}
-.secret-header{display:flex;flex-direction:column;align-items:center;gap:0.3rem;margin-bottom:1.4rem;}
-.secret-header-icon{font-size:2.8rem;line-height:1;}
-.secret-header-title{font-size:1.35rem;font-weight:800;color:var(--text);}
-.secret-header-sub{font-size:0.72rem;color:var(--text2);text-align:center;line-height:1.5;margin-top:0.2rem;}
-.secret-product-row{font-size:0.85rem;font-weight:700;color:var(--text);text-align:center;margin-bottom:0.4rem;padding:0.6rem 1rem;background:var(--surface2);border-radius:10px;border:1px solid var(--border);}
-.secret-price-row{display:flex;align-items:center;justify-content:center;gap:0.6rem;margin-bottom:1.2rem;}
-.secret-price{font-size:1.6rem;font-weight:800;color:var(--accent);}
-.secret-usd{font-size:0.8rem;color:var(--text2);}
-.secret-form{display:flex;flex-direction:column;gap:0.7rem;margin-bottom:1.2rem;}
-.secret-input-wrap{position:relative;}
-.secret-input{width:100%;padding:0.75rem 2.5rem 0.75rem 0.9rem;border:1.5px solid var(--border);border-radius:12px;background:var(--surface2);color:var(--text);font-size:0.82rem;font-family:monospace;letter-spacing:0.06em;outline:none;box-sizing:border-box;transition:border-color 0.2s;}
-.secret-input:focus{border-color:var(--accent);}
-.secret-input::placeholder{font-family:inherit;letter-spacing:0;opacity:0.6;}
-.secret-input-clear{position:absolute;right:0.8rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text2);cursor:pointer;font-size:0.8rem;padding:0.2rem;line-height:1;}
-.secret-error{font-size:0.75rem;color:#ef4444;display:flex;align-items:center;gap:0.4rem;padding:0.5rem 0.7rem;background:#fef2f2;border-radius:8px;border:1px solid #fecaca;}
-@media(prefers-color-scheme:dark){.secret-error{background:#1a0000;border-color:#7f1d1d;}}
-.secret-unlock-btn{width:100%;padding:0.8rem;border-radius:13px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;font-size:0.88rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
-.secret-unlock-btn:hover{opacity:0.9;}
-.secret-unlock-btn:active{transform:scale(0.98);}
-.secret-steps{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:0.9rem;margin-bottom:1rem;}
-.secret-step-title{font-size:0.72rem;font-weight:700;color:var(--text2);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.08em;}
-.secret-step{display:flex;align-items:flex-start;gap:0.45rem;font-size:0.75rem;color:var(--text2);line-height:1.4;margin-bottom:0.3rem;}
-.secret-buy-row{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:1rem;}
-.secret-buy-label{font-size:0.75rem;color:var(--text2);}
-.secret-buy-btn{font-size:0.75rem;font-weight:700;color:var(--accent);text-decoration:none;}
-.secret-buy-btn:hover{text-decoration:underline;}
-.secret-close-btn{width:100%;padding:0.7rem;border-radius:12px;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.8rem;margin-top:0.2rem;transition:background 0.2s;}
-.secret-close-btn:hover{background:var(--border);}
-
-.usdt-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px);}
-.usdt-modal-overlay.show{display:flex;}
-.usdt-modal{background:var(--surface);border:1px solid var(--border);border-radius:24px;width:100%;max-width:360px;overflow:hidden;animation:modalIn 0.25s ease;}
-.usdt-header{background:linear-gradient(135deg,#26a17b,#1a7a5e);padding:1.25rem;color:#fff;text-align:center;}
-.usdt-header-title{font-size:1.1rem;font-weight:900;margin-bottom:0.2rem;}
-.usdt-header-sub{font-size:0.72rem;opacity:0.8;}
-.usdt-body{padding:1.5rem;text-align:center;}
-.usdt-qr-box{background:#fff;border-radius:16px;padding:1rem;display:inline-block;margin-bottom:1.2rem;}
-.usdt-qr-box img{display:block;width:180px;height:180px;}
-.usdt-addr-label{font-size:0.65rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;}
-.usdt-addr-box{display:flex;align-items:center;gap:0.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.6rem 0.75rem;margin-bottom:0.4rem;}
-.usdt-addr-text{flex:1;font-size:0.72rem;font-family:monospace;color:var(--text);word-break:break-all;line-height:1.4;}
-.usdt-copy-btn{flex-shrink:0;background:linear-gradient(135deg,#26a17b,#1a7a5e);color:#fff;border:none;padding:0.35rem 0.75rem;border-radius:7px;font-size:0.7rem;font-weight:700;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;}
-.usdt-copy-btn:hover{opacity:0.85;}
-.usdt-copy-btn.copied{background:var(--text2);}
-.usdt-note{font-size:0.68rem;color:var(--text2);margin-bottom:1rem;line-height:1.5;}
-.usdt-after{background:rgba(128,128,128,0.08);border:1px solid rgba(128,128,128,0.2);border-radius:12px;padding:0.8rem;margin-bottom:1rem;text-align:left;}
-.usdt-after-title{font-size:0.65rem;font-weight:700;color:#26a17b;margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.08em;}
-.usdt-after-step{display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--text2);margin-bottom:0.25rem;}
-.usdt-after-step .step-n{width:16px;height:16px;border-radius:50%;background:rgba(128,128,128,0.15);color:#26a17b;font-size:0.58rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.usdt-contact{display:flex;gap:0.5rem;}
-.usdt-contact-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0.3rem;padding:0.6rem;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--text);transition:all 0.2s;text-decoration:none;}
-.usdt-contact-btn:hover{background:#26a17b;border-color:#26a17b;color:#fff;}
-.usdt-contact-btn.telegram{color:#229ED9;}
-.usdt-contact-btn.telegram:hover{background:#229ED9;border-color:#229ED9;color:#fff;}
-.usdt-close-btn{width:100%;padding:0.65rem;border-radius:12px;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.78rem;margin-top:0.6rem;transition:background 0.2s;}
-.usdt-close-btn:hover{background:var(--border);}
-
-/* ════════════════════════════════════
-   PAYPAL QR MODAL
-════════════════════════════════════ */
-.pp-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:999999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px);}
-.pp-modal-overlay.show{display:flex;}
-.pp-modal{background:var(--surface);border:1px solid var(--border);border-radius:24px;width:100%;max-width:360px;overflow:hidden;animation:modalIn 0.25s ease;}
-.pp-header{background:linear-gradient(135deg,#0070ba,#003087);padding:1.25rem;color:#fff;text-align:center;}
-.pp-header-title{font-size:1.1rem;font-weight:900;margin-bottom:0.2rem;}
-.pp-header-sub{font-size:0.72rem;opacity:0.85;}
-.pp-body{padding:1.5rem;text-align:center;}
-.pp-qr-box{background:#fff;border-radius:16px;padding:1rem;display:inline-block;margin-bottom:1.2rem;}
-.pp-qr-box img{display:block;width:180px;height:180px;}
-.pp-addr-label{font-size:0.65rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;}
-.pp-addr-box{display:flex;align-items:center;gap:0.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.6rem 0.75rem;margin-bottom:0.5rem;}
-.pp-addr-text{flex:1;font-size:0.72rem;font-family:monospace;color:var(--text);word-break:break-all;line-height:1.4;}
-.pp-note{font-size:0.68rem;color:var(--text2);margin-bottom:1rem;line-height:1.5;}
-.pp-amount-hint{background:rgba(128,128,128,0.08);border:1px solid rgba(128,128,128,0.2);border-radius:10px;padding:0.7rem;margin-bottom:1rem;text-align:left;}
-.pp-amount-hint .pp-amount-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;font-size:0.72rem;color:var(--text2);}
-.pp-amount-hint .pp-amount-val{font-weight:700;color:var(--text);font-size:0.88rem;}
-.pp-note-hint{font-size:0.65rem;color:var(--text2);opacity:0.8;margin-top:0.3rem;}
-.pp-after{background:rgba(128,128,128,0.08);border:1px solid rgba(128,128,128,0.2);border-radius:12px;padding:0.8rem;margin-bottom:1rem;text-align:left;}
-.pp-after-title{font-size:0.65rem;font-weight:700;color:#0070ba;margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.08em;}
-.pp-after-step{display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:var(--text2);margin-bottom:0.25rem;}
-.pp-after-step .step-n{width:16px;height:16px;border-radius:50%;background:rgba(128,128,128,0.15);color:#0070ba;font-size:0.58rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.pp-contact{display:flex;gap:0.5rem;}
-.pp-contact-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0.3rem;padding:0.6rem;border-radius:10px;border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;font-size:0.72rem;font-weight:600;color:var(--text);transition:all 0.2s;text-decoration:none;}
-.pp-contact-btn:hover{background:#0070ba;border-color:#0070ba;color:#fff;}
-.pp-contact-btn.telegram{color:#229ED9;}
-.pp-contact-btn.telegram:hover{background:#229ED9;border-color:#229ED9;color:#fff;}
-.pp-close-btn{width:100%;padding:0.65rem;border-radius:12px;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.78rem;margin-top:0.6rem;transition:background 0.2s;}
-.pp-close-btn:hover{background:var(--border);}
-
-/* ═══════════════════════════════
-   BOTTOM NAV
-═══════════════════════════════ */
-.bottom-nav{
-  display:none;position:fixed;bottom:0;left:0;right:0;z-index:300;
-  background:rgba(0,0,0,0.92);backdrop-filter:blur(30px) saturate(180%);
-  -webkit-backdrop-filter:blur(30px) saturate(180%);
-  border-top:1px solid var(--border);
-  padding:0.4rem 0 calc(env(safe-area-inset-bottom) + 0.5rem);
-  box-shadow:0 -4px 30px rgba(0,0,0,0.5);
-}
-.bnav{display:flex;justify-content:space-around;align-items:center;}
-.bnav-btn{
-  display:flex;flex-direction:column;align-items:center;gap:0.15rem;
-  background:none;border:none;color:var(--muted);
-  cursor:pointer;padding:0.35rem 1rem;transition:all 0.2s;
-  font-size:0.6rem;font-weight:600;position:relative;
-}
-.bnav-btn.active,.bnav-btn:hover{color:var(--text2);}
-.bnav-btn.active::before{
-  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:18px;height:2px;border-radius:2px;
-  background:var(--text2);box-shadow:0 0 6px rgba(0,0,0,0.5);
-}
-.bnav-icon{font-size:1.25rem;line-height:1;}
-
-/* ═══════════════════════════════
-   RESPONSIVE
-═══════════════════════════════ */
+/* Mobile toggle */
+.sidebar-toggle{display:none;padding:0.4rem 0.6rem;border-radius:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:1rem;}
 @media(max-width:768px){
-  .stats{grid-template-columns:repeat(2,1fr);}
-  .stat-val{font-size:2.2rem;}
-  .how-steps{grid-template-columns:1fr 1fr;}
-  .testi-grid{grid-template-columns:1fr;}
+  .sidebar-toggle{display:flex;align-items:center;justify-content:center;}
+  .header-nav{display:none;}
+  .chat-welcome-title{font-size:1.2rem;}
 }
-@media(max-width:640px){
-  .bottom-nav{display:block;}
-  body{padding-bottom:72px;}
-  .grid{grid-template-columns:1fr;}
-  .stats{grid-template-columns:repeat(2,1fr);}
-  .how-steps{grid-template-columns:1fr 1fr;}
-  .hero{padding:3.5rem 1.5rem 2.5rem;}
-  .header-inner{padding:0 1rem;}
-}
-
-
-/* TRIAL MODAL */
-.trial-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:999998;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px);}
-.trial-modal-overlay.show{display:flex;}
-.trial-modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:500px;overflow:hidden;animation:modalIn 0.25s ease;}
-.trial-header{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:1.25rem;text-align:center;}
-.trial-header-title{font-size:1.1rem;font-weight:800;}
-.trial-header-sub{font-size:0.75rem;opacity:0.85;margin-top:0.2rem;}
-.trial-body{padding:1.5rem;}
-.trial-product{display:flex;align-items:center;gap:1rem;background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1.2rem;}
-.trial-product-icon{font-size:2rem;}
-.trial-product-info{flex:1;}
-.trial-product-name{font-size:0.95rem;font-weight:700;margin-bottom:0.2rem;}
-.trial-product-desc{font-size:0.75rem;color:var(--text2);line-height:1.4;}
-.trial-console{background:#0a0e1a;color:#00ff00;border-radius:12px;padding:1rem;min-height:140px;font-family:monospace;font-size:0.78rem;line-height:1.7;overflow-y:auto;max-height:220px;margin-bottom:1rem;}
-.trial-console-line{margin-bottom:0.15rem;}
-.trial-console-line.system{color:#8896b0;}
-.trial-console-line.action{color:#e8edf8;}
-.trial-console-line.result{color:#4ade80;}
-.trial-counter{display:flex;align-items:center;justify-content:center;gap:0.5rem;font-size:0.75rem;color:var(--text2);margin-bottom:0.8rem;}
-.trial-counter-dots{display:flex;gap:0.4rem;}
-.trial-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--border);}
-.trial-dot.used{background:var(--accent);}
-.trial-dot.avail{background:var(--surface2);}
-.trial-actions{display:flex;gap:0.5rem;}
-.trial-actions button{flex:1;padding:0.65rem;border-radius:10px;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
-.trial-run{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;}
-.trial-run:hover{opacity:0.85;}
-.trial-run:disabled{opacity:0.4;}
-.trial-buy{background:transparent;border:1.5px solid var(--border);color:var(--text);}
-.trial-buy:hover{background:var(--surface2);}
-.trial-close{width:100%;padding:0.6rem;border-radius:10px;border:none;background:var(--surface2);color:var(--text2);cursor:pointer;font-size:0.8rem;margin-top:0.5rem;transition:background 0.2s;}
-.trial-close:hover{background:var(--border);}
-
-/* TRY BUTTON */
-.btn-try{background:linear-gradient(135deg,var(--cyan),#0891b2);color:#fff;border:none;padding:0.4rem 0.7rem;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-.btn-try:hover{opacity:0.85;transform:translateY(-1px);}
-.btn-try:disabled{opacity:0.35;cursor:not-allowed;}
-
   </style>
 </head>
 <body>
-<div class="bg-canvas">
-  <div class="bg-grid"></div>
-  <div class="bg-orb bg-orb-1"></div>
-  <div class="bg-orb bg-orb-2"></div>
-  <div class="bg-orb bg-orb-3"></div>
-</div>
-<div id="particles"></div>
 
 <div class="app">
-
-<!-- HEADER -->
-<header>
-  <div class="header-inner">
-    <a href="#" class="logo" onclick="scrollToTop(event)">
-      <div class="logo-mark">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="9" stroke="var(--text)" stroke-width="2"/>
-          <path d="M8 12 L11 15 L16 9" stroke="var(--text2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div>
-        <div class="logo-text">AI超市</div>
-        <span class="logo-sub">AI AGENT POWERED</span>
-      </div>
-    </a>
+  <!-- HEADER -->
+  <header class="header">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="header-logo">
+      <div class="header-logo-icon">🛒</div>
+      <div class="header-logo-text">AI<span>超市</span></div>
+    </div>
+    <nav class="header-nav">
+      <button class="header-nav-btn active" onclick="switchMainView('chat')">💬 对话</button>
+      <button class="header-nav-btn" onclick="switchMainView('store')">🏪 商店</button>
+    </nav>
     <div class="header-right">
-      <button class="notif-btn" onclick="requestNotification()">
-        <span class="notif-dot"></span>
-        实时通知
-      </button>
-      <button class="install-btn" id="install-btn" onclick="triggerInstall()">
-        📲 安装APP
-      </button>
+      <div class="header-status"><div class="header-status-dot"></div>在线</div>
     </div>
-  </div>
-</header>
+  </header>
 
-  <!-- HERO — completely redesigned -->
-  <section class="hero" id="hero">
-    <div class="hero-glow"></div>
-    <div class="hero-inner">
-      <div class="hero-badge"><span class="dot"></span>全自动运营 · 每天09:00上架</div>
-      <h1 class="hero-title">买AI能力<br><span class="hero-highlight">像买菜一样简单</span></h1>
-      <p class="hero-sub">一站式AI技能市场，<strong>17款精选工具</strong>覆盖自动化、内容、电商、开发。<br class="br-desktop">订阅通知，新品第一时间到手！</p>
-      
-      <!-- Social proof bar -->
-      <div class="hero-social">
-        <div class="social-avatars">
-          <span class="s-avatar" style="background:linear-gradient(135deg,var(--text),var(--text2))">李</span>
-          <span class="s-avatar" style="background:linear-gradient(135deg,var(--text2),#06b6d4)">王</span>
-          <span class="s-avatar" style="background:linear-gradient(135deg,var(--text2),#f472b6)">张</span>
-          <span class="s-avatar" style="background:linear-gradient(135deg,var(--text2),#34d399)">陈</span>
-        </div>
-        <div class="social-text">
-          <strong>1000+</strong> 活跃用户正在使用<br>
-          <span class="rating-stars">★★★★★ <span style="opacity:0.6">4.9/5</span></span> · 真实评价
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab active" id="tab-owned" onclick="switchSidebarTab('owned')">🛡️ 已购技能</button>
+        <button class="sidebar-tab" id="tab-store" onclick="switchSidebarTab('store')">🏪 商店</button>
+      </div>
+      <div class="sidebar-search">
+        <div class="search-wrap">
+          <input class="search-input" id="sidebar-search" placeholder="搜索技能或商品…" oninput="onSidebarSearch(this.value)"/>
+          <span class="search-icon">🔍</span>
         </div>
       </div>
+      <div id="sidebar-list"></div>
+    </aside>
 
-      <div class="hero-actions">
-        <button class="btn-primary" onclick="document.getElementById('search-input').focus()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#fff" stroke-width="2.5"/><path d="M20 20L16.5 16.5" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
-          浏览全部商品
-        </button>
-        <button class="btn-outline" onclick="triggerInstall()">
-          📲 安装APP
-        </button>
-      </div>
-
-      <!-- Trust tags — more visual -->
-      <div class="trust-tags">
-        <span class="trust-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>1000+用户</span>
-        <span class="trust-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>17款精选</span>
-        <span class="trust-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>PayPal安全支付</span>
-        <span class="trust-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>专属客服</span>
-      </div>
-    </div>
-
-    <!-- Hero visual panel -->
-    <div class="hero-visual">
-      <div class="product-showcase">
-        <div class="showcase-card showcase-card-1">
-          <div class="sc-emoji">⚡</div>
-          <div class="sc-info"><div class="sc-name">GitHub自动化</div><div class="sc-price">¥99/月</div></div>
-          <div class="sc-badge">热门</div>
+    <!-- CHAT AREA -->
+    <main class="chat-area" id="chat-area">
+      <div id="chat-welcome" class="chat-welcome">
+        <div class="chat-welcome-icon">🛒</div>
+        <div class="chat-welcome-title">欢迎来到 AI超市</div>
+        <div class="chat-welcome-desc">购买AI技能后，在这里直接对话使用。<br/>左侧选择技能，或去商店选购。</div>
+        <div class="chat-welcome-hint">
+          <span class="chat-welcome-chip">⚡ GitHub自动化</span>
+          <span class="chat-welcome-chip">📣 内容推流</span>
+          <span class="chat-welcome-chip">🔍 智能爬虫</span>
+          <span class="chat-welcome-chip">🛡️ 安全审计</span>
+          <span class="chat-welcome-chip">📊 数据库操作</span>
         </div>
-        <div class="showcase-card showcase-card-2">
-          <div class="sc-emoji">📣</div>
-          <div class="sc-info"><div class="sc-name">内容推流</div><div class="sc-price">¥199/月</div></div>
-          <div class="sc-badge sc-badge-new">新品</div>
-        </div>
-        <div class="showcase-card showcase-card-3">
-          <div class="sc-emoji">🔗</div>
-          <div class="sc-info"><div class="sc-name">n8n工作流</div><div class="sc-price">¥149/月</div></div>
-        </div>
-        <div class="showcase-bg"></div>
+        <button class="store-btn store-btn-buy" style="max-width:200px;" onclick="switchSidebarTab('store')">🏪 逛商店</button>
       </div>
-    </div>
-  </section>
-
-  <!-- B: FEATURED SECTION — Editor's Picks (NEW!) -->
-  <section class="featured-section" id="featured">
-    <div class="featured-inner">
-      <div class="section-header">
-        <div class="section-eyebrow">✨ 编辑精选</div>
-        <h2 class="section-title">本周最受欢迎</h2>
-        <p class="section-sub">根据销量和用户反馈，挑选出最值得入手的几款</p>
-      </div>
-      <div class="featured-grid">
-        <div class="featured-card featured-card-lg" onclick="openModal('github-automation')">
-          <div class="fc-icon">⚡</div>
-          <div class="fc-body">
-            <div class="fc-cat">自动化</div>
-            <div class="fc-name">GitHub Agent自动化系统</div>
-            <div class="fc-desc">全自动GitHub运营，AI日报生成</div>
-            <div class="fc-rating">★★★★★ <span>4.9</span> · 128条评价</div>
+      <div id="chat-session" style="display:none;flex-direction:column;height:100%;">
+        <div class="chat-header" id="chat-header">
+          <div class="chat-header-icon" id="chat-header-icon">🤖</div>
+          <div class="chat-header-info">
+            <div class="chat-header-name" id="chat-header-name">—</div>
+            <div class="chat-header-sub" id="chat-header-sub">选择技能开始对话</div>
           </div>
-          <div class="fc-footer">
-            <div class="fc-price">¥99<span>/月</span></div>
-            <button class="fc-btn" onclick="event.stopPropagation();pay('github-automation')">💳 购买</button>
-          </div>
-          <div class="fc-ribbon">编辑推荐</div>
-        </div>
-        <div class="featured-col">
-          <div class="featured-card" onclick="openModal('content-promoter')">
-            <div class="fc-icon">📣</div>
-            <div class="fc-body">
-              <div class="fc-cat">内容</div>
-              <div class="fc-name">AI内容推流系统</div>
-              <div class="fc-rating">★★★★★ <span>4.8</span></div>
-            </div>
-            <div class="fc-footer"><div class="fc-price">¥199<span>/月</span></div><button class="fc-btn-sm" onclick="event.stopPropagation();pay('content-promoter')">→</button></div>
-            <div class="fc-badge-sm">热门</div>
-          </div>
-          <div class="featured-card" onclick="openModal('n8n-workflow')">
-            <div class="fc-icon">🔗</div>
-            <div class="fc-body">
-              <div class="fc-cat">自动化</div>
-              <div class="fc-name">n8n工作流系统</div>
-              <div class="fc-rating">★★★★☆ <span>4.7</span></div>
-            </div>
-            <div class="fc-footer"><div class="fc-price">¥149<span>/月</span></div><button class="fc-btn-sm" onclick="event.stopPropagation();pay('n8n-workflow')">→</button></div>
+          <div class="chat-header-actions">
+            <button class="chat-action-btn" onclick="clearChat()">🗑️ 清空</button>
+            <button class="chat-action-btn" onclick="switchSidebarTab('store')">🏪 商店</button>
           </div>
         </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input-area">
+          <div class="chat-input-wrap">
+            <textarea class="chat-input" id="chat-input" rows="1" placeholder="输入你的问题…" oninput="autoResize(this)" onkeydown="onChatKeydown(event)"></textarea>
+            <button class="chat-send-btn" id="chat-send-btn" onclick="sendMessage()">↑</button>
+          </div>
+          <div class="chat-input-hint">按 Enter 发送，Shift+Enter 换行 · 购买技能后即可对话</div>
+        </div>
       </div>
-    </div>
-  </section>
-
-    <!-- STATS — redesigned with icons -->
-  <div style="max-width:1000px;margin:0 auto;padding:0 1.5rem 3rem;">
-    <div class="stats">
-      <div class="stat-cell"><div class="stat-icon-sm">⚡</div><div class="stat-val" id="counter-tools">0</div><div class="stat-label">精选AI工具</div></div>
-      <div class="stat-cell"><div class="stat-icon-sm">📂</div><div class="stat-val">10</div><div class="stat-label">覆盖分类</div></div>
-      <div class="stat-cell"><div class="stat-icon-sm">👥</div><div class="stat-val">1000+</div><div class="stat-label">活跃用户</div></div>
-      <div class="stat-cell"><div class="stat-icon-sm">⭐</div><div class="stat-val">4.9</div><div class="stat-label">平均评分</div></div>
-    </div>
-  </div>
-
-  <!-- FILTER BAR -->
-<div class="filter-bar" id="filter-bar">
-  <div class="filter-inner">
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input class="search-input" id="search-input" type="search" placeholder="搜索 AI 技能、功能或分类…" oninput="onSearch(this.value)"/><button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
-    </div>
-    <select class="sort-select" id="sort-select" onchange="onSort(this.value)">
-      <option value="default">综合排序</option>
-      <option value="price-asc">价格 ↑ 低到高</option>
-      <option value="price-desc">价格 ↓ 高到低</option>
-      <option value="name">按名称 A→Z</option>
-    </select>
-    <div class="view-toggle">
-      <button class="view-btn active" id="view-grid" onclick="setView('grid')" title="网格视图">⊞</button>
-      <button class="view-btn" id="view-list" onclick="setView('list')" title="列表视图">☰</button>
-    </div>
+    </main>
   </div>
 </div>
 
-<!-- CATEGORY TABS -->
-<div class="cat-section">
-  <div class="cat-tabs" id="cat-tabs"></div>
-</div>
-
-<!-- MAIN GRID -->
-<main class="main">
-  <div class="grid-wrap">
-    <div class="grid" id="grid"></div>
-    <div class="no-results" id="no-results">
-      <div class="icon">🔍</div>
-      <div class="title">没有找到相关商品</div>
-      <div class="sub">试试其他关键词或切换分类</div>
-      <button class="reset-btn" onclick="resetFilters()">↺ 重置筛选</button>
-    </div>
-  </div>
-</main>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials" id="testimonials">
-  <div class="testi-eyebrow">真实评价</div>
-  <div class="testi-title">用户怎么说</div>
-  <div class="testi-grid">
-    <div class="testi-card">
-      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-      <div class="testi-text">"GitHub Agent自动化系统太省心了！每天自动追踪Trending，省了我大量时间，强烈推荐！"</div>
-      <div class="testi-author">
-        <div class="testi-avatar" style="background:rgba(0,0,0,0.2);">林</div>
-        <div><div class="testi-name">林同学</div><div class="testi-role">独立开发者</div></div>
-      </div>
-    </div>
-    <div class="testi-card">
-      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-      <div class="testi-text">"AI内容推流系统帮我把内容发布效率提升了5倍，终于不用手动一个个平台发了，赞！"</div>
-      <div class="testi-author">
-        <div class="testi-avatar" style="background:rgba(128,128,128,0.2);">张</div>
-        <div><div class="testi-name">张运营</div><div class="testi-role">新媒体运营</div></div>
-      </div>
-    </div>
-    <div class="testi-card">
-      <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>☆</span></div>
-      <div class="testi-text">"n8n工作流模板太全了，直接导入改一改就用，省去了大量配置时间，性价比超高。"</div>
-      <div class="testi-author">
-        <div class="testi-avatar" style="background:rgba(128,128,128,0.2);">王</div>
-        <div><div class="testi-name">王技术</div><div class="testi-role">自动化工程师</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how" id="how">
-  <div class="how-eyebrow">How it works</div>
-  <div class="how-title">三步开启AI能力</div>
-  <div class="how-steps">
-    <div class="how-step">
-      <div class="step-num">🔍</div>
-      <div class="step-title">浏览商品</div>
-      <div class="step-desc">按分类浏览或搜索需要的AI技能，查看功能介绍与用户评价</div>
-    </div>
-    <div class="how-step">
-      <div class="step-num">💳</div>
-      <div class="step-title">付款解锁</div>
-      <div class="step-desc">PayPal / 微信 / 支付宝均可付款，付款后联系客服获取下载链接</div>
-    </div>
-    <div class="how-step">
-      <div class="step-num">📦</div>
-      <div class="step-title">下载使用</div>
-      <div class="step-desc">客服确认后发送GitHub下载链接，立即开始使用你的AI工具</div>
-    </div>
-    <div class="how-step">
-      <div class="step-num">🔔</div>
-      <div class="step-title">实时通知</div>
-      <div class="step-desc">开启浏览器通知，新商品上架第一时间收到提醒，永不错过</div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section" id="cta">
-  <h2>📲 把AI超市装进口袋</h2>
-  <p>安装后像原生APP一样使用，新品上线第一时间收到通知提醒！</p>
-  <div class="cta-actions">
-    <button class="btn-primary" onclick="triggerInstall()">📲 免费安装APP</button>
-    <button class="btn-outline" onclick="requestNotification()">🔔 开启通知提醒</button>
-  </div>
-  <p class="cta-note">支持 iOS Safari / Android Chrome / 桌面浏览器 · 完全离线可用</p>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">AI超市</div>
-  <p class="footer-desc">一站式AI能力交易市场，让AI能力触手可及。</p>
-  <div class="footer-links">
-    <a href="#products">全部商品</a>
-    <a href="#how">使用说明</a>
-    <a href="#cta">安装APP</a>
-    <a href="https://github.com/nima54851/ai-supermarket" target="_blank">GitHub</a>
-    <a href="https://t.me/diquchaxun78_bot" target="_blank">在线客服</a>
-  </div>
-  <div class="footer-payments">
-    <span class="payment-badge">💳 PayPal</span>
-    <span class="payment-badge">🔐 安全交易</span>
-    <span class="payment-badge">📦 GitHub下载</span>
-    <span class="payment-badge">🚀 快速发货</span>
-  </div>
-  <div class="footer-contact">
-    <a href="mailto:yinanzo@hotmail.com">📧 yinanzo@hotmail.com</a>
-    <a href="https://t.me/diquchaxun78_bot" target="_blank">💬 @diquchaxun78_bot</a>
-  </div>
-  <div class="divider"></div>
-  <p>Powered by AI Agent · 每天09:00自动上架 · 全自动运维</p>
-  <p style="margin-top:0.4rem;">© 2026 AI超市 · All rights reserved</p>
-</footer>
-</div><!-- .app -->
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-icon" id="modal-icon">📱</div>
-      <div class="modal-meta">
-        <div class="modal-name" id="modal-name"></div>
-        <div class="modal-cat" id="modal-cat"></div>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-desc" id="modal-desc"></div>
-      <div class="modal-section-title">功能亮点</div>
-      <div class="modal-features" id="modal-features"></div>
-    </div>
-    <div class="modal-footer">
-      <div class="modal-price-info">
-        <div class="modal-price" id="modal-price"></div>
-        <div class="modal-price-note" id="modal-period"></div>
-        <div class="modal-payment">支持 PayPal / 微信 / 支付宝 · 付款后立即发货</div>
-      </div>
-      <div class="modal-btns">
-        <button class="btn-modal-close" onclick="closeModal()">关闭</button>
-        <button class="btn-modal-buy" id="modal-buy-btn">💳 立即购买</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- INSTALL BANNER -->
-<div id="install-banner">
-  <div class="banner-text">
-    <strong>立即安装 AI超市</strong>
-    <span>添加到主屏幕，随时快速访问</span>
-  </div>
-  <div class="banner-btns">
-    <button class="btn-banner-later" onclick="dismissBanner()">稍后</button>
-    <button class="btn-banner-install" onclick="triggerInstall()">📲 安装</button>
-  </div>
-</div>
-
-<!-- NOTIFY BANNER -->
-<div id="notify-banner">
-  <div class="notify-row">
-    <div class="notify-icon">🔔</div>
-    <div class="notify-body">
-      <strong>开启新品通知提醒？</strong>
-      <span>订阅后，新商品上架第一时间通知你！</span>
-    </div>
-  </div>
-  <div class="notify-btns">
-    <button class="notify-yes" onclick="requestNotification()">开启通知</button>
-    <button class="notify-no" onclick="dismissNotifyBanner()">暂不需要</button>
-  </div>
-</div>
-
-<!-- PAYMENT MODAL -->
+<!-- PAY MODAL -->
 <div class="pay-modal-overlay" id="pay-modal">
   <div class="pay-modal">
     <div class="pay-header">
-      <div class="pay-product" id="pay-product-name">—</div>
+      <div class="pay-product-name" id="pay-product-name">—</div>
       <div class="pay-price-line">
         <span class="pay-cny" id="pay-cny-price">¥—</span>
         <span class="pay-usd" id="pay-usd-price">≈ $— USD</span>
-        <span class="pay-usd" id="pay-usdt-price" style="opacity:0.75;">≈ — USDT</span>
       </div>
       <div class="pay-period">月付 · 随时可续 · 自动发货</div>
     </div>
-    <div class="pay-body">
-      <div class="pay-methods">
-        <a class="pay-method" id="pay-btn-paypal" href="#" href="#" onclick="showPayPalQR(payId);return false;">
-          <div class="pay-method-icon" style="background:#e8f0ff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#0070ba"/><path d="M7.5 18c.9 0 1.8-.7 2.3-1.7H12c1.4 0 2.8-.5 3.8-1.4.9-.9 1.4-2.1 1.4-3.4 0-.5 0-1-.1-1.4H20c.3 1.6.3 3.3-.3 4.8-.5 1.3-1.5 2.4-2.8 3.1H10.8c-.5 1-1.3 1.7-2.3 1.7s-1.7-.6-1.7-1.5c0-.4.1-.8.3-1.1l.7-1.5.7-1.5c.2-.3.3-.7.3-1.1 0-.9-.7-1.6-1.6-1.6C5.3 13.9 4 15.3 4 17c0 2 1.6 3.5 3.5 3.5zm0 0c-.9 0-1.8-.7-2.3-1.7H2c0 2.1 1.5 3.8 3.5 4.2V18z" fill="white"/></svg></div>
-          <div class="pay-method-info">
-            <div class="pay-method-name">💳 PayPal 扫码支付</div>
-            <div class="pay-method-desc">扫码打开 PayPal，确认金额即可付款</div>
-          </div>
-          <div class="pay-method-arrow">›</div>
-        </a>
-        <a class="pay-method" id="pay-btn-wechat" href="https://t.me/diquchaxun78_bot" target="_blank" rel="noopener">
-          <div class="pay-method-icon" style="background:#e8f5e9;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#07c160"/><path d="M8.5 11c.4-.4.9-.5 1.3 0 .4.5.4 1 0 1.3l-.3.3c-.4.4-.9.5-1.3 0s-.4-1 0-1.3l.3-.3z" fill="white"/><path d="M12.5 11c.4-.4.9-.5 1.3 0 .4.5.4 1 0 1.3l-.3.3c-.4.4-.9.5-1.3 0s-.4-1 0-1.3l.3-.3z" fill="white"/><path d="M12 14.5c-2.2 0-4-1-4-2.2C8 10.5 9.2 9.5 10.5 9.5c.7 0 1.4.2 1.8.5-.9 0-2.3.5-2.3 2.2 0 .5.5 1 1.4 1s1.4-.5 1.4-1.4c0 0 1 0 1 1v1h.4c.9 0 1.4-.5 1.4-1.4 0-1-.5-1.8-1.4-2.3 0 0 1.8-.5 2.7.5.9 1 .9 2.2.9 4s-.5 1-1 1-.9.4-.9 1 .4 1 .9 1h1.4c1.4 0 2.2-1 2.2-2.2s-.9-2.2-2.2-2.2h-1.4c-.5 0-.9-.4-.9-1s.4-1 .9-1h.5c.9 0 1.4.5 1.4 1.4 0 .9-.5 1.8-1.4 2.2-.5.2-.9.4-1.4.4z" fill="white"/></svg></div>
-          <div class="pay-method-info">
-            <div class="pay-method-name">💬 微信 / WeChat</div>
-            <div class="pay-method-desc">联系客服发收款码，付款后立即发货</div>
-          </div>
-          <div class="pay-method-arrow">›</div>
-        </a>
-        <a class="pay-method" id="pay-btn-alipay" href="https://t.me/diquchaxun78_bot" target="_blank" rel="noopener">
-          <div class="pay-method-icon" style="background:#fff8e1;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#1677ff"/><path d="M12 5C8 5 6 7.5 6 10s2 5 6 5 6-2.5 6-5-2-5-6-5zm0 8c-2 0-3-.8-3-1.8S10 9.5 12 9.5s3 .7 3 1.7-1 1.8-3 1.8zm0-4.5h1.5v5.5H10v-1.2h2v-1.3H10V9zm3.2 0H17v1.3h-1.3v1.2H17V12h-2c-.8 0-1.3-.5-1.3-1.2s.5-1.3 1.3-1.3z" fill="white"/></svg></div>
-          <div class="pay-method-info">
-            <div class="pay-method-name">🔵 支付宝</div>
-            <div class="pay-method-desc">联系客服发收款码，付款后立即发货</div>
-          </div>
-          <div class="pay-method-arrow">›</div>
-        </a>
-        <a class="pay-method" href="#" onclick="copyUSDT(event)">
-          <div class="pay-method-icon" style="background:#e8f4f0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#26a17b"/><path d="M13.5 8.5c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5zm-2.5 0c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5z" fill="white"/><path d="M11 6.5C7 6.5 4 8.5 4 11s3 4.5 7 4.5 7-2 7-4.5-3-4.5-7-4.5zm0 7.5c-3 0-5.5-1.5-5.5-3.5s2.5-3.5 5.5-3.5 5.5 1.5 5.5 3.5-2.5 3.5-5.5 3.5z" fill="white" opacity=".5"/><path d="M11 5.5C6.5 5.5 3 8 3 11s3.5 5.5 8 5.5 8-2.5 8-5.5S15.5 5.5 11 5.5zm0 9.5c-3.5 0-6.5-2-6.5-4s3-4 6.5-4 6.5 2 6.5 4-3 4-6.5 4z" fill="white" opacity=".3"/></svg></div>
-          <div class="pay-method-info">
-            <div class="pay-method-name">🪙 USDT（TRC20）</div>
-            <div class="pay-method-desc">复制钱包地址转账，联系客服确认后发货</div>
-          </div>
-          <div class="pay-method-arrow">›</div>
-        </a>
-        <a class="pay-method" href="#" onclick="showSecretKey(payId);return false;">
-          <div class="pay-method-icon" style="background:#f0f0ff;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="5" fill="#6366f1"/><path d="M7 7h4v4H7zM13 7h4v4h-4zM7 13h4v4H7zM13 13h4v2h-4v-2z" fill="white" opacity=".5"/><path d="M19 10h2v2h-2zM17 12h2v2h-2zM15 14h2v2h-2zM19 14h2v2h-2z" fill="white" opacity=".7"/><rect x="13" y="11" width="2" height="2" rx=".5" fill="white"/></svg></div>
-          <div class="pay-method-info">
-            <div class="pay-method-name">🔑 秘钥购买（自动发货）</div>
-            <div class="pay-method-desc">输入秘钥直接解锁，秒级发货，无需联系客服</div>
-          </div>
-          <div class="pay-method-arrow">›</div>
-        </a>
-      </div>
-      <div class="pay-divider"><span>付款后 · 如何获取下载链接</span></div>
-      <div class="pay-after">
-        <div class="pay-after-steps">
-          <div class="pay-after-step"><span class="step-n">1</span> 完成付款后截图保存支付凭证</div>
-          <div class="pay-after-step"><span class="step-n">2</span> 点击下方按钮联系客服，发送截图</div>
-          <div class="pay-after-step"><span class="step-n">3</span> 客服确认后立即发送 GitHub 下载链接</div>
+    <div class="pay-methods">
+      <a class="pay-method" href="#" onclick="showPayPalQR();return false;">
+        <div class="pay-method-icon" style="background:#e8f0ff;">💳</div>
+        <div class="pay-method-info">
+          <div class="pay-method-name">PayPal 扫码支付</div>
+          <div class="pay-method-desc">扫码打开 PayPal，确认金额即可付款</div>
         </div>
-        <div class="pay-contact">
-          <a class="pay-contact-btn telegram" href="https://t.me/diquchaxun78_bot" target="_blank" rel="noopener">💬 Telegram客服</a>
-          <a class="pay-contact-btn" href="mailto:yinanzo@hotmail.com" target="_blank" rel="noopener">📧 邮件联系</a>
+        <div class="pay-method-arrow">›</div>
+      </a>
+      <a class="pay-method" href="https://t.me/diquchaxun78_bot" target="_blank">
+        <div class="pay-method-icon" style="background:#e8f5e9;">💬</div>
+        <div class="pay-method-info">
+          <div class="pay-method-name">微信 / WeChat</div>
+          <div class="pay-method-desc">联系客服发收款码，付款后立即发货</div>
         </div>
-      </div>
-      <button class="pay-close-btn" onclick="closePayModal()">取消</button>
+        <div class="pay-method-arrow">›</div>
+      </a>
+      <a class="pay-method" href="#" onclick="showUSDTQR();return false;">
+        <div class="pay-method-icon" style="background:#e8f4f0;">🪙</div>
+        <div class="pay-method-info">
+          <div class="pay-method-name">USDT（TRC20）</div>
+          <div class="pay-method-desc">复制钱包地址转账，联系客服确认后发货</div>
+        </div>
+        <div class="pay-method-arrow">›</div>
+      </a>
+      <a class="pay-method" href="#" onclick="showSecretKey();return false;">
+        <div class="pay-method-icon" style="background:#f0f0ff;">🔑</div>
+        <div class="pay-method-info">
+          <div class="pay-method-name">秘钥购买（自动发货）</div>
+          <div class="pay-method-desc">输入秘钥直接解锁，秒级发货，无需联系客服</div>
+        </div>
+        <div class="pay-method-arrow">›</div>
+      </a>
     </div>
+    <div class="pay-divider"><span>付款后 · 如何获取下载链接</span></div>
+    <div class="pay-after">
+      <div class="pay-after-title">📋 购买流程</div>
+      <div class="pay-after-step"><span class="step-n">1</span> 完成付款后截图保存支付凭证</div>
+      <div class="pay-after-step"><span class="step-n">2</span> 联系客服确认到账，发送截图</div>
+      <div class="pay-after-step"><span class="step-n">3</span> 客服确认后立即发送 GitHub 下载链接</div>
+    </div>
+    <div class="pay-contact">
+      <a class="pay-contact-btn tg" href="https://t.me/diquchaxun78_bot" target="_blank">💬 Telegram客服</a>
+      <a class="pay-contact-btn email" href="mailto:yinanzo@hotmail.com" target="_blank">📧 邮件联系</a>
+    </div>
+    <button class="pay-close" onclick="closePayModal()">取消</button>
   </div>
 </div>
 
 <!-- PAYPAL QR MODAL -->
 <div class="pp-modal-overlay" id="pp-modal">
   <div class="pp-modal">
-    <div class="pp-header">
-      <div class="pp-header-title">💳 PayPal 安全支付</div>
-      <div class="pp-header-sub">扫码打开 PayPal · 确认金额即可付款</div>
+    <h3>💳 PayPal 安全支付</h3>
+    <div class="pp-qr-box">
+      <img id="pp-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://paypal.me/yinanzo/&margin=0" alt="PayPal" style="width:180px;height:180px;"/>
     </div>
-    <div class="pp-body">
-      <div class="pp-qr-box">
-        <img id="pp-qr-img" src="" alt="PayPal QR" />
-      </div>
-      <div class="pp-addr-label">收款邮箱</div>
-      <div class="pp-addr-box">
-        <div class="pp-addr-text">yinanzo@hotmail.com</div>
-      </div>
-      <div class="pp-amount-hint">
-        <div class="pp-amount-row">
-          <span>应付金额（自动计算）</span>
-          <span class="pp-amount-val" id="pp-amount-display">≈ $13.66 USD</span>
-        </div>
-        <div class="pp-note-hint">扫码后在 PayPal 确认金额即可</div>
-      </div>
-      <div class="pp-after">
-        <div class="pp-after-title">⏱️ 付款后如何获取下载链接</div>
-        <div class="pp-after-step"><span class="step-n">1</span> PayPal 付款完成后，截图保存支付凭证</div>
-        <div class="pp-after-step"><span class="step-n">2</span> 联系客服确认到账，发送截图</div>
-        <div class="pp-after-step"><span class="step-n">3</span> 客服确认后立即发送 GitHub 下载链接</div>
-      </div>
-      <div class="pp-contact">
-        <a class="pp-contact-btn telegram" href="https://t.me/diquchaxun78_bot" target="_blank" rel="noopener">💬 Telegram客服</a>
-        <a class="pp-contact-btn" href="https://paypal.me/yinanzo" target="_blank" rel="noopener">🌐 浏览器打开</a>
-      </div>
-      <button class="pp-close-btn" onclick="closePpModal()">关闭</button>
+    <div class="pp-addr-box">
+      <div>yinanzo@hotmail.com</div>
+      <button class="copy-btn" onclick="copyText('yinanzo@hotmail.com','已复制邮箱')">复制</button>
     </div>
-  </div>
-</div>
-
-<!-- SECRET KEY MODAL -->
-<div class="secret-modal-overlay" id="secret-modal" onclick="if(event.target===this)closeSecretModal()">
-  <div class="secret-modal">
-    <div class="secret-header">
-      <div class="secret-header-icon">🔑</div>
-      <div class="secret-header-title">秘钥解锁</div>
-      <div class="secret-header-sub">购买后获得秘钥，输入即可秒级解锁商品</div>
+    <div class="pp-after">
+      <div class="pp-after-title">⏱️ 付款后流程</div>
+      <div class="pp-after-step"><span class="step-n">1</span> 截图保存 PayPal 支付凭证</div>
+      <div class="pp-after-step"><span class="step-n">2</span> 联系客服确认到账</div>
+      <div class="pp-after-step"><span class="step-n">3</span> 客服发送 GitHub 下载链接</div>
     </div>
-    <div class="secret-body">
-      <div class="secret-product-row" id="secret-product-name">—</div>
-      <div class="secret-price-row">
-        <span class="secret-price" id="secret-price-display">¥—</span>
-        <span class="secret-usd" id="secret-usd-display">≈ $— USD</span>
-      </div>
-      <div class="secret-form">
-        <div class="secret-input-wrap">
-          <input class="secret-input" id="secret-input" type="text" placeholder="输入你的秘钥，例如：ABCD-1234-EFGH-5678" autocomplete="off" spellcheck="false"/>
-          <button class="secret-input-clear" onclick="document.getElementById('secret-input').value=''">✕</button>
-        </div>
-        <div class="secret-error" id="secret-error" style="display:none;">
-          <span>⚠️</span> <span id="secret-error-msg">秘钥无效，请检查后重试</span>
-        </div>
-        <button class="secret-unlock-btn" id="secret-unlock-btn" onclick="trySecretKey()">
-          <span>🔓</span> 验证并解锁
-        </button>
-      </div>
-      <div class="secret-steps">
-        <div class="secret-step-title">📋 如何获取秘钥</div>
-        <div class="secret-step"><span class="step-n">1</span> 选择商品并完成付款</div>
-        <div class="secret-step"><span class="step-n">2</span> 付款后联系客服获取秘钥</div>
-        <div class="secret-step"><span class="step-n">3</span> 复制秘钥粘贴到上方输入框</div>
-      </div>
-      <div class="secret-buy-row">
-        <span class="secret-buy-label">还没有秘钥？</span>
-        <a class="secret-buy-btn" href="#" onclick="closeSecretModal();openPayModal(payId);return false;">
-          💳 去购买
-        </a>
-      </div>
-      <button class="secret-close-btn" onclick="closeSecretModal()">关闭</button>
+    <div class="pp-contact">
+      <a class="tg" href="https://t.me/diquchaxun78_bot" target="_blank">💬 联系客服</a>
     </div>
+    <button class="pp-close" onclick="closePpModal()">关闭</button>
   </div>
 </div>
 
 <!-- USDT QR MODAL -->
 <div class="usdt-modal-overlay" id="usdt-modal">
   <div class="usdt-modal">
-    <div class="usdt-header">
-      <div class="usdt-header-title">🪙 USDT (TRC20) 收款</div>
-      <div class="usdt-header-sub">扫码转账 · 安全可靠 · 即时到账</div>
+    <h3>🪙 USDT (TRC20) 收款</h3>
+    <div class="usdt-qr-box">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy&margin=0" alt="USDT" style="width:180px;border-radius:12px;"/>
     </div>
-    <div class="usdt-body">
-      <div class="usdt-qr-box">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy&margin=0" alt="USDT QR" />
-      </div>
-      <div class="usdt-addr-label">钱包地址</div>
-      <div class="usdt-addr-box">
-        <div class="usdt-addr-text">TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy</div>
-        <button class="usdt-copy-btn" id="usdt-copy-btn" onclick="copyUsdtAddr()">复制</button>
-      </div>
-      <div class="usdt-note">⚠️ 请确保钱包支持 TRC20 网络，转账前仔细核对地址</div>
-      <div class="usdt-after">
-        <div class="usdt-after-title">⏱️ 转账后如何获取下载链接</div>
-        <div class="usdt-after-step"><span class="step-n">1</span> 完成USDT转账后，截图保存交易凭证</div>
-        <div class="usdt-after-step"><span class="step-n">2</span> 联系客服确认到账，发送转账截图</div>
-        <div class="usdt-after-step"><span class="step-n">3</span> 客服确认后立即发送 GitHub 下载链接</div>
-      </div>
-      <div class="usdt-contact">
-        <a class="usdt-contact-btn telegram" href="https://t.me/diquchaxun78_bot" target="_blank" rel="noopener">💬 Telegram客服</a>
-        <a class="usdt-contact-btn" href="https://wa.me/" target="_blank" rel="noopener">📱 微信/WhatsApp</a>
-      </div>
-      <button class="usdt-close-btn" onclick="closeUsdtModal()">关闭</button>
+    <div class="usdt-addr-box">
+      <div id="usdt-addr-text">TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy</div>
+      <button class="copy-btn" onclick="copyText('TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy','钱包地址已复制')">复制</button>
     </div>
+    <div class="usdt-after">
+      <div class="usdt-after-title">⏱️ 转账后流程</div>
+      <div class="usdt-after-step"><span class="step-n">1</span> 完成USDT转账，截图保存凭证</div>
+      <div class="usdt-after-step"><span class="step-n">2</span> 联系客服确认到账</div>
+      <div class="usdt-after-step"><span class="step-n">3</span> 客服发送 GitHub 下载链接</div>
+    </div>
+    <div class="usdt-contact">
+      <a class="tg" href="https://t.me/diquchaxun78_bot" target="_blank">💬 联系客服</a>
+    </div>
+    <button class="usdt-close" onclick="closeUsdtModal()">关闭</button>
+  </div>
+</div>
+
+<!-- SECRET KEY MODAL -->
+<div class="secret-modal-overlay" id="secret-modal">
+  <div class="secret-modal">
+    <div class="secret-header">
+      <div class="secret-header-icon">🔑</div>
+      <h3>秘钥解锁</h3>
+      <p>购买后获得秘钥，输入即可秒级解锁</p>
+    </div>
+    <div class="secret-product" id="secret-product-name">—</div>
+    <div class="secret-price-row">
+      <span class="secret-price" id="secret-price-display">¥—</span>
+      <span class="secret-usd" id="secret-usd-display">≈ $— USD</span>
+    </div>
+    <input class="secret-input" id="secret-input" type="text" placeholder="输入秘钥，如：ABCD-1234-EFGH-5678" autocomplete="off"/>
+    <div class="secret-error" id="secret-error" style="display:none;"><span>⚠️</span> <span id="secret-error-msg">秘钥无效</span></div>
+    <button class="secret-unlock" onclick="trySecretKey()"><span>🔓</span> 验证并解锁</button>
+    <div class="secret-steps">
+      <div class="secret-steps-title">📋 如何获取秘钥</div>
+      <div class="secret-step"><span class="step-n">1</span> 选择商品并完成付款</div>
+      <div class="secret-step"><span class="step-n">2</span> 付款后联系客服获取秘钥</div>
+      <div class="secret-step"><span class="step-n">3</span> 复制秘钥粘贴到上方输入框</div>
+    </div>
+    <div class="secret-buy-row">还没有秘钥？<a href="#" onclick="closeSecretModal();openPayModal(currentPayId);return false;">去购买</a></div>
+    <button class="secret-close-btn" onclick="closeSecretModal()">关闭</button>
+  </div>
+</div>
+
+<!-- TRIAL MODAL -->
+<div class="trial-modal-overlay" id="trial-modal">
+  <div class="trial-modal">
+    <div class="trial-header">
+      <h3>🎮 免费试用 — <span id="trial-product-name">—</span></h3>
+      <p>每个商品免费试用 3 次，感受效果后再购买</p>
+    </div>
+    <div class="trial-dot-row" id="trial-dots"></div>
+    <div class="trial-console" id="trial-console"></div>
+    <div class="trial-actions">
+      <button class="trial-run-btn" id="trial-run-btn" onclick="runTrial()">▶ 启动演示</button>
+      <button class="trial-close-btn" onclick="closeTrialModal()">关闭</button>
+    </div>
+    <div class="trial-tips">⚡ 试用不消耗真实资源，每次刷新重置</div>
   </div>
 </div>
 
 <!-- TOAST -->
 <div id="toast"></div>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <div class="bnav">
-    <button class="bnav-btn active" onclick="scrollTo('hero')">
-      <span class="bnav-icon">🏠</span>首页
-    </button>
-    <button class="bnav-btn" onclick="scrollTo('filter-bar')">
-      <span class="bnav-icon">🛍️</span>商品
-    </button>
-    <button class="bnav-btn" onclick="scrollTo('testimonials')">
-      <span class="bnav-icon">💬</span>评价
-    </button>
-    <button class="bnav-btn" onclick="scrollTo('cta')">
-      <span class="bnav-icon">📲</span>安装
-    </button>
-  </div>
-</nav>
-
-
-<!-- TRIAL MODAL -->
-<div class="trial-modal-overlay" id="trial-modal">
-  <div class="trial-modal">
-    <div class="trial-header">
-      <div class="trial-header-title" id="trial-product-name">—</div>
-      <div class="trial-header-sub">免费体验 · 剩余 <span id="trial-left">3</span> 次</div>
-    </div>
-    <div class="trial-body">
-      <div class="trial-product">
-        <div class="trial-product-icon" id="trial-icon">—</div>
-        <div class="trial-product-info">
-          <div class="trial-product-name" id="trial-name">—</div>
-          <div class="trial-product-desc" id="trial-desc">—</div>
-        </div>
-      </div>
-      <div class="trial-console" id="trial-console">
-        <div class="trial-console-line system">$ 正在初始化演示环境...</div>
-      </div>
-      <div class="trial-counter">
-        剩余试用次数：
-        <div class="trial-counter-dots" id="trial-dots"></div>
-      </div>
-      <div class="trial-actions">
-        <button class="trial-run" id="trial-run-btn" onclick="runTrial()">▶ 运行演示</button>
-        <button class="trial-buy" onclick="trialToBuy()">💳 购买完整版</button>
-      </div>
-      <button class="trial-close" onclick="closeTrialModal()">关闭</button>
-    </div>
-  </div>
-</div>
-
 <script>
 // ═══════════════════════════════
 // DATA
 // ═══════════════════════════════
-var SVG_ICON_MAP = {
-  "github-automation": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iI2Y1OWUwYjE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiNmNTllMGIyOCIvPjxwYXRoIGQ9Ik0yMCAzNiBMMjggMjggTDM2IDM2IE0yOCAyOCBWMTgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIi8+PGNpcmNsZSBjeD0iMjAiIGN5PSIzNiIgcj0iMyIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIzNiIgY3k9IjM2IiByPSIzIiBmaWxsPSJ3aGl0ZSIvPjxjaXJjbGUgY3g9IjI4IiBjeT0iMTgiIHI9IjMiIGZpbGw9IndoaXRlIi8+PC9zdmc+",
-  "content-promoter": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iI2VjNDg5OTE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiNlYzQ4OTkyOCIvPjxwYXRoIGQ9Ik0xOCAyOCBMMjYgMjIgTDI2IDM0IFoiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMjgiIHk9IjIyIiB3aWR0aD0iMTIiIGhlaWdodD0iMyIgcng9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjI4IiB5PSIyNyIgd2lkdGg9IjgiIGhlaWdodD0iMyIgcng9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjI4IiB5PSIzMiIgd2lkdGg9IjEwIiBoZWlnaHQ9IjMiIHJ4PSIxLjUiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjciLz48L3N2Zz4=",
-  "n8n-workflow": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzhiNWNmNjE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiM4YjVjZjYyOCIvPjxjaXJjbGUgY3g9IjI4IiBjeT0iMTYiIHI9IjQiIGZpbGw9IndoaXRlIi8+PGNpcmNsZSBjeD0iMTYiIGN5PSIzNiIgcj0iNCIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjM2IiByPSI0IiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik0yOCAyMCBMMjIgMzMgTTI4IDIwIEwzNCAzMyBNMjIgMzYgTDM0IDM2IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+",
-  "telegram-bot": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzIyZDNlZTE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiMyMmQzZWUyOCIvPjxwYXRoIGQ9Ik0yMCAyMCBMMzYgMjAgUTQwIDIwIDQwIDI0IEw0MCAzMiBRNDAgMzYgMzYgMzYgTDI0IDM2IFEyMCAzNiAyMCAzMiBaIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxjaXJjbGUgY3g9IjI0IiBjeT0iMjgiIHI9IjIuNSIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIzMCIgY3k9IjI4IiByPSIyLjUiIGZpbGw9IndoaXRlIi8+PGNpcmNsZSBjeD0iMzYiIGN5PSIyOCIgcj0iMi41IiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjI0IiB5PSIxNiIgd2lkdGg9IjgiIGhlaWdodD0iNCIgcng9IjIiIGZpbGw9IndoaXRlIi8+PC9zdmc+",
-  "ai-manga": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iI2E3OGJmYTE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiNhNzhiZmEyOCIvPjxlbGxpcHNlIGN4PSIyOCIgY3k9IjMwIiByeD0iMTIiIHJ5PSI5IiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik0xNiAzMCBRMjggMTggNDAgMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2E3OGJmYSIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMjMiIGN5PSIyOCIgcj0iMiIgZmlsbD0iI2E3OGJmYSIvPjxjaXJjbGUgY3g9IjMzIiBjeT0iMjgiIHI9IjIiIGZpbGw9IiNhNzhiZmEiLz48L3N2Zz4=",
-  "video-gen": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzA2YjZkNDE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiMwNmI2ZDQyOCIvPjxyZWN0IHg9IjE4IiB5PSIyMiIgd2lkdGg9IjE0IiBoZWlnaHQ9IjEyIiByeD0iMyIgZmlsbD0id2hpdGUiLz48cG9seWdvbiBwb2ludHM9IjM4LDIyIDM4LDM0IDQ2LDI4IiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg==",
-  "idea-generator": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzEwYjk4MTE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiMxMGI5ODEyOCIvPjxwYXRoIGQ9Ik0yOCAxNCBRMzggMjIgMzggMzAgUTM4IDM2IDI4IDM4IFEyMiAzOCAyMiAzNCBMMjIgMzAgUTIyIDI2IDI4IDI0IFEzMiAyMiAzNCAxOCBMMjggMTRaIiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjI1IiB5PSIzNiIgd2lkdGg9IjYiIGhlaWdodD0iNCIgcng9IjIiIGZpbGw9IndoaXRlIi8+PC9zdmc+",
-  "ppt-generator": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iI2ZiYmYyNDE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiNmYmJmMjQyOCIvPjxyZWN0IHg9IjE2IiB5PSIxOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjE4IiByeD0iMyIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOSIvPjxyZWN0IHg9IjE2IiB5PSIxOCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjUiIHJ4PSIzIiBmaWxsPSIjZmJiZjI0Ii8+PHJlY3QgeD0iMjAiIHk9IjI3IiB3aWR0aD0iMTAiIGhlaWdodD0iMiIgcng9IjEiIGZpbGw9IiNmYmJmMjQiIG9wYWNpdHk9IjAuNyIvPjxyZWN0IHg9IjIwIiB5PSIzMSIgd2lkdGg9IjE2IiBoZWlnaHQ9IjIiIHJ4PSIxIiBmaWxsPSIjZmJiZjI0IiBvcGFjaXR5PSIwLjciLz48L3N2Zz4=",
-  "ai-writing": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzYzNjZmMTE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiM2MzY2ZjEyOCIvPjxwYXRoIGQ9Ik0yMiA0MCBMMTggNDQgTDIyIDQ0IFoiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMjIiIHk9IjE2IiB3aWR0aD0iNCIgaGVpZ2h0PSIyOCIgcng9IjIiIGZpbGw9IndoaXRlIiB0cmFuc2Zvcm09InJvdGF0ZSgtNDUgMjggMjgpIi8+PHJlY3QgeD0iMTYiIHk9IjE2IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHJ4PSIzIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4=",
-  "cross-border-ai": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzgxOGNmODE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiM4MThjZjgyOCIvPjxjaXJjbGUgY3g9IjI4IiBjeT0iMjgiIHI9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMjggMTYgUTQwIDIyIDQwIDI4IFE0MCAzNCAyOCA0MCBRMTYgMzQgMTYgMjggUTE2IDIyIDI4IDE2IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48ZWxsaXBzZSBjeD0iMjgiIGN5PSIyOCIgcng9IjEyIiByeT0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+",
-  "ai-agent": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzM4YmRmODE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiMzOGJkZjgyOCIvPjxyZWN0IHg9IjIwIiB5PSIyMiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE0IiByeD0iNCIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIyNCIgY3k9IjI4IiByPSIyLjUiIGZpbGw9IiMzOGJkZjgiLz48Y2lyY2xlIGN4PSIzMiIgY3k9IjI4IiByPSIyLjUiIGZpbGw9IiMzOGJkZjgiLz48cmVjdCB4PSIyMyIgeT0iMzMiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyIiByeD0iMSIgZmlsbD0iIzM4YmRmOCIvPjxyZWN0IHg9IjIyIiB5PSIxOCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjQiIHJ4PSIyIiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjE2IiB5PSIzMCIgd2lkdGg9IjQiIGhlaWdodD0iOCIgcng9IjIiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMzYiIHk9IjMwIiB3aWR0aD0iNCIgaGVpZ2h0PSI4IiByeD0iMiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=",
-  "3d-generator": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iI2MwODRmYzE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiNjMDg0ZmMyOCIvPjxwYXRoIGQ9Ik0yOCAxNiBMNDAgMjQgTDQwIDM2IEwyOCA0NCBMMTYgMzYgTDE2IDI0IFoiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTI4IDE2IEwyOCA0NCBNMTYgMjQgTDQwIDI0IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTYgMjQgTDI4IDMwIEw0MCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+",
-  "web-scraper": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzM0ZDM5OTE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiMzNGQzOTkyOCIvPjxjaXJjbGUgY3g9IjIyIiBjeT0iMjQiIHI9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMi41Ii8+PGxpbmUgeDE9IjI1IiB5MT0iMjciIHgyPSIzNiIgeTI9IjM4IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTM2IDI0IEw0MCAyNCBNMzggMjIgTDM4IDI2IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTI4IDM4IEwzMiAzNCBMMjggMzAgTDI0IDM0IFoiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjciLz48L3N2Zz4=",
-  "database-toolkit": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzkzYzVmZDE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiM5M2M1ZmQyOCIvPjxlbGxpcHNlIGN4PSIyOCIgY3k9IjIwIiByeD0iMTIiIHJ5PSI1IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik0xNiAyMCBWMzYgUTE2IDQxIDI4IDQxIFE0MCA0MSA0MCAzNiBWMjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMi41Ii8+PHBhdGggZD0iTTE2IDI4IFExNiAzMyAyOCAzMyBRNDAgMzMgNDAgMjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMi41Ii8+PC9zdmc+",
-  "security-scanner": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iI2Y4NzE3MTE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiNmODcxNzEyOCIvPjxwYXRoIGQ9Ik0yOCAxNiBMMzggMjAgVjMwIFEzOCAzOCAyOCA0MiBRMTggMzggMTggMzAgVjIwIFoiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48cGF0aCBkPSJNMjIgMzAgTDI2IDM0IEwzNCAyNCIgc3Ryb2tlPSIjZjg3MTcxIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIi8+PC9zdmc+",
-  "design-toolkit": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iIzIyZDNlZTE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiMyMmQzZWUyOCIvPjxwYXRoIGQ9Ik0yMCA0MCBMMTQgNDAgTDE0IDE4IFExNCAxNCAxOCAxNCBMMzggMTQgUTQyIDE0IDQyIDE4IEw0MiAzMCBRNDIgMzQgMzggMzQgTDMyIDM0IEwyMiA0NCBRMjAgNDYgMTggNDQgWiIgZmlsbD0id2hpdGUiLz48Y2lyY2xlIGN4PSIyMiIgY3k9IjIyIiByPSIzIiBmaWxsPSIjMjJkM2VlIi8+PC9zdmc+",
-  "game-dev-kit": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NiA1NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2Ij48cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIHJ4PSIxNCIgZmlsbD0iI2ZiOTIzYzE4Ii8+PGNpcmNsZSBjeD0iMjgiIGN5PSIyOCIgcj0iMTQiIGZpbGw9IiNmYjkyM2MyOCIvPjxyZWN0IHg9IjE4IiB5PSIyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjEwIiByeD0iNSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNCIgeT0iMjciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHJ4PSIyIiBmaWxsPSJ3aGl0ZSIvPjxyZWN0IHg9IjM4IiB5PSIyNyIgd2lkdGg9IjQiIGhlaWdodD0iNCIgcng9IjIiIGZpbGw9IndoaXRlIi8+PHJlY3QgeD0iMjAiIHk9IjIyIiB3aWR0aD0iMyIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjZmI5MjNjIi8+PHJlY3QgeD0iMjYiIHk9IjIyIiB3aWR0aD0iMyIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjZmI5MjNjIi8+PHJlY3QgeD0iMzIiIHk9IjIyIiB3aWR0aD0iMyIgaGVpZ2h0PSIzIiByeD0iMS41IiBmaWxsPSIjZmI5MjNjIi8+PC9zdmc+",
-};
 var PRODUCTS = [
-  {id:"github-automation",name:"GitHub Agent自动化系统",emoji:"⚡",price:99,period:"/月",category:"自动化",desc:"全自动GitHub运营：自动Star、评论、追踪Trending、AI日报生成。7×24小时云端运行，零人工干预。",features:["GitHub Actions 7×24","自动Star热门项目","AI生成智能评论","Trending追踪日报"],color:"var(--text2)",badge:"hot",rating:4.9,reviews:128},
-  {id:"content-promoter",name:"AI内容推流系统",emoji:"📣",price:199,period:"/月",category:"内容",desc:"一键生成多平台推广文案，批量发布，效果追踪，数据可视化。",features:["6大平台同时发布","AI批量生成文案","定时自动推流","数据效果看板"],color:"var(--text2)",badge:"hot",rating:4.8,reviews:96},
-  {id:"n8n-workflow",name:"n8n工作流自动化系统",emoji:"🔗",price:149,period:"/月",category:"自动化",desc:"拖拽式n8n工作流，500+开源模板，CRM+社交媒体全场景覆盖。",features:["500+开源模板","Webhook+定时调度","自定义Python节点","一键导入使用"],color:"var(--text2)",badge:"hot",rating:4.7,reviews:84},
-  {id:"telegram-bot",name:"Telegram号码查询机器人",emoji:"📱",price:29,period:"/月",category:"自动化",desc:"实时手机号码归属地查询，批量查询，7×24小时云端运行，毫秒级响应。",features:["实时查询 < 2秒","全国号码数据库","批量查询支持","数据自动更新"],color:"var(--text2)",badge:"",rating:4.6,reviews:215},
-  {id:"ai-manga",name:"AI漫剧生成系统",emoji:"🎭",price:149,period:"/月",category:"内容",desc:"AI自动生成漫画/漫剧，脚本→分镜→渲染一条龙，批量输出。",features:["脚本自动生成","AI智能分镜","风格迁移","批量渲染导出"],color:"var(--text2)",badge:"new",rating:4.8,reviews:42},
-  {id:"video-gen",name:"AI视频生成助手",emoji:"🎬",price:99,period:"/月",category:"内容",desc:"AI驱动的视频批量生成，支持多种风格和文案自动配音，效果逼真。",features:["文字转视频","AI智能配音","多风格模板","批量导出"],color:"var(--text2)",badge:"",rating:4.5,reviews:67},
-  {id:"idea-generator",name:"脑洞助手/创意生成器",emoji:"🧠",price:39,period:"/月",category:"效率",desc:"AI创意头脑风暴工具，文案、选题、产品创意一键生成，突破思维局限。",features:["头脑风暴模式","文案生成","选题推荐","创意无限拓展"],color:"var(--text2)",badge:"new",rating:4.7,reviews:183},
-  {id:"ppt-generator",name:"PPT智能生成器",emoji:"📊",price:79,period:"/月",category:"效率",desc:"AI一键生成PPT，输入主题自动排版，支持模板自定义，在线编辑。",features:["主题→完整PPT","多套专业模板","支持导出下载","在线协作编辑"],color:"var(--text2)",badge:"",rating:4.6,reviews:134},
-  {id:"ai-writing",name:"AI代写定制服务系统",emoji:"✍️",price:59,period:"/月",category:"内容",desc:"AI文章/文案/报告代写，定制风格与格式，支持中英文，质量保证。",features:["文章代写","多类型报告","风格定制","中英双语"],color:"var(--text)",badge:"",rating:4.5,reviews:99},
-  {id:"cross-border-ai",name:"跨境电商AI助手",emoji:"🌐",price:199,period:"/月",category:"电商",desc:"AI驱动的跨境电商运营助手：商品描述翻译、SEO优化、竞品分析全流程。",features:["AI商品描述生成","多语言翻译","SEO深度优化","竞品全面分析"],color:"var(--text)",badge:"",rating:4.7,reviews:58},
-  {id:"ai-agent",name:"多平台AI Agent助手",emoji:"🤖",price:129,period:"/月",category:"自动化",desc:"通用的AI Agent框架，可对接微信、Discord、Slack等多平台，插件丰富。",features:["多平台接入","插件系统","记忆持久化","自定义技能"],color:"var(--text2)",badge:"",rating:4.6,reviews:71},
-  {id:"3d-generator",name:"3D模型生成系统",emoji:"🎨",price:129,period:"/月",category:"开发",desc:"AI文本→3D模型生成，支持导出GLTF/OBJ格式，游戏开发利器。",features:["文本生成3D模型","多格式导出","纹理自动生成","主流游戏引擎对接"],color:"var(--text2)",badge:"new",rating:4.8,reviews:37},
-  {id:"web-scraper",name:"AI智能网页爬虫",emoji:"🕷️",price:69,period:"/月",category:"数据",desc:"AI驱动的智能网页数据采集，自动解析结构化数据，定时任务。",features:["智能网页抓取","结构化数据解析","多格式导出","定时自动采集"],color:"var(--text2)",badge:"",rating:4.4,reviews:88},
-  {id:"database-toolkit",name:"AI数据库管理工具包",emoji:"🗄️",price:89,period:"/月",category:"开发",desc:"AI辅助的数据库查询、优化、迁移工具，自然语言操作数据库。",features:["自然语言查询","SQL自动优化","数据迁移","ER图生成"],color:"var(--text)",badge:"",rating:4.5,reviews:62},
-  {id:"security-scanner",name:"AI代码安全审计系统",emoji:"🔒",price:149,period:"/月",category:"安全",desc:"AI驱动的代码安全审计，自动检测漏洞、依赖风险，CI/CD集成。",features:["漏洞扫描","依赖风险分析","CI/CD集成","自动修复建议"],color:"var(--text2)",badge:"",rating:4.9,reviews:45},
-  {id:"design-toolkit",name:"AI设计素材生成器",emoji:"🖌️",price:79,period:"/月",category:"设计",desc:"AI生成Logo、UI设计等设计素材，快速原型设计，设计师必备。",features:["AI自动生成Logo","UI素材生成","设计推荐系统","批量导出格式"],color:"var(--text2)",badge:"",rating:4.6,reviews:103},
-  {id:"game-dev-kit",name:"AI游戏开发工具包",emoji:"🎮",price:199,period:"/月",category:"开发",desc:"AI辅助游戏开发，代码生成、美术资源生成、关卡设计一条龙。",features:["代码自动生成","美术AI资源","关卡设计","游戏AI NPC"],color:"var(--text2)",badge:"",rating:4.7,reviews:29}
+  {id:"github-automation",name:"GitHub Agent自动化",emoji:"⚡",price:99,period:"/月",category:"自动化",desc:"全自动GitHub运营：自动Star、评论、追踪Trending、AI日报生成。",features:["GitHub Actions 7×24","自动Star热门项目","AI生成智能评论","Trending追踪日报"],color:"#6366f1",rating:4.9,reviewCount:128},
+  {id:"telegram-bot",name:"Telegram号码查询",emoji:"📱",price:29,period:"/月",category:"自动化",desc:"实时手机号归属地查询，批量查询，7×24小时云端运行。",features:["实时查询 < 2秒","全国号码数据库","批量查询","自动重试机制"],color:"#22d3ee",rating:4.7,reviewCount:203},
+  {id:"content-promoter",name:"AI内容推流系统",emoji:"📣",price:199,period:"/月",category:"内容",desc:"AI自动生成内容并推送到多平台，支持微博、小红书、公众号等。",features:["多平台同步发布","AI内容生成","定时自动发布","数据统计分析"],color:"#ec4899",rating:4.8,reviewCount:87},
+  {id:"n8n-workflow",name:"n8n工作流自动化",emoji:"🔗",price:149,period:"/月",category:"自动化",desc:"可视化n8n工作流设计器，连接100+应用，自动化日常任务。",features:["100+应用集成","可视化流程设计","云端7×24运行","条件分支逻辑"],color:"#10b981",rating:4.6,reviewCount:156},
+  {id:"web-scraper",name:"智能网页爬虫",emoji:"🔍",price:69,period:"/月",category:"数据",desc:"可视化配置爬取规则，自动提取网页数据，支持定时抓取。",features:["可视化规则配置","支持登录/验证码","自动去重存储","定时批量爬取"],color:"#f59e0b",rating:4.5,reviewCount:94},
+  {id:"code-reviewer",name:"AI代码审查助手",emoji:"🔍",price:79,period:"/月",category:"开发",desc:"自动审查代码质量，发现Bug、安全漏洞、性能问题，提供修复建议。",features:["多语言支持","Bug自动发现","安全漏洞检测","修复建议生成"],color:"#8b5cf6",rating:4.8,reviewCount:112},
+  {id:"database-gpt",name:"数据库AI助手",emoji:"📊",price:89,period:"/月",category:"数据",desc:"用自然语言查询数据库，无需写SQL，自动生成报告和可视化图表。",features:["自然语言查询","自动SQL生成","数据可视化","报表自动导出"],color:"#06b6d4",rating:4.7,reviewCount:78},
+  {id:"security-audit",name:"AI安全审计系统",emoji:"🛡️",price:129,period:"/月",category:"安全",desc:"自动化安全扫描，检测SQL注入、XSS、CSRF等常见漏洞。",features:["OWASP Top 10检测","自动化漏洞扫描","修复建议报告","持续监控告警"],color:"#ef4444",rating:4.9,reviewCount:63},
+  {id:"ecommerce-ai",name:"电商AI运营助手",emoji:"🛒",price:159,period:"/月",category:"电商",desc:"自动分析竞品、生成标题描述、优化关键词、监控价格和库存。",features:["竞品实时监控","AI标题生成","关键词优化","库存价格预警"],color:"#f97316",rating:4.6,reviewCount:91},
+  {id:"data-visualizer",name:"数据可视化引擎",emoji:"📈",price:59,period:"/月",category:"数据",desc:"上传CSV/Excel，自动生成20+种图表，支持自定义配色和交互。",features:["20+图表类型","拖拽式操作","多数据源接入","一键导出PNG/SVG"],color:"#14b8a6",rating:4.5,reviewCount:145},
+  {id:"game-dev-kit",name:"AI游戏开发套件",emoji:"🎮",price:199,period:"/月",category:"游戏",desc:"AI辅助游戏开发：自动生成关卡、角色、剧情、对话、美术资源。",features:["AI生成游戏关卡","剧情对话生成","角色自动创建","美术资源生成"],color:"#a855f7",rating:4.7,reviewCount:52},
+  {id:"video-generator",name:"AI视频生成系统",emoji:"🎬",price:249,period:"/月",category:"内容",desc:"输入文字自动生成视频，支持配音、字幕、特效、背景音乐。",features:["文字转视频","AI配音合成","自动字幕生成","多风格特效"],color:"#f43f5e",rating:4.4,reviewCount:38},
+  {id:"design-assistant",name:"AI设计助手",emoji:"🎨",price:99,period:"/月",category:"设计",desc:"输入需求自动生成UI设计稿、海报、Logo、Banner，支持多格式导出。",features:["UI设计自动生成","海报Logo设计","多格式导出","配色方案推荐"],color:"#e879f9",rating:4.6,reviewCount:167},
+  {id:"api-gateway",name:"API网关管理系统",emoji:"🌐",price:119,period:"/月",category:"开发",desc:"统一管理API接口，监控流量，限流熔断，认证鉴权，可视化配置。",features:["统一API管理","流量监控告警","限流熔断保护","多认证方式"],color:"#3b82f6",rating:4.5,reviewCount:84},
+  {id:"ocr-extractor",name:"OCR文档识别系统",emoji:"📄",price:49,period:"/月",category:"数据",desc:"扫描/拍照识别文字，支持PDF、证件、发票、名片等多格式。",features:["多格式文档识别","表格自动还原","批量处理","API接口调用"],color:"#84cc16",rating:4.3,reviewCount:201},
+  {id:"voice-assistant",name:"AI语音助手",emoji:"🎙️",price:89,period:"/月",category:"效率",desc:"语音唤醒、实时转写、翻译合成，支持中英日韩等多语言。",features:["实时语音转文字","多语言翻译","语音合成","打断插话交互"],color:"#fb923c",rating:4.6,reviewCount:118},
+  {id:"crypto-tracker",name:"加密货币监控系统",emoji:"💰",price:79,period:"/月",category:"数据",desc:"实时监控加密货币价格、K线、巨鲸钱包地址，自动告警。",features:["实时价格监控","K线数据接入","巨鲸地址追踪","多渠道告警"],color:"#facc15",rating:4.4,reviewCount:72},
 ];
 
-var CATEGORIES = [
-  {name:"全部",emoji:"🛒"},
-  {name:"自动化",emoji:"⚡"},
-  {name:"内容",emoji:"📣"},
-  {name:"效率",emoji:"💡"},
-  {name:"电商",emoji:"🌐"},
-  {name:"开发",emoji:"🛠️"},
-  {name:"数据",emoji:"📊"},
-  {name:"安全",emoji:"🔒"},
-  {name:"设计",emoji:"🎨"},
-  {name:"游戏",emoji:"🎮"}
-];
-var CAT_CLASSES = {自动化:"automation",内容:"content",效率:"productivity",电商:"ecommerce",开发:"dev",数据:"data",安全:"security",设计:"design",游戏:"game"};
+var CATEGORIES = ["全部","自动化","内容","数据","开发","安全","电商","设计","游戏","效率"];
 var PAYPAL_EMAIL = 'yinanzo@hotmail.com';
+var USDT_ADDR = 'TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy';
 
-var activeFilter = '全部';
+// State
+var ownedSkills = [];       // array of product IDs the user owns
+var currentSkill = null;    // currently selected skill for chat
+var currentPayId = null;    // product being purchased
+var currentView = 'chat';   // 'chat' | 'store'
+var sidebarTab = 'owned';   // 'owned' | 'store'
 var searchQ = '';
-var sortMode = 'default';
-var currentView = 'grid';
-var deferredPrompt = null;
-var payId = null;
+var chatHistories = {};     // {productId: [{role, content}]}
+var trialCounts = {};       // {productId: count}
+var TRIAL_MAX = 3;
+
+// ── INIT ──
+function init(){
+  loadOwned();
+  loadTrialCounts();
+  renderSidebar();
+  checkWelcome();
+}
 
 // ═══════════════════════════════
-// STARS BACKGROUND
+// PERSISTENCE
 // ═══════════════════════════════
-(function createStars(){
-  var container = document.getElementById('stars');
-  for(var i=0;i<60;i++){
-    var s = document.createElement('div');
-    s.className = 'star';
-    var size = Math.random() * 1.5 + 0.5;
-    s.style.cssText = [
-      'left:'+Math.random()*100+'%',
-      'top:'+Math.random()*100+'%',
-      'width:'+size+'px',
-      'height:'+size+'px',
-      'animation-duration:'+(Math.random()*3+2)+'s',
-      'animation-delay:'+Math.random()*3+'s',
-      'opacity:'+(Math.random()*0.5+0.1)
-    ].join(';');
-    container.appendChild(s);
+function loadOwned(){
+  try{ ownedSkills = JSON.parse(localStorage.getItem('ai_market_owned') || '[]'); }catch(e){ ownedSkills=[]; }
+}
+function saveOwned(){
+  localStorage.setItem('ai_market_owned', JSON.stringify(ownedSkills));
+}
+function loadTrialCounts(){
+  try{ trialCounts = JSON.parse(localStorage.getItem('ai_market_trials') || '{}'); }catch(e){ trialCounts={}; }
+}
+function saveTrialCounts(){
+  localStorage.setItem('ai_market_trials', JSON.stringify(trialCounts));
+}
+
+// ═══════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════
+function switchSidebarTab(tab){
+  sidebarTab = tab;
+  document.getElementById('tab-owned').classList.toggle('active', tab==='owned');
+  document.getElementById('tab-store').classList.toggle('active', tab==='store');
+  renderSidebar();
+  closeSidebarOnMobile();
+}
+
+function onSidebarSearch(q){
+  searchQ = q.trim().toLowerCase();
+  renderSidebar();
+}
+
+function renderSidebar(){
+  var list = document.getElementById('sidebar-list');
+  if(sidebarTab === 'owned'){
+    renderOwnedList(list);
+  } else {
+    renderStoreList(list);
   }
-})();
-
-// ═══════════════════════════════
-// COUNTER ANIMATION
-// ═══════════════════════════════
-function animateCounter(el, target, suffix){
-  var start = 0;
-  var duration = 1500;
-  var step = target / (duration / 16);
-  function tick(){
-    start += step;
-    if(start >= target){ el.textContent = target + (suffix||''); return; }
-    el.textContent = Math.floor(start) + (suffix||'');
-    requestAnimationFrame(tick);
-  }
-  tick();
-}
-setTimeout(function(){
-  animateCounter(document.getElementById('counter-tools'), PRODUCTS.length);
-}, 400);
-
-// ═══════════════════════════════
-// HELPERS
-// ═══════════════════════════════
-function toast(msg){
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 3500);
-}
-function scrollTo(id){
-  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
-}
-function scrollToTop(e){
-  e.preventDefault();
-  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ═══════════════════════════════
-// RATING STARS HTML
-// ═══════════════════════════════
-function ratingHTML(rating){
-  var full = Math.floor(rating);
-  var half = rating % 1 >= 0.5;
-  var empty = 5 - full - (half ? 1 : 0);
-  var h = '';
-  for(var i=0;i<full;i++) h += '<span class="star-icon">★</span>';
-  if(half) h += '<span class="star-icon" style="opacity:0.5">★</span>';
-  for(var i=0;i<empty;i++) h += '<span class="star-icon empty">☆</span>';
-  return h;
-}
+function renderOwnedList(list){
+  var items = ownedSkills.map(function(id){
+    for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id) return PRODUCTS[i];
+    return null;
+  }).filter(Boolean);
 
-// ═══════════════════════════════
-// TABS
-// ═══════════════════════════════
-function catCount(name){
-  if(name === '全部') return PRODUCTS.length;
-  return PRODUCTS.filter(function(p){ return p.category === name; }).length;
-}
-function renderTabs(){
-  var el = document.getElementById('cat-tabs');
-  var h = '';
-  for(var i=0;i<CATEGORIES.length;i++){
-    var c = CATEGORIES[i];
-    var cls = (c.name === activeFilter) ? ' cat-tab active' : ' cat-tab';
-    h += '<button class="'+cls+'" onclick="setFilter(\''+c.name+'\')"><span class="emoji">'+c.emoji+'</span>'+c.name+' <span style="opacity:0.5;font-size:0.7rem">'+catCount(c.name)+'</span></button>';
-  }
-  el.innerHTML = h;
-}
-
-// ═══════════════════════════════
-// FILTER & SORT
-// ═══════════════════════════════
-function getFiltered(){
-  var list = PRODUCTS;
-  if(activeFilter !== '全部') list = list.filter(function(p){ return p.category === activeFilter; });
   if(searchQ){
-    var q = searchQ.toLowerCase();
-    list = list.filter(function(p){
-      return p.name.toLowerCase().indexOf(q)!==-1 ||
-             p.desc.toLowerCase().indexOf(q)!==-1 ||
-             p.category.toLowerCase().indexOf(q)!==-1 ||
-             p.features.some(function(f){ return f.toLowerCase().indexOf(q)!==-1; });
-    });
+    items = items.filter(function(p){ return p.name.toLowerCase().indexOf(searchQ)!==-1 || p.category.toLowerCase().indexOf(searchQ)!==-1; });
   }
-  if(sortMode === 'price-asc') list.sort(function(a,b){ return a.price - b.price; });
-  else if(sortMode === 'price-desc') list.sort(function(a,b){ return b.price - a.price; });
-  else if(sortMode === 'name') list.sort(function(a,b){ return a.name.localeCompare(b.name,'zh'); });
-  return list;
-}
 
-// ═══════════════════════════════
-// RENDER GRID
-// ═══════════════════════════════
-function renderGrid(){
-  var grid = document.getElementById('grid');
-  var noResults = document.getElementById('no-results');
-  var list = getFiltered();
-  if(list.length === 0){
-    grid.innerHTML = '';
-    noResults.classList.add('show');
+  if(items.length === 0){
+    list.innerHTML = '<div class="sidebar-empty"><div class="sidebar-empty-icon">🛡️</div><div class="sidebar-empty-title">还没有已购技能</div><div class="sidebar-empty-desc">去商店购买后<br/>技能会出现在这里</div><button class="sidebar-empty-btn" onclick="switchSidebarTab(\'store\')">🏪 去商店</button></div>';
     return;
   }
-  noResults.classList.remove('show');
 
-  var html = '';
-  for(var i=0;i<list.length;i++){
-    var p = list[i];
-    var catClass = CAT_CLASSES[p.category] || '';
-    var badgeHTML = '';
-    if(p.badge === 'hot') badgeHTML = '<span class="badge badge-hot">🔥 热门</span>';
-    else if(p.badge === 'new') badgeHTML = '<span class="badge badge-new">✨ 新品</span>';
-    else if(p.badge === 'pop') badgeHTML = '<span class="badge badge-pop">⭐ 推荐</span>';
-
-    var featsHtml = '';
-    for(var j=0;j<p.features.length;j++){
-      featsHtml += '<div class="card-feat">'+p.features[j]+'</div>';
-    }
-
-    var ribbonHTML = p.badge === 'hot' ? '<div class="card-ribbon">HOT</div>' : '';
-
-    html += '<div class="card" onclick="openModal(\''+p.id+'\')" style="animation-delay:'+(i*0.04)+'s">' +
-      ribbonHTML +
-      '<div class="card-top">' +
-        '<div class="card-icon" style="background:'+p.color+'18"><img src="'+SVG_ICON_MAP[p.id]+'" alt="'+p.name+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="card-icon-fallback" style="display:none;font-size:1.8rem;line-height:72px;text-align:center;width:100%;">'+p.emoji+'</div></div>' +
-        '<div class="card-meta">' +
-          '<div class="card-badges">'+badgeHTML+'</div>' +
-          '<div class="card-cat cat-'+catClass+'">'+p.category+'</div>' +
-          '<div class="card-name">'+p.name+'</div>' +
-          '<div class="card-desc">'+p.desc+'</div>' +
-          '<div class="rating-row">' +
-            '<div class="stars">'+ratingHTML(p.rating)+'</div>' +
-            '<span class="rating-count">'+p.rating+' ('+p.reviews+'条评价)</span>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="card-body">' +
-        '<div class="card-divider"></div>' +
-        '<div class="card-features">'+featsHtml+'</div>' +
-      '</div>' +
-      '<div class="card-footer">' +
-        '<div class="price-info">' +
-          '<div class="price-line"><span class="price"><span class="sym">¥</span>'+p.price+'</span><span class="per">'+p.period+'</span></div>' +
-        '</div>' +
-        '<div class="card-actions">' +
-          '<button class="btn-detail-sm" onclick="event.stopPropagation();openModal(\''+p.id+'\')">详情</button>' +
-          '<button class="btn-buy-sm" onclick="event.stopPropagation();pay(\''+p.id+'\')">💳</button>' +
-          '<button class="btn-try" id="try-btn-'+p.id+'" onclick="event.stopPropagation();openTrial(\''+p.id+'\')">免费试用</button>' +
-        '</div>' +
-      '</div>' +
+  var html = '<div class="sidebar-section">已购技能 ('+items.length+')</div>';
+  items.forEach(function(p){
+    var active = currentSkill && currentSkill.id === p.id ? 'active' : '';
+    html += '<div class="skill-item '+active+'" onclick="selectSkill(\''+p.id+'\')">'+
+      '<div class="skill-icon" style="background:'+p.color+'18">'+p.emoji+'</div>'+
+      '<div class="skill-info">'+
+        '<div class="skill-name">'+p.name+'</div>'+
+        '<div class="skill-desc">'+p.category+' · '+p.price+'元'+p.period+'</div>'+
+      '</div>'+
+      '<span class="skill-badge owned">已购</span>'+
     '</div>';
+  });
+  list.innerHTML = html;
+}
+
+function renderStoreList(list){
+  var items = PRODUCTS;
+  if(searchQ){
+    items = items.filter(function(p){
+      return p.name.toLowerCase().indexOf(searchQ)!==-1 ||
+             p.desc.toLowerCase().indexOf(searchQ)!==-1 ||
+             p.category.toLowerCase().indexOf(searchQ)!==-1 ||
+             (p.features||[]).some(function(f){ return f.toLowerCase().indexOf(searchQ)!==-1; });
+    });
   }
-  grid.innerHTML = html;
-}
 
-// ═══════════════════════════════
-// ACTIONS
-// ═══════════════════════════════
-function setFilter(cat){
-  activeFilter = cat;
-  renderTabs();
-  renderGrid();
-}
-function onSearch(q){ searchQ = q.trim(); document.getElementById("search-clear").classList.toggle("show", q.length > 0); renderGrid(); }
-function clearSearch(){ var inp = document.getElementById("search-input"); inp.value = ""; searchQ = ""; document.getElementById("search-clear").classList.remove("show"); renderGrid(); inp.focus(); }
-function onSort(v){ sortMode = v; renderGrid(); }
-
-function setView(v){
-  currentView = v;
-  document.getElementById('view-grid').classList.toggle('active', v==='grid');
-  document.getElementById('view-list').classList.toggle('active', v==='list');
-  var grid = document.getElementById('grid');
-  grid.style.gridTemplateColumns = v === 'list'
-    ? '1fr'
-    : 'repeat(auto-fill,minmax(370px,1fr))';
-}
-
-// ═══════════════════════════════
-// MODAL
-// ═══════════════════════════════
-function openModal(id){
-  var p = null;
-  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){p=PRODUCTS[i];break;}
-  if(!p) return;
-  var iconEl = document.getElementById('modal-icon');
-  iconEl.style.background = p.color+'18';
-  iconEl.textContent = p.emoji;
-  document.getElementById('modal-name').textContent = p.name;
-  var catEl = document.getElementById('modal-cat');
-  catEl.textContent = p.category;
-  catEl.className = 'modal-cat cat-'+(CAT_CLASSES[p.category]||'');
-  document.getElementById('modal-desc').textContent = p.desc;
-  var featsEl = document.getElementById('modal-features');
-  featsEl.innerHTML = '';
-  for(var j=0;j<p.features.length;j++){
-    var d = document.createElement('div');
-    d.className = 'modal-feat';
-    d.textContent = p.features[j];
-    featsEl.appendChild(d);
+  if(items.length === 0){
+    list.innerHTML = '<div class="sidebar-empty"><div class="sidebar-empty-icon">🔍</div><div class="sidebar-empty-title">没有找到商品</div></div>';
+    return;
   }
-  document.getElementById('modal-price').innerHTML = '<span class="sym">¥</span>'+p.price;
-  document.getElementById('modal-period').textContent = '月付 · 随时可续';
-  document.getElementById('modal-buy-btn').onclick = function(){ pay(id); };
-  document.getElementById('modal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-function closeModal(){
-  document.getElementById('modal').classList.remove('show');
-  document.body.style.overflow = '';
+
+  var html = '<div class="sidebar-section">全部商品 ('+items.length+')</div>';
+  items.forEach(function(p){
+    var owned = ownedSkills.indexOf(p.id) !== -1;
+    var tags = p.features ? p.features.slice(0,2) : [];
+    html += '<div class="store-item">'+
+      '<div class="store-item-top">'+
+        '<div class="store-item-icon" style="background:'+p.color+'18">'+p.emoji+'</div>'+
+        '<div class="store-item-name">'+p.name+'</div>'+
+        '<div class="store-item-price">¥'+p.price+p.period+'</div>'+
+      '</div>'+
+      '<div class="store-item-desc">'+p.desc+'</div>'+
+      '<div class="store-item-tags">'+
+        tags.map(function(t){ return '<span class="store-tag">'+t+'</span>'; }).join('')+
+      '</div>'+
+      '<div class="store-item-actions">';
+    if(owned){
+      html += '<button class="store-btn store-btn-chat" onclick="selectSkill(\''+p.id+'\');return false;">💬 开始对话</button>';
+    } else {
+      html += '<button class="store-btn store-btn-buy" onclick="openPayModal(\''+p.id+'\');return false;">💳 购买</button>'+
+              '<button class="store-btn store-btn-trial" onclick="openTrialModal(\''+p.id+'\');return false;">🎮 试用</button>';
+    }
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
 }
 
-var USDT_ADDR = 'TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy';
-function pay(id){
+function selectSkill(id){
   var p = null;
-  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){p=PRODUCTS[i];break;}
+  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){ p=PRODUCTS[i]; break; }
   if(!p) return;
-  closeModal();
-  closePayModal();
-  var usd = (p.price / 7.25).toFixed(2);
-  var paypalUrl = 'https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business='+encodeURIComponent(PAYPAL_EMAIL)+'&item_name=AI超市 - '+encodeURIComponent(p.name)+'&amount='+usd+'&currency_code=USD&no_note=1&cn=注明商品名称';
-  document.getElementById('pay-product-name').textContent = p.emoji + ' ' + p.name;
+  if(ownedSkills.indexOf(id) === -1){
+    toast('请先购买此技能');
+    openPayModal(id);
+    return;
+  }
+  currentSkill = p;
+  // Init chat history if needed
+  if(!chatHistories[id]){
+    chatHistories[id] = [
+      {role:'ai', content:'你好！我是 '+p.name+' 助手。我可以帮助你：\n\n'+(p.features||[]).map(function(f,i){ return '• '+f; }).join('\n')+'\n\n有什么我可以帮你的吗？'}
+    ];
+  }
+  renderChatSession();
+  renderSidebar();
+}
+
+function checkWelcome(){
+  if(ownedSkills.length > 0 && !currentSkill){
+    selectSkill(ownedSkills[0]);
+  }
+}
+
+// ═══════════════════════════════
+// CHAT
+// ═══════════════════════════════
+function renderChatSession(){
+  if(!currentSkill){
+    document.getElementById('chat-welcome').style.display = 'flex';
+    document.getElementById('chat-session').style.display = 'none';
+    return;
+  }
+  document.getElementById('chat-welcome').style.display = 'none';
+  document.getElementById('chat-session').style.display = 'flex';
+
+  document.getElementById('chat-header-icon').textContent = currentSkill.emoji;
+  document.getElementById('chat-header-icon').style.background = currentSkill.color+'22';
+  document.getElementById('chat-header-name').textContent = currentSkill.name;
+  document.getElementById('chat-header-sub').textContent = currentSkill.category+' · 已购 · '+currentSkill.price+'元'+currentSkill.period;
+
+  var history = chatHistories[currentSkill.id] || [];
+  var msgsEl = document.getElementById('chat-messages');
+  var html = '';
+  history.forEach(function(m){
+    if(m.role === 'user'){
+      html += '<div class="msg user"><div class="msg-avatar">😀</div><div class="msg-bubble">'+escapeHtml(m.content)+'</div></div>';
+    } else {
+      html += '<div class="msg ai"><div class="msg-avatar">'+currentSkill.emoji+'</div><div class="msg-bubble">'+escapeHtml(m.content)+'</div></div>';
+    }
+  });
+  msgsEl.innerHTML = html;
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function sendMessage(){
+  var input = document.getElementById('chat-input');
+  var text = input.value.trim();
+  if(!text || !currentSkill) return;
+
+  var history = chatHistories[currentSkill.id];
+  history.push({role:'user', content:text});
+  input.value = '';
+  input.style.height = 'auto';
+  renderChatSession();
+
+  // Simulate AI response
+  showTyping();
+  setTimeout(function(){
+    removeTyping();
+    var response = generateResponse(currentSkill, history);
+    history.push({role:'ai', content:response});
+    renderChatSession();
+  }, 1000 + Math.random()*1500);
+}
+
+function showTyping(){
+  var msgsEl = document.getElementById('chat-messages');
+  var dot = document.createElement('div');
+  dot.className = 'msg ai';
+  dot.id = 'typing-msg';
+  dot.innerHTML = '<div class="msg-avatar">'+currentSkill.emoji+'</div><div class="msg-typing"><span></span><span></span><span></span></div>';
+  msgsEl.appendChild(dot);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+function removeTyping(){
+  var el = document.getElementById('typing-msg');
+  if(el) el.remove();
+}
+
+function generateResponse(product, history){
+  var last = history[history.length-1].content;
+  var prompts = {
+    'github-automation': '我可以帮你进行GitHub自动化操作。根据你的问题，我建议使用GitHub Actions配合AI来完成：自动Star、评论、生成日报等任务。',
+    'telegram-bot': 'Telegram Bot API 可以帮助你实现号码查询功能。建议使用python-telegram-bot库来开发，支持批量查询和7×24小时运行。',
+    'content-promoter': 'AI内容推流系统支持多平台同步发布。我可以帮你设计内容策略、自动生成文案并推送到微博、小红书等平台。',
+    'n8n-workflow': 'n8n是一个强大的工作流自动化工具，可以连接100+应用。我可以帮你设计可视化工作流，实现任务自动化。',
+    'web-scraper': '智能网页爬虫支持可视化配置爬取规则。我可以根据目标网站的结构，帮你设计最合适的爬取方案。',
+    'code-reviewer': '作为代码审查助手，我可以帮你：1)发现潜在Bug 2)检测安全漏洞 3)分析性能问题 4)给出修复建议。请粘贴你的代码片段。',
+    'database-gpt': '用自然语言查询数据库，无需写SQL。我可以帮你把问题转换成SQL语句，并生成数据报告和可视化图表。',
+    'security-audit': 'AI安全审计系统可以检测SQL注入、XSS、CSRF等常见漏洞。请提供需要扫描的代码或API接口信息。',
+    'ecommerce-ai': '电商AI运营助手可以帮你：竞品监控、AI生成标题、关键词优化、价格库存预警。请告诉我你的具体需求。',
+    'data-visualizer': '数据可视化引擎支持20+种图表类型。请上传CSV/Excel文件，我来帮你生成可视化图表。',
+    'game-dev-kit': 'AI游戏开发套件可以帮你生成关卡、剧情、角色对话等。请描述你想做的游戏类型和风格。',
+    'video-generator': 'AI视频生成系统可以从文字描述生成视频。请提供视频主题、时长、风格等信息。',
+    'design-assistant': 'AI设计助手可以帮你生成UI设计稿、海报、Logo等。请描述设计需求和偏好风格。',
+    'api-gateway': 'API网关管理系统可以帮你统一管理API、监控流量、限流熔断。请告诉我你需要接入哪些服务。',
+    'ocr-extractor': 'OCR文档识别系统支持PDF、证件、发票等格式。请上传图片或文档，我来识别其中的文字。',
+    'voice-assistant': 'AI语音助手支持实时转写、多语言翻译、语音合成。请描述你的使用场景。',
+    'crypto-tracker': '加密货币监控系统可以实时追踪价格、K线、巨鲸地址。请告诉我你想监控哪些币种。',
+  };
+  var base = prompts[product.id] || '我是'+product.name+'助手，可以帮助你：\n\n'+(product.features||[]).map(function(f){ return '• '+f; }).join('\n')+'\n\n请告诉我你的具体需求，我会尽力帮助！';
+  return base + '\n\n---\n📌 你刚才问：' + last.substring(0,60) + (last.length>60?'…':'') + '\n\n请继续告诉我更多细节，我来帮你深入解答。';
+}
+
+function clearChat(){
+  if(!currentSkill) return;
+  chatHistories[currentSkill.id] = [
+    {role:'ai', content:'对话已清空。我是你的 '+currentSkill.name+' 助手，有什么可以帮你的？'}
+  ];
+  renderChatSession();
+}
+
+function onChatKeydown(e){
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+// ═══════════════════════════════
+// PURCHASE
+// ═══════════════════════════════
+function openPayModal(id){
+  var p = null;
+  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){ p=PRODUCTS[i]; break; }
+  if(!p) return;
+  currentPayId = id;
+  document.getElementById('pay-product-name').textContent = p.name;
   document.getElementById('pay-cny-price').textContent = '¥'+p.price;
-  document.getElementById('pay-usd-price').textContent = '≈ $'+usd+' USD';
-  document.getElementById('pay-usdt-price').textContent = '≈ '+usd+' USDT';
-  document.getElementById('pay-btn-paypal').href = paypalUrl;
+  document.getElementById('pay-usd-price').textContent = '≈ $'+(p.price/7.25).toFixed(2)+' USD';
   document.getElementById('pay-modal').classList.add('show');
   document.body.style.overflow = 'hidden';
-  payId = id;
-}
-function showPayPalQR(id){
-  var p = null;
-  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){p=PRODUCTS[i];break;}
-  if(!p) return;
-  closePayModal();
-  var usd = (p.price / 7.25).toFixed(2);
-  document.getElementById('pp-amount-display').textContent = '≈ $'+usd+' USD  ('+p.name+')';
-  var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='+encodeURIComponent('https://paypal.me/yinanzo/'+usd)+'&margin=0';
-  document.getElementById('pp-qr-img').src = qrUrl;
-  document.getElementById('pp-modal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-function closePpModal(){
-  document.getElementById('pp-modal').classList.remove('show');
-  document.body.style.overflow = '';
-}
-function copyUSDT(e){
-  e.preventDefault();
-  closePayModal();
-  document.getElementById('usdt-modal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-function copyUsdtAddr(){
-  var addr = USDT_ADDR;
-  var btn = document.getElementById('usdt-copy-btn');
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(addr).then(function(){
-      btn.textContent = '已复制!';
-      btn.classList.add('copied');
-      setTimeout(function(){ btn.textContent='复制'; btn.classList.remove('copied'); }, 2000);
-    }).catch(function(){ fallbackCopy(addr); });
-  } else { fallbackCopy(addr); }
-}
-function closeUsdtModal(){
-  document.getElementById('usdt-modal').classList.remove('show');
-  document.body.style.overflow = '';
-}
-function showSecretKey(id){
-  var p = null;
-  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){p=PRODUCTS[i];break;}
-  if(!p) return;
-  document.getElementById('secret-product-name').textContent = p.name;
-  document.getElementById('secret-price-display').textContent = '¥'+p.price;
-  document.getElementById('secret-usd-display').textContent = '≈ $'+(p.price/7.25).toFixed(2)+' USD';
-  document.getElementById('secret-input').value = '';
-  document.getElementById('secret-error').style.display = 'none';
-  document.getElementById('secret-modal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-  setTimeout(function(){ document.getElementById('secret-input').focus(); }, 100);
-}
-function closeSecretModal(){
-  document.getElementById('secret-modal').classList.remove('show');
-  document.body.style.overflow = '';
-}
-function trySecretKey(){
-  var key = document.getElementById('secret-input').value.trim().toUpperCase();
-  var err = document.getElementById('secret-error');
-  var errMsg = document.getElementById('secret-error-msg');
-  if(!key){ err.style.display='flex'; errMsg.textContent='请输入秘钥'; return; }
-  // Mock validation: accept any key that matches pattern XXXX-XXXX-XXXX-XXXX
-  if(/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key)){
-    err.style.display='none';
-    closeSecretModal();
-    toast('🎉 秘钥验证成功！正在获取下载链接…');
-    var pid = payId;
-    setTimeout(function(){
-      var p = null;
-      for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===pid){p=PRODUCTS[i];break;}
-      if(p){
-        var downloadUrl = 'https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/'+p.id+'.zip';
-        var a = document.createElement('a');
-        a.href = downloadUrl;
-        a.download = p.id+'.zip';
-        a.click();
-        toast('✅ '+p.name+' 下载已开始！');
-      }
-    }, 1500);
-  } else {
-    err.style.display='flex';
-    errMsg.textContent='秘钥格式错误，请检查后重试（例：ABCD-1234-EFGH-5678）';
-  }
-}
-function fallbackCopy(text){
-  var ta = document.createElement('textarea');
-  ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
-  document.body.appendChild(ta); ta.select();
-  try{document.execCommand('copy'); toast('✅ 钱包地址已复制：' + text);}catch(e){toast('⚠️ 请手动复制：' + text);}
-  document.body.removeChild(ta);
 }
 function closePayModal(){
   document.getElementById('pay-modal').classList.remove('show');
   document.body.style.overflow = '';
 }
 
-// ═══════════════════════════════
-
-// ═════════════════════════════════
-// TRIAL SYSTEM
-// ═════════════════════════════════
-var TRIAL_MAX = 3;
-var currentTrialProduct = null;
-
-function getTrialCount(id){
-  var key = 'trial_'+id;
-  return parseInt(localStorage.getItem(key) || '0', 10);
+function showPayPalQR(){
+  document.getElementById('pp-modal').classList.add('show');
 }
-function useTrial(id){
-  var key = 'trial_'+id;
-  var count = getTrialCount(id);
-  if(count >= TRIAL_MAX) return false;
-  localStorage.setItem(key, String(count+1));
-  return true;
+function closePpModal(){
+  document.getElementById('pp-modal').classList.remove('show');
 }
-function openTrial(id){
-  var count = getTrialCount(id);
-  if(count >= TRIAL_MAX){
-    toast('今日试用次数已用完，请购买完整版');
-    return;
-  }
+
+function showUSDTQR(){
+  document.getElementById('usdt-modal').classList.add('show');
+}
+function closeUsdtModal(){
+  document.getElementById('usdt-modal').classList.remove('show');
+}
+
+function showSecretKey(){
   var p = null;
-  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){p=PRODUCTS[i];break;}
+  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===currentPayId){ p=PRODUCTS[i]; break; }
+  if(p){
+    document.getElementById('secret-product-name').textContent = p.name;
+    document.getElementById('secret-price-display').textContent = '¥'+p.price;
+    document.getElementById('secret-usd-display').textContent = '≈ $'+(p.price/7.25).toFixed(2)+' USD';
+  }
+  document.getElementById('secret-modal').classList.add('show');
+}
+function closeSecretModal(){
+  document.getElementById('secret-modal').classList.remove('show');
+}
+
+function trySecretKey(){
+  var key = document.getElementById('secret-input').value.trim().toUpperCase();
+  var err = document.getElementById('secret-error');
+  var errMsg = document.getElementById('secret-error-msg');
+  if(!key){ err.style.display='flex'; errMsg.textContent='请输入秘钥'; return; }
+  if(/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key)){
+    err.style.display='none';
+    closeSecretModal();
+    closePayModal();
+    // Add to owned
+    if(ownedSkills.indexOf(currentPayId) === -1){
+      ownedSkills.push(currentPayId);
+      saveOwned();
+      toast('🎉 秘钥验证成功！'+getProductName(currentPayId)+' 已解锁');
+      selectSkill(currentPayId);
+      renderSidebar();
+    } else {
+      toast('✅ 此技能已拥有，开始对话吧！');
+      selectSkill(currentPayId);
+    }
+  } else {
+    err.style.display='flex';
+    errMsg.textContent='秘钥格式错误（例：ABCD-1234-EFGH-5678）';
+  }
+}
+
+function getProductName(id){
+  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id) return PRODUCTS[i].name;
+  return id;
+}
+
+// ═══════════════════════════════
+// TRIAL
+// ═══════════════════════════════
+function openTrialModal(id){
+  var p = null;
+  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){ p=PRODUCTS[i]; break; }
   if(!p) return;
-  currentTrialProduct = id;
-  document.getElementById('trial-product-name').textContent = '免费体验 · '+p.name;
-  document.getElementById('trial-icon').textContent = p.emoji;
-  document.getElementById('trial-name').textContent = p.name;
-  document.getElementById('trial-desc').textContent = p.desc;
-  document.getElementById('trial-left').textContent = TRIAL_MAX - count;
-  document.getElementById('trial-console').innerHTML = '<div class="trial-console-line system">$ 正在初始化演示环境...</div>';
+  currentPayId = id;
+  document.getElementById('trial-product-name').textContent = p.name;
+  var used = trialCounts[id] || 0;
+  renderTrialDots(used);
+  document.getElementById('trial-console').innerHTML = '';
   document.getElementById('trial-run-btn').disabled = false;
-  renderTrialDots(count);
+  document.getElementById('trial-run-btn').textContent = '▶ 启动演示';
   document.getElementById('trial-modal').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
+function closeTrialModal(){
+  document.getElementById('trial-modal').classList.remove('show');
+  document.body.style.overflow = '';
+}
 function renderTrialDots(used){
-  var dots = '';
-  for(var i=0;i<TRIAL_MAX;i++){
-    dots += '<div class="trial-dot '+(i<used?'used':'avail')+'"></div>';
-  }
-  document.getElementById('trial-dots').innerHTML = dots;
+  var html = '';
+  for(var i=0;i<TRIAL_MAX;i++) html += '<div class="trial-dot '+(i<used?'used':'available')+'"></div>';
+  document.getElementById('trial-dots').innerHTML = html;
 }
 function runTrial(){
-  if(!currentTrialProduct) return;
-  var count = getTrialCount(currentTrialProduct);
-  if(count >= TRIAL_MAX){
+  var id = currentPayId;
+  if(!id) return;
+  var used = trialCounts[id] || 0;
+  if(used >= TRIAL_MAX){
     toast('试用次数已用完，请购买完整版');
-    closeTrialModal();
     return;
   }
-  var btn = document.getElementById('trial-run-btn');
-  if(btn.disabled) return;
-  btn.disabled = true;
-  useTrial(currentTrialProduct);
-  var newCount = getTrialCount(currentTrialProduct);
-  document.getElementById('trial-left').textContent = TRIAL_MAX - newCount;
-  renderTrialDots(newCount);
+  trialCounts[id] = used + 1;
+  saveTrialCounts();
+  renderTrialDots(trialCounts[id]);
 
+  var p = null;
+  for(var i=0;i<PRODUCTS.length;i++) if(PRODUCTS[i].id===id){ p=PRODUCTS[i]; break; }
   var console_el = document.getElementById('trial-console');
-  var steps = getTrialSteps(currentTrialProduct);
+  var steps = getTrialSteps(p);
   var step = 0;
+  var btn = document.getElementById('trial-run-btn');
+  btn.disabled = true;
+
   function addLine(text, cls){
     var div = document.createElement('div');
     div.className = 'trial-console-line '+cls;
@@ -2183,329 +1081,104 @@ function runTrial(){
   function next(){
     if(step >= steps.length){
       btn.disabled = false;
-      if(newCount >= TRIAL_MAX){
-        btn.textContent = '次数已用完';
-        btn.disabled = true;
-        addLine('[完成] 演示结束，请购买完整版解锁全部功能', 'system');
-      } else {
-        btn.textContent = '▶ 再试一次 ('+(TRIAL_MAX-newCount)+'次剩余)';
-        btn.disabled = false;
-        addLine('[完成] 演示成功！还剩 '+(TRIAL_MAX-newCount)+' 次试用机会', 'system');
-      }
+      btn.textContent = '✅ 演示完成';
+      addLine('['+new Date().toLocaleTimeString()+'] 演示结束，实际使用请购买完整版', 'system');
       return;
     }
     var s = steps[step];
-    addLine(s.label, 'action');
+    addLine('['+new Date().toLocaleTimeString()+'] '+s.label, 'action');
     setTimeout(function(){
-      addLine(s.result, 'result');
+      addLine('  → '+s.result, 'result');
       step++;
-      setTimeout(next, 400);
+      setTimeout(next, 500);
     }, s.delay);
   }
-  addLine('$ 正在执行演示任务...', 'system');
+  addLine('[系统] 正在执行演示任务…', 'system');
   setTimeout(next, 500);
 }
-function getTrialSteps(id){
-  var steps_map = {
-    'github-automation':[
-      {label:'$ git clone github-trending-monitor', delay:600, result:'✓ 克隆成功 (12 files)'},
-      {label:'$ npx agent --search "AI workflow"', delay:800, result:'✓ 找到 47 个相关项目'},
-      {label:'$ agent --star --filter stars>100', delay:700, result:'✓ 已 Star 12 个优质项目'},
-      {label:'$ agent --comment --template "great work"', delay:900, result:'✓ 自动评论完成 (8 repos)'},
-      {label:'$ agent --digest --daily', delay:500, result:'✓ 日报已生成，推送至 Telegram'},
-    ],
-    'content-promoter':[
-      {label:'$ promoter generate --topic "AI tools"', delay:700, result:'✓ 生成 6 平台适配文案 (知乎/小红书/抖音等)'},
-      {label:'$ promoter schedule --time "09:00"', delay:500, result:'✓ 已设置定时发布计划'},
-      {label:'$ promoter post --platforms all', delay:800, result:'✓ 成功发布至 6 个平台'},
-    ],
-    'n8n-workflow':[
-      {label:'$ n8n import workflow --id 8473', delay:700, result:'✓ 工作流已导入 (Webhook + AI)'},
-      {label:'$ n8n activate --id 8473', delay:500, result:'✓ 工作流已激活，运行中'},
-      {label:'$ curl -X POST https://hook.example.com/trigger', delay:600, result:'✓ Webhook 触发成功，AI 返回结果'},
-    ],
-    'telegram-bot':[
-      {label:'$ bot query --phone "13800138000"', delay:800, result:'✓ 查询成功：广东广州 中国移动'},
-      {label:'$ bot batch --file numbers.csv', delay:700, result:'✓ 批量查询完成 (120条，耗时 3.2s)'},
-    ],
-    'ai-manga':[
-      {label:'$ manga generate --script "AI觉醒"', delay:900, result:'✓ 分镜生成完成 (8页)'},
-      {label:'$ manga render --style "赛博朋克"', delay:1000, result:'✓ 渲染完成，输出到 output/manga/' },
-    ],
-    'video-gen':[
-      {label:'$ video gen --text "AI如何改变生活"', delay:900, result:'✓ 视频生成中 (预计 45s)...'},
-      {label:'$ video status', delay:300, result:'✓ 视频完成，分辨率 1080p'},
-    ],
-    'idea-generator':[
-      {label:'$ idea generate --topic "AI变现"', delay:600, result:'✓ 生成 10 个创意方案'},
-      {label:'$ idea expand --id 3', delay:500, result:'✓ 展开方案详情 + 实施步骤'},
-    ],
-    'ppt-generator':[
-      {label:'$ ppt gen --topic "AI Agent行业报告"', delay:800, result:'✓ PPT 生成完成 (18页)'},
-      {label:'$ ppt export --format pdf', delay:400, result:'✓ 导出 PDF 成功'},
-    ],
-    'ai-writing':[
-      {label:'$ write article --topic "n8n工作流技巧"', delay:700, result:'✓ 文章生成完成 (1860字，含 SEO 优化)'},
-      {label:'$ write translate --lang en', delay:500, result:'✓ 英译完成'},
-    ],
-    'cross-border-ai':[
-      {label:'$跨境 ai generate --product "无线耳机"', delay:700, result:'✓ 多语言描述生成 (英/日/韩/德)'},
-      {label:'$跨境 seo optimize --lang en', delay:500, result:'✓ SEO 优化建议 (17条)'},
-    ],
-    'ai-agent':[
-      {label:'$ agent init --platform wechat', delay:600, result:'✓ 微信平台连接成功'},
-      {label:'$ agent install --skill "github"', delay:500, result:'✓ GitHub 技能安装完成'},
-    ],
-    '3d-generator':[
-      {label:'$ 3d gen --text "赛博朋克机器人"', delay:1000, result:'✓ 3D 模型生成完成 (GLTF格式)'},
-    ],
-    'web-scraper':[
-      {label:'$ scrape --url "https://news.ycombinator.com"', delay:700, result:'✓ 抓取完成 (30条，JSON格式)'},
-    ],
-    'database-toolkit':[
-      {label:'$ db query "最近30天订单量"', delay:500, result:'✓ 查询结果：12,847 条，均价 ¥236'},
-    ],
-    'security-scanner':[
-      {label:'$ scan --repo https://github.com/example/app', delay:800, result:'✓ 发现 3 个中风险漏洞'},
-      {label:'$ scan --fix', delay:400, result:'✓ 已生成修复建议代码'},
-    ],
-    'design-toolkit':[
-      {label:'$ design logo --name "TechAI" --style "极简"', delay:700, result:'✓ Logo 生成完成 (SVG/PNG)'},
-    ],
-    'game-dev-kit':[
-      {label:'$ game init --template platformer', delay:600, result:'✓ 游戏框架已创建'},
-      {label:'$ game add ai-npc --count 5', delay:500, result:'✓ AI NPC 已添加 (5个智能角色)'},
-    ],
-  };
-  return steps_map[id] || [
-    {label:'$ demo run --product '+id, delay:600, result:'✓ 演示任务执行成功'},
-    {label:'$ demo result', delay:400, result:'✓ 输出验证通过，功能运行正常'},
+function getTrialSteps(p){
+  if(!p) return [];
+  return [
+    {label:'连接 '+p.name+' 服务…', result:'✅ 连接成功，云端就绪', delay:600},
+    {label:'初始化 AI 模型…', result:'✅ 模型加载完成 (v2.1)', delay:800},
+    {label:'执行演示任务：'+p.name, result:'✅ 任务执行成功，结果已生成', delay:1000},
+    {label:'生成任务报告…', result:'✅ 报告已就绪，可查看详情', delay:600},
   ];
 }
-function trialToBuy(){
-  closeTrialModal();
-  if(currentTrialProduct) pay(currentTrialProduct);
-}
-function closeTrialModal(){
-  document.getElementById('trial-modal').classList.remove('show');
-  document.body.style.overflow = '';
-}
-function updateTrialButtons(){
-  for(var i=0;i<PRODUCTS.length;i++){
-    var p = PRODUCTS[i];
-    var btn = document.getElementById('try-btn-'+p.id);
-    if(!btn) continue;
-    var count = getTrialCount(p.id);
-    if(count >= TRIAL_MAX){
-      btn.textContent = '已用完';
-      btn.disabled = true;
-    } else {
-      btn.textContent = '免费试用';
-      btn.disabled = false;
-    }
-  }
-}
 
-// ═════════════════════════════════
-// VOICE (TTS)
-// ═════════════════════════════════
-var currentVoice = null;
-var currentLang = 'zh-CN';
-var speaking = false;
-
-function initVoice(){
-  if(!('speechSynthesis' in window)) return;
-  var voices = speechSynthesis.getVoices();
-  if(voices.length === 0){
-    speechSynthesis.onvoiceschanged = function(){
-      pickVoice(currentLang);
-    };
-    return;
-  }
-  pickVoice(currentLang);
-}
-function pickVoice(lang){
-  var voices = speechSynthesis.getVoices();
-  var preferred = voices.find(function(v){ return v.lang === lang && v.name.includes('Female'); });
-  if(!preferred) preferred = voices.find(function(v){ return v.lang === lang; });
-  if(!preferred && lang==='en-US') preferred = voices.find(function(v){ return v.lang.startsWith('en'); });
-  currentVoice = preferred || voices[0];
-  currentLang = lang;
-}
-function setVoiceLang(lang){
-  pickVoice(lang);
-}
-function toggleVoice(){
-  if(!('speechSynthesis' in window)){ toast('您的浏览器不支持语音朗读'); return; }
-  if(speaking){
-    speechSynthesis.cancel();
-    speaking = false;
-    document.getElementById('voice-btn').textContent = '🔊';
-    document.getElementById('voice-btn').classList.remove('speaking');
-    return;
-  }
-  var text = getPageSummary();
-  if(!text){ toast('没有可朗读的内容'); return; }
-  var utterance = new SpeechSynthesisUtterance(text);
-  if(currentVoice) utterance.voice = currentVoice;
-  utterance.lang = currentLang;
-  utterance.rate = 0.9;
-  utterance.pitch = 1;
-  utterance.onend = function(){
-    speaking = false;
-    document.getElementById('voice-btn').textContent = '🔊';
-    document.getElementById('voice-btn').classList.remove('speaking');
-  };
-  utterance.onerror = function(){
-    speaking = false;
-    document.getElementById('voice-btn').textContent = '🔊';
-    document.getElementById('voice-btn').classList.remove('speaking');
-  };
-  speechSynthesis.speak(utterance);
-  speaking = true;
-  document.getElementById('voice-btn').textContent = '🔇';
-  document.getElementById('voice-btn').classList.add('speaking');
-}
-function getPageSummary(){
-  var els = document.querySelectorAll('.hero-title, .hero-sub, .card-name');
-  var parts = [];
-  els.forEach(function(el){
-    var t = el.textContent.trim();
-    if(t.length > 2) parts.push(t);
-  });
-  var name = document.querySelector('.logo') ? document.querySelector('.logo').textContent.trim() : '';
-  return name + '。' + parts.slice(0, 8).join('。');
-}
-if('speechSynthesis' in window){
-  window.addEventListener('load', initVoice);
-  speechSynthesis.onvoiceschanged = initVoice;
-}
-
-
-// PWA
 // ═══════════════════════════════
-window.addEventListener('beforeinstallprompt',function(e){
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('install-btn').classList.add('show');
-  document.getElementById('install-banner').classList.add('show');
-});
-
-function triggerInstall(){
-  dismissBanner();
-  if(deferredPrompt){
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function(r){
-      deferredPrompt = null;
-      if(r.outcome==='accepted') toast('✅ 安装成功！可在桌面/主屏幕找到AI超市');
-    });
-    return;
-  }
-  var ua = navigator.userAgent;
-  if(/iPhone|iPad|iPod/i.test(ua)) toast('🍎 Safari → 分享按钮 → 添加到主屏幕');
-  else if(/Android/i.test(ua)) toast('🤖 Chrome菜单 → 安装应用');
-  else toast('💻 Chrome地址栏右侧点击「安装应用」图标');
-}
-function dismissBanner(){
-  document.getElementById('install-banner').classList.remove('show');
-  localStorage.setItem('ai_market_banner_dismissed','1');
+// COPY
+// ═══════════════════════════════
+function copyText(text, msg){
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.cssText='position:fixed;opacity:0';
+  document.body.appendChild(ta); ta.select();
+  try{document.execCommand('copy'); toast(msg||'已复制');}catch(e){toast('请手动复制：'+text);}
+  document.body.removeChild(ta);
 }
 
 // ═══════════════════════════════
-// NOTIFICATIONS
+// TOAST
 // ═══════════════════════════════
-async function requestNotification(){
-  dismissNotifyBanner();
-  if(!('Notification' in window)){ toast('您的浏览器不支持通知功能'); return; }
-  var perm = await Notification.requestPermission();
-  if(perm==='granted'){
-    new Notification('🔔 AI超市通知已开启！',{body:'以后新品上线会第一时间通知你 🎉'});
-    toast('✅ 通知已开启，新品上架第一时间提醒！');
-    localStorage.setItem('ai_market_notify','1');
-  } else {
-    toast('⚠️ 请在浏览器设置中允许通知权限');
-  }
-}
-function dismissNotifyBanner(){
-  document.getElementById('notify-banner').classList.remove('show');
-  localStorage.setItem('ai_market_notify_dismissed','1');
+function toast(msg){
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(function(){ el.classList.remove('show'); }, 2800);
 }
 
 // ═══════════════════════════════
-// SERVICE WORKER DISABLED — always fresh from network
-// Clears all browser caches on every load to prevent stale data
+// MOBILE
 // ═══════════════════════════════
-if ('caches' in window) {
-  caches.keys().then(function(names) {
-    names.forEach(function(name) { caches.delete(name); });
-  });
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function closeSidebarOnMobile(){
+  document.getElementById('sidebar').classList.remove('open');
 }
 
 // ═══════════════════════════════
-// INIT
+// MAIN VIEW
 // ═══════════════════════════════
-renderTabs();
-renderGrid();
-updateTrialButtons();
-
-// Particles
-function createParticles() {
-  var container = document.getElementById('particles');
-  if(!container) return;
-  for (var i = 0; i < 30; i++) {
-    var p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.animationDuration = (Math.random() * 10 + 8) + 's';
-    p.style.animationDelay = (Math.random() * 10) + 's';
-    p.style.width = (Math.random() * 2 + 1) + 'px';
-    p.style.height = p.style.width;
-    container.appendChild(p);
-  }
-}
-createParticles();
-
-// Show notify banner after delay
-if(!localStorage.getItem('ai_market_notify_dismissed') && !localStorage.getItem('ai_market_notify')){
-  setTimeout(function(){
-    if(!localStorage.getItem('ai_market_notify_dismissed'))
-      document.getElementById('notify-banner').classList.add('show');
-  }, 3500);
-}
-if(localStorage.getItem('ai_market_banner_dismissed')){
-  document.getElementById('install-banner').classList.remove('show');
+function switchMainView(view){
+  currentView = view;
+  var btns = document.querySelectorAll('.header-nav-btn');
+  btns.forEach(function(b){ b.classList.remove('active'); });
+  if(view === 'chat') btns[0].classList.add('active');
+  else btns[1].classList.add('active');
+  if(view === 'store') switchSidebarTab('store');
+  else switchSidebarTab('owned');
 }
 
-// Keyboard shortcut: Escape closes all modals
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){
-    closeModal();
+// ═══════════════════════════════
+// ESC / CLICK-OUT
+// ═══════════════════════════════
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){
     closePayModal();
-    closeUsdtModal();
     closePpModal();
-    closeTrialModal();
+    closeUsdtModal();
     closeSecretModal();
+    closeTrialModal();
   }
 });
+document.getElementById('pay-modal').addEventListener('click', function(e){ if(e.target===this) closePayModal(); });
+document.getElementById('pp-modal').addEventListener('click', function(e){ if(e.target===this) closePpModal(); });
+document.getElementById('usdt-modal').addEventListener('click', function(e){ if(e.target===this) closeUsdtModal(); });
+document.getElementById('secret-modal').addEventListener('click', function(e){ if(e.target===this) closeSecretModal(); });
+document.getElementById('trial-modal').addEventListener('click', function(e){ if(e.target===this) closeTrialModal(); });
 
-// Header scroll shadow
-window.addEventListener("scroll", function(){ document.querySelector("header").classList.toggle("scrolled", window.scrollY > 10); });
+// ═══════════════════════════════
+// UTILS
+// ═══════════════════════════════
+function escapeHtml(str){
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br/>');
+}
 
-// Active nav highlight
-var bnavBtns = document.querySelectorAll('.bnav-btn');
-var sections = ['hero','filter-bar','testimonials','cta'];
-window.addEventListener('scroll',function(){
-  var scrollY = window.scrollY + 200;
-  var current = 'hero';
-  sections.forEach(function(id){
-    var el = document.getElementById(id);
-    if(el && el.offsetTop <= scrollY) current = id;
-  });
-  bnavBtns.forEach(function(btn){
-    var cls = btn.getAttribute('onclick') || '';
-    btn.classList.toggle('active', cls.indexOf("'"+current+"'")!==-1);
-  });
-});
+// ═══════════════════════════════
+// BOOT
+// ═══════════════════════════════
+init();
 </script>
 </body>
 </html>
