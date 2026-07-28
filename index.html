@@ -822,9 +822,29 @@ function selectSkill(id){
   currentSkill = p;
   // Init chat history if needed
   if(!chatHistories[id]){
-    chatHistories[id] = [
-      {role:'ai', content:'你好！我是 '+p.name+' 助手。我可以帮助你：\n\n'+(p.features||[]).map(function(f,i){ return '• '+f; }).join('\n')+'\n\n有什么我可以帮你的吗？'}
-    ];
+    var welcomes = {
+      'github-automation': '👋 你好！我是 GitHub Agent 自动化助手。\n\n我可以帮你完成：\n🔹 自动Star和评论GitHub项目\n🔹 追踪Trending热榜，每日推送\n🔹 AI生成高质量评论内容\n🔹 GitHub Actions 7×24云端运行\n\n告诉我你想自动化什么，我来帮你配置！',
+      'telegram-bot': '👋 你好！我是 Telegram号码查询机器人。\n\n我的能力：\n🔹 实时查询手机号归属地，<2秒响应\n🔹 支持批量查询CSV导入\n🔹 全国号码数据库自动更新\n🔹 7×24小时云端运行\n\n输入号码，我来帮你查！',
+      'content-promoter': '👋 你好！我是 AI内容推流系统。\n\n我的专长：\n🔹 一键生成多平台适配内容\n🔹 支持微博/小红书/公众号等\n🔹 定时自动发布\n🔹 数据统计追踪\n\n告诉我你的内容主题，我来帮你生成并推流！',
+      'n8n-workflow': '👋 你好！我是 n8n 工作流自动化助手。\n\n我的能力：\n🔹 可视化连接100+应用\n🔹 条件分支/循环/错误处理\n🔹 云端7×24运行\n🔹 Webhook触发，支持自定义\n\n描述你想自动化的流程，我来帮你设计！',
+      'web-scraper': '👋 你好！我是智能网页爬虫。\n\n我的能力：\n🔹 可视化配置爬取规则\n🔹 支持登录态/验证码处理\n🔹 自动去重格式化存储\n🔹 定时批量爬取\n\n给我一个网址，我来帮你设计爬取方案！',
+      'code-reviewer': '👋 你好！我是 AI代码审查助手。\n\n我的能力：\n🔹 自动发现Bug和逻辑错误\n🔹 检测安全漏洞\n🔹 分析性能瓶颈\n🔹 生成修复建议\n\n直接粘贴代码，我来帮你审查！',
+      'database-gpt': '👋 你好！我是数据库AI助手。\n\n我的能力：\n🔹 自然语言查询，无需写SQL\n🔹 自动生成优化建议\n🔹 数据可视化图表\n🔹 支持MySQL/PG/MongoDB等\n\n用中文告诉我你想查什么数据！',
+      'security-audit': '👋 你好！我是 AI安全审计系统。\n\n我的能力：\n🔹 OWASP Top 10漏洞扫描\n🔹 SQL注入/XSS/CSRF检测\n🔹 修复建议报告\n🔹 持续监控告警\n\n提供URL或代码，我来帮你做安全评估！',
+      'ecommerce-ai': '👋 你好！我是电商AI运营助手。\n\n我的能力：\n🔹 竞品价格/库存实时监控\n🔹 AI生成高转化标题描述\n🔹 关键词优化\n🔹 数据报表\n\n告诉我你的电商情况，我来帮你运营！',
+      'data-visualizer': '👋 你好！我是数据可视化引擎。\n\n我的能力：\n🔹 20+图表类型\n🔹 拖拽式操作\n🔹 多数据源接入\n🔹 一键导出PNG/SVG/PDF\n\n上传数据或描述需求，我来帮你生成图表！',
+      'game-dev-kit': '👋 你好！我是 AI游戏开发套件。\n\n我的能力：\n🔹 AI生成游戏关卡\n🔹 剧情/对话自动生成\n🔹 角色技能配置\n🔹 美术资源建议\n\n告诉我你想做什么游戏，我来帮你规划！',
+      'video-generator': '👋 你好！我是 AI视频生成系统。\n\n我的能力：\n🔹 文字转视频\n🔹 AI配音合成\n🔹 自动字幕\n🔹 多风格特效\n\n描述你想做的视频，我来帮你生成方案！',
+      'design-assistant': '👋 你好！我是 AI设计助手。\n\n我的能力：\n🔹 UI设计稿生成\n🔹 海报/Logo/Banner设计\n🔹 配色方案推荐\n🔹 多格式导出\n\n描述你的设计需求，我来帮你生成方案！',
+      'api-gateway': '👋 你好！我是 API网关管理系统。\n\n我的能力：\n🔹 统一管理API\n🔹 流量监控限流熔断\n🔹 多认证方式\n🔹 可视化配置\n\n告诉我你的需求，我来帮你设计！',
+      'ocr-extractor': '👋 你好！我是 OCR文档识别系统。\n\n我的能力：\n🔹 PDF/图片/扫描件识别\n🔹 证件/发票/名片提取\n🔹 表格结构还原\n🔹 批量处理\n\n上传图片，我来帮你识别文字！',
+      'voice-assistant': '👋 你好！我是 AI语音助手。\n\n我的能力：\n🔹 实时语音转文字\n🔹 多语言翻译\n🔹 语音合成\n🔹 打断插话交互\n\n告诉我你的使用场景，我来帮你配置！',
+      'crypto-tracker': '👋 你好！我是加密货币监控系统。\n\n我的能力：\n🔹 实时价格监控\n🔹 K线数据分析\n🔹 巨鲸地址追踪\n🔹 多渠道告警\n\n告诉我你想监控哪些币种，我来帮你配置！',
+    };
+    chatHistories[id] = [{
+      role: 'ai',
+      content: welcomes[id] || ('你好！我是 '+p.name+'。有什么我可以帮你的？')
+    }];
   }
   renderChatSession();
   renderSidebar();
@@ -905,26 +925,34 @@ function removeTyping(){
 function generateResponse(product, history){
   var last = history[history.length-1].content;
   var prompts = {
-    'github-automation': '我可以帮你进行GitHub自动化操作。根据你的问题，我建议使用GitHub Actions配合AI来完成：自动Star、评论、生成日报等任务。',
-    'telegram-bot': 'Telegram Bot API 可以帮助你实现号码查询功能。建议使用python-telegram-bot库来开发，支持批量查询和7×24小时运行。',
-    'content-promoter': 'AI内容推流系统支持多平台同步发布。我可以帮你设计内容策略、自动生成文案并推送到微博、小红书等平台。',
-    'n8n-workflow': 'n8n是一个强大的工作流自动化工具，可以连接100+应用。我可以帮你设计可视化工作流，实现任务自动化。',
-    'web-scraper': '智能网页爬虫支持可视化配置爬取规则。我可以根据目标网站的结构，帮你设计最合适的爬取方案。',
-    'code-reviewer': '作为代码审查助手，我可以帮你：1)发现潜在Bug 2)检测安全漏洞 3)分析性能问题 4)给出修复建议。请粘贴你的代码片段。',
-    'database-gpt': '用自然语言查询数据库，无需写SQL。我可以帮你把问题转换成SQL语句，并生成数据报告和可视化图表。',
-    'security-audit': 'AI安全审计系统可以检测SQL注入、XSS、CSRF等常见漏洞。请提供需要扫描的代码或API接口信息。',
-    'ecommerce-ai': '电商AI运营助手可以帮你：竞品监控、AI生成标题、关键词优化、价格库存预警。请告诉我你的具体需求。',
-    'data-visualizer': '数据可视化引擎支持20+种图表类型。请上传CSV/Excel文件，我来帮你生成可视化图表。',
-    'game-dev-kit': 'AI游戏开发套件可以帮你生成关卡、剧情、角色对话等。请描述你想做的游戏类型和风格。',
-    'video-generator': 'AI视频生成系统可以从文字描述生成视频。请提供视频主题、时长、风格等信息。',
-    'design-assistant': 'AI设计助手可以帮你生成UI设计稿、海报、Logo等。请描述设计需求和偏好风格。',
-    'api-gateway': 'API网关管理系统可以帮你统一管理API、监控流量、限流熔断。请告诉我你需要接入哪些服务。',
-    'ocr-extractor': 'OCR文档识别系统支持PDF、证件、发票等格式。请上传图片或文档，我来识别其中的文字。',
-    'voice-assistant': 'AI语音助手支持实时转写、多语言翻译、语音合成。请描述你的使用场景。',
-    'crypto-tracker': '加密货币监控系统可以实时追踪价格、K线、巨鲸地址。请告诉我你想监控哪些币种。',
+    'github-automation': '好的，我来帮你！GitHub自动化我能做这些：\n\n🔹 自动Star/评论任何项目\n🔹 追踪Trending日报，每日推送\n🔹 AI生成高质量评论内容\n🔹 全天候GitHub Actions云端运行\n\n告诉我你想自动化什么，我来帮你配置。',
+    'telegram-bot': '收到！Telegram号码查询功能已就绪：\n\n🔹 实时查询手机号归属地，<2秒响应\n🔹 支持批量查询CSV导入\n🔹 全国号码库自动更新\n🔹 自动重试机制，稳定性高\n\n告诉我你要查什么，或者说"帮我查13912345678"试试看。',
+    'content-promoter': 'AI内容推流系统已启动！我的能力：\n\n🔹 一键生成适配各平台的内容文案\n🔹 支持微博/小红书/公众号等\n🔹 定时自动发布，解放双手\n🔹 数据统计，追踪阅读量\n\n告诉我你的产品或内容主题，我来帮你生成并推流。',
+    'n8n-workflow': 'n8n工作流引擎已就绪！我的专长：\n\n🔹 可视化连接100+应用\n🔹 条件分支/循环/错误处理\n🔹 云端7×24运行，无需盯守\n🔹Webhook触发，支持自定义逻辑\n\n告诉我你想自动化什么流程，我来帮你设计工作流。',
+    'web-scraper': '智能爬虫已就绪！我能帮你：\n\n🔹 可视化配置爬取规则，无需写代码\n🔹 支持登录态、验证码处理\n🔹 自动去重、格式化存储\n🔹 定时批量爬取，自动化运行\n\n给我一个网址，我来帮你分析爬取方案。',
+    'code-reviewer': '代码审查助手已就绪！我会帮你：\n\n🔹 自动发现潜在Bug和逻辑错误\n🔹 检测安全漏洞（SQL注入/XSS等）\n🔹 分析性能瓶颈和优化建议\n🔹 生成修复代码片段\n\n直接粘贴代码，我来帮你审查。',
+    'database-gpt': '数据库AI助手已就绪！我能帮你：\n\n🔹 用自然语言查询数据库，无需写SQL\n🔹 自动生成优化建议\n🔹 数据可视化，生成图表报告\n🔹 支持MySQL/PostgreSQL/MongoDB等\n\n直接用中文描述你想查什么，我来转成SQL。',
+    'security-audit': '安全审计系统已启动！我能帮你：\n\n🔹 OWASP Top 10漏洞扫描\n🔹 SQL注入、XSS、CSRF检测\n🔹 自动生成修复建议报告\n🔹 持续监控，异常实时告警\n\n提供要扫描的URL或代码，我来帮你做安全评估。',
+    'ecommerce-ai': '电商AI运营助手已就绪！我的能力：\n\n🔹 实时监控竞品价格和库存\n🔹 AI生成高转化商品标题和描述\n🔹 关键词优化，提升搜索排名\n🔹 数据报表，辅助运营决策\n\n告诉我你的电商平台和商品，我来帮你分析。',
+    'data-visualizer': '数据可视化引擎已就绪！支持：\n\n🔹 20+图表类型（折线/柱状/饼图等）\n🔹 拖拽式操作，无需代码\n🔹 多数据源接入（CSV/Excel/API）\n🔹 一键导出PNG/SVG/PDF\n\n上传数据文件或描述你想可视化什么，我来帮你生成图表。',
+    'game-dev-kit': '游戏开发套件已就绪！我能帮你：\n\n🔹 AI生成游戏关卡和地图设计\n🔹 剧情和角色对话自动生成\n🔹 角色技能和属性自动配置\n🔹 美术资源描述和生成建议\n\n告诉我你想做什么类型的游戏，我来帮你规划。',
+    'video-generator': 'AI视频生成已就绪！我的能力：\n\n🔹 文字描述直接转视频\n🔹 AI配音合成，支持多语言\n🔹 自动字幕生成\n🔹 多种风格特效可选\n\n描述你想做的视频内容，我来帮你生成脚本和素材方案。',
+    'design-assistant': 'AI设计助手已就绪！我能帮你：\n\n🔹 输入需求生成UI设计稿\n🔹 海报/Banner/Logo设计\n🔹 配色方案智能推荐\n🔹 支持导出Figma/Sketch格式\n\n描述你的设计需求，我来帮你生成方案。',
+    'api-gateway': 'API网关管理系统已就绪！我的专长：\n\n🔹 统一管理所有API接口\n🔹 流量监控和限流熔断\n🔹 多种认证方式（JWT/OAuth/API Key）\n🔹 可视化配置，实时生效\n\n告诉我你需要接入哪些服务，我来帮你设计网关方案。',
+    'ocr-extractor': 'OCR文档识别已就绪！支持：\n\n🔹 PDF/图片/扫描件识别\n🔹 证件、发票、名片自动提取\n🔹 表格结构还原，保持格式\n🔹 批量处理，API调用\n\n上传图片或文件，我来帮你识别其中的文字内容。',
+    'voice-assistant': 'AI语音助手已就绪！我的能力：\n\n🔹 实时语音转文字（中英日韩等）\n🔹 多语言即时翻译\n🔹 语音合成，定制音色\n🔹 支持打断和插话交互\n\n告诉我你的使用场景，我来帮你配置语音方案。',
+    'crypto-tracker': '加密货币监控系统已就绪！功能：\n\n🔹 实时价格监控，支持全主流币种\n🔹 K线数据接入，技术分析\n🔹 巨鲸钱包地址追踪\n🔹 多渠道告警（邮件/推送/Telegram）\n\n告诉我你想监控哪些币种，我来帮你配置监控规则。',
   };
-  var base = prompts[product.id] || '我是'+product.name+'助手，可以帮助你：\n\n'+(product.features||[]).map(function(f){ return '• '+f; }).join('\n')+'\n\n请告诉我你的具体需求，我会尽力帮助！';
-  return base + '\n\n---\n📌 你刚才问：' + last.substring(0,60) + (last.length>60?'…':'') + '\n\n请继续告诉我更多细节，我来帮你深入解答。';
+  var base = prompts[product.id] || '我是'+product.name+'，以下是主要功能：\n\n'+(product.features||[]).map(function(f){ return '🔹 '+f; }).join('\n')+'\n\n直接告诉我你想做什么，我来帮你！';
+  // Extract user question context
+  var q = last.toLowerCase();
+  var ctxHint = '';
+  if(q.includes('怎么')||q.includes('如何')||q.includes('帮')||q.includes('做')){
+    ctxHint = '\n\n针对你的问题，让我详细说明一下方案…';
+  } else if(q.includes('帮我')||q.includes('给我')){
+    ctxHint = '\n\n收到，我马上帮你处理！';
+  }
+  return base + ctxHint;
 }
 
 function clearChat(){
