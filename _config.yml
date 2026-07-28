@@ -1,0 +1,4 @@
+# Disable Jekyll processing
+safe: true
+lsi: false
+增量_sitemap: false
