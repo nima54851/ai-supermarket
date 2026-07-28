@@ -1,5 +1,5 @@
-// AI超市 Service Worker v3 - 全面离线 + 新品推送通知
-const CACHE_NAME = 'ai-supermarket-v3';
+// AI超市 Service Worker v4 - 全面离线 + 新品推送通知
+const CACHE_NAME = 'ai-supermarket-v4';
 
 // 核心资源（预缓存）
 const PRECACHE = [
@@ -53,7 +53,7 @@ self.addEventListener('push', e => {
     icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"%3E%3Crect width="192" height="192" rx="36" fill="%236366f1"/%3E%3Ctext x="96" y="128" font-size="110" text-anchor="middle"%3E%F0%9F%9B%92%3C/text%3E%3C/svg%3E',
     badge: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"%3E%3Crect width="96" height="96" rx="18" fill="%236366f1"/%3E%3Ctext x="48" y="68" font-size="55" text-anchor="middle"%3E%F0%9F%9B%92%3C/text%3E%3C/svg%3E',
     vibrate: [300, 100, 300],
-    tag: 'ai-market-v3',
+    tag: 'ai-market-v4',
     renotify: true,
     requireInteraction: false,
     data: { url: data.url || '/ai-supermarket/#products' },
@@ -92,7 +92,7 @@ async function checkNewProducts() {
         body: d.tag_name ? `v${d.tag_name} 上线，快来抢购！` : '有新的AI技能包发布了！',
         icon: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"%3E%3Crect width="192" height="192" rx="36" fill="%236366f1"/%3E%3Ctext x="96" y="128" font-size="110" text-anchor="middle"%3E%F0%9F%9B%92%3C/text%3E%3C/svg%3E',
         badge: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"%3E%3Crect width="96" height="96" rx="18" fill="%236366f1"/%3E%3Ctext x="48" y="68" font-size="55" text-anchor="middle"%3E%F0%9F%9B%92%3C/text%3E%3C/svg%3E',
-        tag: 'new-product-v3',
+        tag: 'new-product-v4',
         data: { url: '/ai-supermarket/#products' }
       });
     }
