@@ -2307,7 +2307,15 @@ function dismissNotifyBanner(){
 // SERVICE WORKER
 // ═══════════════════════════════
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw/service-worker.js').catch(function(e){ console.log('SW failed:',e); });
+  navigator.serviceWorker.register('sw/service-worker.js').then(function(reg){
+    reg.addEventListener('updatefound', function(){
+      reg.installing.addEventListener('statechange', function(){
+        if(this.state === 'installed' && navigator.serviceWorker.controller){
+          window.location.reload();
+        }
+      });
+    });
+  }).catch(function(e){ console.log('SW failed:',e); });
 }
 
 // ═══════════════════════════════
