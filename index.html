@@ -2307,7 +2307,7 @@ function dismissNotifyBanner(){
 // SERVICE WORKER
 // ═══════════════════════════════
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw/service-worker.js').then(function(reg){
+  navigator.serviceWorker.register('service-worker.js').then(function(reg){
     reg.addEventListener('updatefound', function(){
       reg.installing.addEventListener('statechange', function(){
         if(this.state === 'installed' && navigator.serviceWorker.controller){
