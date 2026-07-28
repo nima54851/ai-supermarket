@@ -2304,18 +2304,13 @@ function dismissNotifyBanner(){
 }
 
 // ═══════════════════════════════
-// SERVICE WORKER
+// SERVICE WORKER DISABLED — always fresh from network
+// Clears all browser caches on every load to prevent stale data
 // ═══════════════════════════════
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('service-worker.js').then(function(reg){
-    reg.addEventListener('updatefound', function(){
-      reg.installing.addEventListener('statechange', function(){
-        if(this.state === 'installed' && navigator.serviceWorker.controller){
-          window.location.reload();
-        }
-      });
-    });
-  }).catch(function(e){ console.log('SW failed:',e); });
+if ('caches' in window) {
+  caches.keys().then(function(names) {
+    names.forEach(function(name) { caches.delete(name); });
+  });
 }
 
 // ═══════════════════════════════
