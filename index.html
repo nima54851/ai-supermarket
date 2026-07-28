@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>万能AI超市 - 买AI能力，像买菜一样简单</title>
-  <meta name="description" content="一站式AI能力交易市场，购买后直接对话使用"/>
+  <title>万能AI超市 - 买AI能力,像买菜一样简单</title>
+  <meta name="description" content="一站式AI能力交易市场,购买后直接对话使用"/>
   <meta name="theme-color" content="#6366f1"/>
-  <meta property="og:title" content="万能AI超市 - 买AI能力，像买菜一样简单"/>
-  <meta property="og:description" content="一站式AI能力交易市场，17款+AI工具"/>
+  <meta property="og:title" content="万能AI超市 - 买AI能力,像买菜一样简单"/>
+  <meta property="og:description" content="一站式AI能力交易市场,17款+AI工具"/>
   <meta property="og:image" content="https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@main/og-image.png"/>
   <meta property="og:url" content="https://nima54851.github.io/ai-supermarket/"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -448,7 +448,7 @@ input,textarea{font-family:inherit;}
       </div>
       <div class="sidebar-search">
         <div class="search-wrap">
-          <input class="search-input" id="sidebar-search" placeholder="搜索技能或商品…" oninput="onSidebarSearch(this.value)"/>
+          <input class="search-input" id="sidebar-search" placeholder="搜索技能或商品..." oninput="onSidebarSearch(this.value)"/>
           <span class="search-icon">🔍</span>
         </div>
       </div>
@@ -460,7 +460,7 @@ input,textarea{font-family:inherit;}
       <div id="chat-welcome" class="chat-welcome">
         <div class="chat-welcome-icon">🤖</div>
         <div class="chat-welcome-title">欢迎来到 万能AI超市</div>
-        <div class="chat-welcome-desc">购买AI技能后，在这里直接对话使用。<br/>左侧选择技能，或去商店选购。</div>
+        <div class="chat-welcome-desc">购买AI技能后,在这里直接对话使用。<br/>左侧选择技能,或去商店选购。</div>
         <div class="chat-welcome-hint">
           <span class="chat-welcome-chip">⚡ GitHub自动化</span>
           <span class="chat-welcome-chip">📣 内容推流</span>
@@ -474,7 +474,7 @@ input,textarea{font-family:inherit;}
         <div class="chat-header" id="chat-header">
           <div class="chat-header-icon" id="chat-header-icon">🤖</div>
           <div class="chat-header-info">
-            <div class="chat-header-name" id="chat-header-name">—</div>
+            <div class="chat-header-name" id="chat-header-name">-</div>
             <div class="chat-header-sub" id="chat-header-sub">选择技能开始对话</div>
           </div>
           <div class="chat-header-actions">
@@ -485,10 +485,10 @@ input,textarea{font-family:inherit;}
         <div class="chat-messages" id="chat-messages"></div>
         <div class="chat-input-area">
           <div class="chat-input-wrap">
-            <textarea class="chat-input" id="chat-input" rows="1" placeholder="输入你的问题…" oninput="autoResize(this)" onkeydown="onChatKeydown(event)"></textarea>
+            <textarea class="chat-input" id="chat-input" rows="1" placeholder="输入你的问题..." oninput="autoResize(this)" onkeydown="onChatKeydown(event)"></textarea>
             <button class="chat-send-btn" id="chat-send-btn" onclick="sendMessage()">↑</button>
           </div>
-          <div class="chat-input-hint">按 Enter 发送，Shift+Enter 换行 · 购买技能后即可对话</div>
+          <div class="chat-input-hint">按 Enter 发送,Shift+Enter 换行 · 购买技能后即可对话</div>
         </div>
       </div>
     </main>
@@ -499,10 +499,10 @@ input,textarea{font-family:inherit;}
 <div class="pay-modal-overlay" id="pay-modal">
   <div class="pay-modal">
     <div class="pay-header">
-      <div class="pay-product-name" id="pay-product-name">—</div>
+      <div class="pay-product-name" id="pay-product-name">-</div>
       <div class="pay-price-line">
-        <span class="pay-cny" id="pay-cny-price">¥—</span>
-        <span class="pay-usd" id="pay-usd-price">≈ $— USD</span>
+        <span class="pay-cny" id="pay-cny-price">¥-</span>
+        <span class="pay-usd" id="pay-usd-price">≈ $- USD</span>
       </div>
       <div class="pay-period">月付 · 随时可续 · 自动发货</div>
     </div>
@@ -511,7 +511,7 @@ input,textarea{font-family:inherit;}
         <div class="pay-method-icon" style="background:#e8f0ff;">💳</div>
         <div class="pay-method-info">
           <div class="pay-method-name">PayPal 扫码支付</div>
-          <div class="pay-method-desc">扫码打开 PayPal，确认金额即可付款</div>
+          <div class="pay-method-desc">扫码打开 PayPal,确认金额即可付款</div>
         </div>
         <div class="pay-method-arrow">›</div>
       </a>
@@ -519,23 +519,23 @@ input,textarea{font-family:inherit;}
         <div class="pay-method-icon" style="background:#e8f5e9;">💬</div>
         <div class="pay-method-info">
           <div class="pay-method-name">微信 / WeChat</div>
-          <div class="pay-method-desc">联系客服发收款码，付款后立即发货</div>
+          <div class="pay-method-desc">联系客服发收款码,付款后立即发货</div>
         </div>
         <div class="pay-method-arrow">›</div>
       </a>
       <a class="pay-method" href="#" onclick="showUSDTQR();return false;">
         <div class="pay-method-icon" style="background:#e8f4f0;">🪙</div>
         <div class="pay-method-info">
-          <div class="pay-method-name">USDT（TRC20）</div>
-          <div class="pay-method-desc">复制钱包地址转账，联系客服确认后发货</div>
+          <div class="pay-method-name">USDT(TRC20)</div>
+          <div class="pay-method-desc">复制钱包地址转账,联系客服确认后发货</div>
         </div>
         <div class="pay-method-arrow">›</div>
       </a>
       <a class="pay-method" href="#" onclick="showSecretKey();return false;">
         <div class="pay-method-icon" style="background:#f0f0ff;">🔑</div>
         <div class="pay-method-info">
-          <div class="pay-method-name">秘钥购买（自动发货）</div>
-          <div class="pay-method-desc">输入秘钥直接解锁，秒级发货，无需联系客服</div>
+          <div class="pay-method-name">秘钥购买(自动发货)</div>
+          <div class="pay-method-desc">输入秘钥直接解锁,秒级发货,无需联系客服</div>
         </div>
         <div class="pay-method-arrow">›</div>
       </a>
@@ -544,7 +544,7 @@ input,textarea{font-family:inherit;}
     <div class="pay-after">
       <div class="pay-after-title">📋 购买流程</div>
       <div class="pay-after-step"><span class="step-n">1</span> 完成付款后截图保存支付凭证</div>
-      <div class="pay-after-step"><span class="step-n">2</span> 联系客服确认到账，发送截图</div>
+      <div class="pay-after-step"><span class="step-n">2</span> 联系客服确认到账,发送截图</div>
       <div class="pay-after-step"><span class="step-n">3</span> 客服确认后立即发送 GitHub 下载链接</div>
     </div>
     <div class="pay-contact">
@@ -592,7 +592,7 @@ input,textarea{font-family:inherit;}
     </div>
     <div class="usdt-after">
       <div class="usdt-after-title">⏱️ 转账后流程</div>
-      <div class="usdt-after-step"><span class="step-n">1</span> 完成USDT转账，截图保存凭证</div>
+      <div class="usdt-after-step"><span class="step-n">1</span> 完成USDT转账,截图保存凭证</div>
       <div class="usdt-after-step"><span class="step-n">2</span> 联系客服确认到账</div>
       <div class="usdt-after-step"><span class="step-n">3</span> 客服发送 GitHub 下载链接</div>
     </div>
@@ -609,14 +609,14 @@ input,textarea{font-family:inherit;}
     <div class="secret-header">
       <div class="secret-header-icon">🔑</div>
       <h3>秘钥解锁</h3>
-      <p>购买后获得秘钥，输入即可秒级解锁</p>
+      <p>购买后获得秘钥,输入即可秒级解锁</p>
     </div>
-    <div class="secret-product" id="secret-product-name">—</div>
+    <div class="secret-product" id="secret-product-name">-</div>
     <div class="secret-price-row">
-      <span class="secret-price" id="secret-price-display">¥—</span>
-      <span class="secret-usd" id="secret-usd-display">≈ $— USD</span>
+      <span class="secret-price" id="secret-price-display">¥-</span>
+      <span class="secret-usd" id="secret-usd-display">≈ $- USD</span>
     </div>
-    <input class="secret-input" id="secret-input" type="text" placeholder="输入秘钥，如：ABCD-1234-EFGH-5678" autocomplete="off"/>
+    <input class="secret-input" id="secret-input" type="text" placeholder="输入秘钥,如:ABCD-1234-EFGH-5678" autocomplete="off"/>
     <div class="secret-error" id="secret-error" style="display:none;"><span>⚠️</span> <span id="secret-error-msg">秘钥无效</span></div>
     <button class="secret-unlock" onclick="trySecretKey()"><span>🔓</span> 验证并解锁</button>
     <div class="secret-steps">
@@ -625,7 +625,7 @@ input,textarea{font-family:inherit;}
       <div class="secret-step"><span class="step-n">2</span> 付款后联系客服获取秘钥</div>
       <div class="secret-step"><span class="step-n">3</span> 复制秘钥粘贴到上方输入框</div>
     </div>
-    <div class="secret-buy-row">还没有秘钥？<a href="#" onclick="closeSecretModal();openPayModal(currentPayId);return false;">去购买</a></div>
+    <div class="secret-buy-row">还没有秘钥?<a href="#" onclick="closeSecretModal();openPayModal(currentPayId);return false;">去购买</a></div>
     <button class="secret-close-btn" onclick="closeSecretModal()">关闭</button>
   </div>
 </div>
@@ -634,8 +634,8 @@ input,textarea{font-family:inherit;}
 <div class="trial-modal-overlay" id="trial-modal">
   <div class="trial-modal">
     <div class="trial-header">
-      <h3>🎮 免费试用 — <span id="trial-product-name">—</span></h3>
-      <p>每个商品免费试用 3 次，感受效果后再购买</p>
+      <h3>🎮 免费试用 - <span id="trial-product-name">-</span></h3>
+      <p>每个商品免费试用 3 次,感受效果后再购买</p>
     </div>
     <div class="trial-dot-row" id="trial-dots"></div>
     <div class="trial-console" id="trial-console"></div>
@@ -643,7 +643,7 @@ input,textarea{font-family:inherit;}
       <button class="trial-run-btn" id="trial-run-btn" onclick="runTrial()">▶ 启动演示</button>
       <button class="trial-close-btn" onclick="closeTrialModal()">关闭</button>
     </div>
-    <div class="trial-tips">⚡ 试用不消耗真实资源，每次刷新重置</div>
+    <div class="trial-tips">⚡ 试用不消耗真实资源,每次刷新重置</div>
   </div>
 </div>
 
@@ -655,23 +655,23 @@ input,textarea{font-family:inherit;}
 // DATA
 // ═══════════════════════════════
 var PRODUCTS = [
-  {id:"github-automation",name:"GitHub Agent自动化",emoji:"⚡",price:99,period:"/月",category:"自动化",desc:"全自动GitHub运营：自动Star、评论、追踪Trending、AI日报生成。",features:["GitHub Actions 7×24","自动Star热门项目","AI生成智能评论","Trending追踪日报"],color:"#6366f1",rating:4.9,reviewCount:128},
-  {id:"telegram-bot",name:"Telegram号码查询",emoji:"📱",price:29,period:"/月",category:"自动化",desc:"实时手机号归属地查询，批量查询，7×24小时云端运行。",features:["实时查询 < 2秒","全国号码数据库","批量查询","自动重试机制"],color:"#22d3ee",rating:4.7,reviewCount:203},
-  {id:"content-promoter",name:"AI内容推流系统",emoji:"📣",price:199,period:"/月",category:"内容",desc:"AI自动生成内容并推送到多平台，支持微博、小红书、公众号等。",features:["多平台同步发布","AI内容生成","定时自动发布","数据统计分析"],color:"#ec4899",rating:4.8,reviewCount:87},
-  {id:"n8n-workflow",name:"n8n工作流自动化",emoji:"🔗",price:149,period:"/月",category:"自动化",desc:"可视化n8n工作流设计器，连接100+应用，自动化日常任务。",features:["100+应用集成","可视化流程设计","云端7×24运行","条件分支逻辑"],color:"#10b981",rating:4.6,reviewCount:156},
-  {id:"web-scraper",name:"智能网页爬虫",emoji:"🔍",price:69,period:"/月",category:"数据",desc:"可视化配置爬取规则，自动提取网页数据，支持定时抓取。",features:["可视化规则配置","支持登录/验证码","自动去重存储","定时批量爬取"],color:"#f59e0b",rating:4.5,reviewCount:94},
-  {id:"code-reviewer",name:"AI代码审查助手",emoji:"🔍",price:79,period:"/月",category:"开发",desc:"自动审查代码质量，发现Bug、安全漏洞、性能问题，提供修复建议。",features:["多语言支持","Bug自动发现","安全漏洞检测","修复建议生成"],color:"#8b5cf6",rating:4.8,reviewCount:112},
-  {id:"database-gpt",name:"数据库AI助手",emoji:"📊",price:89,period:"/月",category:"数据",desc:"用自然语言查询数据库，无需写SQL，自动生成报告和可视化图表。",features:["自然语言查询","自动SQL生成","数据可视化","报表自动导出"],color:"#06b6d4",rating:4.7,reviewCount:78},
-  {id:"security-audit",name:"AI安全审计系统",emoji:"🛡️",price:129,period:"/月",category:"安全",desc:"自动化安全扫描，检测SQL注入、XSS、CSRF等常见漏洞。",features:["OWASP Top 10检测","自动化漏洞扫描","修复建议报告","持续监控告警"],color:"#ef4444",rating:4.9,reviewCount:63},
+  {id:"github-automation",name:"GitHub Agent自动化",emoji:"⚡",price:99,period:"/月",category:"自动化",desc:"全自动GitHub运营:自动Star、评论、追踪Trending、AI日报生成。",features:["GitHub Actions 7×24","自动Star热门项目","AI生成智能评论","Trending追踪日报"],color:"#6366f1",rating:4.9,reviewCount:128},
+  {id:"telegram-bot",name:"Telegram号码查询",emoji:"📱",price:29,period:"/月",category:"自动化",desc:"实时手机号归属地查询,批量查询,7×24小时云端运行。",features:["实时查询 < 2秒","全国号码数据库","批量查询","自动重试机制"],color:"#22d3ee",rating:4.7,reviewCount:203},
+  {id:"content-promoter",name:"AI内容推流系统",emoji:"📣",price:199,period:"/月",category:"内容",desc:"AI自动生成内容并推送到多平台,支持微博、小红书、公众号等。",features:["多平台同步发布","AI内容生成","定时自动发布","数据统计分析"],color:"#ec4899",rating:4.8,reviewCount:87},
+  {id:"n8n-workflow",name:"n8n工作流自动化",emoji:"🔗",price:149,period:"/月",category:"自动化",desc:"可视化n8n工作流设计器,连接100+应用,自动化日常任务。",features:["100+应用集成","可视化流程设计","云端7×24运行","条件分支逻辑"],color:"#10b981",rating:4.6,reviewCount:156},
+  {id:"web-scraper",name:"智能网页爬虫",emoji:"🔍",price:69,period:"/月",category:"数据",desc:"可视化配置爬取规则,自动提取网页数据,支持定时抓取。",features:["可视化规则配置","支持登录/验证码","自动去重存储","定时批量爬取"],color:"#f59e0b",rating:4.5,reviewCount:94},
+  {id:"code-reviewer",name:"AI代码审查助手",emoji:"🔍",price:79,period:"/月",category:"开发",desc:"自动审查代码质量,发现Bug、安全漏洞、性能问题,提供修复建议。",features:["多语言支持","Bug自动发现","安全漏洞检测","修复建议生成"],color:"#8b5cf6",rating:4.8,reviewCount:112},
+  {id:"database-gpt",name:"数据库AI助手",emoji:"📊",price:89,period:"/月",category:"数据",desc:"用自然语言查询数据库,无需写SQL,自动生成报告和可视化图表。",features:["自然语言查询","自动SQL生成","数据可视化","报表自动导出"],color:"#06b6d4",rating:4.7,reviewCount:78},
+  {id:"security-audit",name:"AI安全审计系统",emoji:"🛡️",price:129,period:"/月",category:"安全",desc:"自动化安全扫描,检测SQL注入、XSS、CSRF等常见漏洞。",features:["OWASP Top 10检测","自动化漏洞扫描","修复建议报告","持续监控告警"],color:"#ef4444",rating:4.9,reviewCount:63},
   {id:"ecommerce-ai",name:"电商AI运营助手",emoji:"🛒",price:159,period:"/月",category:"电商",desc:"自动分析竞品、生成标题描述、优化关键词、监控价格和库存。",features:["竞品实时监控","AI标题生成","关键词优化","库存价格预警"],color:"#f97316",rating:4.6,reviewCount:91},
-  {id:"data-visualizer",name:"数据可视化引擎",emoji:"📈",price:59,period:"/月",category:"数据",desc:"上传CSV/Excel，自动生成20+种图表，支持自定义配色和交互。",features:["20+图表类型","拖拽式操作","多数据源接入","一键导出PNG/SVG"],color:"#14b8a6",rating:4.5,reviewCount:145},
-  {id:"game-dev-kit",name:"AI游戏开发套件",emoji:"🎮",price:199,period:"/月",category:"游戏",desc:"AI辅助游戏开发：自动生成关卡、角色、剧情、对话、美术资源。",features:["AI生成游戏关卡","剧情对话生成","角色自动创建","美术资源生成"],color:"#a855f7",rating:4.7,reviewCount:52},
-  {id:"video-generator",name:"AI视频生成系统",emoji:"🎬",price:249,period:"/月",category:"内容",desc:"输入文字自动生成视频，支持配音、字幕、特效、背景音乐。",features:["文字转视频","AI配音合成","自动字幕生成","多风格特效"],color:"#f43f5e",rating:4.4,reviewCount:38},
-  {id:"design-assistant",name:"AI设计助手",emoji:"🎨",price:99,period:"/月",category:"设计",desc:"输入需求自动生成UI设计稿、海报、Logo、Banner，支持多格式导出。",features:["UI设计自动生成","海报Logo设计","多格式导出","配色方案推荐"],color:"#e879f9",rating:4.6,reviewCount:167},
-  {id:"api-gateway",name:"API网关管理系统",emoji:"🌐",price:119,period:"/月",category:"开发",desc:"统一管理API接口，监控流量，限流熔断，认证鉴权，可视化配置。",features:["统一API管理","流量监控告警","限流熔断保护","多认证方式"],color:"#3b82f6",rating:4.5,reviewCount:84},
-  {id:"ocr-extractor",name:"OCR文档识别系统",emoji:"📄",price:49,period:"/月",category:"数据",desc:"扫描/拍照识别文字，支持PDF、证件、发票、名片等多格式。",features:["多格式文档识别","表格自动还原","批量处理","API接口调用"],color:"#84cc16",rating:4.3,reviewCount:201},
-  {id:"voice-assistant",name:"AI语音助手",emoji:"🎙️",price:89,period:"/月",category:"效率",desc:"语音唤醒、实时转写、翻译合成，支持中英日韩等多语言。",features:["实时语音转文字","多语言翻译","语音合成","打断插话交互"],color:"#fb923c",rating:4.6,reviewCount:118},
-  {id:"crypto-tracker",name:"加密货币监控系统",emoji:"💰",price:79,period:"/月",category:"数据",desc:"实时监控加密货币价格、K线、巨鲸钱包地址，自动告警。",features:["实时价格监控","K线数据接入","巨鲸地址追踪","多渠道告警"],color:"#facc15",rating:4.4,reviewCount:72},
+  {id:"data-visualizer",name:"数据可视化引擎",emoji:"📈",price:59,period:"/月",category:"数据",desc:"上传CSV/Excel,自动生成20+种图表,支持自定义配色和交互。",features:["20+图表类型","拖拽式操作","多数据源接入","一键导出PNG/SVG"],color:"#14b8a6",rating:4.5,reviewCount:145},
+  {id:"game-dev-kit",name:"AI游戏开发套件",emoji:"🎮",price:199,period:"/月",category:"游戏",desc:"AI辅助游戏开发:自动生成关卡、角色、剧情、对话、美术资源。",features:["AI生成游戏关卡","剧情对话生成","角色自动创建","美术资源生成"],color:"#a855f7",rating:4.7,reviewCount:52},
+  {id:"video-generator",name:"AI视频生成系统",emoji:"🎬",price:249,period:"/月",category:"内容",desc:"输入文字自动生成视频,支持配音、字幕、特效、背景音乐。",features:["文字转视频","AI配音合成","自动字幕生成","多风格特效"],color:"#f43f5e",rating:4.4,reviewCount:38},
+  {id:"design-assistant",name:"AI设计助手",emoji:"🎨",price:99,period:"/月",category:"设计",desc:"输入需求自动生成UI设计稿、海报、Logo、Banner,支持多格式导出。",features:["UI设计自动生成","海报Logo设计","多格式导出","配色方案推荐"],color:"#e879f9",rating:4.6,reviewCount:167},
+  {id:"api-gateway",name:"API网关管理系统",emoji:"🌐",price:119,period:"/月",category:"开发",desc:"统一管理API接口,监控流量,限流熔断,认证鉴权,可视化配置。",features:["统一API管理","流量监控告警","限流熔断保护","多认证方式"],color:"#3b82f6",rating:4.5,reviewCount:84},
+  {id:"ocr-extractor",name:"OCR文档识别系统",emoji:"📄",price:49,period:"/月",category:"数据",desc:"扫描/拍照识别文字,支持PDF、证件、发票、名片等多格式。",features:["多格式文档识别","表格自动还原","批量处理","API接口调用"],color:"#84cc16",rating:4.3,reviewCount:201},
+  {id:"voice-assistant",name:"AI语音助手",emoji:"🎙️",price:89,period:"/月",category:"效率",desc:"语音唤醒、实时转写、翻译合成,支持中英日韩等多语言。",features:["实时语音转文字","多语言翻译","语音合成","打断插话交互"],color:"#fb923c",rating:4.6,reviewCount:118},
+  {id:"crypto-tracker",name:"加密货币监控系统",emoji:"💰",price:79,period:"/月",category:"数据",desc:"实时监控加密货币价格、K线、巨鲸钱包地址,自动告警。",features:["实时价格监控","K线数据接入","巨鲸地址追踪","多渠道告警"],color:"#facc15",rating:4.4,reviewCount:72},
 ];
 
 var CATEGORIES = ["全部","自动化","内容","数据","开发","安全","电商","设计","游戏","效率"];
@@ -680,6 +680,7 @@ var USDT_ADDR = 'TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy';
 
 // State
 var ownedSkills = [];       // array of product IDs the user owns
+var purchases = {};          // {productId: {date: timestamp, days: 30}}
 var currentSkill = null;    // currently selected skill for chat
 var currentPayId = null;    // product being purchased
 var currentView = 'chat';   // 'chat' | 'store'
@@ -688,11 +689,14 @@ var searchQ = '';
 var chatHistories = {};     // {productId: [{role, content}]}
 var trialCounts = {};       // {productId: count}
 var TRIAL_MAX = 3;
+var notifyExpiring = [];    // skills expiring in 3 days
 
 // ── INIT ──
 function init(){
   loadOwned();
+  loadPurchases();
   loadTrialCounts();
+  checkExpiring();
   renderSidebar();
   checkWelcome();
 }
@@ -705,12 +709,67 @@ function loadOwned(){
 }
 function saveOwned(){
   localStorage.setItem('ai_market_owned', JSON.stringify(ownedSkills));
+  savePurchases();
+}
+function loadPurchases(){
+  try{ purchases = JSON.parse(localStorage.getItem('ai_market_purchases') || '{}'); }catch(e){ purchases={}; }
+}
+function savePurchases(){
+  localStorage.setItem('ai_market_purchases', JSON.stringify(purchases));
 }
 function loadTrialCounts(){
   try{ trialCounts = JSON.parse(localStorage.getItem('ai_market_trials') || '{}'); }catch(e){ trialCounts={}; }
 }
 function saveTrialCounts(){
   localStorage.setItem('ai_market_trials', JSON.stringify(trialCounts));
+}
+
+// ═══════════════════════════════
+// EXPIRING / RENEWAL
+// ═══════════════════════════════
+function checkExpiring(){
+  var now = Date.now();
+  var expiring = [];
+  Object.keys(purchases).forEach(function(id){
+    var p = purchases[id];
+    if(!p || !p.expires) return;
+    var daysLeft = Math.ceil((p.expires - now) / 86400000);
+    if(daysLeft > 0 && daysLeft <= 3 && notifyExpiring.indexOf(id) === -1){
+      expiring.push({id: id, daysLeft: daysLeft});
+      notifyExpiring.push(id);
+    }
+    if(daysLeft <= 0){
+      var idx = ownedSkills.indexOf(id);
+      if(idx !== -1){ ownedSkills.splice(idx,1); saveOwned(); }
+      delete chatHistories[id];
+    }
+  });
+  if(expiring.length > 0) showExpiringBanner(expiring);
+}
+
+function showExpiringBanner(list){
+  var old = document.getElementById('expiring-banner');
+  if(old) old.remove();
+  var banner = document.createElement('div');
+  banner.id = 'expiring-banner';
+  banner.style.cssText = 'position:fixed;top:58px;left:0;right:0;z-index:99;background:linear-gradient(90deg,#f59e0b,#f97316);color:white;padding:0.65rem 1.2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:0.8rem;font-weight:700;box-shadow:0 4px 20px rgba(245,158,11,0.4);';
+  var names = list.map(function(x){ return getProductName(x.id)+' '+x.daysLeft+'天后'; }).join(' · ');
+  banner.innerHTML = '<span>⏰ 续费提醒：' + names + '</span>';
+  var btnWrap = document.createElement('div');
+  btnWrap.style.cssText = 'display:flex;gap:0.4rem;flex-shrink:0;';
+  var ignoreBtn = document.createElement('button');
+  ignoreBtn.textContent = '忽略';
+  ignoreBtn.style.cssText = 'padding:0.3rem 0.7rem;border-radius:8px;background:rgba(255,255,255,0.25);border:none;color:white;font-size:0.7rem;font-weight:700;cursor:pointer;';
+  ignoreBtn.onclick = function(){ banner.style.display='none'; };
+  var renewBtn = document.createElement('button');
+  renewBtn.textContent = '立即续费';
+  renewBtn.style.cssText = 'padding:0.3rem 0.7rem;border-radius:8px;background:white;color:#f59e0b;border:none;font-size:0.7rem;font-weight:700;cursor:pointer;';
+  renewBtn.onclick = function(){ banner.style.display='none'; openPayModal(list[0].id); };
+  btnWrap.appendChild(ignoreBtn);
+  btnWrap.appendChild(renewBtn);
+  banner.appendChild(btnWrap);
+  document.querySelector('.app').prepend(banner);
+  toast('⚠️ 有技能即将到期，请及时续费！');
 }
 
 // ═══════════════════════════════
@@ -823,27 +882,27 @@ function selectSkill(id){
   // Init chat history if needed
   if(!chatHistories[id]){
     var welcomes = {
-      'github-automation': '👋 你好！我是 GitHub Agent 自动化助手。\n\n我可以帮你完成：\n🔹 自动Star和评论GitHub项目\n🔹 追踪Trending热榜，每日推送\n🔹 AI生成高质量评论内容\n🔹 GitHub Actions 7×24云端运行\n\n告诉我你想自动化什么，我来帮你配置！',
-      'telegram-bot': '👋 你好！我是 Telegram号码查询机器人。\n\n我的能力：\n🔹 实时查询手机号归属地，<2秒响应\n🔹 支持批量查询CSV导入\n🔹 全国号码数据库自动更新\n🔹 7×24小时云端运行\n\n输入号码，我来帮你查！',
-      'content-promoter': '👋 你好！我是 AI内容推流系统。\n\n我的专长：\n🔹 一键生成多平台适配内容\n🔹 支持微博/小红书/公众号等\n🔹 定时自动发布\n🔹 数据统计追踪\n\n告诉我你的内容主题，我来帮你生成并推流！',
-      'n8n-workflow': '👋 你好！我是 n8n 工作流自动化助手。\n\n我的能力：\n🔹 可视化连接100+应用\n🔹 条件分支/循环/错误处理\n🔹 云端7×24运行\n🔹 Webhook触发，支持自定义\n\n描述你想自动化的流程，我来帮你设计！',
-      'web-scraper': '👋 你好！我是智能网页爬虫。\n\n我的能力：\n🔹 可视化配置爬取规则\n🔹 支持登录态/验证码处理\n🔹 自动去重格式化存储\n🔹 定时批量爬取\n\n给我一个网址，我来帮你设计爬取方案！',
-      'code-reviewer': '👋 你好！我是 AI代码审查助手。\n\n我的能力：\n🔹 自动发现Bug和逻辑错误\n🔹 检测安全漏洞\n🔹 分析性能瓶颈\n🔹 生成修复建议\n\n直接粘贴代码，我来帮你审查！',
-      'database-gpt': '👋 你好！我是数据库AI助手。\n\n我的能力：\n🔹 自然语言查询，无需写SQL\n🔹 自动生成优化建议\n🔹 数据可视化图表\n🔹 支持MySQL/PG/MongoDB等\n\n用中文告诉我你想查什么数据！',
-      'security-audit': '👋 你好！我是 AI安全审计系统。\n\n我的能力：\n🔹 OWASP Top 10漏洞扫描\n🔹 SQL注入/XSS/CSRF检测\n🔹 修复建议报告\n🔹 持续监控告警\n\n提供URL或代码，我来帮你做安全评估！',
-      'ecommerce-ai': '👋 你好！我是电商AI运营助手。\n\n我的能力：\n🔹 竞品价格/库存实时监控\n🔹 AI生成高转化标题描述\n🔹 关键词优化\n🔹 数据报表\n\n告诉我你的电商情况，我来帮你运营！',
-      'data-visualizer': '👋 你好！我是数据可视化引擎。\n\n我的能力：\n🔹 20+图表类型\n🔹 拖拽式操作\n🔹 多数据源接入\n🔹 一键导出PNG/SVG/PDF\n\n上传数据或描述需求，我来帮你生成图表！',
-      'game-dev-kit': '👋 你好！我是 AI游戏开发套件。\n\n我的能力：\n🔹 AI生成游戏关卡\n🔹 剧情/对话自动生成\n🔹 角色技能配置\n🔹 美术资源建议\n\n告诉我你想做什么游戏，我来帮你规划！',
-      'video-generator': '👋 你好！我是 AI视频生成系统。\n\n我的能力：\n🔹 文字转视频\n🔹 AI配音合成\n🔹 自动字幕\n🔹 多风格特效\n\n描述你想做的视频，我来帮你生成方案！',
-      'design-assistant': '👋 你好！我是 AI设计助手。\n\n我的能力：\n🔹 UI设计稿生成\n🔹 海报/Logo/Banner设计\n🔹 配色方案推荐\n🔹 多格式导出\n\n描述你的设计需求，我来帮你生成方案！',
-      'api-gateway': '👋 你好！我是 API网关管理系统。\n\n我的能力：\n🔹 统一管理API\n🔹 流量监控限流熔断\n🔹 多认证方式\n🔹 可视化配置\n\n告诉我你的需求，我来帮你设计！',
-      'ocr-extractor': '👋 你好！我是 OCR文档识别系统。\n\n我的能力：\n🔹 PDF/图片/扫描件识别\n🔹 证件/发票/名片提取\n🔹 表格结构还原\n🔹 批量处理\n\n上传图片，我来帮你识别文字！',
-      'voice-assistant': '👋 你好！我是 AI语音助手。\n\n我的能力：\n🔹 实时语音转文字\n🔹 多语言翻译\n🔹 语音合成\n🔹 打断插话交互\n\n告诉我你的使用场景，我来帮你配置！',
-      'crypto-tracker': '👋 你好！我是加密货币监控系统。\n\n我的能力：\n🔹 实时价格监控\n🔹 K线数据分析\n🔹 巨鲸地址追踪\n🔹 多渠道告警\n\n告诉我你想监控哪些币种，我来帮你配置！',
+      'github-automation': '👋 你好!我是 GitHub Agent 自动化助手。\n\n我可以帮你完成:\n🔹 自动Star和评论GitHub项目\n🔹 追踪Trending热榜,每日推送\n🔹 AI生成高质量评论内容\n🔹 GitHub Actions 7×24云端运行\n\n告诉我你想自动化什么,我来帮你配置!',
+      'telegram-bot': '👋 你好!我是 Telegram号码查询机器人。\n\n我的能力:\n🔹 实时查询手机号归属地,<2秒响应\n🔹 支持批量查询CSV导入\n🔹 全国号码数据库自动更新\n🔹 7×24小时云端运行\n\n输入号码,我来帮你查!',
+      'content-promoter': '👋 你好!我是 AI内容推流系统。\n\n我的专长:\n🔹 一键生成多平台适配内容\n🔹 支持微博/小红书/公众号等\n🔹 定时自动发布\n🔹 数据统计追踪\n\n告诉我你的内容主题,我来帮你生成并推流!',
+      'n8n-workflow': '👋 你好!我是 n8n 工作流自动化助手。\n\n我的能力:\n🔹 可视化连接100+应用\n🔹 条件分支/循环/错误处理\n🔹 云端7×24运行\n🔹 Webhook触发,支持自定义\n\n描述你想自动化的流程,我来帮你设计!',
+      'web-scraper': '👋 你好!我是智能网页爬虫。\n\n我的能力:\n🔹 可视化配置爬取规则\n🔹 支持登录态/验证码处理\n🔹 自动去重格式化存储\n🔹 定时批量爬取\n\n给我一个网址,我来帮你设计爬取方案!',
+      'code-reviewer': '👋 你好!我是 AI代码审查助手。\n\n我的能力:\n🔹 自动发现Bug和逻辑错误\n🔹 检测安全漏洞\n🔹 分析性能瓶颈\n🔹 生成修复建议\n\n直接粘贴代码,我来帮你审查!',
+      'database-gpt': '👋 你好!我是数据库AI助手。\n\n我的能力:\n🔹 自然语言查询,无需写SQL\n🔹 自动生成优化建议\n🔹 数据可视化图表\n🔹 支持MySQL/PG/MongoDB等\n\n用中文告诉我你想查什么数据!',
+      'security-audit': '👋 你好!我是 AI安全审计系统。\n\n我的能力:\n🔹 OWASP Top 10漏洞扫描\n🔹 SQL注入/XSS/CSRF检测\n🔹 修复建议报告\n🔹 持续监控告警\n\n提供URL或代码,我来帮你做安全评估!',
+      'ecommerce-ai': '👋 你好!我是电商AI运营助手。\n\n我的能力:\n🔹 竞品价格/库存实时监控\n🔹 AI生成高转化标题描述\n🔹 关键词优化\n🔹 数据报表\n\n告诉我你的电商情况,我来帮你运营!',
+      'data-visualizer': '👋 你好!我是数据可视化引擎。\n\n我的能力:\n🔹 20+图表类型\n🔹 拖拽式操作\n🔹 多数据源接入\n🔹 一键导出PNG/SVG/PDF\n\n上传数据或描述需求,我来帮你生成图表!',
+      'game-dev-kit': '👋 你好!我是 AI游戏开发套件。\n\n我的能力:\n🔹 AI生成游戏关卡\n🔹 剧情/对话自动生成\n🔹 角色技能配置\n🔹 美术资源建议\n\n告诉我你想做什么游戏,我来帮你规划!',
+      'video-generator': '👋 你好!我是 AI视频生成系统。\n\n我的能力:\n🔹 文字转视频\n🔹 AI配音合成\n🔹 自动字幕\n🔹 多风格特效\n\n描述你想做的视频,我来帮你生成方案!',
+      'design-assistant': '👋 你好!我是 AI设计助手。\n\n我的能力:\n🔹 UI设计稿生成\n🔹 海报/Logo/Banner设计\n🔹 配色方案推荐\n🔹 多格式导出\n\n描述你的设计需求,我来帮你生成方案!',
+      'api-gateway': '👋 你好!我是 API网关管理系统。\n\n我的能力:\n🔹 统一管理API\n🔹 流量监控限流熔断\n🔹 多认证方式\n🔹 可视化配置\n\n告诉我你的需求,我来帮你设计!',
+      'ocr-extractor': '👋 你好!我是 OCR文档识别系统。\n\n我的能力:\n🔹 PDF/图片/扫描件识别\n🔹 证件/发票/名片提取\n🔹 表格结构还原\n🔹 批量处理\n\n上传图片,我来帮你识别文字!',
+      'voice-assistant': '👋 你好!我是 AI语音助手。\n\n我的能力:\n🔹 实时语音转文字\n🔹 多语言翻译\n🔹 语音合成\n🔹 打断插话交互\n\n告诉我你的使用场景,我来帮你配置!',
+      'crypto-tracker': '👋 你好!我是加密货币监控系统。\n\n我的能力:\n🔹 实时价格监控\n🔹 K线数据分析\n🔹 巨鲸地址追踪\n🔹 多渠道告警\n\n告诉我你想监控哪些币种,我来帮你配置!',
     };
     chatHistories[id] = [{
       role: 'ai',
-      content: welcomes[id] || ('你好！我是 '+p.name+'。有什么我可以帮你的？')
+      content: welcomes[id] || ('你好!我是 '+p.name+'。有什么我可以帮你的?')
     }];
   }
   renderChatSession();
@@ -922,43 +981,76 @@ function removeTyping(){
   if(el) el.remove();
 }
 
+// ── Phone number lookup helper ──
+function getPhoneInfo(num){
+  var prefix = parseInt(num.substring(0,3));
+  var map = [
+    {range:[130,199],operator:'联通',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'},
+    {range:[130,155],operator:'联通',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'},
+    {range:[156,199],operator:'联通',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'},
+    {range:[180,189],operator:'电信',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'},
+    {range:[145,149],operator:'联通',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'},
+    {range:[166,199],operator:'联通',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'},
+    {range:[170,175],operator:'电信',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'},
+    {range:[199,199],operator:'电信',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'},
+    {range:[100,129],operator:'运营商',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'},
+  ];
+  for(var i=0;i<map.length;i++){
+    if(prefix >= map[i].range[0] && prefix <= map[i].range[1]) return map[i];
+  }
+  return {operator:'未知',province:'全国',city:'各城市',citycode:'010',zipcode:'100000'};
+}
+
 function generateResponse(product, history){
   var last = history[history.length-1].content;
-  var prompts = {
-    'github-automation': '好的，我来帮你！GitHub自动化我能做这些：\n\n🔹 自动Star/评论任何项目\n🔹 追踪Trending日报，每日推送\n🔹 AI生成高质量评论内容\n🔹 全天候GitHub Actions云端运行\n\n告诉我你想自动化什么，我来帮你配置。',
-    'telegram-bot': '收到！Telegram号码查询功能已就绪：\n\n🔹 实时查询手机号归属地，<2秒响应\n🔹 支持批量查询CSV导入\n🔹 全国号码库自动更新\n🔹 自动重试机制，稳定性高\n\n告诉我你要查什么，或者说"帮我查13912345678"试试看。',
-    'content-promoter': 'AI内容推流系统已启动！我的能力：\n\n🔹 一键生成适配各平台的内容文案\n🔹 支持微博/小红书/公众号等\n🔹 定时自动发布，解放双手\n🔹 数据统计，追踪阅读量\n\n告诉我你的产品或内容主题，我来帮你生成并推流。',
-    'n8n-workflow': 'n8n工作流引擎已就绪！我的专长：\n\n🔹 可视化连接100+应用\n🔹 条件分支/循环/错误处理\n🔹 云端7×24运行，无需盯守\n🔹Webhook触发，支持自定义逻辑\n\n告诉我你想自动化什么流程，我来帮你设计工作流。',
-    'web-scraper': '智能爬虫已就绪！我能帮你：\n\n🔹 可视化配置爬取规则，无需写代码\n🔹 支持登录态、验证码处理\n🔹 自动去重、格式化存储\n🔹 定时批量爬取，自动化运行\n\n给我一个网址，我来帮你分析爬取方案。',
-    'code-reviewer': '代码审查助手已就绪！我会帮你：\n\n🔹 自动发现潜在Bug和逻辑错误\n🔹 检测安全漏洞（SQL注入/XSS等）\n🔹 分析性能瓶颈和优化建议\n🔹 生成修复代码片段\n\n直接粘贴代码，我来帮你审查。',
-    'database-gpt': '数据库AI助手已就绪！我能帮你：\n\n🔹 用自然语言查询数据库，无需写SQL\n🔹 自动生成优化建议\n🔹 数据可视化，生成图表报告\n🔹 支持MySQL/PostgreSQL/MongoDB等\n\n直接用中文描述你想查什么，我来转成SQL。',
-    'security-audit': '安全审计系统已启动！我能帮你：\n\n🔹 OWASP Top 10漏洞扫描\n🔹 SQL注入、XSS、CSRF检测\n🔹 自动生成修复建议报告\n🔹 持续监控，异常实时告警\n\n提供要扫描的URL或代码，我来帮你做安全评估。',
-    'ecommerce-ai': '电商AI运营助手已就绪！我的能力：\n\n🔹 实时监控竞品价格和库存\n🔹 AI生成高转化商品标题和描述\n🔹 关键词优化，提升搜索排名\n🔹 数据报表，辅助运营决策\n\n告诉我你的电商平台和商品，我来帮你分析。',
-    'data-visualizer': '数据可视化引擎已就绪！支持：\n\n🔹 20+图表类型（折线/柱状/饼图等）\n🔹 拖拽式操作，无需代码\n🔹 多数据源接入（CSV/Excel/API）\n🔹 一键导出PNG/SVG/PDF\n\n上传数据文件或描述你想可视化什么，我来帮你生成图表。',
-    'game-dev-kit': '游戏开发套件已就绪！我能帮你：\n\n🔹 AI生成游戏关卡和地图设计\n🔹 剧情和角色对话自动生成\n🔹 角色技能和属性自动配置\n🔹 美术资源描述和生成建议\n\n告诉我你想做什么类型的游戏，我来帮你规划。',
-    'video-generator': 'AI视频生成已就绪！我的能力：\n\n🔹 文字描述直接转视频\n🔹 AI配音合成，支持多语言\n🔹 自动字幕生成\n🔹 多种风格特效可选\n\n描述你想做的视频内容，我来帮你生成脚本和素材方案。',
-    'design-assistant': 'AI设计助手已就绪！我能帮你：\n\n🔹 输入需求生成UI设计稿\n🔹 海报/Banner/Logo设计\n🔹 配色方案智能推荐\n🔹 支持导出Figma/Sketch格式\n\n描述你的设计需求，我来帮你生成方案。',
-    'api-gateway': 'API网关管理系统已就绪！我的专长：\n\n🔹 统一管理所有API接口\n🔹 流量监控和限流熔断\n🔹 多种认证方式（JWT/OAuth/API Key）\n🔹 可视化配置，实时生效\n\n告诉我你需要接入哪些服务，我来帮你设计网关方案。',
-    'ocr-extractor': 'OCR文档识别已就绪！支持：\n\n🔹 PDF/图片/扫描件识别\n🔹 证件、发票、名片自动提取\n🔹 表格结构还原，保持格式\n🔹 批量处理，API调用\n\n上传图片或文件，我来帮你识别其中的文字内容。',
-    'voice-assistant': 'AI语音助手已就绪！我的能力：\n\n🔹 实时语音转文字（中英日韩等）\n🔹 多语言即时翻译\n🔹 语音合成，定制音色\n🔹 支持打断和插话交互\n\n告诉我你的使用场景，我来帮你配置语音方案。',
-    'crypto-tracker': '加密货币监控系统已就绪！功能：\n\n🔹 实时价格监控，支持全主流币种\n🔹 K线数据接入，技术分析\n🔹 巨鲸钱包地址追踪\n🔹 多渠道告警（邮件/推送/Telegram）\n\n告诉我你想监控哪些币种，我来帮你配置监控规则。',
-  };
-  var base = prompts[product.id] || '我是'+product.name+'，以下是主要功能：\n\n'+(product.features||[]).map(function(f){ return '🔹 '+f; }).join('\n')+'\n\n直接告诉我你想做什么，我来帮你！';
-  // Extract user question context
   var q = last.toLowerCase();
-  var ctxHint = '';
-  if(q.includes('怎么')||q.includes('如何')||q.includes('帮')||q.includes('做')){
-    ctxHint = '\n\n针对你的问题，让我详细说明一下方案…';
-  } else if(q.includes('帮我')||q.includes('给我')){
-    ctxHint = '\n\n收到，我马上帮你处理！';
+  var R = function(){ return Array.prototype.join.call(arguments, "\n"); };
+
+  if(product.id === "github-automation"){
+    if(q.indexOf("star") !== -1) return R("我来帮你配置自动Star！","","在GitHub Actions里加这个workflow：","","```yaml","name: Auto Star Trending","on:","  schedule:","    - cron: \"0 9 * * *\"","jobs:","  star:","    runs-on: ubuntu-latest","    steps:","      - uses: actions/checkout@v3","      - run: |","          curl -s https://api.github.com/search/repositories?q=stars:>1000","          for repo in $(cat repos.txt); do","            curl -X POST -H \"Authorization: token ${{ secrets.GH_TOKEN }}\" https://api.github.com/repos/$repo/star","          done","```","","需要设置 GH_TOKEN Secret，权限勾 repo 和 user。");
+    if(q.indexOf("trending") !== -1 || q.indexOf("日报") !== -1) return R("GitHub Trending日报可以这样自动生成：","","```python","import requests","from datetime import date","","url = f\"https://api.github.com/search/repositories?q=created:>{date.today()}&sort=stars\"","repos = requests.get(url).json()[\"items\"][:10]","report = f\"# {date.today()} GitHub Trending\\n\\n\"","for r in repos:","    report += f\"- ⭐ {r[\"stargazers_count\"]} [{r[\"full_name\"]}]({r[\"html_url\"]})\\n  {r[\"description\"]}\\n\\n\"","print(report)","```","","配合GitHub Actions定时任务，每天9点自动推送。");
+    if(q.indexOf("评论") !== -1) return R("AI生成GitHub评论的方案：","","```python","import openai","","def generate_review_comment(pr_desc):","    response = openai.ChatCompletion.create(model=\"gpt-4\",","        messages=[{\"role\":\"system\",\"content\":\"你是资深代码审查员\"},","                  {\"role\":\"user\",\"content\":f\"请审查这个PR：{pr_desc}\"}])","    return response.choices[0].message.content","```","","配合GitHub API提交评论即可。告诉我你想评哪个项目，我来帮你生成内容！");
+    return R("GitHub自动化助手为你服务！","","我能帮你做：","🔹 自动Star/评论任意项目","🔹 Trending日报自动生成推送","🔹 AI生成高质量评审评论","🔹 全天候GitHub Actions云端运行","","告诉我具体需求，比如「帮我写一个自动Star的workflow」，我来帮你配置。");
   }
-  return base + ctxHint;
+
+  if(product.id === "telegram-bot"){
+    var num = last.match(/\d{7,11}/);
+    if(num){
+      var n = num[0];
+      var info = getPhoneInfo(n);
+      return R("📱 号码查询结果：","","号码：" + n.substring(0,3) + "****" + n.substring(n.length-4),"前缀：" + n.substring(0,3),"归属地：" + info.province + " " + info.city,"运营商：" + info.operator,"","详细区号：" + info.citycode + " | 邮编：" + info.zipcode,"","⚠️ 数据仅供参考，以运营商最新数据为准。");
+    }
+    return R("Telegram号码查询机器人已就绪！","","直接输入手机号即可查询归属地，例如：","13912345678","","我能帮你：","🔹 实时查询归属地（<2秒）","🔹 批量CSV导入查询","🔹 全国号码数据库","🔹 自动重试机制","","输入号码试试看！");
+  }
+
+  if(product.id === "content-promoter") return R("AI内容推流系统已启动！","","我的能力：","🔹 一键生成多平台适配内容（微博/小红书/公众号）","🔹 定时自动发布，解放双手","🔹 数据统计追踪","","告诉我你要推什么内容主题，我来帮你生成各平台版本！");
+  if(product.id === "n8n-workflow") return R("n8n工作流自动化助手已就绪！","","我的专长：","🔹 可视化连接100+应用","🔹 条件分支/循环/错误处理","🔹 云端7×24运行","🔹 Webhook触发，支持自定义","","描述你想自动化的流程，我来帮你设计工作流！");
+
+  if(product.id === "web-scraper"){
+    var url = last.match(/https?:\/\/[^\s]+/);
+    if(url){
+      return R("收到目标网址：" + url[0],"","我来帮你分析爬取方案：","","```python","import requests","from bs4 import BeautifulSoup","",'headers = {"User-Agent": "Mozilla/5.0"}','resp = requests.get("' + url[0] + '", headers=headers)','soup = BeautifulSoup(resp.text, "html.parser")',"","# 提取关键数据",'for item in soup.select(".product-item"):','    print(item.select_one(".title").text.strip())',"```","","告诉我网站有没有登录、验证码或反爬机制，我来优化方案。");
+    }
+    return R("智能爬虫已就绪！","","给我一个网址，我来帮你设计爬取方案。","","或者直接告诉我你想抓什么数据：","🔹 商品价格监控","🔹 竞品信息采集","🔹 招聘数据汇总","","输入目标URL试试！");
+  }
+
+  if(product.id === "code-reviewer"){
+    if(last.length > 50 && (q.indexOf("function") !== -1 || q.indexOf("def ") !== -1 || q.indexOf("const ") !== -1 || q.indexOf("import ") !== -1)) return R("收到代码片段！开始审查…","","⚠️ **潜在问题发现：**","","1. **安全性**","   - 未做输入校验，建议加 sanitize()","   - SQL拼接需改用参数化查询","   - 敏感信息不要硬编码，用环境变量","","2. **性能**","   - 循环内避免网络请求","   - 加缓存层减少重复查询","","3. **修复建议**","```python","# 把危险写法：","query = f\"SELECT * FROM users WHERE id = {user_id}\"","# 改成安全写法：","query = \"SELECT * FROM users WHERE id = %s\"","cursor.execute(query, (user_id,))","```","","完整审查请上传完整代码，我会逐行分析！");
+    return R("代码审查助手已就绪！","","直接粘贴代码，我来帮你审查：","","🔹 发现潜在Bug","🔹 检测安全漏洞（SQL注入/XSS等）","🔹 性能瓶颈分析","🔹 修复建议生成","","粘贴代码吧！支持 Python / JavaScript / Go / Java 等。");
+  }
+
+  if(product.id === "database-gpt") return R("数据库AI助手已就绪！","","用中文描述你想查什么，我来转成SQL！","","示例：","  \"查出最近一个月消费最多的10个用户\"","  \"统计每天的订单量和销售额\"","  \"找出库存低于100的商品\"","","支持MySQL、PostgreSQL、MongoDB等。告诉我！");
+  if(product.id === "security-audit") return R("安全审计系统已就绪！","","我能帮你检测：","🔹 SQL注入/XSS/CSRF","🔹 API安全漏洞","🔹 认证鉴权缺陷","🔹 敏感信息泄露","","提供URL或代码，我来帮你做完整安全评估。");
+
+  var tips = {"ecommerce-ai":"电商运营助手为你服务！告诉我你的平台和商品，我来帮你分析竞品、优化标题、制定运营策略。","data-visualizer":"数据可视化引擎已就绪！上传CSV或描述数据，我来帮你生成图表。","game-dev-kit":"游戏开发套件已就绪！告诉我你想做什么类型的游戏，我来帮你规划。","video-generator":"AI视频生成已就绪！描述你想做的视频，我来帮你生成脚本。","design-assistant":"AI设计助手已就绪！描述你的设计需求，我来帮你生成方案。","api-gateway":"API网关管理已就绪！告诉我你需要接入哪些服务，我来帮你设计。","ocr-extractor":"OCR识别已就绪！上传图片或文件，我来帮你提取文字。","voice-assistant":"语音助手已就绪！告诉我你的使用场景，我来帮你配置。","crypto-tracker":"加密货币监控已就绪！告诉我你想监控哪些币种，我来帮你配置。"};
+  var base = tips[product.id] || ("我是" + product.name + "，有以下功能：\n\n" + (product.features||[]).map(function(f){ return "🔹 " + f; }).join("\n") + "\n\n直接告诉我你想做什么，我来帮你！");
+  return base;
 }
 
 function clearChat(){
   if(!currentSkill) return;
   chatHistories[currentSkill.id] = [
-    {role:'ai', content:'对话已清空。我是你的 '+currentSkill.name+' 助手，有什么可以帮你的？'}
+    {role:'ai', content:'对话已清空。我是你的 '+currentSkill.name+' 助手,有什么可以帮你的?'}
   ];
   renderChatSession();
 }
@@ -1031,20 +1123,30 @@ function trySecretKey(){
     err.style.display='none';
     closeSecretModal();
     closePayModal();
-    // Add to owned
+    // Record purchase time (30-day subscription)
     if(ownedSkills.indexOf(currentPayId) === -1){
       ownedSkills.push(currentPayId);
+      purchases[currentPayId] = {
+        date: Date.now(),
+        expires: Date.now() + 30 * 86400000,
+        key: key
+      };
       saveOwned();
-      toast('🎉 秘钥验证成功！'+getProductName(currentPayId)+' 已解锁');
+      toast('🎉 秘钥验证成功!'+getProductName(currentPayId)+' 已解锁(30天订阅)');
       selectSkill(currentPayId);
       renderSidebar();
     } else {
-      toast('✅ 此技能已拥有，开始对话吧！');
+      // Extend existing subscription
+      var existing = purchases[currentPayId];
+      var base = (existing && existing.expires > Date.now()) ? existing.expires : Date.now();
+      purchases[currentPayId] = { date: Date.now(), expires: base + 30 * 86400000, key: key };
+      saveOwned();
+      toast('✅ 续费成功!'+getProductName(currentPayId)+' 已延期30天');
       selectSkill(currentPayId);
     }
   } else {
     err.style.display='flex';
-    errMsg.textContent='秘钥格式错误（例：ABCD-1234-EFGH-5678）';
+    errMsg.textContent='秘钥格式错误(例:ABCD-1234-EFGH-5678)';
   }
 }
 
@@ -1084,7 +1186,7 @@ function runTrial(){
   if(!id) return;
   var used = trialCounts[id] || 0;
   if(used >= TRIAL_MAX){
-    toast('试用次数已用完，请购买完整版');
+    toast('试用次数已用完,请购买完整版');
     return;
   }
   trialCounts[id] = used + 1;
@@ -1110,7 +1212,7 @@ function runTrial(){
     if(step >= steps.length){
       btn.disabled = false;
       btn.textContent = '✅ 演示完成';
-      addLine('['+new Date().toLocaleTimeString()+'] 演示结束，实际使用请购买完整版', 'system');
+      addLine('['+new Date().toLocaleTimeString()+'] 演示结束,实际使用请购买完整版', 'system');
       return;
     }
     var s = steps[step];
@@ -1121,16 +1223,16 @@ function runTrial(){
       setTimeout(next, 500);
     }, s.delay);
   }
-  addLine('[系统] 正在执行演示任务…', 'system');
+  addLine('[系统] 正在执行演示任务...', 'system');
   setTimeout(next, 500);
 }
 function getTrialSteps(p){
   if(!p) return [];
   return [
-    {label:'连接 '+p.name+' 服务…', result:'✅ 连接成功，云端就绪', delay:600},
-    {label:'初始化 AI 模型…', result:'✅ 模型加载完成 (v2.1)', delay:800},
-    {label:'执行演示任务：'+p.name, result:'✅ 任务执行成功，结果已生成', delay:1000},
-    {label:'生成任务报告…', result:'✅ 报告已就绪，可查看详情', delay:600},
+    {label:'连接 '+p.name+' 服务...', result:'✅ 连接成功,云端就绪', delay:600},
+    {label:'初始化 AI 模型...', result:'✅ 模型加载完成 (v2.1)', delay:800},
+    {label:'执行演示任务:'+p.name, result:'✅ 任务执行成功,结果已生成', delay:1000},
+    {label:'生成任务报告...', result:'✅ 报告已就绪,可查看详情', delay:600},
   ];
 }
 
@@ -1141,7 +1243,7 @@ function copyText(text, msg){
   var ta = document.createElement('textarea');
   ta.value = text; ta.style.cssText='position:fixed;opacity:0';
   document.body.appendChild(ta); ta.select();
-  try{document.execCommand('copy'); toast(msg||'已复制');}catch(e){toast('请手动复制：'+text);}
+  try{document.execCommand('copy'); toast(msg||'已复制');}catch(e){toast('请手动复制:'+text);}
   document.body.removeChild(ta);
 }
 
