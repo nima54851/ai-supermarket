@@ -238,11 +238,13 @@ header{
 }
 .notif-btn:hover{border-color:var(--accent);color:var(--accent);}
 .notif-dot{
-  width:7px;height:7px;border-radius:50%;background:var(--text2);
-  box-shadow:0 0 4px rgba(0,0,0,0.2);
-  animation:livePulse 2s infinite;
+  width:8px;height:8px;border-radius:50%;
+  animation:notifBounce 2.4s ease infinite, notifColor 3s ease infinite;
 }
 @keyframes livePulse{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes notifBounce{0%,100%{transform:scale(1);opacity:1}40%{transform:scale(1.4);opacity:1}60%{transform:scale(0.85);opacity:0.7}80%{transform:scale(1.15);opacity:1}90%{transform:scale(1)}}
+@keyframes notifColor{0%,100%{background:var(--accent)}50%{background:var(--accent2)}}
 
 .install-btn{
   display:none;
@@ -273,7 +275,15 @@ header{
 .hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.2);color:var(--text2);padding:0.35rem 1rem;border-radius:100px;font-size:0.72rem;font-weight:700;letter-spacing:0.04em;margin-bottom:1.5rem;}
 .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:livePulse 2s infinite;}@media(prefers-color-scheme:dark){.hero-badge .dot{background:var(--text2);}}
 .hero-title{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.08;letter-spacing:-0.02em;margin-bottom:1rem;}
-.hero-highlight{background:linear-gradient(135deg,var(--text2),var(--text2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-highlight{
+  background:linear-gradient(90deg,var(--accent),var(--accent2),#f59e0b,var(--accent));
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:gradShift 4s ease infinite;
+  font-weight:900;
+}
 .hero-sub{font-size:1rem;color:var(--text2);line-height:1.8;margin-bottom:1.5rem;}
 .hero-sub strong{color:var(--text2);}
 /* Social proof bar */
