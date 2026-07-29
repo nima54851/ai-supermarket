@@ -96,7 +96,56 @@ input,textarea{font-family:inherit;}
 }
 .header-nav-btn:hover{background:var(--surface2);color:var(--text);}
 .header-nav-btn.active{background:var(--accent);color:white;}
-.header-right{display:flex;align-items:center;gap:0.6rem;}
+.header-right{display:flex;align-items:center;gap:0.5rem;}
+.header-api-btn{
+  font-size:0.7rem;padding:0.3rem 0.6rem;border-radius:8px;
+  background:rgba(99,102,241,0.15);color:var(--accent);
+  border:1px solid rgba(99,102,241,0.3);cursor:pointer;
+  font-weight:700;transition:all 0.2s;white-space:nowrap;
+}
+.header-api-btn:hover{background:rgba(99,102,241,0.25);}
+.header-api-btn.active{background:var(--accent);color:white;}
+.settings-modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;display:none;
+}
+.settings-modal-overlay.open{display:flex;}
+.settings-modal{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:1.8rem;width:90%;max-width:420px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+}
+.settings-modal h3{font-size:1.1rem;font-weight:900;margin-bottom:0.4rem;}
+.settings-modal p{font-size:0.75rem;color:var(--text2);margin-bottom:1.2rem;line-height:1.5;}
+.settings-modal label{font-size:0.75rem;font-weight:700;color:var(--text2);display:block;margin-bottom:0.4rem;}
+.settings-modal input{
+  width:100%;padding:0.65rem 0.8rem;border-radius:10px;
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);font-size:0.82rem;outline:none;margin-bottom:0.8rem;
+  transition:border-color 0.2s;
+}
+.settings-modal input:focus{border-color:var(--accent);}
+.settings-modal-actions{display:flex;gap:0.6rem;margin-top:0.6rem;}
+.settings-save-btn{
+  flex:1;padding:0.6rem;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;
+  font-weight:700;font-size:0.82rem;cursor:pointer;border:none;transition:opacity 0.2s;
+}
+.settings-save-btn:hover{opacity:0.88;}
+.settings-cancel-btn{
+  flex:1;padding:0.6rem;border-radius:10px;
+  background:var(--surface2);border:1px solid var(--border);color:var(--text2);
+  font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.2s;
+}
+.settings-cancel-btn:hover{border-color:var(--accent);color:var(--accent);}
+.api-status{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  font-size:0.7rem;font-weight:700;padding:0.25rem 0.6rem;
+  border-radius:20px;margin-bottom:0.8rem;
+}
+.api-status.connected{background:rgba(16,185,129,0.15);color:var(--green);}
+.api-status.disconnected{background:rgba(78,96,128,0.15);color:var(--muted);}
 .header-status{
   display:flex;align-items:center;gap:0.4rem;
   font-size:0.7rem;color:var(--green);
@@ -434,8 +483,40 @@ input,textarea{font-family:inherit;}
     </nav>
     <div class="header-right">
       <div class="header-status"><div class="header-status-dot"></div>在线</div>
+      <button class="header-api-btn" id="api-status-btn" onclick="openSettings()">⚙️ AI设置</button>
     </div>
   </header>
+  <div class="settings-modal-overlay" id="settings-modal">
+    <div class="settings-modal">
+      <h3>🤖 AI大脑设置</h3>
+      <p>接入真实大模型，告别硬编码回复。支持 Groq（免费高速）、OpenAI、兼容 OpenAI 格式的任意 API。</p>
+      <div id="api-status-badge" class="api-status disconnected">⚪ 未配置</div>
+      <label>API Provider</label>
+      <select id="api-provider" style="width:100%;padding:0.65rem 0.8rem;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:0.82rem;outline:none;margin-bottom:0.8rem;" onchange="updateApiStatus()">
+        <option value="groq">🔥 Groq（推荐 · 免费高速）</option>
+        <option value="openai">🤖 OpenAI（GPT-4o / GPT-4）</option>
+        <option value="compatible">🔗 OpenAI 兼容格式（任意支持 API）</option>
+        <option value="none">🚫 关闭（使用硬编码回复）</option>
+      </select>
+      <label>Base URL（Groq 可留空）</label>
+      <input id="api-base-url" type="text" placeholder="https://api.groq.com/openai/v1" />
+      <label>API Key</label>
+      <input id="api-key" type="password" placeholder="gsk_..." />
+      <label>Model</label>
+      <select id="api-model" style="width:100%;padding:0.65rem 0.8rem;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:0.82rem;outline:none;margin-bottom:0.4rem;">
+        <option value="llama-3.3-70b-versatile">Llama 3.3 70B Versatile（Groq 推荐）</option>
+        <option value="llama-3.1-8b-instant">Llama 3.1 8B Instant（Groq 超快）</option>
+        <option value="mixtral-8x7b-32768">Mixtral 8x7B（Groq）</option>
+        <option value="gpt-4o">GPT-4o（OpenAI）</option>
+        <option value="gpt-4o-mini">GPT-4o Mini（OpenAI）</option>
+        <option value="gpt-3.5-turbo">GPT-3.5 Turbo（OpenAI）</option>
+      </select>
+      <div class="settings-modal-actions">
+        <button class="settings-save-btn" onclick="saveApiSettings()">💾 保存</button>
+        <button class="settings-cancel-btn" onclick="closeSettings()">取消</button>
+      </div>
+    </div>
+  </div>
 
   <!-- MAIN -->
   <div class="main">
@@ -957,22 +1038,187 @@ function sendMessage(){
   input.style.height = 'auto';
   renderChatSession();
 
-  // Simulate AI response
-  showTyping();
-  setTimeout(function(){
-    removeTyping();
-    var response = generateResponse(currentSkill, history);
-    history.push({role:'ai', content:response});
-    renderChatSession();
-  }, 1000 + Math.random()*1500);
+  // Try real AI API first, fall back to hardcoded
+  var apiKey = localStorage.getItem('ai_api_key') || '';
+  if(apiKey && localStorage.getItem('ai_api_enabled') === 'true'){
+    callAIApi(history, function(response){
+      history.push({role:'ai', content:response});
+      renderChatSession();
+    }, function(err){
+      // API failed, fall back to hardcoded
+      console.warn('AI API failed, using hardcoded response:', err);
+      showTyping();
+      setTimeout(function(){
+        removeTyping();
+        var response = generateResponse(currentSkill, history);
+        history.push({role:'ai', content:response});
+        renderChatSession();
+      }, 1000 + Math.random()*1500);
+    });
+  } else {
+    showTyping();
+    setTimeout(function(){
+      removeTyping();
+      var response = generateResponse(currentSkill, history);
+      history.push({role:'ai', content:response});
+      renderChatSession();
+    }, 1000 + Math.random()*1500);
+  }
 }
+
+// ── Real AI API ──
+async function callAIApi(history, onSuccess, onError){
+  var provider = localStorage.getItem('ai_api_provider') || 'groq';
+  var baseUrl = localStorage.getItem('ai_api_base_url') || '';
+  var apiKey = localStorage.getItem('ai_api_key');
+  var model = localStorage.getItem('ai_api_model') || 'llama-3.3-70b-versatile';
+
+  if(provider === 'groq'){
+    baseUrl = baseUrl || 'https://api.groq.com/openai/v1';
+    model = model || 'llama-3.3-70b-versatile';
+  }
+
+  // Build system prompt based on current product
+  var productName = currentSkill ? currentSkill.name : 'AI助手';
+  var productDesc = currentSkill ? currentSkill.desc : '';
+  var systemPrompt = '你是「万能AI超市」的AI客服助手，用户正在咨询产品：' + productName + '。\n' +
+    '产品描述：' + productDesc + '\n' +
+    '请用友好、专业的语气回答用户问题，可以推荐产品特点、使用场景、价格方案等内容。如果用户问到你不知道的，就说联系客服（@diquchaxun78_bot）。\n' +
+    '记住你是客服，不是用户。';
+
+  // Build messages for API
+  var messages = [{role:'system', content:systemPrompt}];
+  for(var i=0;i<history.length;i++){
+    messages.push(history[i]);
+  }
+
+  try {
+    var typingEl = document.getElementById('typing-msg');
+    var typingText = typingEl ? typingEl.querySelector('.msg-text') : null;
+    if(typingText) typingText.innerHTML = '<em>正在连接 AI…</em>';
+
+    var response = await fetch(baseUrl + '/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + apiKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({model: model, messages: messages, stream: false})
+    });
+
+    if(!response.ok){
+      var errData = await response.json().catch(function(){return {}});
+      throw new Error('API错误 ' + response.status + ': ' + (errData.error && errData.error.message || response.statusText));
+    }
+
+    var data = await response.json();
+    var reply = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '抱歉，AI没有返回有效内容。';
+    onSuccess(reply.trim());
+  } catch(err){
+    onError(err.message || String(err));
+  }
+}
+
+function openSettings(){
+  var modal = document.getElementById('settings-modal');
+  var provider = localStorage.getItem('ai_api_provider') || 'groq';
+  var baseUrl = localStorage.getItem('ai_api_base_url') || 'https://api.groq.com/openai/v1';
+  var apiKey = localStorage.getItem('ai_api_key') || '';
+  var model = localStorage.getItem('ai_api_model') || 'llama-3.3-70b-versatile';
+  var enabled = localStorage.getItem('ai_api_enabled') === 'true';
+
+  document.getElementById('api-provider').value = provider;
+  document.getElementById('api-base-url').value = baseUrl;
+  document.getElementById('api-key').value = apiKey;
+  document.getElementById('api-model').value = model;
+  updateApiStatus();
+  modal.classList.add('open');
+}
+
+function closeSettings(){
+  document.getElementById('settings-modal').classList.remove('open');
+}
+
+function updateApiStatus(){
+  var provider = document.getElementById('api-provider').value;
+  var baseUrl = document.getElementById('api-base-url');
+  var model = document.getElementById('api-model');
+  var badge = document.getElementById('api-status-badge');
+  var modelSel = document.getElementById('api-model');
+
+  var groqModels = ['llama-3.3-70b-versatile','llama-3.1-8b-instant','mixtral-8x7b-32768'];
+  var openaiModels = ['gpt-4o','gpt-4o-mini','gpt-3.5-turbo'];
+
+  if(provider === 'groq'){
+    baseUrl.value = 'https://api.groq.com/openai/v1';
+    baseUrl.placeholder = '留空默认 Groq';
+    modelSel.innerHTML = '<option value="llama-3.3-70b-versatile">Llama 3.3 70B Versatile（推荐）</option>' +
+      '<option value="llama-3.1-8b-instant">Llama 3.1 8B Instant（超快）</option>' +
+      '<option value="mixtral-8x7b-32768">Mixtral 8x7B</option>';
+  } else if(provider === 'openai'){
+    baseUrl.value = 'https://api.openai.com/v1';
+    baseUrl.placeholder = '留空默认 OpenAI';
+    modelSel.innerHTML = '<option value="gpt-4o">GPT-4o</option>' +
+      '<option value="gpt-4o-mini">GPT-4o Mini</option>' +
+      '<option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>';
+  } else if(provider === 'compatible'){
+    baseUrl.value = '';
+    baseUrl.placeholder = 'https://your-api.com/v1';
+    modelSel.innerHTML = '<option value="">请输入自定义模型名</option>';
+  }
+
+  if(provider === 'none'){
+    badge.className = 'api-status disconnected';
+    badge.innerHTML = '⚪ 已关闭（使用硬编码）';
+  } else if(document.getElementById('api-key').value) {
+    badge.className = 'api-status connected';
+    badge.innerHTML = '🟢 已配置 ' + provider.toUpperCase();
+  } else {
+    badge.className = 'api-status disconnected';
+    badge.innerHTML = '⚠️ 已选择 ' + provider.toUpperCase() + '，请填入 API Key';
+  }
+}
+
+function saveApiSettings(){
+  var provider = document.getElementById('api-provider').value;
+  var baseUrl = document.getElementById('api-base-url').value.trim();
+  var apiKey = document.getElementById('api-key').value.trim();
+  var model = document.getElementById('api-model').value;
+
+  localStorage.setItem('ai_api_provider', provider);
+  localStorage.setItem('ai_api_base_url', baseUrl);
+  localStorage.setItem('ai_api_key', apiKey);
+  localStorage.setItem('ai_api_model', model);
+  localStorage.setItem('ai_api_enabled', provider !== 'none' && apiKey ? 'true' : 'false');
+
+  var btn = document.getElementById('api-status-btn');
+  if(provider !== 'none' && apiKey){
+    btn.classList.add('active');
+    btn.textContent = '🔥 AI在线';
+  } else {
+    btn.classList.remove('active');
+    btn.textContent = '⚙️ AI设置';
+  }
+
+  closeSettings();
+}
+
+// Init on page load
+document.addEventListener('DOMContentLoaded', function(){
+  if(localStorage.getItem('ai_api_enabled') === 'true'){
+    var btn = document.getElementById('api-status-btn');
+    if(btn){ btn.classList.add('active'); btn.textContent = '🔥 AI在线'; }
+  }
+  // Settings modal close on overlay click
+  document.getElementById('settings-modal').addEventListener('click', function(e){ if(e.target===this) closeSettings(); });
+});
 
 function showTyping(){
   var msgsEl = document.getElementById('chat-messages');
   var dot = document.createElement('div');
   dot.className = 'msg ai';
   dot.id = 'typing-msg';
-  dot.innerHTML = '<div class="msg-avatar">'+currentSkill.emoji+'</div><div class="msg-typing"><span></span><span></span><span></span></div>';
+  dot.innerHTML = '<div class="msg-avatar">'+(currentSkill?currentSkill.emoji:'🤖')+'</div><div class="msg-bubble"><div class="msg-typing"><span></span><span></span><span></span></div></div>';
   msgsEl.appendChild(dot);
   msgsEl.scrollTop = msgsEl.scrollHeight;
 }
