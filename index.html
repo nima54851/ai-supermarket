@@ -781,6 +781,47 @@ input, textarea, select { font-family: inherit; }
   .hero-stats { gap: 1rem; }
   .hero-stat-num { font-size: 1.2rem; }
 }
+/* SEARCH */
+.hero-search-wrap { display:flex;align-items:center;background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:0 0.8rem;gap:0.5rem;transition:border-color 0.2s;max-width:500px;margin:0 auto; }
+.hero-search-wrap:focus-within { border-color:var(--accent); }
+.hero-search-icon { font-size:0.9rem;color:var(--muted);flex-shrink:0; }
+.hero-search-input { flex:1;padding:0.6rem 0;background:transparent;border:none;color:var(--text);font-size:0.85rem;outline:none; }
+.hero-search-input::placeholder { color:var(--muted); }
+.hero-search-clear { width:20px;height:20px;border-radius:50%;background:var(--surface2);border:none;cursor:pointer;font-size:0.65rem;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;transition:background 0.2s; }
+.hero-search-clear:hover { background:var(--surface3); }
+.search-highlight { background:rgba(14,93,216,0.12);color:var(--accent);border-radius:3px;padding:0 2px;font-weight:700; }
+
+/* HOW IT WORKS */
+.how-section { padding:2rem 2rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border); }
+.how-title { text-align:center;font-size:0.7rem;font-weight:900;margin-bottom:1.2rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em; }
+.how-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;max-width:900px;margin:0 auto; }
+@media(max-width:768px){ .how-grid { grid-template-columns:repeat(2,1fr); } }
+.how-card { text-align:center;padding:0.8rem 0.5rem; }
+.how-icon { width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin:0 auto 0.4rem; }
+.how-step { display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:white;font-size:0.6rem;font-weight:900;margin-bottom:0.35rem; }
+.how-name { font-size:0.78rem;font-weight:800;margin-bottom:0.2rem; }
+.how-desc { font-size:0.65rem;color:var(--text2);line-height:1.5; }
+
+/* TRUST BADGE */
+.trust-section { padding:0.8rem 2rem;display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;background:var(--accent-light);border-bottom:1px solid rgba(14,93,216,0.12); }
+.trust-item { display:flex;align-items:center;gap:0.4rem;font-size:0.7rem;font-weight:700;color:var(--accent); }
+
+/* PRODUCT EXTRAS */
+.product-badge-hot { position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#ef4444,#f97316);color:white;font-size:0.58rem;font-weight:900;padding:0.18rem 0.5rem;border-radius:20px;letter-spacing:0.05em;text-transform:uppercase;box-shadow:0 2px 6px rgba(239,68,68,0.3); }
+.product-rating { display:flex;align-items:center;gap:0.25rem;font-size:0.63rem;color:var(--orange);margin-top:0.15rem; }
+
+/* CTA BANNER */
+.cta-banner { margin:0 2rem 2rem;padding:1.6rem;background:linear-gradient(135deg,var(--accent),#1a56db);border-radius:var(--radius);color:white;text-align:center; }
+.cta-banner h2 { font-size:1.05rem;font-weight:900;margin-bottom:0.25rem; }
+.cta-banner p { font-size:0.72rem;opacity:0.85;margin-bottom:0.8rem; }
+.cta-banner-btns { display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap; }
+.cta-btn-white { padding:0.5rem 1.2rem;border-radius:10px;background:white;color:var(--accent);font-size:0.75rem;font-weight:800;transition:transform 0.2s; }
+.cta-btn-white:hover { transform:translateY(-1px); }
+.cta-btn-outline { padding:0.5rem 1.2rem;border-radius:10px;background:rgba(255,255,255,0.15);color:white;border:1.5px solid rgba(255,255,255,0.4);font-size:0.75rem;font-weight:800; }
+
+/* LIVE VISITORS */
+.live-visitors { position:fixed;bottom:1.5rem;left:1.5rem;display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.75rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:0.68rem;font-weight:700;color:var(--text2);box-shadow:var(--shadow);z-index:99; }
+.live-dot { width:8px;height:8px;border-radius:50%;background:var(--green);animation:livePulse 1.5s infinite; }
   </style>
 </head>
 <body>
@@ -844,9 +885,66 @@ input, textarea, select { font-family: inherit; }
     </div>
   </section>
 
-  <!-- FILTER -->
+  <!-- FILTER & SEARCH -->
   <div class="filter-section">
-    <div class="filter-scroll" id="filter-bar"></div>
+    <div style="max-width:900px;margin:0 auto;">
+      <div class="hero-search-wrap">
+        <span class="hero-search-icon">🔍</span>
+        <input class="hero-search-input" id="hero-search" type="text" placeholder="搜索 AI 技能..." oninput="handleSearch(this.value)"/>
+        <button class="hero-search-clear" id="search-clear" onclick="clearSearch()" style="display:none">✕</button>
+      </div>
+      <div class="filter-scroll" id="filter-bar" style="margin-top:0.7rem;"></div>
+    </div>
+  </div>
+
+  <!-- TRUST BADGE -->
+  <div class="trust-section">
+    <div class="trust-item"><span>🔒</span> 安全支付</div>
+    <div class="trust-item"><span>⚡</span> 秒级发货</div>
+    <div class="trust-item"><span>🛡️</span> 7×24 运维</div>
+    <div class="trust-item"><span>💬</span> 专业客服</div>
+    <div class="trust-item"><span>📥</span> 永久下载权限</div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <div class="how-title">如何使用</div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-icon" style="background:#EFF6FF;">🔍</div>
+        <div class="how-step">1</div>
+        <div class="how-name">浏览技能</div>
+        <div class="how-desc">在商店浏览全部 AI 技能，找到你需要的工具</div>
+      </div>
+      <div class="how-card">
+        <div class="how-icon" style="background:#F0FDF4;">🛒</div>
+        <div class="how-step">2</div>
+        <div class="how-name">完成购买</div>
+        <div class="how-desc">支持 PayPal / 微信 / USDT，多种支付方式</div>
+      </div>
+      <div class="how-card">
+        <div class="how-icon" style="background:#FFF7ED;">📬</div>
+        <div class="how-step">3</div>
+        <div class="how-name">获取下载</div>
+        <div class="how-desc">付款后联系客服，即刻收到 GitHub 下载链接</div>
+      </div>
+      <div class="how-card">
+        <div class="how-icon" style="background:#F5F3FF;">🚀</div>
+        <div class="how-step">4</div>
+        <div class="how-name">开始使用</div>
+        <div class="how-desc">下载安装，接入 AI 配置，立刻开启自动化</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA BANNER -->
+  <div class="cta-banner">
+    <h2>没有找到你想要的？</h2>
+    <p>告诉我们你的需求，定制开发专属 AI 技能</p>
+    <div class="cta-banner-btns">
+      <a class="cta-btn-white" href="https://t.me/diquchaxun78_bot" target="_blank">💬 咨询定制</a>
+      <a class="cta-btn-outline" href="https://t.me/diquchaxun78_bot" target="_blank">📧 邮件联系</a>
+    </div>
   </div>
 
   <!-- PRODUCTS -->
@@ -857,6 +955,12 @@ input, textarea, select { font-family: inherit; }
     </div>
     <div class="products-grid" id="products-grid"></div>
   </section>
+
+  <!-- LIVE VISITORS -->
+  <div class="live-visitors">
+    <div class="live-dot"></div>
+    <span id="live-count">128</span> 人正在浏览
+  </div>
 
 </div>
 
@@ -1100,9 +1204,11 @@ var ownedSkills = [];
 var purchases = {};
 var currentView = 'store';
 var currentFilter = '全部';
+var currentSearch = '';
 var currentPayId = null;
 var chatHistories = {};
 var apiConfig = { provider: 'groq', baseUrl: '', key: '', model: 'llama-3.3-70b-versatile' };
+var HOT_PRODUCTS = ['github-automation','content-promoter','n8n-workflow','game-dev-kit','security-scanner'];
 
 // ═══════════════════════════════════════════
 // INIT
@@ -1195,17 +1301,28 @@ function renderProducts(){
   if(currentFilter !== '全部'){
     items = items.filter(p => p.category === currentFilter);
   }
+  if(currentSearch.trim()){
+    const q = currentSearch.trim().toLowerCase();
+    items = items.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q) ||
+      p.features.some(f => f.toLowerCase().includes(q))
+    );
+  }
 
-  document.getElementById('section-title').textContent = currentView === 'store' ? '🏪 全部技能' : '🛡️ 我的技能';
-  document.getElementById('section-count').textContent = `${items.length} 个技能`;
+  const titleMap = { store: '🏪 全部技能', owned: '🛡️ 我的技能' };
+  document.getElementById('section-title').textContent = titleMap[currentView] || '🏪 全部技能';
+  const suffix = currentSearch.trim() ? ` · 搜索「${currentSearch.trim()}」` : '';
+  document.getElementById('section-count').textContent = `${items.length} 个技能${suffix}`;
 
   const grid = document.getElementById('products-grid');
   if(items.length === 0){
     grid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--muted);">
-        <div style="font-size:3rem;margin-bottom:0.8rem;">${currentView === 'owned' ? '🔓' : '🔍'}</div>
-        <div style="font-size:0.9rem;font-weight:700;margin-bottom:0.4rem;">${currentView === 'owned' ? '还没有购买任何技能' : '没有找到相关技能'}</div>
-        <div style="font-size:0.78rem;">${currentView === 'owned' ? '<a href="#" onclick="switchView(\'store\');return false;" style="color:var(--accent);">去商店逛逛 →</a>' : '试试其他分类'}</div>
+      <div class="no-results">
+        <div class="no-results-icon">${currentView === 'owned' ? '🔓' : '🔍'}</div>
+        <div class="no-results-title">${currentView === 'owned' ? '还没有购买任何技能' : '没有找到相关技能'}</div>
+        <div class="no-results-desc">${currentView === 'owned' ? '<a href="#" onclick="switchView(\'store\');return false;" style="color:var(--accent);">去商店逛逛 →</a>' : currentSearch ? '换个关键词试试' : '试试其他分类'}</div>
       </div>`;
     return;
   }
@@ -1213,12 +1330,18 @@ function renderProducts(){
   grid.innerHTML = items.map(p => {
     const owned = ownedSkills.indexOf(p.id) !== -1;
     const bgLighter = p.color + '18';
-    return `<div class="product-card${owned ? ' owned' : ''}" onclick="openDetail('${p.id}')">
+    const isHot = HOT_PRODUCTS.indexOf(p.id) !== -1;
+    const rating = p.rating || 4.5;
+    const stars = '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
+    const displayName = currentSearch.trim() ? highlightMatch(p.name, currentSearch.trim()) : p.name;
+    return `<div class="product-card${owned ? ' owned' : ''}" onclick="openDetail('${p.id}')" style="position:relative;">
+      ${isHot ? '<div class="product-badge-hot">🔥 热门</div>' : ''}
       <div class="product-card-top">
         <div class="product-card-icon" style="background:${bgLighter};">${p.emoji}</div>
         <div class="product-card-meta">
-          <div class="product-card-name">${p.name}</div>
+          <div class="product-card-name">${displayName}</div>
           <div class="product-card-category">${p.category}</div>
+          <div class="product-rating">${stars} <span style="color:var(--muted)">(${p.reviews || 0})</span></div>
         </div>
         <div class="product-card-price">¥${p.price}<span class="period">${p.period}</span></div>
       </div>
@@ -1233,6 +1356,37 @@ function renderProducts(){
     </div>`;
   }).join('');
 }
+
+// ═══════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════
+function handleSearch(q){
+  currentSearch = q;
+  document.getElementById('search-clear').style.display = q ? 'flex' : 'none';
+  renderProducts();
+}
+function clearSearch(){
+  document.getElementById('hero-search').value = '';
+  currentSearch = '';
+  document.getElementById('search-clear').style.display = 'none';
+  renderProducts();
+}
+function highlightMatch(text, query){
+  if(!query) return text;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if(idx === -1) return text;
+  return text.slice(0, idx) + '<span class="search-highlight">' + text.slice(idx, idx + query.length) + '</span>' + text.slice(idx + query.length);
+}
+
+// Simulate live visitor count
+function updateLiveCount(){
+  const base = 128;
+  const variation = Math.floor(Math.random() * 20) - 10;
+  const count = Math.max(100, base + variation);
+  document.getElementById('live-count').textContent = count;
+  setTimeout(updateLiveCount, 8000);
+}
+setTimeout(updateLiveCount, 3000);
 
 // ═══════════════════════════════════════════
 // DETAIL MODAL
