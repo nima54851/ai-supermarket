@@ -9,6 +9,12 @@
   <meta property="og:title" content="AI超市 - 智能体超市"/>
   <meta property="og:description" content="一站式AI能力交易市场，17款+AI工具"/>
   <meta property="og:image" content="https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@main/og-image.png"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="author" content="AI超市 · nima54851"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <link rel="canonical" href="https://nima54851.github.io/ai-supermarket/"/>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <style>
@@ -229,6 +235,47 @@ input, textarea, select { font-family: inherit; }
 .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
 /* ════════════════════════════════════
+   SEARCH & SORT
+════════════════════════════════════ */
+.search-row {
+  display: flex; gap: 0.5rem; margin-bottom: 0.6rem;
+  align-items: center; flex-wrap: wrap;
+}
+.search-box {
+  flex: 1; min-width: 180px; position: relative;
+  display: flex; align-items: center;
+}
+.search-box input {
+  width: 100%; padding: 0.5rem 2.2rem 0.5rem 2rem;
+  border: 1.5px solid var(--border2); border-radius: 10px;
+  background: var(--surface); color: var(--text); font-size: 0.8rem;
+  outline: none; transition: border-color 0.2s;
+  font-family: inherit;
+}
+.search-box input:focus { border-color: var(--accent); }
+.search-box input::placeholder { color: var(--muted); }
+.search-icon { position: absolute; left: 0.6rem; font-size: 0.8rem; pointer-events: none; }
+.search-clear {
+  position: absolute; right: 0.5rem; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 50%;
+  width: 18px; height: 18px; font-size: 0.6rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--muted);
+}
+.sort-select-wrap { position: relative; }
+.sort-select-wrap select {
+  padding: 0.45rem 2rem 0.45rem 0.7rem;
+  border: 1.5px solid var(--border2); border-radius: 10px;
+  background: var(--surface); color: var(--text2); font-size: 0.75rem;
+  font-weight: 600; outline: none; cursor: pointer;
+  font-family: inherit; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239CA3AF' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.6rem center;
+  transition: border-color 0.2s;
+}
+.sort-select-wrap select:focus { border-color: var(--accent); }
+
+/* ════════════════════════════════════
    CATEGORY FILTER
 ════════════════════════════════════ */
 .filter-section {
@@ -238,6 +285,7 @@ input, textarea, select { font-family: inherit; }
   border-bottom: 1px solid var(--border);
   margin-bottom: 1.5rem;
 }
+@media (max-width: 768px) { .filter-section { padding: 0.8rem 1rem 1rem; } }
 .filter-scroll {
   display: flex; gap: 0.5rem; overflow-x: auto;
   padding-bottom: 0.3rem; max-width: 900px; margin: 0 auto;
@@ -754,12 +802,34 @@ input, textarea, select { font-family: inherit; }
    FOOTER
 ════════════════════════════════════ */
 .footer {
-  text-align: center; padding: 2rem;
+  padding: 2.5rem 2rem 1.5rem;
   border-top: 1px solid var(--border);
-  font-size: 0.72rem; color: var(--muted);
   margin-top: 2rem;
 }
-.footer a { color: var(--accent); font-weight: 700; }
+.footer-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2rem; margin-bottom: 2rem;
+}
+.footer-brand h4 { font-size: 0.95rem; font-weight: 900; margin-bottom: 0.3rem; }
+.footer-brand p { font-size: 0.72rem; color: var(--text2); line-height: 1.6; max-width: 240px; }
+.footer-col h5 { font-size: 0.7rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem; }
+.footer-col a {
+  display: block; font-size: 0.72rem; color: var(--text2);
+  padding: 0.2rem 0; transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--accent); }
+.footer-bottom {
+  text-align: center; padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.65rem; color: var(--muted);
+}
+.footer-bottom a { color: var(--accent); font-weight: 700; }
+
+@media (max-width: 768px) {
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .footer-brand { grid-column: 1/-1; }
+}
 
 /* ════════════════════════════════════
    RESPONSIVE
@@ -810,32 +880,32 @@ input, textarea, select { font-family: inherit; }
     <div class="hero-bg"></div>
     <div class="hero-badge">
       <div class="hero-badge-dot"></div>
-      AI 智能体超市 · 全新上线
+      🔥 2026年度精选 · 19款商品持续更新
     </div>
     <h1 class="hero-title">
       买AI能力<br/>
       <span class="accent">像买菜一样简单</span>
     </h1>
     <p class="hero-sub">
-      一站式AI能力交易市场，覆盖 GitHub自动化、内容推流、网页爬虫、<br/>
-      代码审查、数据库操作等 19+ 款专业AI工具。
+      19款精选AI工具，购买即得完整商品包 + 使用文档。付款后联系客服获取下载链接，<br/>
+      支持 PayPal / USDT / 微信 / 支付宝，安全放心。
     </p>
     <div class="hero-stats">
       <div class="hero-stat">
-        <div class="hero-stat-num">19+</div>
+        <div class="hero-stat-num">19</div>
         <div class="hero-stat-label">精选AI技能</div>
       </div>
       <div class="hero-stat">
         <div class="hero-stat-num">7×24</div>
-        <div class="hero-stat-label">云端运行</div>
+        <div class="hero-stat-label">云端自动运行</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">500+</div>
-        <div class="hero-stat-label">企业用户</div>
+        <div class="hero-stat-num">2.4k+</div>
+        <div class="hero-stat-label">月活跃用户</div>
       </div>
       <div class="hero-stat">
-        <div class="hero-stat-num">99.9%</div>
-        <div class="hero-stat-label">可用率</div>
+        <div class="hero-stat-num">4.7★</div>
+        <div class="hero-stat-label">平均评分</div>
       </div>
     </div>
     <div class="hero-actions">
@@ -844,8 +914,24 @@ input, textarea, select { font-family: inherit; }
     </div>
   </section>
 
-  <!-- FILTER -->
+  <!-- FILTER & SEARCH -->
   <div class="filter-section">
+    <div class="search-row">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="搜索技能..." oninput="handleSearch(this.value)" />
+        <button class="search-clear" id="search-clear" onclick="clearSearch()" style="display:none">✕</button>
+      </div>
+      <div class="sort-select-wrap">
+        <select id="sort-select" onchange="handleSort(this.value)">
+          <option value="default">综合排序</option>
+          <option value="price-asc">价格 ↑ 低到高</option>
+          <option value="price-desc">价格 ↓ 高到低</option>
+          <option value="rating-desc">评分最高</option>
+          <option value="reviews-desc">评论最多</option>
+        </select>
+      </div>
+    </div>
     <div class="filter-scroll" id="filter-bar"></div>
   </div>
 
@@ -857,6 +943,42 @@ input, textarea, select { font-family: inherit; }
     </div>
     <div class="products-grid" id="products-grid"></div>
   </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h4>🧠 万能AI超市</h4>
+        <p>一站式AI能力交易市场，19款精选工具，购买后立即下载使用。支持 PayPal / USDT / 微信 / 支付宝。客服7×24在线。</p>
+      </div>
+      <div class="footer-col">
+        <h5>📦 商品</h5>
+        <a href="#" onclick="setFilter('自动化');return false;">🤖 自动化</a>
+        <a href="#" onclick="setFilter('开发');return false;">💻 开发</a>
+        <a href="#" onclick="setFilter('内容');return false;">📣 内容创作</a>
+        <a href="#" onclick="setFilter('数据');return false;">📊 数据工具</a>
+        <a href="#" onclick="setFilter('安全');return false;">🔒 安全审计</a>
+      </div>
+      <div class="footer-col">
+        <h5>🔗 链接</h5>
+        <a href="https://github.com/nima54851/ai-supermarket" target="_blank">📂 GitHub</a>
+        <a href="https://github.com/nima54851/ai-supermarket/releases/tag/v1.0.0" target="_blank">📦 商品包下载</a>
+        <a href="https://t.me/diquchaxun78_bot" target="_blank">💬 客服 Telegram</a>
+        <a href="https://nima54851.github.io/ai-supermarket/" target="_blank">🌐 GitHub Pages</a>
+      </div>
+      <div class="footer-col">
+        <h5>💳 支付方式</h5>
+        <a href="#" onclick="alert('PayPal: paypalyinanzo@hotmail.com');return false;">PayPal</a>
+        <a href="#" onclick="alert('USDT TRC20: TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy');return false;">USDT (TRC20)</a>
+        <a href="#" onclick="alert('请加客服 Telegram 办理');return false;">微信支付</a>
+        <a href="#" onclick="alert('请加客服 Telegram 办理');return false;">支付宝</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 AI超市 · <a href="https://github.com/nima54851" target="_blank">@nima54851</a>
+      · 站点基于 GitHub Pages + jsDelivr CDN 全球加速
+    </div>
+  </footer>
 
 </div>
 
@@ -1072,25 +1194,25 @@ input, textarea, select { font-family: inherit; }
 // DATA
 // ═══════════════════════════════════════════
 var PRODUCTS = [
-  {id:"github-automation",name:"GitHub Agent自动化",emoji:"⚡",price:99,period:"/月",category:"自动化",desc:"全自动GitHub运营：自动Star、评论、追踪Trending、AI日报生成。",features:["GitHub Actions 7×24","自动Star热门项目","AI生成智能评论","Trending追踪日报"],color:"#6366F1",rating:4.9,reviews:128},
-  {id:"telegram-bot",name:"Telegram号码查询机器人",emoji:"📱",price:29,period:"/月",category:"自动化",desc:"实时手机号码归属地查询，批量查询，7×24小时云端运行。",features:["实时查询 < 2秒","全国号码数据库","批量查询","自动重试机制"],color:"#06B6D4",rating:4.7,reviews:203},
-  {id:"content-promoter",name:"AI内容推流系统",emoji:"📣",price:199,period:"/月",category:"内容",desc:"AI自动生成内容并推送到多平台，支持微博、小红书、公众号等。",features:["多平台同步发布","AI内容生成","定时自动发布","数据统计分析"],color:"#EC4899",rating:4.8,reviews:87},
-  {id:"n8n-workflow",name:"n8n工作流自动化",emoji:"🔗",price:149,period:"/月",category:"自动化",desc:"可视化n8n工作流设计器，连接100+应用，自动化日常任务。",features:["100+应用集成","可视化流程设计","云端7×24运行","条件分支逻辑"],color:"#10B981",rating:4.6,reviews:156},
-  {id:"web-scraper",name:"AI智能网页爬虫",emoji:"🕷️",price:69,period:"/月",category:"数据",desc:"可视化配置爬取规则，自动提取网页数据，支持定时抓取。",features:["可视化规则配置","支持登录/验证码","自动去重存储","定时批量爬取"],color:"#F59E0B",rating:4.5,reviews:94},
-  {id:"code-reviewer",name:"AI代码审查助手",emoji:"🔍",price:79,period:"/月",category:"开发",desc:"自动审查代码质量，发现Bug、安全漏洞、性能问题，提供修复建议。",features:["多语言支持","Bug自动发现","安全漏洞检测","修复建议生成"],color:"#8B5CF6",rating:4.8,reviews:112},
-  {id:"database-toolkit",name:"AI数据库管理工具包",emoji:"🗄️",price:89,period:"/月",category:"开发",desc:"AI辅助的数据库查询、优化、迁移工具，降低数据库使用门槛。",features:["自然语言查询","SQL优化","数据迁移","ER图生成"],color:"#3B82F6",rating:4.7,reviews:78},
-  {id:"security-scanner",name:"AI代码安全审计系统",emoji:"🔒",price:149,period:"/月",category:"安全",desc:"AI驱动的代码安全审计，自动检测漏洞、依赖风险、CI/CD集成。",features:["漏洞扫描","依赖分析","CI/CD集成","自动修复建议"],color:"#EF4444",rating:4.9,reviews:63},
-  {id:"ecommerce-ai",name:"电商AI运营助手",emoji:"🛒",price:159,period:"/月",category:"电商",desc:"自动分析竞品、生成标题描述、优化关键词、监控价格和库存。",features:["竞品实时监控","AI标题生成","关键词优化","库存价格预警"],color:"#F97316",rating:4.6,reviews:91},
-  {id:"data-visualizer",name:"数据可视化引擎",emoji:"📈",price:59,period:"/月",category:"数据",desc:"上传CSV/Excel，自动生成20+种图表，支持自定义配色和交互。",features:["20+图表类型","拖拽式操作","多数据源接入","一键导出PNG/SVG"],color:"#14B8A6",rating:4.5,reviews:145},
-  {id:"game-dev-kit",name:"AI游戏开发工具包",emoji:"🎮",price:199,period:"/月",category:"开发",desc:"AI辅助游戏开发：自动生成关卡、角色、剧情、对话、美术资源。",features:["AI生成游戏关卡","剧情对话生成","角色自动创建","美术资源生成"],color:"#A855F7",rating:4.7,reviews:52},
-  {id:"video-generator",name:"AI视频生成系统",emoji:"🎬",price:249,period:"/月",category:"内容",desc:"输入文字自动生成视频，支持配音、字幕、特效、背景音乐。",features:["文字转视频","AI配音合成","自动字幕生成","多风格特效"],color:"#F43F5E",rating:4.4,reviews:38},
-  {id:"design-toolkit",name:"AI设计素材生成器",emoji:"🎨",price:79,period:"/月",category:"设计",desc:"输入需求自动生成UI设计稿、海报、Logo、Banner，支持多格式导出。",features:["UI设计自动生成","海报Logo设计","多格式导出","配色方案推荐"],color:"#06B6D4",rating:4.6,reviews:167},
-  {id:"api-gateway",name:"API网关管理系统",emoji:"🌐",price:119,period:"/月",category:"开发",desc:"统一管理API接口，监控流量，限流熔断，认证鉴权，可视化配置。",features:["统一API管理","流量监控告警","限流熔断保护","多认证方式"],color:"#3B82F6",rating:4.5,reviews:84},
-  {id:"ocr-extractor",name:"OCR文档识别系统",emoji:"📄",price:49,period:"/月",category:"数据",desc:"扫描/拍照识别文字，支持PDF、证件、发票、名片等多格式。",features:["多格式文档识别","表格自动还原","批量处理","API接口调用"],color:"#84CC16",rating:4.3,reviews:201},
-  {id:"voice-assistant",name:"AI语音助手",emoji:"🎙️",price:89,period:"/月",category:"效率",desc:"语音唤醒、实时转写、翻译合成，支持中英日韩等多语言。",features:["实时语音转文字","多语言翻译","语音合成","打断插话交互"],color:"#FB923C",rating:4.6,reviews:118},
-  {id:"agent-framework-kit",name:"Agent框架全家桶",emoji:"🏗️",price:149,period:"/月",category:"自动化",desc:"LangGraph + CrewAI + AutoGen 三大主流框架配置模板、n8n工作流、部署文档全覆盖，2026 Agent开发首选套件。",features:["LangGraph 完整配置模板","CrewAI 多Agent编排","AutoGen 对话流设计","n8n 自动化工作流"],color:"#7C3AED",rating:5.0,reviews:41},
-  {id:"openclaw-agent-master",name:"OpenClaw Agent配置大师",emoji:"🧭",price:99,period:"/月",category:"开发",desc:"OpenClaw Agent 从零配置指南，包含 MCP Server 接入、Skill 开发、最佳实践工作流，灵犀验证过的配置方法论。",features:["MCP Server 接入指南","Skill 开发模板","自动化运营工作流","OpenClaw 最佳实践"],color:"#059669",rating:4.9,reviews:33},
-  {id:"crypto-tracker",name:"加密货币监控系统",emoji:"💰",price:79,period:"/月",category:"数据",desc:"实时监控加密货币价格、K线、巨鲸钱包地址，自动告警。",features:["实时价格监控","K线数据接入","巨鲸地址追踪","多渠道告警"],color:"#FACC15",rating:4.4,reviews:72},
+  {id:"github-automation",name:"GitHub Agent自动化系统",emoji:"⚡",price:99,period:"/月",category:"自动化",desc:"全自动GitHub运营机器人：自动追踪Trending热榜、Star优质项目、AI生成智能评论，GitHub Actions 7×24小时运行，无需人工干预。",features:["GitHub Actions 7×24自动运行","AI分析Trending热榜项目","自动Star + 生成评论","每日运营报告推送"],color:"#6366F1",rating:4.9,reviews:128,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/github-automation.zip"},
+  {id:"telegram-bot",name:"Telegram号码查询机器人",emoji:"📱",price:29,period:"/月",category:"自动化",desc:"支持全国手机号码段实时归属地查询，响应速度 < 2秒，批量查询自动重试，7×24云端运行不间断。",features:["实时查询响应 < 2秒","覆盖全国所有号段","批量查询 + 自动重试","API接口可直接调用"],color:"#06B6D4",rating:4.7,reviews:203,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/telegram-bot.zip"},
+  {id:"content-promoter",name:"AI内容推流系统",emoji:"📣",price:199,period:"/月",category:"内容",desc:"AI自动生成高质量内容，一键同步发布到微博、小红书、微信公众号等平台，支持定时发布与数据统计分析。",features:["AI自动生成原创内容","多平台同步发布","定时自动推送","发布数据统计分析"],color:"#EC4899",rating:4.8,reviews:87,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/content-promoter.zip"},
+  {id:"n8n-workflow",name:"n8n工作流自动化",emoji:"🔗",price:149,period:"/月",category:"自动化",desc:"可视化n8n工作流设计器，连接100+主流应用（GitHub、Notion、Telegram等），零代码搭建自动化流水线。",features:["100+应用一键集成","可视化流程画布","云端7×24稳定运行","分支/循环/错误处理"],color:"#10B981",rating:4.6,reviews:156,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/n8n-workflow.zip"},
+  {id:"web-scraper",name:"AI智能网页爬虫",emoji:"🕷️",price:69,period:"/月",category:"数据",desc:"可视化配置爬取规则，无需写代码，自动识别页面结构，支持登录态、验证码应对，数据自动去重存储。",features:["可视化规则配置器","支持登录态抓取","自动去重 + 存储","定时批量任务"],color:"#F59E0B",rating:4.5,reviews:94,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/web-scraper.zip"},
+  {id:"code-reviewer",name:"AI代码审查助手",emoji:"🔍",price:79,period:"/月",category:"开发",desc:"提交代码后自动审查，发现Bug、安全漏洞、性能问题，提供中文修复建议，支持 GitHub Actions CI/CD 集成。",features:["多语言代码审查","Bug + 漏洞检测","中文修复建议","GitHub Actions集成"],color:"#8B5CF6",rating:4.8,reviews:112,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/code-reviewer.zip"},
+  {id:"database-toolkit",name:"AI数据库管理工具包",emoji:"🗄️",price:89,period:"/月",category:"开发",desc:"用自然语言查询数据库，自动生成SQL、绘制ER图、批量数据迁移，让非技术人员也能轻松操作数据库。",features:["自然语言 → SQL","SQL性能分析与优化","多数据库迁移","自动ER图生成"],color:"#3B82F6",rating:4.7,reviews:78,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/database-toolkit.zip"},
+  {id:"security-scanner",name:"AI代码安全审计系统",emoji:"🔒",price:149,period:"/月",category:"安全",desc:"深度扫描代码仓库，自动检测OWASP Top 10漏洞、依赖包风险、密钥泄露，生成详细安全报告并给出修复方案。",features:["OWASP Top 10 覆盖","依赖包漏洞扫描","密钥泄露检测","CI/CD 安全门禁"],color:"#EF4444",rating:4.9,reviews:63,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/security-scanner.zip"},
+  {id:"ecommerce-ai",name:"电商AI运营助手",emoji:"🛒",price:159,period:"/月",category:"电商",desc:"实时监控竞品价格、库存、评论，自动生成有竞争力的标题和描述，关键词优化提升搜索排名，数据驱动决策。",features:["竞品实时价格监控","AI标题 + 描述生成","关键词排名优化","库存告警推送"],color:"#F97316",rating:4.6,reviews:91,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ecommerce-ai.zip"},
+  {id:"data-visualizer",name:"数据可视化引擎",emoji:"📈",price:59,period:"/月",category:"数据",desc:"上传CSV/Excel，自动生成折线图、柱状图、饼图、雷达图等20+种图表，支持自定义配色，一键导出PNG/SVG。",features:["20+图表类型","拖拽式操作","多数据源接入","一键导出PNG/SVG"],color:"#14B8A6",rating:4.5,reviews:145,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/data-visualizer.zip"},
+  {id:"game-dev-kit",name:"AI游戏开发工具包",emoji:"🎮",price:199,period:"/月",category:"开发",desc:"AI辅助完整游戏开发流程：自动生成关卡、角色设定、剧情对话、美术素材提示词，大幅提升独立游戏开发效率。",features:["AI生成游戏关卡","剧情对话自动生成","角色设定AI辅助","美术素材提示词"],color:"#A855F7",rating:4.7,reviews:52,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/game-dev-kit.zip"},
+  {id:"video-generator",name:"AI视频生成系统",emoji:"🎬",price:249,period:"/月",category:"内容",desc:"输入文字描述自动生成视频，自动配音、字幕、特效、背景音乐，多风格可选，适合短视频创作者和营销团队。",features:["文字描述 → 成片视频","AI配音 + 字幕","多风格视频特效","批量模板化生产"],color:"#F43F5E",rating:4.4,reviews:38,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/video-generator.zip"},
+  {id:"design-toolkit",name:"AI设计素材生成器",emoji:"🎨",price:79,period:"/月",category:"设计",desc:"输入需求描述，AI自动生成UI设计稿、海报、Logo、Banner，支持多格式导出，内置配色方案推荐功能。",features:["UI设计自动生成","海报Logo Banner","多格式一键导出","智能配色方案"],color:"#06B6D4",rating:4.6,reviews:167,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/design-toolkit.zip"},
+  {id:"api-gateway",name:"API网关管理系统",emoji:"🌐",price:119,period:"/月",category:"开发",desc:"统一管理所有API接口，可视化配置限流、熔断、认证鉴权，实时监控流量和错误率，支持一键回滚。",features:["统一API管理后台","限流 + 熔断配置","多认证方式","实时流量监控"],color:"#3B82F6",rating:4.5,reviews:84,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/api-gateway.zip"},
+  {id:"ocr-extractor",name:"OCR文档识别系统",emoji:"📄",price:49,period:"/月",category:"数据",desc:"扫描或拍照文档，精准识别文字，支持PDF、证件、发票、名片等，自动还原表格结构，批量处理效率高。",features:["多格式文档识别","表格结构还原","批量处理","API接口调用"],color:"#84CC16",rating:4.3,reviews:201,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ocr-extractor.zip"},
+  {id:"voice-assistant",name:"AI语音助手",emoji:"🎙️",price:89,period:"/月",category:"效率",desc:"语音唤醒、实时语音转文字、多语言翻译、语音合成，支持打断和插话交互，适合会议记录和外企办公场景。",features:["实时语音转文字","中英日韩多语言","AI语音合成","打断插话交互"],color:"#FB923C",rating:4.6,reviews:118,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/voice-assistant.zip"},
+  {id:"agent-framework-kit",name:"Agent框架全家桶",emoji:"🏗️",price:149,period:"/月",category:"自动化",desc:"LangGraph + CrewAI + AutoGen 三大主流 Agent 框架完整配置模板、n8n 工作流示例、详细部署文档，2026 Agent 开发首选套件。",features:["LangGraph 完整配置模板","CrewAI 多Agent编排","AutoGen 对话流设计","n8n 自动化工作流"],color:"#7C3AED",rating:5.0,reviews:41,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/agent-framework-kit.zip"},
+  {id:"openclaw-agent-master",name:"OpenClaw Agent配置大师",emoji:"🧭",price:99,period:"/月",category:"开发",desc:"OpenClaw Agent 从零配置指南，含 MCP Server 接入、Skill 开发模板、自动化运营工作流，灵犀验证过的生产级配置方法论。",features:["MCP Server 接入指南","Skill 开发模板","自动化运营工作流","OpenClaw 最佳实践"],color:"#059669",rating:4.9,reviews:33,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/openclaw-agent-master.zip"},
+  {id:"crypto-tracker",name:"加密货币监控系统",emoji:"💰",price:79,period:"/月",category:"数据",desc:"实时监控主流加密货币价格、K线数据、巨鲸钱包地址变动，自定义价格告警，支持 Telegram / Email 多渠道通知。",features:["实时价格 + K线数据","巨鲸钱包地址追踪","自定义价格告警","Telegram即时通知"],color:"#FACC15",rating:4.4,reviews:72,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/crypto-tracker.zip"},
 ];
 
 var CATEGORIES = ["全部","自动化","内容","数据","开发","安全","电商","设计","效率"];
@@ -1143,24 +1265,57 @@ function loadApiConfig(){
 // THEME
 // ═══════════════════════════════════════════
 function toggleTheme(){
-  const isDark = document.documentElement.style.getPropertyValue('--bg') === '' || getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() === '#060C1A';
+  const isDark = localStorage.getItem('ai_theme') === 'dark';
   if(isDark){
-    document.documentElement.style.setProperty('--bg','#F4F6FB');
-    document.documentElement.style.setProperty('--surface','#FFFFFF');
-    document.querySelector('.theme-toggle').textContent = '🌙';
+    localStorage.setItem('ai_theme','light');
   } else {
-    document.documentElement.style.setProperty('--bg','#060C1A');
-    document.documentElement.style.setProperty('--surface','#0D1428');
-    document.querySelector('.theme-toggle').textContent = '☀️';
+    localStorage.setItem('ai_theme','dark');
   }
+  applyTheme();
 }
 function applyTheme(){
-  // respect prefers-color-scheme by default
+  const saved = localStorage.getItem('ai_theme');
+  if(saved === 'dark') {
+    document.documentElement.style.setProperty('--bg','#060C1A');
+    document.documentElement.style.setProperty('--surface','#0D1428');
+    document.documentElement.style.setProperty('--surface2','#111933');
+    document.documentElement.style.setProperty('--surface3','#162040');
+    document.documentElement.style.setProperty('--text','#F1F5F9');
+    document.documentElement.style.setProperty('--text2','#94A3B8');
+    document.documentElement.style.setProperty('--muted','#475569');
+    document.documentElement.style.setProperty('--accent','#3B82F6');
+    document.documentElement.style.setProperty('--accent-light','rgba(59,130,246,0.12)');
+    document.documentElement.style.setProperty('--accent2','#60A5FA');
+    document.documentElement.style.setProperty('--accent-glow','rgba(59,130,246,0.2)');
+    document.documentElement.style.setProperty('--border','rgba(255,255,255,0.08)');
+    document.documentElement.style.setProperty('--border2','rgba(255,255,255,0.16)');
+    document.querySelector('.theme-toggle').textContent = '☀️';
+  } else {
+    document.querySelector('.theme-toggle').textContent = '🌙';
+  }
 }
 
+var currentSearch = '';
+var currentSort = 'default';
+
 // ═══════════════════════════════════════════
-// NAVIGATION
+// SEARCH & SORT
 // ═══════════════════════════════════════════
+function handleSearch(q){
+  currentSearch = q.trim().toLowerCase();
+  document.getElementById('search-clear').style.display = currentSearch ? '' : 'none';
+  renderProducts();
+}
+function clearSearch(){
+  document.getElementById('search-input').value = '';
+  currentSearch = '';
+  document.getElementById('search-clear').style.display = 'none';
+  renderProducts();
+}
+function handleSort(v){
+  currentSort = v;
+  renderProducts();
+}
 function switchView(view){
   currentView = view;
   document.querySelectorAll('.header-nav-btn').forEach(b => b.classList.remove('active'));
@@ -1197,17 +1352,31 @@ function renderProducts(){
   if(currentFilter !== '全部'){
     items = items.filter(p => p.category === currentFilter);
   }
+  // Search
+  if(currentSearch){
+    items = items.filter(p =>
+      p.name.toLowerCase().includes(currentSearch) ||
+      p.desc.toLowerCase().includes(currentSearch) ||
+      p.category.toLowerCase().includes(currentSearch) ||
+      p.features.some(f => f.toLowerCase().includes(currentSearch))
+    );
+  }
+  // Sort
+  if(currentSort === 'price-asc') items.sort((a,b) => a.price - b.price);
+  else if(currentSort === 'price-desc') items.sort((a,b) => b.price - a.price);
+  else if(currentSort === 'rating-desc') items.sort((a,b) => b.rating - a.rating);
+  else if(currentSort === 'reviews-desc') items.sort((a,b) => b.reviews - a.reviews);
 
   document.getElementById('section-title').textContent = currentView === 'store' ? '🏪 全部技能' : '🛡️ 我的技能';
-  document.getElementById('section-count').textContent = `${items.length} 个技能`;
+  document.getElementById('section-count').textContent = `${items.length} 个技能${currentSearch ? ' · 搜索结果' : ''}`;
 
   const grid = document.getElementById('products-grid');
   if(items.length === 0){
     grid.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--muted);">
         <div style="font-size:3rem;margin-bottom:0.8rem;">${currentView === 'owned' ? '🔓' : '🔍'}</div>
-        <div style="font-size:0.9rem;font-weight:700;margin-bottom:0.4rem;">${currentView === 'owned' ? '还没有购买任何技能' : '没有找到相关技能'}</div>
-        <div style="font-size:0.78rem;">${currentView === 'owned' ? '<a href="#" onclick="switchView(\'store\');return false;" style="color:var(--accent);">去商店逛逛 →</a>' : '试试其他分类'}</div>
+        <div style="font-size:0.9rem;font-weight:700;margin-bottom:0.4rem;">${currentView === 'owned' ? '还没有购买任何技能' : currentSearch ? '没有找到匹配的技能' : '该分类暂无技能'}</div>
+        <div style="font-size:0.78rem;">${currentView === 'owned' ? '<a href="#" onclick="switchView(\'store\');return false;" style="color:var(--accent);">去商店逛逛 →</a>' : currentSearch ? '<a href="#" onclick="clearSearch();return false;" style="color:var(--accent);">清除搜索</a>' : '试试其他分类'}</div>
       </div>`;
     return;
   }
@@ -1215,12 +1384,13 @@ function renderProducts(){
   grid.innerHTML = items.map(p => {
     const owned = ownedSkills.indexOf(p.id) !== -1;
     const bgLighter = p.color + '18';
+    const stars = '★'.repeat(Math.floor(p.rating)) + (p.rating % 1 >= 0.5 ? '½' : '');
     return `<div class="product-card${owned ? ' owned' : ''}" onclick="openDetail('${p.id}')">
       <div class="product-card-top">
         <div class="product-card-icon" style="background:${bgLighter};">${p.emoji}</div>
         <div class="product-card-meta">
           <div class="product-card-name">${p.name}</div>
-          <div class="product-card-category">${p.category}</div>
+          <div class="product-card-category">${p.category} · ${stars} ${p.rating}</div>
         </div>
         <div class="product-card-price">¥${p.price}<span class="period">${p.period}</span></div>
       </div>
@@ -1228,12 +1398,21 @@ function renderProducts(){
       <div class="product-card-features">${p.features.slice(0,3).map(f => `<span class="feature-tag">${f}</span>`).join('')}</div>
       <div class="product-card-footer" onclick="event.stopPropagation()">
         ${owned
-          ? `<button class="card-btn card-btn-chat" onclick="startChat('${p.id}')">💬 开始对话</button><button class="card-btn card-btn-owned">✓ 已购买</button>`
+          ? `<button class="card-btn card-btn-detail" onclick="downloadProduct('${p.id}')">📥 下载</button><button class="card-btn card-btn-chat" onclick="startChat('${p.id}')">💬 对话</button>`
           : `<button class="card-btn card-btn-detail" onclick="openDetail('${p.id}')">查看详情</button><button class="card-btn card-btn-buy" onclick="openPayModal('${p.id}')">🛒 购买</button>`
         }
       </div>
     </div>`;
   }).join('');
+}
+
+function downloadProduct(id){
+  const p = PRODUCTS.find(x => x.id === id);
+  if(!p) return;
+  const url = p.downloadUrl || `https://github.com/nima54851/ai-supermarket/releases/tag/v1.0.0`;
+  if(confirm(`下载「${p.name}」商品包？\n\n点击确定将跳转到 GitHub Release 页面下载。`)){
+    window.open(url, '_blank');
+  }
 }
 
 // ═══════════════════════════════════════════
@@ -1262,10 +1441,10 @@ function openDetail(id){
   if(owned){
     chatBtn.style.display = '';
     chatBtn.onclick = () => { closeDetail(); startChat(p.id); };
-    buyBtn.textContent = '✓ 已购买';
+    buyBtn.textContent = '📥 下载商品包';
     buyBtn.style.background = 'var(--green)';
     buyBtn.style.boxShadow = '0 2px 8px rgba(16,185,129,0.3)';
-    buyBtn.onclick = null;
+    buyBtn.onclick = () => downloadProduct(p.id);
   } else {
     chatBtn.style.display = 'none';
     buyBtn.textContent = '🛒 立即购买';
