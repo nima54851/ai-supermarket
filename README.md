@@ -1,17 +1,17 @@
-# 🤖 AI超市 - 一站式AI能力交易市场
+# 🧭 灵犀集市 - 一站式AI能力交易平台
 
 > 买AI能力，像买菜一样简单 | Buy AI Tools Like Groceries
 
-[![AI超市](https://img.shields.io/badge/AI%20超市-全息玻璃界面-6366f1?style=for-the-badge&logo=robot&logoColor=white)](https://nima54851.github.io/ai-supermarket)
-[![17+ AI产品](https://img.shields.io/badge/17%2B%20AI%E4%BA%A7%E5%93%81-涵盖10%E4%B8%AA%E9%A2%86%E5%9F%9F-blue?style=for-the-badge)](https://nima54851.github.io/ai-supermarket)
+[![灵犀集市](https://img.shields.io/badge/灵犀集市-AI智能体市场-6366f1?style=for-the-badge&logo=robot&logoColor=white)](https://nima54851.github.io/ai-supermarket)
+[![19+ AI产品](https://img.shields.io/badge/19%2B%20AI%E4%BA%A7%E5%93%81-涵盖10%E4%B8%AA%E9%A2%86%E5%9F%9F-blue?style=for-the-badge)](https://nima54851.github.io/ai-supermarket)
 [![PayPal安全支付](https://img.shields.io/badge/PayPal-安全支付-00457C?style=for-the-badge&logo=paypal)](https://nima54851.github.io/ai-supermarket)
 [![PWA安装](https://img.shields.io/badge/PWA-可安装到桌面-4CAF50?style=for-the-badge&logo=progressive-web-apps)](https://nima54851.github.io/ai-supermarket)
 
 ---
 
-## 🎯 AI超市是什么？
+## 🎯 灵犀集市是什么？
 
-AI超市是一个**AI能力交易平台**，精选17款+实用AI工具，覆盖自动化、内容创作、电商、开发、数据、安全、设计、游戏等10大领域。所有产品均为**GitHub开源项目 + 完整使用文档**，买完即可上手。
+灵犀集市是一个**AI能力交易平台**，精选19款+实用AI工具，覆盖自动化、内容创作、电商、开发、数据、安全、设计、游戏等10大领域。所有产品均为**GitHub开源项目 + 完整使用文档**，买完即可上手。
 
 🛒 **在线访问**: [https://nima54851.github.io/ai-supermarket](https://nima54851.github.io/ai-supermarket)
 
@@ -38,6 +38,8 @@ AI超市是一个**AI能力交易平台**，精选17款+实用AI工具，覆盖�
 | 🔒 AI代码安全审计系统 | ¥149 | 安全 | 自动化代码安全扫描 |
 | 🎨 AI设计素材生成器 | ¥79 | 设计 | AI设计素材批量生成 |
 | 🎮 AI游戏开发工具包 | ¥199 | 游戏 | AI游戏原型快速开发 |
+| 🔍 AI研究情报助手 | ¥99 | 效率 | 自动化情报收集整理 |
+| 🚀 AI工作流加速器 | ¥149 | 自动化 | 企业级AI流程自动化 |
 
 ---
 
@@ -73,8 +75,8 @@ AI超市是一个**AI能力交易平台**，精选17款+实用AI工具，覆盖�
 
 ## 📊 SEO关键词
 
-AI工具, AI超市, 买AI, AI能力交易, GitHub自动化, n8n工作流, AI内容创作, 电商AI, AI开发工具, AI安全, 自动化工具, Telegram Bot, AI Agent, AI视频生成, AI爬虫, AI数据库, 游戏开发AI, AI设计, AI效率工具, AI赚钱
+AI工具, 灵犀集市, 买AI, AI能力交易, GitHub自动化, n8n工作流, AI内容创作, 电商AI, AI开发工具, AI安全, 自动化工具, Telegram Bot, AI Agent, AI视频生成, AI爬虫, AI数据库, 游戏开发AI, AI设计, AI效率工具, AI赚钱
 
 ---
 
-*© 2025-2026 AI超市 | AI能力交易市场 | [在线访问](https://nima54851.github.io/ai-supermarket)*
+*© 2025-2026 灵犀集市 | AI能力交易平台 | [在线访问](https://nima54851.github.io/ai-supermarket)*
