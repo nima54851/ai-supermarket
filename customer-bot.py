@@ -49,6 +49,7 @@ PRODUCTS = {
     "security-scanner":{"name": "🔒 AI代码安全审计系统", "price": 149, "period": "月", "desc": "AI驱动的代码安全审计"},
     "design-toolkit":  {"name": "🖌️ AI设计素材生成器", "price": 79, "period": "月", "desc": "AI生成Logo、UI设计素材"},
     "game-dev-kit":    {"name": "🎮 AI游戏开发工具包", "price": 199, "period": "月", "desc": "AI辅助游戏开发"},
+    "skill-builder":   {"name": "🛠️ AI技能构建系统", "price": 49, "period": "永久", "desc": "从零构建AI Agent技能（ClawHub版）", "download": "https://github.com/nima54851/agent-studio/releases/download/v1.0.0/skill-builder.zip"},
 }
 
 # 订单记录文件
@@ -367,8 +368,8 @@ def main():
             return
         target_uid = args[0]
         product_id = args[1]
-        link = args[2] if len(args) > 2 else f"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/{product_id}.zip"
         p = PRODUCTS.get(product_id, {"name": product_id})
+        link = args[2] if len(args) > 2 else p.get("download", f"https://github.com/nima54851/agent-studio/releases/download/v1.0.0/{product_id}.zip")
         try:
             await ctx.bot.send_message(
                 chat_id=int(target_uid),
@@ -401,46 +402,46 @@ def main():
             return
         await update.message.reply_text(ADMIN_HELP, parse_mode="Markdown")
 
-    # ── 构建并启动 Bot ──
-    import httpx
-    from telegram import Bot
+    # ── 修复 apscheduler 与 pytz 的 timezone 兼容问题 ──
+    # ── 构建并启动 Bot (python-telegram-bot v22+ async API) ──
+    import asyncio
+    from telegram import Bot, Update
     from telegram.request import HTTPXRequest
-    from telegram.ext import Updater
+    from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters
 
-    if PROXY_URL:
-        print(f"🔗 通过代理连接 Telegram...")
-        proxies = {"http://": PROXY_URL, "https://": PROXY_URL}
-        http_client = httpx.AsyncClient(
-            timeout=httpx.Timeout(30.0, connect=20.0),
-            proxies=proxies, trust_env=False
-        )
-        proxy_req = HTTPXRequest(httpx_client=http_client)
-        bot = Bot(token=BOT_TOKEN, request=proxy_req)
-        updater = Updater(bot=bot)
-        app = updater.updater.application
-        print("✅ 代理配置成功！")
-    else:
-        print("🌐 直连模式启动...")
-        updater = Updater(token=BOT_TOKEN)
-        app = updater.updater.application
+    async def run_bot():
+        if PROXY_URL:
+            print(f"🔗 通过代理连接 Telegram...")
+            proxy_req = HTTPXRequest(proxy=PROXY_URL, read_timeout=30.0, connect_timeout=20.0)
+            bot = Bot(token=BOT_TOKEN, request=proxy_req)
+        else:
+            print("🌐 直连模式启动...")
+            bot = Bot(token=BOT_TOKEN)
 
-    # 注册所有 Handler
-    app.add_handler(CommandHandler("start", start_cmd))
-    app.add_handler(CommandHandler("help", help_cmd))
-    app.add_handler(CommandHandler("list", list_cmd))
-    app.add_handler(CommandHandler("buy", buy_cmd))
-    app.add_handler(CommandHandler("orders", admin_orders))
-    app.add_handler(CommandHandler("sendlink", admin_sendlink))
-    app.add_handler(CommandHandler("stats", admin_stats))
-    app.add_handler(CommandHandler("admin", admin_help))
-    app.add_handler(CallbackQueryHandler(button_handler))
-    app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+        app = Application.builder().bot(bot).build()
+        print("✅ Bot 初始化成功！")
 
-    print("🤖 AI超市客服机器人启动中...")
-    print("💬 等待消息...")
-    updater.start_polling(allowed_updates=Update.ALL_TYPES)
-    updater.idle()
+        # 注册所有 Handler
+        app.add_handler(CommandHandler("start", start_cmd))
+        app.add_handler(CommandHandler("help", help_cmd))
+        app.add_handler(CommandHandler("list", list_cmd))
+        app.add_handler(CommandHandler("buy", buy_cmd))
+        app.add_handler(CommandHandler("orders", admin_orders))
+        app.add_handler(CommandHandler("sendlink", admin_sendlink))
+        app.add_handler(CommandHandler("stats", admin_stats))
+        app.add_handler(CommandHandler("admin", admin_help))
+        app.add_handler(CallbackQueryHandler(button_handler))
+        app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+        app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+
+        print("🤖 AI超市客服机器人启动中...")
+        print("💬 等待消息...")
+        await app.initialize()
+        await app.start()
+        await app.run_polling(allowed_updates=Update.ALL_TYPES)
+        await app.stop()
+
+    asyncio.run(run_bot())
 
 if __name__ == "__main__":
     main()

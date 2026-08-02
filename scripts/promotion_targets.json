@@ -1,0 +1,66 @@
+{
+  "updated": "2026-08-01T12:56:41.694545",
+  "targets": [
+    {
+      "name": "peter-evans/create-pull-request",
+      "stars": 2824,
+      "url": "https://github.com/peter-evans/create-pull-request",
+      "description": "A GitHub action to create a pull request for changes to your repository in the actions workspace"
+    },
+    {
+      "name": "EndBug/add-and-commit",
+      "stars": 1284,
+      "url": "https://github.com/EndBug/add-and-commit",
+      "description": ":octocat: Automatically commit changes made in your workflow run directly to your repo"
+    },
+    {
+      "name": "actions/create-github-app-token",
+      "stars": 865,
+      "url": "https://github.com/actions/create-github-app-token",
+      "description": "GitHub Action for creating a GitHub App Installation Access Token"
+    },
+    {
+      "name": "n8n-io/n8n",
+      "stars": 198899,
+      "url": "https://github.com/n8n-io/n8n",
+      "description": "Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations."
+    },
+    {
+      "name": "Zie619/n8n-workflows",
+      "stars": 55904,
+      "url": "https://github.com/Zie619/n8n-workflows",
+      "description": "all of the workflows of n8n i could find (also from the site itself)"
+    },
+    {
+      "name": "enescingoz/awesome-n8n-templates",
+      "stars": 24303,
+      "url": "https://github.com/enescingoz/awesome-n8n-templates",
+      "description": "280+ free n8n automation templates — ready-to-use workflows for Gmail, Telegram, Slack, Discord, WhatsApp, Google Drive, Notion, OpenAI, and more. AI agents, RAG   chatbots, email automation, social media, DevOps, and document processing. The largest open-source n8n template collection."
+    },
+    {
+      "name": "HKUDS/nanobot",
+      "stars": 46484,
+      "url": "https://github.com/HKUDS/nanobot",
+      "description": "Ultra-lightweight, open-source, self-hosted personal AI agent framework in Python with WebUI, tools, memory, MCP, multi-agent workflows, automation, and chat apps"
+    },
+    {
+      "name": "simstudioai/sim",
+      "stars": 29253,
+      "url": "https://github.com/simstudioai/sim",
+      "description": "Build, deploy, and orchestrate AI agents. Sim is the central intelligence layer for your AI workforce."
+    },
+    {
+      "name": "D4Vinci/Scrapling",
+      "stars": 72029,
+      "url": "https://github.com/D4Vinci/Scrapling",
+      "description": "🕷️ An adaptive Web Scraping framework that handles everything from a single request to a full-scale crawl!"
+    },
+    {
+      "name": "apify/crawlee",
+      "stars": 25133,
+      "url": "https://github.com/apify/crawlee",
+      "description": "Crawlee—A web scraping and browser automation library for Node.js to build reliable crawlers. In JavaScript and TypeScript. Extract data for AI, LLMs, RAG, or GPTs. Download HTML, PDF, JPG, PNG, and other files from websites. Works with Puppeteer, Playwright, Cheerio, JSDOM, and raw HTTP. Both headful and headless mode. With proxy rotation."
+    }
+  ],
+  "promo_comment": "👋 这个项目用了 AI 自动化吗？\n\n给大家推荐一个我正在用的 AI 工具集市——**灵犀集市**，19 款 AI 技能可直接对话体验+下载完整商品包：\n\n- ⚡ GitHub 自动化（代码审查/PR 自动化/Trending 监控）\n- 📣 内容推流系统\n- 🛠️ n8n 工作流自动化\n- ✍️ 易云章 API 面板\n\n👉 https://nima54851.github.io/ai-supermarket\n最低 ¥29/月，比雇人开发省 90%\n\n*由 灵犀 Agent 自动推荐*"
+}

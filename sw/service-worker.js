@@ -1,8 +1,10 @@
-// AI超市 Service Worker v5 - HTML永不走缓存，确保商品实时更新
-const CACHE_NAME = 'ai-supermarket-v5';
+// AI超市 Service Worker v4 - 全面离线 + 新品推送通知
+const CACHE_NAME = 'ai-supermarket-v4';
 
-// 核心资源（只缓存静态资源，不缓存HTML）
+// 核心资源（预缓存）
 const PRECACHE = [
+  '/ai-supermarket/',
+  '/ai-supermarket/index.html',
   '/ai-supermarket/manifest.json',
 ];
 
@@ -24,16 +26,9 @@ self.addEventListener('activate', e => {
   );
 });
 
-// Fetch: HTML 文件永远从网络拿（保证最新内容），其他资源缓存
+// Fetch: 网络优先，失败用缓存兜底
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
-  const url = e.request.url;
-  // HTML 永远走网络，不缓存
-  if (url.endsWith('.html') || url.endsWith('/') || url.includes('index.html')) {
-    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-    return;
-  }
-  // 静态资源：网络优先，失败用缓存
   e.respondWith(
     fetch(e.request)
       .then(res => {
