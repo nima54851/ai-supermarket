@@ -3,6 +3,9 @@ name: Deploy Chat to Pages
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -23,5 +26,4 @@ jobs:
       - name: Commit and push
         run: |
           git add index.html
-          git commit -m "💬 客服v4部署 $(date '+%Y-%m-%d %H:%M')" || echo "no changes to commit"
-          git push
+          git commit -m "💬 客服v4部署 $(date '+%Y-%m-%d %H:%M')" && git push || echo "no changes"
