@@ -338,30 +338,5 @@
     "color": "#f59e0b",
     "type": "tool",
     "is_web": false
-  },
-  {
-    "id": "vpn-platform",
-    "name": "赛盾VPN平台系统",
-    "emoji": "🛡️",
-    "price": 99,
-    "period": "月",
-    "category": "网络工具",
-    "desc": "完整前后端VPN产品平台：着陆页+用户后台+管理员后台，支持套餐/节点/订单管理，开箱即用。",
-    "features": [
-      "完整前后端源码",
-      "用户注册/登录/套餐购买",
-      "管理员后台（用户/节点/订单）",
-      "6个全球高速节点",
-      "SQLite 开箱即用",
-      "Docker 一键部署"
-    ],
-    "skill_path": null,
-    "icon": "🛡️",
-    "color": "#3b82f6",
-    "type": "web",
-    "is_web": true,
-    "demo_url": "https://nima54851.github.io/vpn-platform/",
-    "github_url": "https://github.com/nima54851/vpn-platform",
-    "is_new": true
   }
 ]
