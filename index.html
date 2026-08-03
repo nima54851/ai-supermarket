@@ -1044,6 +1044,18 @@ input, textarea, select { font-family: inherit; }
   cursor: pointer; flex-shrink: 0;
 }
 #chat-send-btn:hover { opacity: 0.9; }
+.chat-img { max-width: 200px; max-height: 150px; border-radius: 8px; cursor: pointer; margin: 4px 0; display: block; }
+.chat-typing { display: flex; align-items: flex-end; gap: 0.4rem; }
+.typing-bubble { background: rgba(99,102,241,0.15) !important; padding: 0.6rem 0.8rem !important; }
+.typing-dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: #6366f1; margin: 0 1px; animation: typingBounce 1.2s infinite;
+}
+.typing-dot:nth-child(2){ animation-delay: 0.2s; }
+.typing-dot:nth-child(3){ animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%,60%,100%{ transform: translateY(0); } 30%{ transform: translateY(-6px); }
+}
 
 </style>
 </head>
@@ -1172,7 +1184,7 @@ input, textarea, select { font-family: inherit; }
       </div>
       <div class="footer-col">
         <h5>💳 支付方式</h5>
-        <a href="#" onclick="alert('PayPal: paypalyinanzo@hotmail.com');return false;">PayPal</a>
+        <a href="#" onclick="alert('PayPal: yinanzo@hotmail.com');return false;">PayPal</a>
         <a href="#" onclick="alert('USDT TRC20: TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy');return false;">USDT (TRC20)</a>
         <a href="#" onclick="alert('请加客服 Telegram 办理');return false;">微信支付</a>
         <a href="#" onclick="alert('请加客服 Telegram 办理');return false;">支付宝</a>
@@ -1999,34 +2011,57 @@ document.addEventListener('click', function(e){
 init();
 
 // ═══════════════════════════════════════════
-// 客服对话系统 v3
-// 发消息 → 本地服务 → GitHub → jsDelivr CDN → 轮询读取
 // ═══════════════════════════════════════════
-const CHAT_LOCAL = "http://localhost:6061";  // 发消息用本地服务
+// 客服对话系统 v4
+// 浏览器直连 GitHub API，支持：文字+图片+5秒轮询
+// ═══════════════════════════════════════════
+const GITHUB_TOKEN = "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";
+const REPO = "nima54851/ai-supermarket";
+const INBOX_URL = "https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@c510ccb51791431fce793b84545a7e7f0c005be6/inbox.json";
+const API_BASE = "https://api.github.com";
+
 let chatVisitorId = localStorage.getItem("lingxi_visitor_id") || ("v" + Math.random().toString(36).slice(2));
 localStorage.setItem("lingxi_visitor_id", chatVisitorId);
 let chatOpen = false;
 let chatHasUnread = false;
-let chatLastMsgId = 0;  // 记录本地已读消息时间戳
+let chatLastMsgTime = 0;
 let chatPollingTimer = null;
-let chatJsdelivrUrl = null;
 
-// 获取 CDN URL（从本地服务获取）
-function initChatConfig(){
-  fetch(`${CHAT_LOCAL}/api/chat/config`)
-    .then(r => r.json())
-    .then(d => { chatJsdelivrUrl = d.jsdelivr_url; })
-    .catch(() => { chatJsdelivrUrl = `https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@c510ccb51791431fce793b84545a7e7f0c005be6/inbox.json`; });
+async function ghGetContent(path) {
+  const url = API_BASE + `/repos/${REPO}/contents/${path}`;
+  const r = await fetch(url, {
+    headers: { "Authorization": "token " + GITHUB_TOKEN, "Accept": "application/vnd.github.v3+json" }
+  });
+  if(!r.ok) return null;
+  const d = await r.json();
+  return JSON.parse(atob(d.content));
 }
-initChatConfig();
 
-function toggleChat(){
+async function ghPutContent(path, content, sha) {
+  const url = API_BASE + `/repos/${REPO}/contents/${path}`;
+  const body = {
+    message: "update " + path,
+    content: btoa(unescape(encodeURIComponent(JSON.stringify(content)))),
+    sha: sha || undefined
+  };
+  const r = await fetch(url, {
+    method: "PUT",
+    headers: { "Authorization": "token " + GITHUB_TOKEN, "Accept": "application/vnd.github.v3+json", "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  return r.ok;
+}
+
+function toggleChat() {
   chatOpen = !chatOpen;
-  document.getElementById("chat-panel").style.display = chatOpen ? "flex" : "none";
-  document.getElementById("chat-toggle-icon").textContent = chatOpen ? "✕" : "💬";
-  if(chatOpen){
+  const panel = document.getElementById("chat-panel");
+  const icon = document.getElementById("chat-toggle-icon");
+  if(panel) panel.style.display = chatOpen ? "flex" : "none";
+  if(icon) icon.textContent = chatOpen ? "✕" : "💬";
+  if(chatOpen) {
     chatHasUnread = false;
-    document.getElementById("chat-unread-dot").style.display = "none";
+    const dot = document.getElementById("chat-unread-dot");
+    if(dot) dot.style.display = "none";
     loadChatHistory();
     startChatPolling();
   } else {
@@ -2034,81 +2069,160 @@ function toggleChat(){
   }
 }
 
-function loadChatHistory(){
-  if(!chatJsdelivrUrl) return;
-  fetch(chatJsdelivrUrl + '?t=' + Date.now())
-    .then(r => r.json())
-    .then(d => {
-      const myMsgs = (d.messages && d.messages[chatVisitorId]) || [];
-      const box = document.getElementById("chat-messages");
-      box.innerHTML = "";
-      myMsgs.forEach(m => {
-        addChatBubble(m.role, m.content, m.agent);
-        chatLastMsgId = Math.max(chatLastMsgId, m.time || 0);
-      });
-      box.scrollTop = box.scrollHeight;
-    }).catch(() => {});
+async function loadChatHistory() {
+  try {
+    const r = await fetch(INBOX_URL + "&t=" + Date.now());
+    if(!r.ok) return;
+    const d = await r.json();
+    const myMsgs = (d.messages && d.messages[chatVisitorId]) || [];
+    const box = document.getElementById("chat-messages");
+    if(!box) return;
+    box.innerHTML = "";
+    myMsgs.forEach(m => {
+      renderMsg(m);
+      chatLastMsgTime = Math.max(chatLastMsgTime, m.time || 0);
+    });
+    box.scrollTop = box.scrollHeight;
+    hideTyping();
+  } catch(e) {}
 }
 
-function addChatBubble(role, content, agent){
+function renderMsg(m) {
   const box = document.getElementById("chat-messages");
   if(!box) return;
   const div = document.createElement("div");
-  div.className = "chat-msg " + (role === "user" ? "chat-msg-user" : "chat-msg-agent");
-  const avatar = role === "agent" ? '<span class="chat-msg-avatar">🧭</span>' : '';
-  const name = role === "agent" ? '<span class="chat-msg-name">' + (agent||"灵犀") + '</span>' : '';
-  div.innerHTML = avatar + '<div class="chat-msg-bubble">' + name + '<span>' + escHtml(content) + '</span></div>';
+  div.className = "chat-msg " + (m.role === "user" ? "chat-msg-user" : "chat-msg-agent");
+  const avatar = m.role === "agent" ? '<span class="chat-msg-avatar">🧭</span>' : '';
+  const name = m.role === "agent" ? '<span class="chat-msg-name">' + escHtml(m.agent || "灵犀") + '</span>' : '';
+  let imgHtml = '';
+  if(m.image) {
+    const imgSrc = m.image.startsWith('data:') ? m.image
+      : (m.image.startsWith('http') ? m.image
+      : INBOX_URL.replace('/inbox.json','') + m.image);
+    imgHtml = '<img src="' + imgSrc + '" style="max-width:180px;border-radius:8px;margin-top:6px;cursor:pointer;" onclick="window.open(this.src,\'_blank\')"/>';
+  }
+  div.innerHTML = avatar + '<div class="chat-msg-bubble">' + name + '<span>' + escHtml(m.content || "") + '</span>' + imgHtml + '</div>';
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  hideTyping();
+}
+
+function escHtml(s) {
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function showTyping() {
+  const box = document.getElementById("chat-messages");
+  if(!box || document.getElementById("chat-typing")) return;
+  const div = document.createElement("div");
+  div.id = "chat-typing";
+  div.className = "chat-msg chat-msg-agent";
+  div.innerHTML = '<span class="chat-msg-avatar">🧭</span><div class="chat-msg-bubble"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 }
 
-function escHtml(s){
-  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function hideTyping() {
+  const el = document.getElementById("chat-typing");
+  if(el) el.remove();
 }
 
-function sendChat(){
+async function sendChat() {
   const inp = document.getElementById("chat-input");
   const content = inp.value.trim();
-  if(!content) return;
+  const imgInput = document.getElementById("chat-img-input");
+  const file = imgInput && imgInput.files[0];
+  const imgName = document.getElementById("chat-img-name");
+
+  if(!content && !file) return;
+
   inp.value = "";
-  // 先乐观显示
+  if(imgInput) imgInput.value = "";
+  if(imgName) { imgName.style.display = "none"; imgName.textContent = ""; }
+
   const ts = Date.now() / 1000;
-  addChatBubble("user", content);
-  // 发到本地服务（本地服务会同步到 GitHub）
-  fetch(`${CHAT_LOCAL}/api/chat/send`, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({visitor_id: chatVisitorId, content})
-  }).then(() => {
-    chatLastMsgId = ts;  // 跳过刚发的这条，等灵犀回复
-  }).catch(() => {});
+  renderMsg({ role: "user", content: content || " [图片] ", time: ts, image: null });
+  showTyping();
+
+  try {
+    const inbox = await ghGetContent("inbox.json") || { version: 0, messages: {}, created: "2026-08-03" };
+    if(!inbox.messages) inbox.messages = {};
+    if(!inbox.messages[chatVisitorId]) inbox.messages[chatVisitorId] = [];
+
+    const shaRes = await fetch(API_BASE + "/repos/" + REPO + "/contents/inbox.json", {
+      headers: { "Authorization": "token " + GITHUB_TOKEN, "Accept": "application/vnd.github.v3+json" }
+    });
+    const shaData = await shaRes.json();
+    const sha = shaData.sha;
+
+    let imgBase64 = null;
+    if(file) {
+      imgBase64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    const msgObj = {
+      id: Date.now(), role: "user", content: content || " [图片] ",
+      agent: null, time: ts
+    };
+    if(imgBase64) msgObj.image = imgBase64;
+    inbox.messages[chatVisitorId].push(msgObj);
+    inbox.version = (inbox.version || 0) + 1;
+
+    const ok = await ghPutContent("inbox.json", inbox, sha);
+    if(!ok) throw new Error("GitHub PUT failed");
+    chatLastMsgTime = ts;
+    hideTyping();
+    startChatPolling();
+  } catch(e) {
+    console.error("发送失败:", e);
+    hideTyping();
+    renderMsg({ role: "agent", content: "⚠️ 发送失败，请刷新重试", agent: "灵犀", time: Date.now()/1000 });
+  }
 }
 
-function startChatPolling(){
+function onImgSelected(el) {
+  const file = el.files[0];
+  const imgName = document.getElementById("chat-img-name");
+  if(file && imgName) {
+    imgName.textContent = "📷 " + file.name;
+    imgName.style.display = "inline";
+  }
+}
+
+function startChatPolling() {
   if(chatPollingTimer) return;
   pollChat();
   chatPollingTimer = setInterval(pollChat, 5000);
 }
-function stopChatPolling(){
-  if(chatPollingTimer){ clearInterval(chatPollingTimer); chatPollingTimer = null; }
+
+function stopChatPolling() {
+  if(chatPollingTimer) { clearInterval(chatPollingTimer); chatPollingTimer = null; }
 }
 
-function pollChat(){
-  if(!chatOpen || !chatJsdelivrUrl) return;
-  fetch(chatJsdelivrUrl + '?t=' + Date.now())
-    .then(r => r.json())
-    .then(d => {
-      const myMsgs = (d.messages && d.messages[chatVisitorId]) || [];
-      const newMsgs = myMsgs.filter(m => (m.time || 0) > chatLastMsgId && m.role === "agent");
+async function pollChat() {
+  try {
+    const d = await fetch(INBOX_URL + "&t=" + Date.now()).then(r => r.json());
+    const myMsgs = (d.messages && d.messages[chatVisitorId]) || [];
+    const newMsgs = myMsgs.filter(m => (m.time || 0) > chatLastMsgTime && m.role === "agent");
+    if(newMsgs.length) {
       newMsgs.forEach(m => {
-        addChatBubble("agent", m.content, m.agent);
-        chatLastMsgId = Math.max(chatLastMsgId, m.time || 0);
+        renderMsg(m);
+        chatLastMsgTime = Math.max(chatLastMsgTime, m.time || 0);
+        if(!chatOpen) {
+          chatHasUnread = true;
+          const dot = document.getElementById("chat-unread-dot");
+          if(dot) dot.style.display = "block";
+        }
       });
-    }).catch(() => {});
+      if(document.hidden && 'vibrate' in navigator) navigator.vibrate(100);
+    }
+  } catch(e) {}
 }
-
-</script>
-
 <!-- ═══ 客服对话窗口 ═══════════════════════════════════════════════ -->
 <div id="chat-widget">
   <div id="chat-toggle" onclick="toggleChat()">
@@ -2135,9 +2249,11 @@ function pollChat(){
     </div>
     <div class="chat-messages" id="chat-messages"></div>
     <div class="chat-input-area">
-      <input id="chat-input" type="text" placeholder="输入消息..." maxlength="2000"
-             onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendChat()}"
-             rows="1"/>
+      <input type="file" id="chat-img-input" accept="image/*" style="display:none" onchange="if(this.files[0]){document.getElementById('chat-img-name').textContent=this.files[0].name;document.getElementById('chat-img-name').style.display='inline';}"/>
+      <button onclick="document.getElementById('chat-img-input').click()" title="发送图片" style="background:none;border:none;cursor:pointer;font-size:1.1rem;padding:0.3rem;">📷</button>
+      <input id="chat-input" type="text" placeholder="输入消息...（可发截图给客服）" maxlength="2000"
+             onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendChat()}"/>
+      <span id="chat-img-name" style="display:none;font-size:0.65rem;color:#a5b4fc;max-width:80px;overflow:hidden;white-space:nowrap;"></span>
       <button id="chat-send-btn" onclick="sendChat()">发送</button>
     </div>
   </div>
