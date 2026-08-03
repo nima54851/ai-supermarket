@@ -1,0 +1,27 @@
+name: Deploy Chat to Pages
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download latest index.html
+        run: |
+          curl -L -o index.html \
+            "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/index.html"
+          echo "downloaded: $(wc -c < index.html) bytes"
+
+      - name: Configure git
+        run: |
+          git config user.name "lingxi-bot"
+          git config user.email "lingxi@openclaw.local"
+
+      - name: Commit and push
+        run: |
+          git add index.html
+          git commit -m "💬 客服v4部署 $(date '+%Y-%m-%d %H:%M')" || echo "no changes to commit"
+          git push
