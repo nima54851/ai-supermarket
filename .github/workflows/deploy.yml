@@ -1,44 +1,13 @@
-name: Deploy CoursePay to GitHub Pages
-
-on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
+name: Deploy Chat
+on: workflow_dispatch
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-        
-      - name: Build site (copy files)
+      - uses: actions/checkout@v4
+      - name: Deploy
         run: |
-          mkdir -p _site
-          cp -r coursepay-site/* _site/ 2>/dev/null || true
-          cp index.html _site/ 2>/dev/null || true
-          echo "✅ 网站文件准备完成"
-          
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '_site'
-          
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          echo "${{ github.event.inputs.html_content }}" > index.html
+          git config user.name "lingxi-bot"
+          git config user.email "lingxi@openclaw.local"
+          git add index.html && git commit -m "💬 更新" && git push
