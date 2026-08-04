@@ -759,6 +759,10 @@ input, textarea, select { font-family: inherit; }
 .pay-contact a { flex: 1; text-align: center; padding: 0.5rem; border-radius: 9px; font-size: 0.72rem; font-weight: 700; text-decoration: none; }
 .pay-contact .tg { background: var(--accent); color: white; }
 .pay-contact .email { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); }
+.pay-key-row { text-align: center; font-size: 0.72rem; color: var(--text2); margin-bottom: 0.5rem; }
+.pay-key-row a { color: var(--accent); font-weight: 700; text-decoration: none; }
+.pay-key-row a:hover { text-decoration: underline; }
+
 .pay-close {
   width: 100%; padding: 0.6rem; border-radius: 11px;
   background: var(--surface2); border: 1px solid var(--border);
@@ -1366,6 +1370,10 @@ input, textarea, select { font-family: inherit; }
     <div class="pay-contact">
       <a class="tg" href="https://t.me/diquchaxun78_bot" target="_blank">🤖 Telegram机器人（全自动发货）</a>
       <a class="email" href="mailto:yinanzo@hotmail.com" target="_blank">📧 邮件联系</a>
+    </div>
+    <div class="pay-key-row">
+      <span>已有秘钥？</span>
+      <a href="#" onclick="closePayModal();showSecretKey();return false;">🔑 输入秘钥解锁</a>
     </div>
     <button class="pay-close" onclick="closePayModal()">取消</button>
   </div>
