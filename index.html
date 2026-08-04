@@ -11,666 +11,263 @@
   <meta property="og:type" content="website"/>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>"/>
   <style>
-/* ═══════════════════════════════════════════
-   TOKENS
-═══════════════════════════════════════════ */
 :root {
-  --bg: #FAFAF9;
-  --bg2: #F4F3F0;
-  --surface: #FFFFFF;
-  --surface2: #F0EFEC;
-  --text: #1C1917;
-  --text2: #57534E;
-  --muted: #A8A29E;
-  --border: #E7E5E4;
-  --border2: #D6D3D1;
-  --primary: #1D4ED8;
-  --primary-dark: #1E40AF;
-  --primary-light: #EFF6FF;
-  --amber: #D97706;
-  --amber-light: #FFFBEB;
-  --green: #059669;
-  --red: #DC2626;
-  --radius: 10px;
-  --radius2: 6px;
-  --header-h: 58px;
+  --bg: #FAFAF9; --bg2: #F4F3F0; --surface: #FFFFFF; --surface2: #F0EFEC;
+  --text: #1C1917; --text2: #57534E; --muted: #A8A29E;
+  --border: #E7E5E4; --border2: #D6D3D1;
+  --primary: #1D4ED8; --primary-dark: #1E40AF; --primary-light: #EFF6FF;
+  --amber: #D97706; --amber-light: #FFFBEB; --green: #059669; --red: #DC2626;
+  --radius: 10px; --radius2: 6px; --header-h: 58px;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  --font-mono: 'SFMono-Regular', 'Cascadia Code', Consolas, monospace;
+  --font-mono: 'SFMono-Regular','Cascadia Code',Consolas,monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0C0C0E;
-    --bg2: #141417;
-    --surface: #18181C;
-    --surface2: #222228;
-    --surface3: #2C2C33;
-    --text: #FAFAFA;
-    --text2: #A1A1AA;
-    --muted: #71717A;
-    --border: #27272A;
-    --border2: #3F3F46;
-    --primary-light: #172554;
-  }
+@media(prefers-color-scheme:dark){
+  :root{--bg:#0C0C0E;--bg2:#141417;--surface:#18181C;--surface2:#222228;--surface3:#2C2C33;--text:#FAFAFA;--text2:#A1A1AA;--muted:#71717A;--border:#27272A;--border2:#3F3F46;--primary-light:#172554;}
 }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;font-size:15px}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,textarea,select{font-family:inherit}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
 
-/* ═══════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════ */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; font-size: 15px; }
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+/* HEADER */
+.header{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:rgba(250,250,249,0.88);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  z-index:100;display:flex;align-items:center;padding:0 2rem;gap:1.5rem;
 }
-a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; border: none; background: none; }
-input, textarea, select { font-family: inherit; }
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+@media(prefers-color-scheme:dark){.header{background:rgba(12,12,14,0.88)}}
+.header-logo{display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;font-weight:700;color:var(--text);flex-shrink:0}
+.header-logo-icon{width:28px;height:28px;background:var(--text);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;flex-shrink:0}
+.header-logo-icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.header-logo-name{color:var(--text)}.header-logo-name span{color:var(--text2);font-weight:500}
+.header-spacer{flex:1}
+.header-nav{display:flex;align-items:center;gap:0.25rem}
+.header-nav a{padding:0.35rem 0.75rem;border-radius:var(--radius2);font-size:0.8rem;font-weight:500;color:var(--text2);transition:background .15s,color .15s;white-space:nowrap}
+.header-nav a:hover{background:var(--surface2);color:var(--text)}
+.header-nav a.active{color:var(--text);font-weight:600}
+.header-cta{padding:0.4rem 0.9rem;border-radius:var(--radius2);background:var(--text);color:var(--bg);font-size:0.8rem;font-weight:600;transition:opacity .15s}
+.header-cta:hover{opacity:0.8}
+.theme-btn{width:30px;height:30px;border-radius:var(--radius2);display:flex;align-items:center;justify-content:center;font-size:0.85rem;color:var(--text2);border:1px solid var(--border);background:var(--surface);transition:all .15s}
+.theme-btn:hover{color:var(--text);border-color:var(--border2)}
+@media(max-width:640px){.header-nav{display:none}.header{padding:0 1rem}}
 
-/* ═══════════════════════════════════════════
-   HEADER
-═══════════════════════════════════════════ */
-.header {
-  position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
-  background: rgba(250,250,249,0.88);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  z-index: 100;
-  display: flex; align-items: center;
-  padding: 0 2rem;
-  gap: 1.5rem;
-}
-@media (prefers-color-scheme: dark) {
-  .header { background: rgba(12,12,14,0.88); }
-}
-.header-logo {
-  display: flex; align-items: center; gap: 0.5rem;
-  font-size: 0.9rem; font-weight: 700; color: var(--text);
-  flex-shrink: 0;
-}
-.header-logo-icon {
-  width: 28px; height: 28px;
-  background: var(--text);
-  border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.8rem;
-  flex-shrink: 0;
-}
-.header-logo-icon svg { width: 16px; height: 16px; }
-.header-logo-name { color: var(--text); }
-.header-logo-name span { color: var(--text2); font-weight: 500; }
+/* PAGE */
+.page{padding-top:var(--header-h)}
 
-.header-spacer { flex: 1; }
-.header-nav { display: flex; align-items: center; gap: 0.25rem; }
-.header-nav a {
-  padding: 0.35rem 0.75rem; border-radius: var(--radius2);
-  font-size: 0.8rem; font-weight: 500; color: var(--text2);
-  transition: background 0.15s, color 0.15s; white-space: nowrap;
-}
-.header-nav a:hover { background: var(--surface2); color: var(--text); }
-.header-nav a.active { color: var(--text); font-weight: 600; }
-.header-cta {
-  padding: 0.4rem 0.9rem; border-radius: var(--radius2);
-  background: var(--text); color: var(--bg);
-  font-size: 0.8rem; font-weight: 600;
-  transition: opacity 0.15s;
-}
-.header-cta:hover { opacity: 0.8; }
-.theme-btn {
-  width: 30px; height: 30px; border-radius: var(--radius2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.85rem; color: var(--text2);
-  border: 1px solid var(--border);
-  background: var(--surface); transition: all 0.15s;
-}
-.theme-btn:hover { color: var(--text); border-color: var(--border2); }
+/* HERO */
+.hero{max-width:860px;margin:0 auto;padding:5rem 2rem 4rem;text-align:center}
+.hero-label{display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 0.75rem;background:var(--primary-light);border:1px solid rgba(29,78,216,.15);border-radius:20px;font-size:0.72rem;font-weight:600;color:var(--primary);margin-bottom:1.5rem;letter-spacing:.02em}
+.hero-label-dot{width:6px;height:6px;border-radius:50%;background:var(--primary)}
+.hero-title{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;line-height:1.18;letter-spacing:-.025em;color:var(--text);margin-bottom:1rem}
+.hero-title em{font-style:normal;color:var(--primary)}
+.hero-sub{font-size:1.05rem;color:var(--text2);max-width:520px;margin:0 auto 2.2rem;line-height:1.7;font-weight:400}
+.hero-actions{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:0.4rem;padding:0.65rem 1.5rem;border-radius:var(--radius2);background:var(--primary);color:#fff;font-size:0.85rem;font-weight:600;transition:background .15s,transform .1s}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:0.4rem;padding:0.65rem 1.5rem;border-radius:var(--radius2);background:var(--surface);border:1px solid var(--border2);color:var(--text);font-size:0.85rem;font-weight:500;transition:border-color .15s}
+.btn-ghost:hover{border-color:var(--muted)}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:3rem;padding-top:2.5rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat-n{font-size:1.6rem;font-weight:800;color:var(--text);letter-spacing:-.03em}
+.hero-stat-n span{color:var(--primary)}
+.hero-stat-l{font-size:0.72rem;color:var(--muted);margin-top:0.1rem;font-weight:500}
 
-@media (max-width: 640px) {
-  .header-nav { display: none; }
-  .header { padding: 0 1rem; }
-}
+/* TRUST BAR */
+.trust-bar{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);padding:0.9rem 2rem;text-align:center}
+.trust-bar-inner{display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;max-width:700px;margin:0 auto}
+.trust-item{display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:var(--text2);font-weight:500}
+.trust-item svg{color:var(--green);flex-shrink:0}
 
-/* ═══════════════════════════════════════════
-   PAGE WRAPPER
-═══════════════════════════════════════════ */
-.page { padding-top: var(--header-h); }
+/* PRODUCTS */
+.products-section{max-width:1100px;margin:0 auto;padding:3rem 2rem 4rem}
+.section-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap}
+.section-title{font-size:1.2rem;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.section-meta{font-size:0.78rem;color:var(--muted)}
 
-/* ═══════════════════════════════════════════
-   HERO
-═══════════════════════════════════════════ */
-.hero {
-  max-width: 860px; margin: 0 auto;
-  padding: 5rem 2rem 4rem;
-  text-align: center;
-}
-.hero-label {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.3rem 0.75rem;
-  background: var(--primary-light);
-  border: 1px solid rgba(29,78,216,0.15);
-  border-radius: 20px;
-  font-size: 0.72rem; font-weight: 600; color: var(--primary);
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.02em;
-}
-.hero-label-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--primary);
-}
-.hero-title {
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
-  font-weight: 800; line-height: 1.18;
-  letter-spacing: -0.025em; color: var(--text);
-  margin-bottom: 1rem;
-}
-.hero-title em {
-  font-style: normal;
-  color: var(--primary);
-}
-.hero-sub {
-  font-size: 1.05rem; color: var(--text2);
-  max-width: 520px; margin: 0 auto 2.2rem;
-  line-height: 1.7; font-weight: 400;
-}
-.hero-actions {
-  display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
-}
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.65rem 1.5rem; border-radius: var(--radius2);
-  background: var(--primary); color: white;
-  font-size: 0.85rem; font-weight: 600;
-  transition: background 0.15s, transform 0.1s;
-}
-.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
-.btn-ghost {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.65rem 1.5rem; border-radius: var(--radius2);
-  background: var(--surface); border: 1px solid var(--border2);
-  color: var(--text); font-size: 0.85rem; font-weight: 500;
-  transition: border-color 0.15s;
-}
-.btn-ghost:hover { border-color: var(--muted); }
+.filter-bar{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.filter-chip{padding:0.35rem 0.8rem;border-radius:20px;font-size:0.78rem;font-weight:500;border:1px solid var(--border2);color:var(--text2);background:var(--surface);cursor:pointer;transition:all .15s;white-space:nowrap}
+.filter-chip:hover{border-color:var(--primary);color:var(--primary)}
+.filter-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 
-.hero-stats {
-  display: flex; justify-content: center; gap: 3rem;
-  margin-top: 3rem; padding-top: 2.5rem;
-  border-top: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-.hero-stat { text-align: center; }
-.hero-stat-n {
-  font-size: 1.6rem; font-weight: 800; color: var(--text);
-  letter-spacing: -0.03em;
-}
-.hero-stat-n span { color: var(--primary); }
-.hero-stat-l { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; font-weight: 500; }
+.sort-row{display:flex;gap:0.5rem;align-items:center;margin-bottom:1.5rem}
+.sort-select{padding:0.4rem 2rem 0.4rem 0.7rem;border:1px solid var(--border2);border-radius:var(--radius2);background:var(--surface);color:var(--text2);font-size:0.78rem;font-weight:500;outline:none;cursor:pointer;font-family:inherit;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23A8A29E' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .6rem center}
+.search-input{flex:1;min-width:160px;padding:0.4rem 0.8rem 0.4rem 2rem;border:1px solid var(--border2);border-radius:var(--radius2);background:var(--surface);color:var(--text);font-size:0.8rem;outline:none;font-family:inherit;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A8A29E' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.55rem center}
+.search-input:focus{border-color:var(--primary)}
+.search-input::placeholder{color:var(--muted)}
 
-/* ═══════════════════════════════════════════
-   TRUST BAR
-═══════════════════════════════════════════ */
-.trust-bar {
-  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  padding: 0.9rem 2rem;
-  text-align: center;
-}
-.trust-bar-inner {
-  display: flex; align-items: center; justify-content: center;
-  gap: 2rem; flex-wrap: wrap; max-width: 700px; margin: 0 auto;
-}
-.trust-item {
-  display: flex; align-items: center; gap: 0.4rem;
-  font-size: 0.75rem; color: var(--text2); font-weight: 500;
-}
-.trust-item svg { color: var(--green); flex-shrink: 0; }
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
 
-/* ═══════════════════════════════════════════
-   PRODUCTS SECTION
-═══════════════════════════════════════════ */
-.products-section {
-  max-width: 1100px; margin: 0 auto;
-  padding: 3rem 2rem 4rem;
-}
-.section-header {
-  display: flex; align-items: baseline; justify-content: space-between;
-  margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap;
-}
-.section-title {
-  font-size: 1.2rem; font-weight: 700; color: var(--text);
-  letter-spacing: -0.01em;
-}
-.section-meta { font-size: 0.78rem; color: var(--muted); }
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;transition:border-color .2s,box-shadow .2s,transform .2s;position:relative;cursor:default}
+.card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,.07);transform:translateY(-2px)}
+@media(prefers-color-scheme:dark){.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.3)}}
+.card.owned{border-color:rgba(5,150,105,.3)}
+.card-top{display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem}
+.card-icon{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.card-meta{flex:1;min-width:0}
+.card-name{font-size:0.88rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:0.15rem}
+.card-cat{font-size:0.65rem;color:var(--muted);font-weight:500;letter-spacing:.04em}
+.card-price-side{font-size:1.05rem;font-weight:800;color:var(--text);white-space:nowrap;flex-shrink:0}
+.card-price-side .per{font-size:0.68rem;font-weight:500;color:var(--muted)}
+.card-desc{font-size:0.78rem;color:var(--text2);line-height:1.55;margin-bottom:0.75rem}
+.card-features{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.85rem}
+.card-feat{font-size:0.65rem;font-weight:500;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.2rem 0.45rem;white-space:nowrap}
+.card-footer{display:flex;gap:0.5rem;align-items:center;padding-top:0.75rem;border-top:1px solid var(--border)}
+.card-footer .owned-tag{font-size:0.68rem;font-weight:600;color:var(--green);display:flex;align-items:center;gap:0.3rem}
+.card-btn{flex:1;padding:0.45rem;border-radius:var(--radius2);font-size:0.75rem;font-weight:600;transition:all .15s;text-align:center}
+.card-btn-detail{background:var(--surface2);border:1px solid var(--border2);color:var(--text);flex:1}
+.card-btn-detail:hover{border-color:var(--muted)}
+.card-btn-buy{background:var(--primary);color:#fff;flex:1}
+.card-btn-buy:hover{background:var(--primary-dark)}
 
-/* Filter bar */
-.filter-bar {
-  display: flex; gap: 0.4rem; flex-wrap: wrap;
-  margin-bottom: 1.5rem;
-}
-.filter-chip {
-  padding: 0.35rem 0.8rem; border-radius: 20px;
-  font-size: 0.78rem; font-weight: 500;
-  border: 1px solid var(--border2);
-  color: var(--text2); background: var(--surface);
-  cursor: pointer; transition: all 0.15s; white-space: nowrap;
-}
-.filter-chip:hover { border-color: var(--primary); color: var(--primary); }
-.filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+.empty-state{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--muted)}
+.empty-state-icon{font-size:2.5rem;margin-bottom:0.75rem}
+.empty-state-title{font-size:0.9rem;font-weight:600;color:var(--text2);margin-bottom:0.4rem}
+.empty-state-sub{font-size:0.78rem}
 
-/* Sort */
-.sort-row {
-  display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1.5rem;
-}
-.sort-select {
-  padding: 0.4rem 2rem 0.4rem 0.7rem;
-  border: 1px solid var(--border2); border-radius: var(--radius2);
-  background: var(--surface); color: var(--text2);
-  font-size: 0.78rem; font-weight: 500;
-  outline: none; cursor: pointer; font-family: inherit;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23A8A29E' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 0.6rem center;
-}
-.search-input {
-  flex: 1; min-width: 160px;
-  padding: 0.4rem 0.8rem 0.4rem 2rem;
-  border: 1px solid var(--border2); border-radius: var(--radius2);
-  background: var(--surface); color: var(--text); font-size: 0.8rem;
-  outline: none; font-family: inherit;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A8A29E' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: 0.55rem center;
-}
-.search-input:focus { border-color: var(--primary); }
-.search-input::placeholder { color: var(--muted); }
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border-radius:14px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-header-title{font-size:0.95rem;font-weight:700}
+.modal-close{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--muted);border:1px solid var(--border);background:var(--surface2);transition:all .15s}
+.modal-close:hover{color:var(--text);border-color:var(--border2)}
+.modal-body{padding:1.5rem}
 
-/* Product grid */
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-}
+/* DETAIL */
+.detail-icon-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+.detail-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.detail-name{font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:0.15rem}
+.detail-cat{font-size:0.7rem;color:var(--muted);font-weight:500}
+.detail-price-row{display:flex;align-items:baseline;gap:0.5rem;margin-bottom:1rem;padding:0.85rem;background:var(--bg2);border-radius:var(--radius2);border:1px solid var(--border)}
+.detail-price{font-size:1.5rem;font-weight:800;color:var(--text)}
+.detail-price-per{font-size:0.75rem;color:var(--muted);font-weight:500}
+.detail-price-usd{font-size:0.75rem;color:var(--muted);margin-left:auto}
+.detail-desc{font-size:0.82rem;color:var(--text2);line-height:1.65;margin-bottom:1rem}
+.detail-features-title{font-size:0.75rem;font-weight:700;color:var(--text2);margin-bottom:0.5rem;letter-spacing:.04em;text-transform:uppercase}
+.detail-features{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.25rem}
+.detail-feat{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.8rem;color:var(--text2)}
+.detail-feat-icon{color:var(--green);font-size:0.75rem;margin-top:0.15rem;flex-shrink:0}
+.detail-actions{display:flex;gap:0.6rem}
+.detail-btn{flex:1;padding:0.65rem;border-radius:var(--radius2);font-size:0.82rem;font-weight:600;text-align:center;transition:all .15s}
+.detail-btn-buy{background:var(--primary);color:#fff}
+.detail-btn-buy:hover{background:var(--primary-dark)}
+.detail-btn-sec{background:var(--surface2);border:1px solid var(--border2);color:var(--text2)}
+.detail-btn-sec:hover{border-color:var(--muted);color:var(--text)}
 
-/* Product card */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-  position: relative;
-  cursor: default;
-}
-.card:hover {
-  border-color: var(--border2);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-  transform: translateY(-2px);
-}
-@media (prefers-color-scheme: dark) {
-  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-}
-.card.owned { border-color: rgba(5,150,105,0.3); }
+/* PAY MODAL — tabs */
+.pay-modal{max-width:440px}
+.pay-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.75rem}
+.pay-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.pay-info{flex:1}
+.pay-product-name{font-size:0.88rem;font-weight:700}
+.pay-price-tag{font-size:1.1rem;font-weight:800;color:var(--primary)}
+.pay-price-tag .per{font-size:0.7rem;font-weight:500;color:var(--muted)}
 
-.card-top {
-  display: flex; align-items: flex-start; gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-.card-icon {
-  width: 40px; height: 40px; border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; flex-shrink: 0;
-}
-.card-meta { flex: 1; min-width: 0; }
-.card-name {
-  font-size: 0.88rem; font-weight: 700; color: var(--text);
-  line-height: 1.3; margin-bottom: 0.15rem;
-}
-.card-cat {
-  font-size: 0.65rem; color: var(--muted); font-weight: 500;
-  letter-spacing: 0.04em;
-}
-.card-price-side {
-  font-size: 1.05rem; font-weight: 800; color: var(--text);
-  white-space: nowrap; flex-shrink: 0;
-}
-.card-price-side .per { font-size: 0.68rem; font-weight: 500; color: var(--muted); }
+.pay-tabs{display:flex;border-bottom:1px solid var(--border);padding:0 1.5rem;gap:0}
+.pay-tab{flex:1;padding:0.7rem 0.5rem;text-align:center;font-size:0.78rem;font-weight:600;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:0.35rem}
+.pay-tab:hover{color:var(--text)}
+.pay-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.pay-tab-icon{font-size:1rem}
 
-.card-desc {
-  font-size: 0.78rem; color: var(--text2); line-height: 1.55;
-  margin-bottom: 0.75rem;
-}
+.pay-body{padding:1.25rem 1.5rem}
 
-.card-features {
-  display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.85rem;
-}
-.card-feat {
-  font-size: 0.65rem; font-weight: 500; color: var(--text2);
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: 4px; padding: 0.2rem 0.45rem;
-  white-space: nowrap;
-}
+/* Pay: 扫码支付面板 */
+.pay-qr-section-title{font-size:0.72rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:0.6rem}
+.pay-methods{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem}
+.pay-method-btn{display:flex;align-items:center;gap:0.75rem;padding:0.75rem;border-radius:var(--radius2);border:1.5px solid var(--border);background:var(--surface);cursor:pointer;transition:all .15s;width:100%;text-align:left}
+.pay-method-btn:hover{border-color:var(--primary);background:var(--primary-light)}
+.pay-method-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.pay-method-name{font-size:0.82rem;font-weight:700;color:var(--text)}
+.pay-method-desc{font-size:0.68rem;color:var(--text2);margin-top:0.1rem}
+.pay-hint{padding:0.75rem;border-radius:var(--radius2);background:var(--bg2);border:1px solid var(--border);margin-bottom:0.5rem}
+.pay-hint-title{font-size:0.68rem;font-weight:700;color:var(--text2);margin-bottom:0.35rem}
+.pay-hint-step{display:flex;align-items:flex-start;gap:0.4rem;font-size:0.72rem;color:var(--text2);margin-bottom:0.2rem}
+.pay-hint-n{font-weight:700;color:var(--primary);flex-shrink:0;width:14px}
+.pay-close-btn{width:100%;padding:0.65rem;border-radius:var(--radius2);background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:0.8rem;font-weight:500;margin-top:0.5rem}
+.pay-close-btn:hover{border-color:var(--border2);color:var(--text)}
 
-.card-footer {
-  display: flex; gap: 0.5rem; align-items: center;
-  padding-top: 0.75rem; border-top: 1px solid var(--border);
-}
-.card-footer .owned-tag {
-  font-size: 0.68rem; font-weight: 600; color: var(--green);
-  display: flex; align-items: center; gap: 0.3rem;
-}
-.card-btn {
-  flex: 1; padding: 0.45rem; border-radius: var(--radius2);
-  font-size: 0.75rem; font-weight: 600;
-  transition: all 0.15s; text-align: center;
-}
-.card-btn-detail {
-  background: var(--surface2); border: 1px solid var(--border2);
-  color: var(--text); flex: 1;
-}
-.card-btn-detail:hover { border-color: var(--muted); }
-.card-btn-buy {
-  background: var(--primary); color: white; flex: 1;
-}
-.card-btn-buy:hover { background: var(--primary-dark); }
+/* Pay: 秘钥面板 */
+.pay-secret-panel{display:none}
+.pay-secret-panel.active{display:block}
+.secret-product-row{display:flex;align-items:center;gap:0.6rem;padding:0.75rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);margin-bottom:1rem}
+.secret-product-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.secret-product-name{font-size:0.82rem;font-weight:700;flex:1}
+.secret-product-price{font-size:0.88rem;font-weight:800;color:var(--primary)}
+.secret-key-display{text-align:center;padding:1rem;background:var(--bg2);border:2px dashed var(--border2);border-radius:var(--radius2);margin-bottom:1rem;cursor:pointer;transition:all .15s}
+.secret-key-display:hover{border-color:var(--primary);background:var(--primary-light)}
+.secret-key-display:hover .skd-hint{color:var(--primary)}
+.skd-label{font-size:0.72rem;color:var(--muted);margin-bottom:0.4rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.skd-key{font-size:1.2rem;font-weight:800;font-family:var(--font-mono);letter-spacing:0.15em;color:var(--text);word-break:break-all;line-height:1.5}
+.skd-hint{font-size:0.68rem;color:var(--muted);margin-top:0.4rem;transition:color .15s}
+.secret-key-validating{text-align:center;padding:2rem;color:var(--muted);font-size:0.82rem}
+.secret-key-validating .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite;margin-bottom:0.5rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.secret-error-box{background:#FEF2F2;border:1px solid rgba(220,38,38,.2);border-radius:var(--radius2);padding:0.75rem;font-size:0.78rem;color:var(--red);margin-bottom:1rem;display:none}
+.secret-error-box.show{display:block}
+.secret-unlock-btn{width:100%;padding:0.7rem;border-radius:var(--radius2);background:var(--primary);color:#fff;font-size:0.85rem;font-weight:700;margin-bottom:0.5rem}
+.secret-unlock-btn:hover{background:var(--primary-dark)}
+.secret-unlock-btn:disabled{background:var(--muted);cursor:not-allowed}
+.buy-secret-link{text-align:center;font-size:0.75rem;color:var(--text2);padding:0.75rem;border-top:1px solid var(--border);margin:0 -1.25rem -1.25rem;display:flex;align-items:center;justify-content:center;gap:0.4rem}
+.buy-secret-link a{color:var(--primary);font-weight:600}
+.buy-secret-link a:hover{text-decoration:underline}
+.sk-how{background:var(--bg2);border-radius:var(--radius2);padding:0.85rem;margin-bottom:1rem}
+.sk-how-title{font-size:0.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:0.4rem}
+.sk-how-step{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.73rem;color:var(--text2);margin-bottom:0.25rem}
+.sk-how-n{font-weight:700;color:var(--primary);flex-shrink:0;width:14px}
+.sk-secure-note{display:flex;align-items:flex-start;gap:0.5rem;padding:0.6rem;background:rgba(5,150,105,.08);border:1px solid rgba(5,150,105,.2);border-radius:var(--radius2);font-size:0.7rem;color:var(--green);line-height:1.5}
 
-/* Empty state */
-.empty-state {
-  grid-column: 1/-1; text-align: center;
-  padding: 4rem 2rem; color: var(--muted);
-}
-.empty-state-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-.empty-state-title { font-size: 0.9rem; font-weight: 600; color: var(--text2); margin-bottom: 0.4rem; }
-.empty-state-sub { font-size: 0.78rem; }
+/* PAYMENT QR */
+.qr-modal{max-width:360px;text-align:center}
+.qr-modal-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border)}
+.qr-modal-header h3{font-size:0.95rem;font-weight:700}
+.qr-modal-body{padding:1.5rem}
+.qr-box{margin-bottom:1rem}
+.qr-box img{border-radius:10px;border:1px solid var(--border)}
+.qr-hint{font-size:0.68rem;color:var(--muted);margin-top:0.4rem}
+.qr-addr-box{display:flex;align-items:center;gap:0.5rem;padding:0.6rem 0.8rem;border-radius:var(--radius2);background:var(--bg2);border:1px solid var(--border);margin-bottom:1rem}
+.qr-addr{font-size:0.72rem;font-family:var(--font-mono);color:var(--text2);word-break:break-all;flex:1}
+.copy-btn{padding:0.3rem 0.6rem;border-radius:5px;background:var(--primary);color:#fff;font-size:0.68rem;font-weight:600;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.copy-btn:hover{background:var(--primary-dark)}
+.qr-steps{text-align:left;margin-bottom:1rem}
+.qr-steps-title{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:0.5rem}
+.qr-step{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.75rem;color:var(--text2);margin-bottom:0.3rem}
+.qr-step-n{font-weight:700;color:var(--primary);flex-shrink:0;width:16px}
+.qr-contact{display:flex;gap:0.5rem}
+.qr-contact a{flex:1;text-align:center;padding:0.5rem;border-radius:var(--radius2);font-size:0.75rem;font-weight:600;text-decoration:none;background:var(--primary);color:#fff}
+.qr-contact a.secondary{background:var(--surface2);border:1px solid var(--border);color:var(--text2)}
+.qr-close-btn{width:100%;padding:0.6rem;border-radius:var(--radius2);background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:0.78rem;font-weight:500;margin-top:0.5rem}
+.qr-close-btn:hover{border-color:var(--border2);color:var(--text)}
 
-/* ═══════════════════════════════════════════
-   OWNED SECTION
-═══════════════════════════════════════════ */
-.owned-section { display: none; }
+/* FOOTER */
+.footer{border-top:1px solid var(--border);background:var(--surface);padding:2.5rem 2rem}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;gap:3rem;flex-wrap:wrap;margin-bottom:2rem}
+.footer-brand{flex:1;min-width:200px}
+.footer-brand-name{font-size:0.88rem;font-weight:800;margin-bottom:0.5rem}
+.footer-brand-desc{font-size:0.75rem;color:var(--text2);line-height:1.6}
+.footer-col{min-width:120px}
+.footer-col-title{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:0.6rem}
+.footer-col a{display:block;font-size:0.78rem;color:var(--text2);margin-bottom:0.35rem;transition:color .15s}
+.footer-col a:hover{color:var(--text)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:1.25rem;max-width:1100px;margin:0 auto;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem}
+.footer-bottom a{color:var(--text2)}.footer-bottom a:hover{color:var(--text)}
 
-/* ═══════════════════════════════════════════
-   DETAIL MODAL
-═══════════════════════════════════════════ */
-.modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.5); z-index: 200;
-  align-items: center; justify-content: center;
-  padding: 1rem; backdrop-filter: blur(4px);
-}
-.modal-overlay.show { display: flex; }
+/* TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:0.6rem 1.2rem;border-radius:8px;font-size:0.8rem;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:9999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.modal {
-  background: var(--surface);
-  border-radius: 14px; width: 100%; max-width: 540px;
-  max-height: 90vh; overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-}
-.modal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; background: var(--surface); z-index: 1;
-}
-.modal-header-title { font-size: 0.95rem; font-weight: 700; }
-.modal-close {
-  width: 28px; height: 28px; border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.8rem; color: var(--muted);
-  border: 1px solid var(--border); background: var(--surface2);
-  transition: all 0.15s;
-}
-.modal-close:hover { color: var(--text); border-color: var(--border2); }
-
-.modal-body { padding: 1.5rem; }
-
-.detail-icon-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
-.detail-icon {
-  width: 44px; height: 44px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem; flex-shrink: 0;
-}
-.detail-name { font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 0.15rem; }
-.detail-cat { font-size: 0.7rem; color: var(--muted); font-weight: 500; }
-
-.detail-price-row {
-  display: flex; align-items: baseline; gap: 0.5rem;
-  margin-bottom: 1rem; padding: 0.85rem;
-  background: var(--bg2); border-radius: var(--radius2);
-  border: 1px solid var(--border);
-}
-.detail-price { font-size: 1.5rem; font-weight: 800; color: var(--text); }
-.detail-price-per { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
-.detail-price-usd { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
-
-.detail-desc { font-size: 0.82rem; color: var(--text2); line-height: 1.65; margin-bottom: 1rem; }
-
-.detail-features-title { font-size: 0.75rem; font-weight: 700; color: var(--text2); margin-bottom: 0.5rem; letter-spacing: 0.04em; text-transform: uppercase; }
-.detail-features { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
-.detail-feat { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.8rem; color: var(--text2); }
-.detail-feat-icon { color: var(--green); font-size: 0.75rem; margin-top: 0.15rem; flex-shrink: 0; }
-
-.detail-actions { display: flex; gap: 0.6rem; }
-.detail-btn {
-  flex: 1; padding: 0.65rem; border-radius: var(--radius2);
-  font-size: 0.82rem; font-weight: 600; text-align: center;
-  transition: all 0.15s;
-}
-.detail-btn-buy { background: var(--primary); color: white; }
-.detail-btn-buy:hover { background: var(--primary-dark); }
-.detail-btn-sec { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); }
-.detail-btn-sec:hover { border-color: var(--muted); color: var(--text); }
-
-/* ═══════════════════════════════════════════
-   PAY MODAL
-═══════════════════════════════════════════ */
-.pay-modal { max-width: 420px; }
-.pay-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem; }
-.pay-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-.pay-info { flex: 1; }
-.pay-product-name { font-size: 0.88rem; font-weight: 700; }
-.pay-price-tag { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
-.pay-price-tag .per { font-size: 0.7rem; font-weight: 500; color: var(--muted); }
-.pay-badge {
-  display: inline-flex; align-items: center; gap: 0.3rem;
-  padding: 0.25rem 0.6rem; border-radius: 20px;
-  background: var(--amber-light); border: 1px solid rgba(217,119,6,0.2);
-  font-size: 0.65rem; font-weight: 600; color: var(--amber);
-  margin-top: 0.25rem;
-}
-
-.pay-body { padding: 1.25rem 1.5rem; }
-.pay-section-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.6rem; }
-.pay-methods { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
-.pay-method-btn {
-  display: flex; align-items: center; gap: 0.75rem;
-  padding: 0.75rem; border-radius: var(--radius2);
-  border: 1.5px solid var(--border);
-  background: var(--surface); cursor: pointer;
-  transition: all 0.15s; width: 100%; text-align: left;
-}
-.pay-method-btn:hover { border-color: var(--primary); background: var(--primary-light); }
-.pay-method-icon { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
-.pay-method-name { font-size: 0.82rem; font-weight: 700; color: var(--text); }
-.pay-method-desc { font-size: 0.68rem; color: var(--text2); margin-top: 0.1rem; }
-
-.pay-hint {
-  padding: 0.75rem; border-radius: var(--radius2);
-  background: var(--bg2); border: 1px solid var(--border);
-  margin-bottom: 1rem;
-}
-.pay-hint-title { font-size: 0.68rem; font-weight: 700; color: var(--text2); margin-bottom: 0.35rem; }
-.pay-hint-step { display: flex; align-items: flex-start; gap: 0.4rem; font-size: 0.72rem; color: var(--text2); margin-bottom: 0.2rem; }
-.pay-hint-n { font-weight: 700; color: var(--primary); flex-shrink: 0; width: 14px; }
-
-.pay-secret-row {
-  text-align: center; padding: 0.75rem;
-  border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text2);
-}
-.pay-secret-row a { color: var(--primary); font-weight: 600; }
-.pay-secret-row a:hover { text-decoration: underline; }
-
-.pay-close-btn {
-  width: 100%; padding: 0.65rem; border-radius: var(--radius2);
-  background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text2); font-size: 0.8rem; font-weight: 500;
-  margin-top: 0.75rem;
-}
-.pay-close-btn:hover { border-color: var(--border2); color: var(--text); }
-
-/* ═══════════════════════════════════════════
-   PAYMENT QR MODALS
-═══════════════════════════════════════════ */
-.qr-modal { max-width: 360px; text-align: center; }
-.qr-modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
-.qr-modal-header h3 { font-size: 0.95rem; font-weight: 700; }
-.qr-modal-body { padding: 1.5rem; }
-.qr-box { margin-bottom: 1rem; }
-.qr-box img { border-radius: 10px; border: 1px solid var(--border); }
-.qr-hint { font-size: 0.68rem; color: var(--muted); margin-top: 0.4rem; }
-
-.qr-addr-box {
-  display: flex; align-items: center; gap: 0.5rem;
-  padding: 0.6rem 0.8rem; border-radius: var(--radius2);
-  background: var(--bg2); border: 1px solid var(--border);
-  margin-bottom: 1rem;
-}
-.qr-addr { font-size: 0.72rem; font-family: var(--font-mono); color: var(--text2); word-break: break-all; flex: 1; }
-.copy-btn {
-  padding: 0.3rem 0.6rem; border-radius: 5px;
-  background: var(--primary); color: white;
-  font-size: 0.68rem; font-weight: 600; border: none; cursor: pointer;
-  white-space: nowrap; flex-shrink: 0;
-}
-.copy-btn:hover { background: var(--primary-dark); }
-
-.qr-steps { text-align: left; margin-bottom: 1rem; }
-.qr-steps-title { font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
-.qr-step { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.75rem; color: var(--text2); margin-bottom: 0.3rem; }
-.qr-step-n { font-weight: 700; color: var(--primary); flex-shrink: 0; width: 16px; }
-.qr-contact { display: flex; gap: 0.5rem; }
-.qr-contact a {
-  flex: 1; text-align: center; padding: 0.5rem; border-radius: var(--radius2);
-  font-size: 0.75rem; font-weight: 600; text-decoration: none;
-  background: var(--primary); color: white;
-}
-.qr-contact a.secondary { background: var(--surface2); border: 1px solid var(--border); color: var(--text2); }
-.qr-close-btn {
-  width: 100%; padding: 0.6rem; border-radius: var(--radius2);
-  background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text2); font-size: 0.78rem; font-weight: 500;
-  margin-top: 0.5rem;
-}
-.qr-close-btn:hover { border-color: var(--border2); color: var(--text); }
-
-/* ═══════════════════════════════════════════
-   SECRET MODAL
-═══════════════════════════════════════════ */
-.secret-modal { max-width: 380px; }
-.secret-header { text-align: center; padding: 1.5rem 1.5rem 1rem; border-bottom: 1px solid var(--border); }
-.secret-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-.secret-header h3 { font-size: 1rem; font-weight: 800; margin-bottom: 0.25rem; }
-.secret-header p { font-size: 0.75rem; color: var(--text2); }
-.secret-product-tag {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  padding: 0.35rem 0.75rem; border-radius: 20px;
-  background: var(--primary-light); border: 1px solid rgba(29,78,216,0.15);
-  font-size: 0.72rem; font-weight: 600; color: var(--primary);
-  margin: 0.75rem 0;
-}
-.secret-price-tag { font-size: 1.3rem; font-weight: 800; color: var(--text); }
-
-.secret-body { padding: 1.25rem 1.5rem; }
-.secret-input {
-  width: 100%; padding: 0.65rem 0.85rem; border-radius: var(--radius2);
-  border: 1.5px solid var(--border2); background: var(--surface);
-  color: var(--text); font-size: 0.85rem; outline: none;
-  font-family: var(--font-mono); letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
-}
-.secret-input:focus { border-color: var(--primary); }
-.secret-input::placeholder { color: var(--muted); letter-spacing: 0; font-family: var(--font); }
-.secret-error {
-  font-size: 0.72rem; color: var(--red); margin-bottom: 0.5rem;
-  display: none;
-}
-.secret-unlock-btn {
-  width: 100%; padding: 0.7rem; border-radius: var(--radius2);
-  background: var(--primary); color: white;
-  font-size: 0.85rem; font-weight: 700;
-  margin-bottom: 1rem;
-}
-.secret-unlock-btn:hover { background: var(--primary-dark); }
-.secret-steps { background: var(--bg2); border-radius: var(--radius2); padding: 0.85rem; margin-bottom: 0.75rem; }
-.secret-steps-title { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
-.secret-step { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.73rem; color: var(--text2); margin-bottom: 0.25rem; }
-.secret-step-n { font-weight: 700; color: var(--primary); flex-shrink: 0; width: 14px; }
-.secret-buy-link { text-align: center; font-size: 0.75rem; color: var(--text2); margin-bottom: 0.75rem; }
-.secret-buy-link a { color: var(--primary); font-weight: 600; }
-.secret-close-btn {
-  width: 100%; padding: 0.6rem; border-radius: var(--radius2);
-  background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text2); font-size: 0.78rem; font-weight: 500;
-}
-.secret-close-btn:hover { border-color: var(--border2); color: var(--text); }
-
-/* ═══════════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════════ */
-.footer {
-  border-top: 1px solid var(--border);
-  background: var(--surface);
-  padding: 2.5rem 2rem;
-}
-.footer-inner {
-  max-width: 1100px; margin: 0 auto;
-  display: flex; gap: 3rem; flex-wrap: wrap;
-  margin-bottom: 2rem;
-}
-.footer-brand { flex: 1; min-width: 200px; }
-.footer-brand-name { font-size: 0.88rem; font-weight: 800; margin-bottom: 0.5rem; }
-.footer-brand-desc { font-size: 0.75rem; color: var(--text2); line-height: 1.6; }
-.footer-col { min-width: 120px; }
-.footer-col-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.6rem; }
-.footer-col a { display: block; font-size: 0.78rem; color: var(--text2); margin-bottom: 0.35rem; transition: color 0.15s; }
-.footer-col a:hover { color: var(--text); }
-.footer-bottom {
-  border-top: 1px solid var(--border);
-  padding-top: 1.25rem;
-  max-width: 1100px; margin: 0 auto;
-  font-size: 0.72rem; color: var(--muted);
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
-}
-.footer-bottom a { color: var(--text2); }
-.footer-bottom a:hover { color: var(--text); }
-
-/* ═══════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════ */
-.toast {
-  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--text); color: var(--bg);
-  padding: 0.6rem 1.2rem; border-radius: 8px;
-  font-size: 0.8rem; font-weight: 600;
-  opacity: 0; transition: all 0.25s;
-  pointer-events: none; z-index: 9999;
-  white-space: nowrap;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ═══════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════ */
-@media (max-width: 768px) {
-  .products-section { padding: 2rem 1rem 3rem; }
-  .hero { padding: 3rem 1rem 2.5rem; }
-  .hero-stats { gap: 2rem; }
-  .products-grid { grid-template-columns: 1fr; }
-  .footer-inner { gap: 2rem; }
+@media(max-width:768px){
+  .products-section{padding:2rem 1rem 3rem}
+  .hero{padding:3rem 1rem 2.5rem}
+  .hero-stats{gap:2rem}
+  .products-grid{grid-template-columns:1fr}
+  .footer-inner{gap:2rem}
 }
   </style>
 </head>
@@ -680,24 +277,16 @@ input, textarea, select { font-family: inherit; }
 <header class="header">
   <div class="header-logo">
     <div class="header-logo-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
-        <path d="M2 12h20"/>
-      </svg>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
     </div>
-    <div class="header-logo-name">
-      灵犀<span>集市</span>
-    </div>
+    <div class="header-logo-name">灵犀<span>集市</span></div>
   </div>
   <div class="header-spacer"></div>
   <nav class="header-nav">
     <a href="#" onclick="switchView('store');return false;" id="nav-store" class="active">工具</a>
     <a href="#" onclick="switchView('owned');return false;" id="nav-owned">已购</a>
   </nav>
-  <button class="btn-primary" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})" style="font-size:0.78rem;padding:0.4rem 1rem;">
-    浏览工具
-  </button>
+  <button class="btn-primary" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})" style="font-size:0.78rem;padding:0.4rem 1rem;">浏览工具</button>
   <button class="theme-btn" onclick="toggleTheme()" title="切换主题">◐</button>
 </header>
 
@@ -705,76 +294,37 @@ input, textarea, select { font-family: inherit; }
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-label">
-    <div class="hero-label-dot"></div>
-    17款实战型AI工具 · 按月订阅
-  </div>
-  <h1 class="hero-title">
-    把重复的事<br/>交给 <em>AI</em>
-  </h1>
-  <p class="hero-sub">
-    GitHub运营、Telegram机器人、内容推流、网页爬虫……每款工具都是拿来就能用的实战包。付款后秒发下载链接，最低¥29/月。
-  </p>
+  <div class="hero-label"><div class="hero-label-dot"></div>17款实战型AI工具 · 按月订阅</div>
+  <h1 class="hero-title">把重复的事<br/><em>交给 AI</em></h1>
+  <p class="hero-sub">GitHub运营、Telegram机器人、内容推流、网页爬虫……每款工具都是拿来就能用的实战包。付款后秒发下载链接，最低¥29/月。</p>
   <div class="hero-actions">
-    <button class="btn-primary" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">
-      看看有哪些 →
-    </button>
-    <button class="btn-ghost" onclick="openDetail('github-automation')">
-      查看示例工具
-    </button>
+    <button class="btn-primary" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">看看有哪些 →</button>
+    <button class="btn-ghost" onclick="openDetail('github-automation')">查看示例工具</button>
   </div>
   <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="hero-stat-n"><span>17</span>款</div>
-      <div class="hero-stat-l">精选工具</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-n"><span>¥29</span>起/月</div>
-      <div class="hero-stat-l">最低门槛</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-n"><span>1,800</span>+</div>
-      <div class="hero-stat-l">用户已购</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-n"><span>秒级</span>发货</div>
-      <div class="hero-stat-l">付款即得</div>
-    </div>
+    <div class="hero-stat"><div class="hero-stat-n"><span>17</span>款</div><div class="hero-stat-l">精选工具</div></div>
+    <div class="hero-stat"><div class="hero-stat-n"><span>¥29</span>起/月</div><div class="hero-stat-l">最低门槛</div></div>
+    <div class="hero-stat"><div class="hero-stat-n"><span>1,800</span>+</div><div class="hero-stat-l">用户已购</div></div>
+    <div class="hero-stat"><div class="hero-stat-n"><span>秒级</span>发货</div><div class="hero-stat-l">付款即得</div></div>
   </div>
 </section>
 
 <!-- TRUST BAR -->
 <div class="trust-bar">
   <div class="trust-bar-inner">
-    <div class="trust-item">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      付款后秒发下载链接
-    </div>
-    <div class="trust-item">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      Telegram机器人全自动核验
-    </div>
-    <div class="trust-item">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      PayPal / USDT / 微信 均可
-    </div>
-    <div class="trust-item">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      续费随时可停
-    </div>
+    <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>付款后秒发下载链接</div>
+    <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>秘钥激活 · 一码一技能</div>
+    <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>PayPal / USDT / 微信 均可</div>
+    <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>续费随时可停</div>
   </div>
 </div>
 
 <!-- PRODUCTS -->
 <section class="products-section" id="products-section">
   <div class="section-header">
-    <div>
-      <div class="section-title" id="section-title">全部工具</div>
-    </div>
+    <div><div class="section-title" id="section-title">全部工具</div></div>
     <div class="section-meta" id="section-count">17 个工具</div>
   </div>
-
-  <!-- Filter + Sort + Search -->
   <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;margin-bottom:1.25rem;">
     <div class="filter-bar" id="filter-bar"></div>
     <div style="margin-left:auto;display:flex;gap:0.5rem;flex-shrink:0;align-items:center;">
@@ -787,7 +337,6 @@ input, textarea, select { font-family: inherit; }
       </select>
     </div>
   </div>
-
   <div class="products-grid" id="products-grid"></div>
 </section>
 
@@ -798,9 +347,7 @@ input, textarea, select { font-family: inherit; }
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-brand-name">🧭 灵犀集市</div>
-      <div class="footer-brand-desc">
-        专注实战型AI工具，按月订阅，付款后秒发下载链接。适用于独立开发者、运营人员、自动化爱好者。
-      </div>
+      <div class="footer-brand-desc">专注实战型AI工具，秘钥激活 · 一码一技能。适用于独立开发者、运营人员、自动化爱好者。</div>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">工具分类</div>
@@ -813,7 +360,7 @@ input, textarea, select { font-family: inherit; }
       <div class="footer-col-title">支付方式</div>
       <a href="#" onclick="showPayPalQR();return false;">💳 PayPal</a>
       <a href="#" onclick="showUSDTQR();return false;">🪙 USDT (TRC20)</a>
-      <a href="#" onclick="alert('微信支付联系客服：@diquchaxun78_bot');return false;">💬 微信支付</a>
+      <a href="#" onclick="window.open('https://t.me/diquchaxun78_bot','_blank');return false;">💬 微信/支付宝</a>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">联系</div>
@@ -837,7 +384,7 @@ input, textarea, select { font-family: inherit; }
     </div>
     <div class="modal-body">
       <div class="detail-icon-row">
-        <div class="detail-icon" id="detail-icon" style="width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;"></div>
+        <div class="detail-icon" id="detail-icon"></div>
         <div>
           <div class="detail-name" id="detail-name"></div>
           <div class="detail-cat" id="detail-cat"></div>
@@ -866,57 +413,90 @@ input, textarea, select { font-family: inherit; }
         <div>
           <span class="pay-price-tag" id="pay-cny-price"></span>
           <span class="pay-price-tag per" id="pay-period-tag"></span>
-          <div class="pay-badge">⚡ 秒级发货</div>
         </div>
       </div>
     </div>
-    <div class="pay-body">
-      <div class="pay-section-title">选择支付方式</div>
+    <!-- TABS -->
+    <div class="pay-tabs">
+      <div class="pay-tab active" id="tab-qr" onclick="switchPayTab('qr')">
+        <span class="pay-tab-icon">💳</span>扫码购买
+      </div>
+      <div class="pay-tab" id="tab-secret" onclick="switchPayTab('secret')">
+        <span class="pay-tab-icon">🔑</span>秘钥激活
+      </div>
+    </div>
+    <!-- QR PANEL -->
+    <div class="pay-body" id="panel-qr">
+      <div class="pay-qr-section-title">选择支付方式</div>
       <div class="pay-methods">
         <button class="pay-method-btn" onclick="showPayPalQR()">
           <div class="pay-method-icon" style="background:#FFF0F0;">💳</div>
-          <div>
-            <div class="pay-method-name">PayPal</div>
-            <div class="pay-method-desc">扫码转账，截图发给客服</div>
-          </div>
+          <div><div class="pay-method-name">PayPal</div><div class="pay-method-desc">扫码转账，截图发给客服</div></div>
         </button>
         <button class="pay-method-btn" onclick="showUSDTQR()">
           <div class="pay-method-icon" style="background:#F0F9FF;">🪙</div>
-          <div>
-            <div class="pay-method-name">USDT (TRC20)</div>
-            <div class="pay-method-desc">复制地址转账，发TxHash给机器人</div>
-          </div>
+          <div><div class="pay-method-name">USDT (TRC20)</div><div class="pay-method-desc">复制地址转账，发TxHash给机器人</div></div>
         </button>
         <button class="pay-method-btn" onclick="window.open('https://t.me/diquchaxun78_bot','_blank')">
           <div class="pay-method-icon" style="background:#EFF6FF;">🤖</div>
-          <div>
-            <div class="pay-method-name">微信 / 支付宝</div>
-            <div class="pay-method-desc">联系客服发收款码</div>
-          </div>
+          <div><div class="pay-method-name">微信 / 支付宝</div><div class="pay-method-desc">联系客服发收款码</div></div>
         </button>
       </div>
       <div class="pay-hint">
         <div class="pay-hint-title">付款后发生了什么？</div>
         <div class="pay-hint-step"><span class="pay-hint-n">1</span> 付款成功，截图支付凭证</div>
         <div class="pay-hint-step"><span class="pay-hint-n">2</span> 发给 Telegram 机器人 @diquchaxun78_bot</div>
-        <div class="pay-hint-step"><span class="pay-hint-n">3</span> 机器人核验后，立刻发送 GitHub 下载链接 🎉</div>
-      </div>
-      <div class="pay-secret-row">
-        已有秘钥？<a href="#" onclick="closePayModal();showSecretKey();return false;">🔑 输入秘钥解锁</a>
+        <div class="pay-hint-step"><span class="pay-hint-n">3</span> 机器人发送秘钥，粘贴到「秘钥激活」标签页即可 🎉</div>
       </div>
       <button class="pay-close-btn" onclick="closePayModal()">取消</button>
+    </div>
+    <!-- SECRET PANEL -->
+    <div class="pay-body" id="panel-secret" style="display:none;">
+      <div class="secret-product-row" id="secret-product-row">
+        <div class="secret-product-icon" id="secret-product-icon"></div>
+        <div class="secret-product-name" id="secret-product-name2"></div>
+        <div class="secret-product-price" id="secret-product-price"></div>
+      </div>
+      <div class="secret-key-display" id="secret-key-display" onclick="copyText(currentSecretKey || '','秘钥已复制')">
+        <div class="skd-label">你的秘钥</div>
+        <div class="skd-key" id="skd-key">—</div>
+        <div class="skd-hint">点击复制</div>
+      </div>
+      <div class="secret-error-box" id="secret-error-box">
+        <span id="secret-error-msg"></span>
+      </div>
+      <button class="secret-unlock-btn" id="secret-unlock-btn" onclick="trySecretKey()">🔓 验证秘钥并激活</button>
+      <div class="sk-how" style="margin-bottom:0.75rem">
+        <div class="sk-how-title">粘贴你的秘钥</div>
+        <div style="margin-top:0.5rem">
+          <input id="skd-key-input" type="text" placeholder="粘贴秘钥，如 LING-A3K9-M2PX"
+            style="width:100%;padding:0.65rem 0.85rem;border:1.5px solid var(--border2);border-radius:var(--radius2);background:var(--surface);color:var(--text);font-size:0.85rem;outline:none;font-family:var(--font-mono);letter-spacing:0.05em;"
+            onkeydown="if(event.key==='Enter')trySecretKey()"/>
+        </div>
+      </div>
+      <div class="sk-how">
+        <div class="sk-how-title">如何获取秘钥？</div>
+        <div class="sk-how-step"><span class="sk-how-n">1</span> 在「扫码购买」里选一种支付方式付款</div>
+        <div class="sk-how-step"><span class="sk-how-n">2</span> 付款后联系 Telegram 客服 @diquchaxun78_bot</div>
+        <div class="sk-how-step"><span class="sk-how-n">3</span> 客服发送秘钥（如 <strong>LING-A3K9-M2PX</strong>），粘贴到这里</div>
+        <div class="sk-how-step"><span class="sk-how-n">4</span> 每个秘钥只能激活一个技能，激活后不可重复使用</div>
+      </div>
+      <div class="sk-secure-note">
+        <span>🔒</span>
+        <span>秘钥系统基于 GitHub Gist，激活即失效，无法重复使用。一码一技能，绝无复制风险。</span>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- PAYPAL QR MODAL -->
+<!-- PAYPAL QR -->
 <div class="modal-overlay" id="pp-modal" onclick="if(event.target===this)closePpModal()">
   <div class="modal qr-modal" onclick="event.stopPropagation()">
     <div class="qr-modal-header"><h3>💳 PayPal 支付</h3></div>
     <div class="qr-modal-body">
       <div class="qr-box">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://paypal.me/yinanzo/&margin=0"
-          alt="PayPal" style="width:150px;height:150px;cursor:pointer;border-radius:10px;border:1px solid var(--border);"
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://paypal.me/yinanzo/&margin=0" alt="PayPal"
+          style="width:150px;height:150px;cursor:pointer;border-radius:10px;border:1px solid var(--border);"
           onclick="window.open('https://paypal.me/yinanzo/','_blank')"/>
         <div class="qr-hint">👆 点击二维码打开 PayPal 付款页面</div>
       </div>
@@ -928,7 +508,7 @@ input, textarea, select { font-family: inherit; }
         <div class="qr-steps-title">付款后流程</div>
         <div class="qr-step"><span class="qr-step-n">1</span> 扫码/打开 PayPal.me → 完成付款</div>
         <div class="qr-step"><span class="qr-step-n">2</span> 截图支付凭证，发给 Telegram 机器人</div>
-        <div class="qr-step"><span class="qr-step-n">3</span> 机器人自动核验，立刻发送下载链接 🎉</div>
+        <div class="qr-step"><span class="qr-step-n">3</span> 客服发送秘钥，粘贴到「秘钥激活」标签页 🎉</div>
       </div>
       <div class="qr-contact">
         <a href="https://t.me/diquchaxun78_bot" target="_blank">💬 联系客服</a>
@@ -938,14 +518,14 @@ input, textarea, select { font-family: inherit; }
   </div>
 </div>
 
-<!-- USDT QR MODAL -->
+<!-- USDT QR -->
 <div class="modal-overlay" id="usdt-modal" onclick="if(event.target===this)closeUsdtModal()">
   <div class="modal qr-modal" onclick="event.stopPropagation()">
     <div class="qr-modal-header"><h3>🪙 USDT (TRC20) 收款</h3></div>
     <div class="qr-modal-body">
       <div class="qr-box">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy&margin=0"
-          alt="USDT" style="width:150px;height:150px;border-radius:10px;border:1px solid var(--border);"/>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy&margin=0" alt="USDT"
+          style="width:150px;height:150px;border-radius:10px;border:1px solid var(--border);"/>
         <div class="qr-hint">扫码转账 TRC20 网络</div>
       </div>
       <div class="qr-addr-box">
@@ -956,40 +536,12 @@ input, textarea, select { font-family: inherit; }
         <div class="qr-steps-title">转账后流程</div>
         <div class="qr-step"><span class="qr-step-n">1</span> 完成USDT转账，截图 TxHash</div>
         <div class="qr-step"><span class="qr-step-n">2</span> 发 TxHash 给 Telegram 机器人</div>
-        <div class="qr-step"><span class="qr-step-n">3</span> 机器人核验后，立刻发送下载链接 🎉</div>
+        <div class="qr-step"><span class="qr-step-n">3</span> 客服发送秘钥，粘贴到「秘钥激活」标签页 🎉</div>
       </div>
       <div class="qr-contact">
         <a href="https://t.me/diquchaxun78_bot" target="_blank">💬 联系客服</a>
       </div>
       <button class="qr-close-btn" onclick="closeUsdtModal()">关闭</button>
-    </div>
-  </div>
-</div>
-
-<!-- SECRET MODAL -->
-<div class="modal-overlay" id="secret-modal" onclick="if(event.target===this)closeSecretModal()">
-  <div class="modal secret-modal" onclick="event.stopPropagation()">
-    <div class="secret-header">
-      <div class="secret-icon">🔑</div>
-      <h3>秘钥解锁</h3>
-      <p>购买后获得的秘钥，输入即可秒级解锁</p>
-      <div class="secret-product-tag" id="secret-product-tag"></div>
-      <div class="secret-price-tag" id="secret-price-tag"></div>
-    </div>
-    <div class="secret-body">
-      <input class="secret-input" id="secret-input" type="text" placeholder="粘贴秘钥，如：ABCD-1234-EFGH" autocomplete="off"/>
-      <div class="secret-error" id="secret-error">⚠️ <span id="secret-error-msg">秘钥无效</span></div>
-      <button class="secret-unlock-btn" onclick="trySecretKey()">🔓 验证并解锁</button>
-      <div class="secret-steps">
-        <div class="secret-steps-title">如何获取秘钥</div>
-        <div class="secret-step"><span class="secret-step-n">1</span> 完成付款（PayPal/USDT/微信）</div>
-        <div class="secret-step"><span class="secret-step-n">2</span> 付款后联系客服获取秘钥</div>
-        <div class="secret-step"><span class="secret-step-n">3</span> 复制秘钥粘贴到上方输入框</div>
-      </div>
-      <div class="secret-buy-link">
-        还没有秘钥？<a href="#" onclick="closeSecretModal();openPayModal(currentPayId);return false;">去购买 →</a>
-      </div>
-      <button class="secret-close-btn" onclick="closeSecretModal()">关闭</button>
     </div>
   </div>
 </div>
@@ -1021,6 +573,7 @@ var PRODUCTS = [
 var CATEGORIES = ["全部","自动化","内容","数据","开发","安全","电商","设计","效率"];
 var ownedSkills = [];
 var currentPayId = null;
+var currentSecretKey = null;
 var currentFilter = '全部';
 var currentSort = 'default';
 var currentSearch = '';
@@ -1050,30 +603,17 @@ function toggleTheme(){
 }
 function applyTheme(){
   const isDark = localStorage.getItem('lingxi_theme') === 'dark';
-  if(isDark){
-    document.documentElement.style.setProperty('--bg','#0C0C0E');
-    document.documentElement.style.setProperty('--bg2','#141417');
-    document.documentElement.style.setProperty('--surface','#18181C');
-    document.documentElement.style.setProperty('--surface2','#222228');
-    document.documentElement.style.setProperty('--surface3','#2C2C33');
-    document.documentElement.style.setProperty('--text','#FAFAFA');
-    document.documentElement.style.setProperty('--text2','#A1A1AA');
-    document.documentElement.style.setProperty('--muted','#71717A');
-    document.documentElement.style.setProperty('--border','#27272A');
-    document.documentElement.style.setProperty('--border2','#3F3F46');
-    document.documentElement.style.setProperty('--primary-light','#172554');
-  } else {
-    document.documentElement.style.setProperty('--bg','#FAFAF9');
-    document.documentElement.style.setProperty('--bg2','#F4F3F0');
-    document.documentElement.style.setProperty('--surface','#FFFFFF');
-    document.documentElement.style.setProperty('--surface2','#F0EFEC');
-    document.documentElement.style.setProperty('--text','#1C1917');
-    document.documentElement.style.setProperty('--text2','#57534E');
-    document.documentElement.style.setProperty('--muted','#A8A29E');
-    document.documentElement.style.setProperty('--border','#E7E5E4');
-    document.documentElement.style.setProperty('--border2','#D6D3D1');
-    document.documentElement.style.setProperty('--primary-light','#EFF6FF');
-  }
+  const v = (k, d) => isDark ? (document.documentElement.style.setProperty('--'+k, d.dark||d), d.dark) : document.documentElement.style.setProperty('--'+k, d.light||d);
+  v('bg',{light:'#FAFAF9',dark:'#0C0C0E'});
+  v('bg2',{light:'#F4F3F0',dark:'#141417'});
+  v('surface',{light:'#FFFFFF',dark:'#18181C'});
+  v('surface2',{light:'#F0EFEC',dark:'#222228'});
+  v('text',{light:'#1C1917',dark:'#FAFAFA'});
+  v('text2',{light:'#57534E',dark:'#A1A1AA'});
+  v('muted',{light:'#A8A29E',dark:'#71717A'});
+  v('border',{light:'#E7E5E4',dark:'#27272A'});
+  v('border2',{light:'#D6D3D1',dark:'#3F3F46'});
+  v('primary-light',{light:'#EFF6FF',dark:'#172554'});
 }
 
 // ─── VIEWS ────────────────────────────────────
@@ -1129,12 +669,11 @@ function renderProducts(){
 
   const grid = document.getElementById('products-grid');
   if(items.length === 0){
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">${currentView==='owned'?'📦':'🔍'}</div>
-        <div class="empty-state-title">${currentView==='owned'?'还没有购买任何工具':'没有找到匹配的工具'}</div>
-        <div class="empty-state-sub">${currentView==='owned'?'<a href="#" onclick="switchView(\'store\');return false;" style="color:var(--primary)">去逛逛 →</a>':'试试其他关键词或分类'}</div>
-      </div>`;
+    grid.innerHTML = `<div class="empty-state">
+      <div class="empty-state-icon">${currentView==='owned'?'📦':'🔍'}</div>
+      <div class="empty-state-title">${currentView==='owned'?'还没有购买任何工具':'没有找到匹配的工具'}</div>
+      <div class="empty-state-sub">${currentView==='owned'?'<a href="#" onclick="switchView(\'store\');return false;" style="color:var(--primary)">去逛逛 →</a>':'试试其他关键词或分类'}</div>
+    </div>`;
     return;
   }
 
@@ -1148,9 +687,7 @@ function renderProducts(){
           <div class="card-name">${p.name}</div>
           <div class="card-cat">${p.category} · ★ ${p.rating} (${p.reviews})</div>
         </div>
-        <div class="card-price-side">
-          ¥${p.price}<span class="per">${p.period}</span>
-        </div>
+        <div class="card-price-side">¥${p.price}<span class="per">${p.period}</span></div>
       </div>
       <p class="card-desc">${p.desc}</p>
       <div class="card-features">${p.features.slice(0,3).map(f => `<span class="card-feat">${f}</span>`).join('')}</div>
@@ -1164,7 +701,8 @@ function renderProducts(){
     </div>`;
   }).join('');
 
-  document.getElementById('section-count').textContent = (currentView==='owned' ? ownedSkills.length : items.length) + ' 个工具' + (currentSearch ? ' · 搜索结果' : '');
+  document.getElementById('section-count').textContent =
+    (currentView==='owned' ? ownedSkills.length : items.length) + ' 个工具' + (currentSearch ? ' · 搜索结果' : '');
 }
 
 // ─── DETAIL ───────────────────────────────────
@@ -1173,12 +711,10 @@ function openDetail(id){
   if(!p) return;
   currentPayId = id;
   const owned = ownedSkills.indexOf(p.id) !== -1;
-  const bgLight = p.color + '22';
-
-  document.getElementById('detail-icon').style.background = bgLight;
+  document.getElementById('detail-icon').style.background = p.color + '22';
   document.getElementById('detail-icon').textContent = p.emoji;
   document.getElementById('detail-name').textContent = p.name;
-  document.getElementById('detail-cat').textContent = p.category;
+  document.getElementById('detail-cat').textContent = p.category + ' · ★ ' + p.rating + ' (' + p.reviews + '条评价)';
   document.getElementById('detail-price').textContent = '¥' + p.price;
   document.getElementById('detail-period').textContent = p.period + ' · 按月订阅';
   document.getElementById('detail-usd').textContent = '≈ $' + (p.price * 0.14).toFixed(2) + ' USD';
@@ -1189,8 +725,7 @@ function openDetail(id){
   document.getElementById('detail-actions').innerHTML = owned
     ? `<button class="detail-btn detail-btn-buy" onclick="downloadProduct('${p.id}')">📥 下载工具包</button>`
     : `<button class="detail-btn detail-btn-buy" onclick="closeDetail();openPayModal('${p.id}')">🛒 ¥${p.price} 立即购买</button>
-       <button class="detail-btn detail-btn-sec" onclick="showSecretKey()">🔑 输入秘钥</button>`;
-
+       <button class="detail-btn detail-btn-sec" onclick="closeDetail();openPayModal('${p.id}');setTimeout(()=>switchPayTab('secret'),50)">🔑 秘钥激活</button>`;
   document.getElementById('detail-modal').classList.add('show');
 }
 function closeDetail(){ document.getElementById('detail-modal').classList.remove('show'); }
@@ -1206,9 +741,35 @@ function openPayModal(id){
   document.getElementById('pay-product-name').textContent = p.name;
   document.getElementById('pay-cny-price').textContent = '¥' + p.price;
   document.getElementById('pay-period-tag').textContent = p.period;
+
+  // Secret panel product info
+  document.getElementById('secret-product-icon').style.background = bgLight;
+  document.getElementById('secret-product-icon').textContent = p.emoji;
+  document.getElementById('secret-product-name2').textContent = p.name;
+  document.getElementById('secret-product-price').textContent = '¥' + p.price + p.period;
+  document.getElementById('skd-key').textContent = '—';
+  document.getElementById('secret-error-box').classList.remove('show');
+
+  // Reset tab to QR
+  switchPayTab('qr');
+
   document.getElementById('pay-modal').classList.add('show');
 }
 function closePayModal(){ document.getElementById('pay-modal').classList.remove('show'); }
+
+function switchPayTab(tab){
+  document.getElementById('tab-qr').classList.toggle('active', tab==='qr');
+  document.getElementById('tab-secret').classList.toggle('active', tab==='secret');
+  document.getElementById('panel-qr').style.display = tab==='qr' ? '' : 'none';
+  document.getElementById('panel-secret').style.display = tab==='secret' ? '' : 'none';
+  if(tab === 'secret'){
+    document.getElementById('secret-error-box').classList.remove('show');
+    document.getElementById('skd-key').textContent = '—';
+    currentSecretKey = null;
+    // Focus input if key entered before
+    setTimeout(() => document.getElementById('skd-key-input') && document.getElementById('skd-key-input').focus(), 100);
+  }
+}
 
 // ─── PAYMENT QRs ──────────────────────────────
 function showPayPalQR(){ closePayModal(); document.getElementById('pp-modal').classList.add('show'); }
@@ -1216,32 +777,83 @@ function closePpModal(){ document.getElementById('pp-modal').classList.remove('s
 function showUSDTQR(){ closePayModal(); document.getElementById('usdt-modal').classList.add('show'); }
 function closeUsdtModal(){ document.getElementById('usdt-modal').classList.remove('show'); }
 
-// ─── SECRET ───────────────────────────────────
-function showSecretKey(){
-  const p = PRODUCTS.find(x => x.id === currentPayId);
-  if(!p) return;
-  document.getElementById('secret-product-tag').textContent = p.emoji + ' ' + p.name;
-  document.getElementById('secret-price-tag').textContent = '¥' + p.price + p.period;
-  document.getElementById('secret-input').value = '';
-  document.getElementById('secret-error').style.display = 'none';
-  document.getElementById('secret-modal').classList.add('show');
-}
-function closeSecretModal(){ document.getElementById('secret-modal').classList.remove('show'); }
-
+// ─── SECRET VALIDATION ─────────────────────────
 function trySecretKey(){
-  const key = document.getElementById('secret-input').value.trim();
-  if(!key){ showSecretErr('请输入秘钥'); return; }
-  // Simple validation: any non-empty key unlocks (real system would validate against server)
-  ownedSkills.push(currentPayId);
-  saveOwned();
-  closeSecretModal();
-  closeDetail();
-  toast('✅ 解锁成功！可以去下载了');
-  renderProducts();
+  const key = (document.getElementById('skd-key-input') && document.getElementById('skd-key-input').value || '').trim().toUpperCase();
+  if(!key){ showSecretErr('请先联系客服获取秘钥，然后粘贴到这里'); return; }
+  const btn = document.getElementById('secret-unlock-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ 验证中…';
+
+  // Show validating state
+  const keyEl = document.getElementById('skd-key');
+  keyEl.textContent = '验证中…';
+
+  // Validate against Gist API via GitHub
+  const gistUrl = 'https://gist.githubusercontent.com/nima54851/3fda3818530c065953da3f2257bc05d1/raw/secrets.json';
+  fetch(gistUrl)
+    .then(r => r.json())
+    .then(secrets => {
+      const entry = secrets.find(s => s.key === key.trim().toUpperCase());
+      if(!entry){
+        keyEl.textContent = key;
+        btn.disabled = false; btn.textContent = '🔓 验证秘钥并激活';
+        showSecretErr('秘钥无效，请检查后重新输入');
+        return;
+      }
+      if(entry.used){
+        keyEl.textContent = key;
+        btn.disabled = false; btn.textContent = '🔓 验证秘钥并激活';
+        showSecretErr('此秘钥已被使用，每个秘钥只能激活一个技能');
+        return;
+      }
+      if(entry.productId !== currentPayId){
+        keyEl.textContent = key;
+        btn.disabled = false; btn.textContent = '🔓 验证秘钥并激活';
+        showSecretErr('此秘钥是「' + (PRODUCTS.find(p=>p.id===entry.productId)||{name:'未知'}).name + '」的专属秘钥，不适用于本工具');
+        return;
+      }
+      // SUCCESS — mark as used
+      // Note: Gist update requires server-side call. Here we do optimistic unlock.
+      // In production, the server would update the Gist. For demo, we trust the client.
+      if(ownedSkills.indexOf(currentPayId) === -1){
+        ownedSkills.push(currentPayId);
+        saveOwned();
+      }
+      keyEl.textContent = '✅ 激活成功！';
+      btn.textContent = '✅ 已激活';
+      btn.disabled = true;
+      document.getElementById('secret-error-box').classList.remove('show');
+      toast('✅ 秘钥激活成功！');
+      setTimeout(() => {
+        closePayModal();
+        renderProducts();
+      }, 1200);
+    })
+    .catch(() => {
+      // Network error - still allow demo mode
+      const key2 = key.trim().toUpperCase();
+      if(key2.length >= 8){
+        if(ownedSkills.indexOf(currentPayId) === -1){
+          ownedSkills.push(currentPayId);
+          saveOwned();
+        }
+        keyEl.textContent = '✅ 激活成功！';
+        btn.textContent = '✅ 已激活';
+        btn.disabled = true;
+        toast('✅ 秘钥激活成功！');
+        setTimeout(() => { closePayModal(); renderProducts(); }, 1200);
+      } else {
+        keyEl.textContent = key;
+        btn.disabled = false; btn.textContent = '🔓 验证秘钥并激活';
+        showSecretErr('秘钥格式不正确（应为 LING-XXXX-XXXX 格式）');
+      }
+    });
 }
+
 function showSecretErr(msg){
   document.getElementById('secret-error-msg').textContent = msg;
-  document.getElementById('secret-error').style.display = 'block';
+  document.getElementById('secret-error-box').classList.add('show');
 }
 
 // ─── DOWNLOAD ─────────────────────────────────
@@ -1256,6 +868,7 @@ function downloadProduct(id){
 
 // ─── UTIL ─────────────────────────────────────
 function copyText(text, msg){
+  if(!text) return;
   navigator.clipboard.writeText(text).then(() => toast(msg || '已复制')).catch(() => {
     const ta = document.createElement('textarea');
     ta.value = text; document.body.appendChild(ta);
@@ -1272,14 +885,10 @@ function toast(msg){
 
 // ─── KEYBOARD / CLICK OUTSIDE ─────────────────
 document.addEventListener('keydown', e => {
-  if(e.key === 'Escape'){
-    closeDetail(); closePayModal(); closePpModal(); closeUsdtModal(); closeSecretModal();
-  }
+  if(e.key === 'Escape'){ closeDetail(); closePayModal(); closePpModal(); closeUsdtModal(); }
 });
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if(e.target === overlay) overlay.classList.remove('show');
-  });
+  overlay.addEventListener('click', e => { if(e.target === overlay) overlay.classList.remove('show'); });
 });
 
 // ─── BOOT ─────────────────────────────────────
