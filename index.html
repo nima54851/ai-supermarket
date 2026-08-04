@@ -1058,6 +1058,42 @@ input, textarea, select { font-family: inherit; }
 }
 
 </style>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true });
+  </script>
+  <!-- SEO Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "灵犀集市",
+    "url": "https://nima54851.github.io/ai-supermarket",
+    "description": "17款AI工具（内容推流、GitHub自动化、网页爬虫、PPT生成等），每个技能都能先免费试用再付费，最低¥29/月。",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://nima54851.github.io/ai-supermarket?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "灵犀集市",
+    "url": "https://nima54851.github.io/ai-supermarket",
+    "description": "AI能力交易市场，提供内容推流、GitHub自动化、网页爬虫等AI工具。",
+    "sameAs": [
+      "https://github.com/nima54851",
+      "https://t.me/diquchaxun78_bot"
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -1184,10 +1220,10 @@ input, textarea, select { font-family: inherit; }
       </div>
       <div class="footer-col">
         <h5>💳 支付方式</h5>
-        <a href="#" onclick="alert('PayPal: yinanzo@hotmail.com');return false;">PayPal</a>
-        <a href="#" onclick="alert('USDT TRC20: TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy');return false;">USDT (TRC20)</a>
-        <a href="#" onclick="alert('请加客服 Telegram 办理');return false;">微信支付</a>
-        <a href="#" onclick="alert('请加客服 Telegram 办理');return false;">支付宝</a>
+        <a href="#" onclick="showPayPalQR();return false;">PayPal</a>
+        <a href="#" onclick="showUSDTQR();return false;">USDT (TRC20)</a>
+        <a href="#" onclick="alert('联系客服 Telegram 办理：@diquchaxun78_bot');return false;">微信支付</a>
+        <a href="#" onclick="alert('联系客服 Telegram 办理：@diquchaxun78_bot');return false;">支付宝</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1305,6 +1341,13 @@ input, textarea, select { font-family: inherit; }
           <div class="pay-method-desc">联系客服发收款码，付款后自动发货</div>
         </div>
       </a>
+      <a class="pay-method" href="#" onclick="showPayPalQR();return false;">
+        <div class="pay-method-icon" style="background:#FFF0F0;">💳</div>
+        <div class="pay-method-info">
+          <div class="pay-method-name">PayPal</div>
+          <div class="pay-method-desc">扫码转账 → 发截图给客服 → 自动发货</div>
+        </div>
+      </a>
       <a class="pay-method" href="#" onclick="showUSDTQR();return false;">
         <div class="pay-method-icon" style="background:#F0F9FF;">🪙</div>
         <div class="pay-method-info">
@@ -1333,17 +1376,21 @@ input, textarea, select { font-family: inherit; }
   <div class="pp-modal">
     <h3>💳 PayPal 安全支付</h3>
     <div class="pp-qr-box">
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://paypal.me/yinanzo/&margin=0" alt="PayPal" style="width:160px;height:160px;"/>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://paypal.me/yinanzo/&margin=0" alt="PayPal" style="width:160px;height:160px;cursor:pointer;" onclick="window.open('https://paypal.me/yinanzo/','_blank');return false;"/>
+      <div style="font-size:0.65rem;color:var(--muted);margin-top:0.4rem;">👆 点击二维码直接打开 PayPal 付款页面</div>
     </div>
     <div class="pp-addr-box">
       <div>yinanzo@hotmail.com</div>
       <button class="copy-btn" onclick="copyText('yinanzo@hotmail.com','邮箱已复制')">复制</button>
     </div>
+    <div style="background:#FFF0F0;border:1px solid rgba(14,93,216,0.15);border-radius:10px;padding:0.6rem 0.8rem;margin-bottom:0.6rem;font-size:0.68rem;color:#D97706;">
+      💡 付款金额以商品页标注的¥价格为准，截图发给客服即可
+    </div>
     <div class="pay-after2">
       <div class="pay-after2-title">⏱️ 付款后流程</div>
-      <div class="pay-after2-step"><span class="step-n">1</span> 截图保存 PayPal 支付凭证</div>
-      <div class="pay-after2-step"><span class="step-n">2</span> 联系客服确认到账</div>
-      <div class="pay-after2-step"><span class="step-n">3</span> 客服发送 GitHub 下载链接</div>
+      <div class="pay-after2-step"><span class="step-n">1</span> 扫码/打开 PayPal.me → 付款</div>
+      <div class="pay-after2-step"><span class="step-n">2</span> 截图支付凭证，发给 Telegram 机器人</div>
+      <div class="pay-after2-step"><span class="step-n">3</span> 机器人自动核验，立刻发送下载链接 🎉</div>
     </div>
     <div class="pay-contact2"><a href="https://t.me/diquchaxun78_bot" target="_blank">💬 联系客服</a></div>
     <button class="pay-close2" onclick="closePpModal()">关闭</button>
@@ -1632,7 +1679,7 @@ function renderProducts(){
       <div class="product-card-footer" onclick="event.stopPropagation()">
         ${owned
           ? `<button class="card-btn card-btn-detail" onclick="downloadProduct('${p.id}')">📥 下载</button><button class="card-btn card-btn-chat" onclick="startChat('${p.id}')">💬 对话</button>`
-          : `<button class="card-btn card-btn-detail" onclick="openDetail('${p.id}')">查看详情</button><button class="card-btn card-btn-buy" onclick="openPayModal('${p.id}')">🛒 购买</button>`
+          : `<button class="card-btn card-btn-detail" onclick="openDetail('${p.id}')">查看详情</button>${p.free_trial ? `<button class="card-btn card-btn-chat" onclick="openDetail('${p.id}')">🎁 免费试用</button>` : ''}<button class="card-btn card-btn-buy" onclick="openPayModal('${p.id}')">🛒 购买</button>`
         }
       </div>
     </div>`;
@@ -1651,12 +1698,20 @@ function downloadProduct(id){
 // ═══════════════════════════════════════════
 // DETAIL MODAL
 // ═══════════════════════════════════════════
+// GA4 Event helper
+function trackEvent(category, action, label) {
+  if(typeof gtag !== 'undefined') {
+    gtag('event', action, { event_category: category, event_label: label });
+  }
+}
+
 function openDetail(id){
   const p = PRODUCTS.find(x => x.id === id);
   if(!p) return;
   currentPayId = id;
   const owned = ownedSkills.indexOf(p.id) !== -1;
   const bgLighter = p.color + '18';
+  trackEvent('Product', 'view_detail', p.name);
 
   document.getElementById('detail-icon').style.background = bgLighter;
   document.getElementById('detail-icon').textContent = p.emoji;
@@ -1727,14 +1782,21 @@ function openPayModal(id){
   document.getElementById('pay-cny-price').textContent = '¥' + p.price;
   document.getElementById('pay-usd-price').textContent = '≈ $' + (p.price * 0.14).toFixed(2) + ' USD';
   document.getElementById('pay-modal').classList.add('show');
+  trackEvent('Product', 'open_pay_modal', p.name + ' ¥' + p.price);
 }
 function openPayFromDetail(){ openPayModal(currentPayId); }
 function closePayModal(){ document.getElementById('pay-modal').classList.remove('show'); }
 
-function showPayPalQR(){ closePayModal(); document.getElementById('pp-modal').classList.add('show'); }
+function showPayPalQR(){
+  closePayModal(); document.getElementById('pp-modal').classList.add('show');
+  trackEvent('Payment', 'open_paypal', 'footer');
+}
 function closePpModal(){ document.getElementById('pp-modal').classList.remove('show'); }
 
-function showUSDTQR(){ closePayModal(); document.getElementById('usdt-modal').classList.add('show'); }
+function showUSDTQR(){
+  closePayModal(); document.getElementById('usdt-modal').classList.add('show');
+  trackEvent('Payment', 'open_usdt', 'footer');
+}
 function closeUsdtModal(){ document.getElementById('usdt-modal').classList.remove('show'); }
 
 function showSecretKey(){
