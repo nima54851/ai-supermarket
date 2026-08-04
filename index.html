@@ -9,7 +9,7 @@
   <meta property="og:title" content="灵犀集市"/>
   <meta property="og:description" content="17款实战型AI工具，按月订阅，付款后秒发下载链接"/>
   <meta property="og:type" content="website"/>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
   <style>
 :root {
   --bg: #FAFAF9; --bg2: #F4F3F0; --surface: #FFFFFF; --surface2: #F0EFEC;
@@ -262,6 +262,33 @@ input,textarea,select{font-family:inherit}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:0.6rem 1.2rem;border-radius:8px;font-size:0.8rem;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:9999;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* FLOW SECTION */
+.flow-section{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2.5rem 2rem}
+.flow-inner{max-width:900px;margin:0 auto}
+.flow-title{font-size:0.85rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.5rem;text-align:center}
+.flow-steps{display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap}
+.flow-step{flex:1;min-width:160px;text-align:center;position:relative}
+.flow-step::after{content:'→';position:absolute;right:-1.1rem;top:1.2rem;font-size:1.1rem;color:var(--muted);display:none}
+.flow-step:not(:last-child)::after{display:block}
+@media(max-width:600px){.flow-step::after{display:none!important}}
+.flow-step-num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;font-size:0.8rem;font-weight:800;margin:0 auto 0.75rem}
+.flow-step-icon{font-size:1.8rem;margin-bottom:0.5rem}
+.flow-step-title{font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:0.25rem}
+.flow-step-desc{font-size:0.72rem;color:var(--text2);line-height:1.5}
+
+/* SOCIAL PROOF */
+.proof-section{padding:2.5rem 2rem}
+.proof-inner{max-width:900px;margin:0 auto}
+.proof-title{font-size:0.85rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1.5rem;text-align:center}
+.proof-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.proof-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem}
+.proof-card-top{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem}
+.proof-avatar{width:30px;height:30px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;color:#fff;flex-shrink:0}
+.proof-name{font-size:0.78rem;font-weight:700;color:var(--text)}
+.proof-time{font-size:0.65rem;color:var(--muted);margin-left:auto}
+.proof-stars{font-size:0.7rem;color:#F59E0B;margin-bottom:0.4rem}
+.proof-text{font-size:0.78rem;color:var(--text2);line-height:1.55}
+
 @media(max-width:768px){
   .products-section{padding:2rem 1rem 3rem}
   .hero{padding:3rem 1rem 2.5rem}
@@ -276,9 +303,15 @@ input,textarea,select{font-family:inherit}
 <!-- HEADER -->
 <header class="header">
   <div class="header-logo">
-    <div class="header-logo-icon">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" width="28" height="28" style="flex-shrink:0">
+      <defs><linearGradient id="lbg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1D4ED8"/><stop offset="100%" stop-color="#1E40AF"/></linearGradient></defs>
+      <rect width="28" height="28" rx="7" fill="url(#lbg)"/>
+      <circle cx="14" cy="14" r="9.8" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.6"/>
+      <polygon points="14,4.5 15.1,12.3 14,11 12.9,12.3" fill="white"/>
+      <polygon points="14,11 15.1,12.3 14,21.5 12.9,12.3" fill="rgba(255,255,255,0.38)"/>
+      <circle cx="14" cy="14" r="1.8" fill="white"/>
+      <circle cx="17.7" cy="7.3" r="0.9" fill="rgba(255,255,255,0.85)"/>
+    </svg>
     <div class="header-logo-name">灵犀<span>集市</span></div>
   </div>
   <div class="header-spacer"></div>
@@ -315,7 +348,76 @@ input,textarea,select{font-family:inherit}
     <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>付款后秒发下载链接</div>
     <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>秘钥激活 · 一码一技能</div>
     <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>PayPal / USDT / 微信 均可</div>
-    <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>续费随时可停</div>
+    <div class="trust-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>1,800+ 用户已购</div>
+  </div>
+</div>
+
+<!-- FLOW SECTION -->
+<div class="flow-section">
+  <div class="flow-inner">
+    <div class="flow-title">购买流程 · 3步搞定</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-step-num">1</div>
+        <div class="flow-step-icon">🛒</div>
+        <div class="flow-step-title">选工具 & 付款</div>
+        <div class="flow-step-desc">扫码 PayPal / USDT / 微信，任意一种完成付款</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">2</div>
+        <div class="flow-step-icon">🤖</div>
+        <div class="flow-step-title">发凭证给机器人</div>
+        <div class="flow-step-desc">截图支付页面或 TxHash，发给 Telegram 客服机器人</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">3</div>
+        <div class="flow-step-icon">🔑</div>
+        <div class="flow-step-title">收到秘钥 & 激活</div>
+        <div class="flow-step-desc">客服发送秘钥，粘贴到网站「秘钥激活」标签，即刻解锁！</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step-num">4</div>
+        <div class="flow-step-icon">📥</div>
+        <div class="flow-step-title">下载 & 使用</div>
+        <div class="flow-step-desc">激活后直接下载工具包，配置好就能用</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL PROOF -->
+<div class="proof-section">
+  <div class="proof-inner">
+    <div class="proof-title">用户评价</div>
+    <div class="proof-grid">
+      <div class="proof-card">
+        <div class="proof-card-top">
+          <div class="proof-avatar">陈</div>
+          <div class="proof-name">陈工</div>
+          <div class="proof-time">3天前</div>
+        </div>
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">GitHub自动化真的省了我每天半小时，Star+评论全自动，GitHub Actions 跑着完全不用管。续费毫不犹豫。</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-card-top">
+          <div class="proof-avatar">林</div>
+          <div class="proof-name">林同学</div>
+          <div class="proof-time">1周前</div>
+        </div>
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">秘钥激活太方便了，付款后5分钟就拿到秘钥。爬虫工具配置简单，数据跑起来很稳定，推荐。</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-card-top">
+          <div class="proof-avatar">王</div>
+          <div class="proof-name">王老板</div>
+          <div class="proof-time">2周前</div>
+        </div>
+        <div class="proof-stars">★★★★☆</div>
+        <div class="proof-text">内容推流系统买来给我们新媒体团队用，AI生成的内容质量不错，定时发布功能省心。价格也合理。</div>
+      </div>
+    </div>
   </div>
 </div>
 
