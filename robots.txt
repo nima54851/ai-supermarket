@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nima54851.github.io/ai-supermarket/sitemap.xml
+
+# Disallow admin/backend
+Disallow: /api/
+Disallow: /*.json$
