@@ -1,82 +1,128 @@
-# 🧭 灵犀集市 - 一站式AI能力交易平台
+# 🧭 灵犀集市 — AI工具实战包商店
 
-> 买AI能力，像买菜一样简单 | Buy AI Tools Like Groceries
+<div align="center">
 
-[![灵犀集市](https://img.shields.io/badge/灵犀集市-AI智能体市场-6366f1?style=for-the-badge&logo=robot&logoColor=white)](https://nima54851.github.io/ai-supermarket)
-[![19+ AI产品](https://img.shields.io/badge/19%2B%20AI%E4%BA%A7%E5%93%81-涵盖10%E4%B8%AA%E9%A2%86%E5%9F%9F-blue?style=for-the-badge)](https://nima54851.github.io/ai-supermarket)
-[![PayPal安全支付](https://img.shields.io/badge/PayPal-安全支付-00457C?style=for-the-badge&logo=paypal)](https://nima54851.github.io/ai-supermarket)
-[![PWA安装](https://img.shields.io/badge/PWA-可安装到桌面-4CAF50?style=for-the-badge&logo=progressive-web-apps)](https://nima54851.github.io/ai-supermarket)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Tools](https://img.shields.io/badge/tools-17-blue)
+![Price](https://img.shields.io/badge/price-¥29%2F%E6%9C%88-red)
+![PayPal](https://img.shields.io/badge/PayPal-ready-brightgreen)
 
----
+**17款拿来就能用的AI工具（GitHub运营、Telegram机器人、内容推流、网页爬虫、数据分析……），按月订阅，秘钥激活。**
 
-## 🎯 灵犀集市是什么？
+[🌐 在线商店](https://nima54851.github.io/ai-supermarket/)
+· [📦 全部工具列表](https://nima54851.github.io/ai-supermarket/#products)
+· [💬 Telegram 客服](https://t.me/diquchaxun78_bot)
 
-灵犀集市是一个**AI能力交易平台**，精选19款+实用AI工具，覆盖自动化、内容创作、电商、开发、数据、安全、设计、游戏等10大领域。所有产品均为**GitHub开源项目 + 完整使用文档**，买完即可上手。
-
-🛒 **在线访问**: [https://nima54851.github.io/ai-supermarket](https://nima54851.github.io/ai-supermarket)
-
----
-
-## 📦 全部产品
-
-| 产品 | 价格 | 分类 | 说明 |
-|------|------|------|------|
-| ⚡ GitHub Agent自动化系统 | ¥99 | 自动化 | n8n + GitHub API自动化工作流 |
-| 📣 AI内容推流系统 | ¥199 | 内容 | 多平台内容一键分发 |
-| 🔗 n8n工作流自动化系统 | ¥149 | 自动化 | 零代码自动化工作流 |
-| 🤖 Telegram号码查询机器人 | ¥29 | 开发 | Python开发Telegram Bot实战 |
-| 🎬 AI视频生成助手 | ¥99 | 内容 | AI短视频自动化生成 |
-| 📚 AI漫剧生成系统 | ¥149 | 内容 | AI漫画转视频动画 |
-| 💡 脑洞助手/创意生成器 | ¥39 | 效率 | AI创意灵感激发 |
-| 📊 PPT智能生成器 | ¥79 | 效率 | AI一键生成专业PPT |
-| ✍️ AI代写定制服务系统 | ¥59 | 内容 | AI写作助手完整方案 |
-| 🌍 跨境电商AI助手 | ¥199 | 电商 | 选品/翻译/运营AI工具 |
-| 🧠 多平台AI Agent助手 | ¥129 | AI | 多LLM统一调度Agent |
-| 🎨 3D模型生成系统 | ¥129 | 开发 | AI 3D建模自动化 |
-| 🕷️ AI智能网页爬虫 | ¥69 | 数据 | 可视化爬虫+AI分析 |
-| 🗄️ AI数据库管理工具包 | ¥89 | 数据 | DB管理+AI查询优化 |
-| 🔒 AI代码安全审计系统 | ¥149 | 安全 | 自动化代码安全扫描 |
-| 🎨 AI设计素材生成器 | ¥79 | 设计 | AI设计素材批量生成 |
-| 🎮 AI游戏开发工具包 | ¥199 | 游戏 | AI游戏原型快速开发 |
-| 🔍 AI研究情报助手 | ¥99 | 效率 | 自动化情报收集整理 |
-| 🚀 AI工作流加速器 | ¥149 | 自动化 | 企业级AI流程自动化 |
+</div>
 
 ---
 
-## 🔥 核心特色
+## 🎯 适用场景
 
-- 🖥️ **全息玻璃界面** — OLED深色主题，现代感十足
-- 📱 **PWA应用** — 一键安装到桌面，离线可用
-- 🔔 **实时通知** — 新品上架Push推送
-- 💳 **PayPal安全支付** — 全球通用，自动发货
-- 🌐 **jsDelivr CDN加速** — 全球毫秒级访问
-- 🔍 **智能搜索** — 10大分类即时筛选
-
----
-
-## 🛠️ 技术栈
-
-- **前端**: 纯HTML/CSS/JS（零依赖，无构建步骤）
-- **PWA**: Service Worker + Web App Manifest
-- **CDN**: jsDelivr（全球加速）/ GitHub Pages
-- **支付**: PayPal IPN + Webhook自动通知
-- **客服**: Telegram Bot (@diquchaxun78_bot)
+| 场景 | 推荐工具 |
+|------|---------|
+| 独立开发者自动化运营GitHub | GitHub Agent自动化 ⚡ |
+| 快速查询手机号归属地 | Telegram号码查询机器人 📱 |
+| 多平台内容批量发布 | AI内容推流系统 📣 |
+| 可视化搭建自动化流程 | n8n工作流自动化 🔗 |
+| 无代码爬取任意网站数据 | AI智能网页爬虫 🕷️ |
+| 代码安全审计与漏洞检测 | AI代码安全审计系统 🔒 |
+| 批量识别文档/证件文字 | OCR文档识别系统 📄 |
+| 多语言语音转写翻译 | AI语音助手 🎙️ |
 
 ---
 
-## 🚀 快速访问
+## 💡 核心特性
 
-- 🌐 **全球访问**: [https://nima54851.github.io/ai-supermarket](https://nima54851.github.io/ai-supermarket)
-- ⚡ **CDN极速**: [https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@main/index.html](https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@main/index.html)
-- 💬 **客服机器人**: [@diquchaxun78_bot](https://t.me/diquchaxun78_bot)
-- 📧 **联系邮箱**: paypalyinanzo@hotmail.com
-
----
-
-## 📊 SEO关键词
-
-AI工具, 灵犀集市, 买AI, AI能力交易, GitHub自动化, n8n工作流, AI内容创作, 电商AI, AI开发工具, AI安全, 自动化工具, Telegram Bot, AI Agent, AI视频生成, AI爬虫, AI数据库, 游戏开发AI, AI设计, AI效率工具, AI赚钱
+- ✅ **拿来就能用** — 每款工具都是完整可运行的实战包，不是教程
+- ✅ **秘钥激活** — 一码一技能，GitHub Gist验证，无法复制盗用
+- ✅ **云端运行** — GitHub Actions 7×24 自动执行，不用开着电脑
+- ✅ **随时续费** — 按月订阅，付款秒发秘钥
+- ✅ **多支付方式** — PayPal / USDT TRC20 / 微信/支付宝
 
 ---
 
-*© 2025-2026 灵犀集市 | AI能力交易平台 | [在线访问](https://nima54851.github.io/ai-supermarket)*
+## 🛒 如何购买
+
+**3步搞定：**
+
+1. 选工具 → 扫码/转账完成付款（PayPal / USDT / 微信）
+2. 截图支付凭证，发给 [Telegram 客服机器人](https://t.me/diquchaxun78_bot)
+3. 收到秘钥 → 粘贴到[商店秘钥激活框](https://nima54851.github.io/ai-supermarket/) → 直接下载使用
+
+**最低 ¥29/月**，比一杯咖啡还便宜。
+
+---
+
+## 📦 全部工具（17款）
+
+### 自动化系列
+- ⚡ **GitHub Agent自动化** ¥99/月 — Star/评论/Trending追踪全自动
+- 🔗 **n8n工作流自动化** ¥149/月 — 可视化搭建100+应用集成
+- 🏗️ **Agent框架全家桶** ¥149/月 — LangGraph+CrewAI+AutoGen完整模板
+- 📱 **Telegram号码查询机器人** ¥29/月 — 实时归属地查询<2秒
+
+### 内容运营系列
+- 📣 **AI内容推流系统** ¥199/月 — 微博/小红书/公众号一键同步
+- 🎬 **AI视频生成系统** ¥249/月 — 文字描述直接生成视频
+- 🎨 **AI设计素材生成器** ¥79/月 — UI/海报/Logo/Banner自动生成
+
+### 数据工具系列
+- 🕷️ **AI智能网页爬虫** ¥69/月 — 可视化配置，无需写代码
+- 📄 **OCR文档识别系统** ¥49/月 — PDF/证件/发票批量识别
+- 📈 **数据可视化引擎** ¥59/月 — CSV/Excel自动生成20+图表
+- 🗄️ **AI数据库管理工具包** ¥89/月 — 自然语言查询，自动生成SQL
+
+### 开发套件系列
+- 🔍 **AI代码审查助手** ¥79/月 — Bug/漏洞检测，中文修复建议
+- 🌐 **API网关管理系统** ¥119/月 — 限流/熔断/认证统一管理
+- 🔒 **AI代码安全审计系统** ¥149/月 — OWASP Top 10全覆盖
+- 🎮 **AI游戏开发工具包** ¥199/月 — AI生成关卡/剧情/角色设定
+- 🛒 **电商AI运营助手** ¥159/月 — 竞品监控/AI标题/关键词排名
+- 🎙️ **AI语音助手** ¥89/月 — 实时语音转写/多语言翻译
+
+---
+
+## 💰 支付方式
+
+| 方式 | 说明 |
+|------|------|
+| 💳 PayPal | yinanzo@hotmail.com |
+| 🪙 USDT (TRC20) | `TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy` |
+| 💬 微信/支付宝 | 联系 [@diquchaxun78_bot](https://t.me/diquchaxun78_bot) |
+
+---
+
+## 🔑 秘钥系统
+
+每个工具对应唯一秘钥（格式：`LING-XXXX-XXXX`），通过 GitHub Gist 验证，**一码一技能，激活后不可重复使用**。
+
+### 客户购买流程（开发者参考）
+```bash
+# 1. 客户付款后，灵犀生成秘钥
+# 2. 秘钥存入 GitHub Gist（私有）
+# 3. 客户在网站输入秘钥，前端验证 GitHub Gist JSON
+# 4. 验证通过 → 解锁技能 → 写入 localStorage
+```
+
+---
+
+## 🔧 技术栈
+
+| 组件 | 技术 |
+|------|------|
+| 前端 | HTML/CSS/JavaScript（零依赖） |
+| 部署 | GitHub Pages + jsDelivr CDN |
+| 秘钥验证 | GitHub Gist API |
+| 后端自动化 | GitHub Actions |
+| 客服 | Telegram Bot API |
+
+---
+
+## 📄 License
+
+MIT — 工具包可自由使用，秘钥系统 © 2026 灵犀集市
+
+---
+
+*🧭 灵犀集市 — 把重复的事，交给 AI。*
