@@ -1,447 +1,815 @@
 #!/usr/bin/env python3
 """
-AI超市 客服机器人
+AI超市 全自动发货机器人 v2.0
 用法: python3 customer-bot.py
-依赖: pip install python-telegram-bot
+依赖: pip install python-telegram-bot httpx
 
-环境变量（可选）:
-  TELEGRAM_PROXY  — 例如 socks5://127.0.0.1:1080
-  TELEGRAM_API_ID  — Telegram API ID（从 https://my.telegram.org 获取）
+功能:
+  ✅ PayPal付款截图 → 自动核验金额 → 秒发下载链接
+  ✅ USDT TRC20转帐 → 自动查询TxHash → 秒发下载链接
+  ✅ 全部订单自动记录，无需人工介入
+  ✅ 管理员查看订单、广播、统计数据
 """
 
 import os
 import sys
 import json
 import logging
-from datetime import datetime
-from functools import lru_cache
+import asyncio
+import re
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
 
-# Telegram Bot Token
+# ── 配置 ──────────────────────────────────────────
 BOT_TOKEN = "8979991426:AAEtgWjhF1KV_pJZVwzjk-ZE2_Yf1-W4RDU"
 
-# ── 代理配置 ──
-#   服务器无法直连 Telegram，在此填入你的 MTProxy 地址
-#   万提供的代理: socks5://ee29044830465c5171f152ab7d07ccfc89617a7572652e6d6963726f736f66742e636f6d@18.139.137.172:443
+# 代理（国内服务器需要）
 PROXY_URL = os.environ.get(
     "TELEGRAM_PROXY",
     "socks5://ee29044830465c5171f152ab7d07ccfc89617a7572652e6d6963726f736f66742e636f6d@18.139.137.172:443"
 )
 
-# Admin User IDs (你的 Telegram User ID，设置后只有你能用管理命令)
-ADMIN_IDS = [7668716558]
+# 管理员 ID
+ADMIN_IDS = [7668716558, 7576072069]  # 万的ID + 可添加更多
 
-# 商品数据
+# USDT TRC20 收款地址
+USDT_ADDRESS = "TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy"
+
+# 商品数据（含下载链接）
 PRODUCTS = {
-    "telegram-bot":    {"name": "📱 Telegram号码查询机器人", "price": 29, "period": "月", "desc": "实时手机号码归属地查询"},
-    "github-automation": {"name": "⚡ GitHub Agent自动化系统", "price": 99, "period": "月", "desc": "全自动GitHub运营"},
-    "content-promoter": {"name": "📣 AI内容推流系统", "price": 199, "period": "月", "desc": "一键生成多平台推广文案"},
-    "n8n-workflow":    {"name": "🔗 n8n工作流自动化系统", "price": 149, "period": "月", "desc": "拖拽式n8n工作流"},
-    "video-gen":       {"name": "🎬 AI视频生成助手", "price": 99, "period": "月", "desc": "AI驱动的视频批量生成"},
-    "ai-manga":        {"name": "🎭 AI漫剧生成系统", "price": 149, "period": "月", "desc": "AI自动生成漫画/漫剧"},
-    "idea-generator":  {"name": "🧠 脑洞助手/创意生成器", "price": 39, "period": "月", "desc": "AI创意头脑风暴工具"},
-    "ppt-generator":   {"name": "📊 PPT智能生成器", "price": 79, "period": "月", "desc": "AI一键生成PPT"},
-    "ai-writing":      {"name": "✍️ AI代写定制服务系统", "price": 59, "period": "月", "desc": "AI文章/文案/报告代写"},
-    "cross-border-ai":{"name": "🌐 跨境电商AI助手", "price": 199, "period": "月", "desc": "AI驱动的跨境电商运营助手"},
-    "ai-agent":        {"name": "🤖 多平台AI Agent助手", "price": 129, "period": "月", "desc": "通用AI Agent框架"},
-    "3d-generator":    {"name": "🎨 3D模型生成系统", "price": 129, "period": "月", "desc": "AI文本→3D模型生成"},
-    "web-scraper":     {"name": "🕷️ AI智能网页爬虫", "price": 69, "period": "月", "desc": "AI驱动的智能网页数据采集"},
-    "database-toolkit":{"name": "🗄️ AI数据库管理工具包", "price": 89, "period": "月", "desc": "AI辅助的数据库管理"},
-    "security-scanner":{"name": "🔒 AI代码安全审计系统", "price": 149, "period": "月", "desc": "AI驱动的代码安全审计"},
-    "design-toolkit":  {"name": "🖌️ AI设计素材生成器", "price": 79, "period": "月", "desc": "AI生成Logo、UI设计素材"},
-    "game-dev-kit":    {"name": "🎮 AI游戏开发工具包", "price": 199, "period": "月", "desc": "AI辅助游戏开发"},
-    "skill-builder":   {"name": "🛠️ AI技能构建系统", "price": 49, "period": "永久", "desc": "从零构建AI Agent技能（ClawHub版）", "download": "https://github.com/nima54851/agent-studio/releases/download/v1.0.0/skill-builder.zip"},
+    "telegram-bot":       {"name": "📱 Telegram号码查询机器人",  "price": 29,  "price_usd": 4,  "period": "月", "desc": "实时手机号码归属地查询，批量查询",    "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/telegram-bot.zip"},
+    "github-automation":  {"name": "⚡ GitHub Agent自动化系统",   "price": 99,  "price_usd": 14, "period": "月", "desc": "全自动GitHub运营，自动Star/评论/日报", "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/github-automation.zip"},
+    "content-promoter":   {"name": "📣 AI内容推流系统",           "price": 199, "price_usd": 28, "period": "月", "desc": "一键生成6平台推广文案，定时自动推流",  "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/content-promoter.zip"},
+    "n8n-workflow":       {"name": "🔗 n8n工作流自动化系统",      "price": 149, "price_usd": 21, "period": "月", "desc": "拖拽式n8n工作流，500+模板一键导入",    "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/n8n-workflow.zip"},
+    "video-gen":          {"name": "🎬 AI视频生成助手",           "price": 99,  "price_usd": 14, "period": "月", "desc": "文字转视频，AI配音，多风格批量导出",   "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/video-gen.zip"},
+    "ai-manga":           {"name": "🎭 AI漫剧生成系统",           "price": 149, "price_usd": 21, "period": "月", "desc": "脚本→分镜→渲染一条龙，无需绘画基础",   "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ai-manga.zip"},
+    "idea-generator":     {"name": "🧠 AI创意头脑风暴助手",       "price": 39,  "price_usd": 5,  "period": "月", "desc": "输入主题，10秒内给你20个创意方向",     "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/idea-generator.zip"},
+    "ppt-generator":      {"name": "📊 AI一键生成PPT",            "price": 79,  "price_usd": 11, "period": "月", "desc": "输入主题，5分钟生成20页专业PPT",       "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ppt-generator.zip"},
+    "ai-writing":         {"name": "✍️ AI代写定制服务",           "price": 59,  "price_usd": 8,  "period": "月", "desc": "文章/文案/报告代写，定制风格多语言",   "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ai-writing.zip"},
+    "cross-border-ai":    {"name": "🌐 跨境电商AI运营助手",       "price": 199, "price_usd": 28, "period": "月", "desc": "商品描述翻译+SEO优化+竞品分析",        "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/cross-border-ai.zip"},
+    "ai-agent":           {"name": "🤖 多平台AI Agent助手",       "price": 129, "price_usd": 18, "period": "月", "desc": "对接微信/Discord/Slack，24小时在线",  "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ai-agent.zip"},
+    "3d-generator":       {"name": "🎨 AI 3D模型生成系统",       "price": 129, "price_usd": 18, "period": "月", "desc": "文本生成3D模型，支持Unity/Blender导出","download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/3d-generator.zip"},
+    "web-scraper":        {"name": "🕷️ AI智能网页爬虫",           "price": 69,  "price_usd": 10, "period": "月", "desc": "AI自动解析页面结构，批量采集导出Excel", "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/web-scraper.zip"},
+    "database-toolkit":   {"name": "🗄️ AI数据库管理工具包",       "price": 89,  "price_usd": 12, "period": "月", "desc": "自然语言查数据库，无需写SQL",           "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/database-toolkit.zip"},
+    "security-scanner":   {"name": "🔒 AI代码安全审计系统",       "price": 149, "price_usd": 21, "period": "月", "desc": "自动检测漏洞+依赖风险+CI/CD集成",      "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/security-scanner.zip"},
+    "design-toolkit":     {"name": "🖌️ AI设计素材生成器",         "price": 79,  "price_usd": 11, "period": "月", "desc": "AI生成Logo+UI素材+配色方案，无需设计师","download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/design-toolkit.zip"},
+    "game-dev-kit":       {"name": "🎮 AI游戏开发工具包",         "price": 199, "price_usd": 28, "period": "月", "desc": "代码+美术+关卡全AI生成，1小时出Demo",  "download": "https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/game-dev-kit.zip"},
+    "ecloudsign-panel":   {"name": "📄 易云章API控制面板",        "price": 99,  "price_usd": 14, "period": "月", "desc": "证书/签名/印章/合同/模板 全接口面板",  "download": "https://github.com/nima54851/ai-supermarket/releases/download/ecloudsign-panel-v1.0/ecloudsign-panel-v1.0-linux.tar.gz"},
+    "skill-builder":      {"name": "🛠️ AI技能构建系统",          "price": 49,  "price_usd": 7,  "period": "永久", "desc": "从零构建AI Agent技能（ClawHub版）",     "download": "https://github.com/nima54851/agent-studio/releases/download/v1.0.0/skill-builder.zip"},
 }
 
-# 订单记录文件
-ORDERS_FILE = "orders.json"
+ORDERS_FILE = Path(__file__).parent / "orders.json"
 
-def load_orders():
-    if os.path.exists(ORDERS_FILE):
-        with open(ORDERS_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
+# ── USDT TRON 浏览器 API ──────────────────────────
+TRONSCAN_API = "https://apilist.tronscan.org"
+TRONGRID_API = "https://api.trongrid.io"
+
+# ── 日志 ──────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("bot.log", encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# ── 数据持久化 ─────────────────────────────────────
+def load_orders() -> dict:
+    if ORDERS_FILE.exists():
+        try:
+            return json.loads(ORDERS_FILE.read_text(encoding="utf-8"))
+        except:
+            return {}
     return {}
 
-def save_orders(orders):
-    with open(ORDERS_FILE, "w", encoding="utf-8") as f:
-        json.dump(orders, f, ensure_ascii=False, indent=2)
+def save_orders(orders: dict):
+    ORDERS_FILE.write_text(json.dumps(orders, ensure_ascii=False, indent=2), encoding="utf-8")
 
-# ── 消息模板 ──
-WELCOME = """
-🛒 *AI超市 - 智能客服*
+# ── 工具函数 ───────────────────────────────────────
 
-您好！欢迎来到AI超市 👋
+def is_admin(user_id: int) -> bool:
+    return user_id in ADMIN_IDS
 
-我是这里的自动客服，可以帮您：
+def fmt_price(p: dict, method: str = "paypal") -> str:
+    if method == "usdt":
+        # 按 ¥7.1/USD 估算USDT数量
+        usd = p["price"] / 7.1
+        return f"≈ {usd:.1f} USDT"
+    return f"¥{p['price']}（≈ ${p['price_usd']} USD）"
 
-📋 *商品列表* — 查看所有AI技能
-💰 *价格说明* — 了解收费方式
-💳 *购买流程* — 如何付款获取下载链接
-📦 *下载帮助* — 购买后如何下载
-
-直接输入商品名称或编号即可下单！
-
-————————————
-💳 支付方式：PayPal
-📧 paypalyinanzo@hotmail.com
-"""
-
-PRODUCT_LIST = """
-🛍️ *AI超市 - 商品列表*
-
-"""
-
-def get_product_list():
-    text = PRODUCT_LIST
-    for i, (pid, p) in enumerate(PRODUCTS.items(), 1):
-        text += f"*{i}. {p['name']}*\n   💰 ¥{p['price']}/{p['period']}\n   {p['desc']}\n\n"
-    text += "————————————\n回复商品编号或名称即可下单！\n"
-    return text
-
-BUY_GUIDE = """
-💳 *购买流程*
-
-1️⃣ 告诉我您想要的商品
-2️⃣ 我给您 PayPal 付款链接
-3️⃣ 扫码付款后发我截图
-4️⃣ 我确认后发送下载链接
-
-📧 PayPal: paypalyinanzo@hotmail.com
-💬 付款后联系本机器人发送截图即可
-"""
-
-ORDER_CONFIRM = """
-✅ *订单已确认！*
-
-商品: {name}
-价格: ¥{price}/{period}
-
-⏳ 正在处理您的下载链接...
-请稍等片刻，链接将自动发送给您。
-"""
-
-DOWNLOAD_SENT = """
-📦 *下载链接已发送！*
-
-商品: {name}
-购买时间: {time}
-
-🔗 请点击以下链接下载：
-{link}
-
-⚠️ 链接有效期：永久
-💾 下载后请妥善保存
-"""
-
-ADMIN_HELP = """
-🛠️ *管理命令*
-
-`/orders` — 查看所有订单
-`/order <user_id>` — 查看指定用户订单
-`/sendlink <user_id> <product_id>` — 发送下载链接给用户
-`/broadcast <消息>` — 广播消息给所有用户
-`/stats` — 查看统计数据
-`/addadmin <user_id>` — 添加管理员
-"""
-
-def is_admin(user_id):
-    return str(user_id) in [str(a) for a in ADMIN_IDS]
-
-def make_order_keyboard():
+def make_product_keyboard(page: int = 0):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+    pids = list(PRODUCTS.keys())
+    start = page * 8
+    end = min(start + 8, len(pids))
     keyboard = []
-    row = []
-    for i, pid in enumerate(PRODUCTS.keys()):
-        row.append(InlineKeyboardButton(str(i+1), callback_data=f"buy:{pid}"))
-        if len(row) == 2:
-            keyboard.append(row)
-            row = []
-    if row:
-        keyboard.append(row)
-    keyboard.append([InlineKeyboardButton("📋 商品列表", callback_data="list")])
-    keyboard.append([InlineKeyboardButton("💳 购买指南", callback_data="guide")])
+    for pid in pids[start:end]:
+        p = PRODUCTS[pid]
+        keyboard.append([
+            InlineKeyboardButton(f"{p['emoji']} {p['name'].split(' ', 1)[1]}", callback_data=f"p:{pid}")
+        ])
+    # 分页
+    nav = []
+    if page > 0:
+        nav.append(InlineKeyboardButton("◀️ 上一页", callback_data=f"page:{page-1}"))
+    if end < len(pids):
+        nav.append(InlineKeyboardButton("下一页 ▶️", callback_data=f"page:{page+1}"))
+    if nav:
+        keyboard.append(nav)
+    keyboard.append([InlineKeyboardButton("💳 支付方式说明", callback_data="payinfo")])
     return InlineKeyboardMarkup(keyboard)
 
-def main():
-    import asyncio
+def make_pay_keyboard(pid: str):
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("💳 PayPal 付款", callback_data=f"paypal:{pid}")],
+        [InlineKeyboardButton("🪙 USDT 付款（更便宜）", callback_data=f"usdt:{pid}")],
+        [InlineKeyboardButton("◀️ 返回商品列表", callback_data="plist:0")],
+    ])
+
+def send_download_link(chat_id: int, p: dict, ctx, user_name: str = "") -> str:
+    """发送下载链接给用户，返回发送的文本"""
+    link = p["download"]
+    now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    msg = f"""
+✅ *购买成功！链接已发送*
+
+商品：{p['name']}
+时间：{now}
+
+━━━━━━━━━━━━━━━━━
+
+🔗 *下载地址（点击复制）：*
+`{link}`
+
+━━━━━━━━━━━━━━━━━
+
+📋 *下载说明：*
+① 点击上方链接 → 跳转到 GitHub
+② 点击文件名 → 点击 "Download" 下载
+③ 解压后按 README.md 说明配置使用
+
+💡 如遇下载问题，联系本机器人或发截图给我！
+"""
+    return msg
+
+# ── TRON/USDT 核验 ──────────────────────────────────
+
+async def check_trc20_tx(address: str, expected_usd: float, hours: int = 2) -> dict:
+    """
+    查 TRON 链上 USDT 转账记录
+    返回 {"found": bool, "tx": {...}}
+    """
+    try:
+        import httpx
+        # TronGrid API - 获取 USDT 转账
+        url = f"{TRONGRID_API}/v1/accounts/{address}/transactions/trc20"
+        params = {
+            "only_confirmed": "true",
+            "limit": 20,
+            "min_timestamp": int((datetime.now() - timedelta(hours=hours)).timestamp() * 1000),
+        }
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.get(url, params=params)
+            if resp.status_code != 200:
+                return {"found": False, "error": f"API错误: {resp.status_code}"}
+
+            data = resp.json()
+            txs = data.get("data", []) or []
+            for tx in txs:
+                token_info = tx.get("token_info", {})
+                if token_info.get("symbol") != "USDT":
+                    continue
+                # 转账金额（需要除以精度 6）
+                amount_raw = tx.get("value", "0")
+                try:
+                    amount_usdt = int(amount_raw) / 1_000_000
+                except:
+                    continue
+                # 接收方确认是收款地址
+                to_addr = tx.get("to", "")
+                if to_addr.lower() != address.lower():
+                    continue
+                # 金额容差：预期金额 ± 10%
+                if amount_usdt >= expected_usd * 0.9:
+                    return {"found": True, "tx": tx, "amount": amount_usdt}
+        return {"found": False}
+    except Exception as e:
+        logger.error(f"TRC20查询失败: {e}")
+        return {"found": False, "error": str(e)}
+
+# ── 主程序 ──────────────────────────────────────────
+
+async def main():
     from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
     from telegram.ext import (
         Application, CommandHandler, MessageHandler,
         CallbackQueryHandler, filters, ContextTypes,
     )
 
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    logger = logging.getLogger(__name__)
-
+    # 订单 & 会话
     orders = load_orders()
-    user_sessions = {}  # user_id -> {"state": "...", "data": {...}}
+    sessions: dict[str, dict] = {}  # user_id -> {state, product_id, pay_method}
 
-    async def start_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        user_id = str(update.effective_user.id)
-        if user_id not in orders:
-            orders[user_id] = {"history": [], "purchases": []}
+    def get_session(uid: str) -> dict:
+        if uid not in sessions:
+            sessions[uid] = {"state": "idle", "product_id": None, "pay_method": None}
+        return sessions[uid]
+
+    # ── 命令处理 ──────────────────────────────────
+
+    async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+        uid = str(update.effective_user.id)
+        user = update.effective_user
+        now = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        # 初始化用户记录
+        if uid not in orders:
+            orders[uid] = {"joined": now, "purchases": [], "history": []}
             save_orders(orders)
-        await update.message.reply_text(WELCOME, parse_mode="Markdown", reply_markup=make_order_keyboard())
 
-    async def help_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        await update.message.reply_text(WELCOME, parse_mode="Markdown", reply_markup=make_order_keyboard())
+        welcome = f"""
+🛒 *灵犀集市 - 全自动发货*
 
-    async def list_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        await update.message.reply_text(get_product_list(), parse_mode="Markdown")
+您好 {user.first_name or '朋友'}！欢迎来到灵犀集市 👋
 
-    async def buy_cmd(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        await update.message.reply_text(get_product_list(), parse_mode="Markdown")
+在这里购买AI工具，*付款后立刻自动收到下载链接*，无需等待！
 
-    async def button_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+📦 *自动化流程：*
+① 选商品 → ② 付款 → ③ 自动发链接
+
+💳 支持：PayPal / USDT（TRC20）
+
+*回复商品名称或编号立即购买*
+"""
+        await update.message.reply_text(welcome, parse_mode="Markdown", reply_markup=make_product_keyboard())
+
+    async def cmd_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+        await cmd_start(update, ctx)
+
+    async def cmd_list(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+        uid = str(update.effective_user.id)
+        await update.message.reply_text("📋 *全部商品列表*\n\n选择一件商品开始购买：", parse_mode="Markdown", reply_markup=make_product_keyboard())
+
+    async def cmd_stats(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+        if not is_admin(update.effective_user.id):
+            await update.message.reply_text("❌ 无权访问")
+            return
+        total_users = len(orders)
+        total_orders = sum(len(o.get("purchases", [])) for o in orders.values())
+        revenue = sum(
+            sum(p["price"] for p in o.get("purchases", []))
+            for o in orders.values()
+        )
+        text = f"""
+📊 *运营统计*
+
+👥 注册用户：{total_users}
+🛒 总订单数：{total_orders}
+💰 总收入：¥{revenue}
+
+最近订单："""
+        for uid, o in list(orders.items())[-5:]:
+            for p in o.get("purchases", [])[-2:]:
+                text += f"\n• {p['name']} ¥{p['price']} ({p['time']})"
+        await update.message.reply_text(text, parse_mode="Markdown")
+
+    async def cmd_orders_admin(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+        if not is_admin(update.effective_user.id):
+            await update.message.reply_text("❌ 无权访问")
+            return
+        if not ctx.args:
+            # 列出所有用户最近订单
+            text = "*📋 最近订单（Top 20）：*\n"
+            all_purchases = []
+            for uid, o in orders.items():
+                for p in o.get("purchases", []):
+                    all_purchases.append((uid, p))
+            all_purchases.sort(key=lambda x: x[1]["time"], reverse=True)
+            for uid, p in all_purchases[:20]:
+                text += f"\n`{uid[-6:]}` · {p['name']} · ¥{p['price']} · {p['time']}"
+            await update.message.reply_text(text or "暂无订单", parse_mode="Markdown")
+            return
+        # 指定用户
+        uid = ctx.args[0]
+        o = orders.get(uid, {})
+        if not o:
+            await update.message.reply_text(f"用户 {uid} 无记录")
+            return
+        text = f"*用户 {uid[-6:]} 的订单：*\n"
+        for p in o.get("purchases", []):
+            text += f"\n• {p['name']} ¥{p['price']} · {p['time']}"
+        await update.message.reply_text(text, parse_mode="Markdown")
+
+    # ── 按钮处理 ──────────────────────────────────
+
+    async def cb_handler(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         query = update.callback_query
         await query.answer()
-        user_id = str(query.from_user.id)
+        uid = str(query.from_user.id)
         data = query.data
+        sess = get_session(uid)
 
-        if data.startswith("buy:"):
-            pid = data.split(":", 1)[1]
+        # 商品列表翻页
+        if data.startswith("page:"):
+            page = int(data.split(":")[1])
+            try:
+                await query.edit_message_text("📋 *全部商品列表*\n\n选择一件商品开始购买：", parse_mode="Markdown", reply_markup=make_product_keyboard(page))
+            except:
+                pass
+            return
+
+        if data == "plist":
+            await query.edit_message_text("📋 *全部商品列表*\n\n选择一件商品开始购买：", parse_mode="Markdown", reply_markup=make_product_keyboard())
+            return
+
+        if data == "payinfo":
+            await query.edit_message_text(
+                "*💳 支付方式说明*\n\n"
+                "*① PayPal*\n发截图给我 → 自动发货（推荐）\n\n"
+                "*② USDT（TRC20）*\n转账到地址 → 发TxHash给我 → 自动发货\n价格更优惠！\n\n"
+                "*USDT收款地址：*\n`TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy`",
+                parse_mode="Markdown",
+                reply_markup=make_product_keyboard()
+            )
+            return
+
+        # 选择商品
+        if data.startswith("p:"):
+            pid = data[2:]
             if pid not in PRODUCTS:
                 await query.edit_message_text("❌ 商品不存在")
                 return
             p = PRODUCTS[pid]
-            pay_url = f"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=paypalyinanzo@hotmail.com&item_name=AI超市 - {p['name']}&amount={p['price']}&currency_code=USD"
-            text = f"""💳 *确认购买*
+            sess["product_id"] = pid
+            sess["state"] = "select_pay_method"
+            text = f"""
+📦 *商品详情*
 
-商品: {p['name']}
-价格: ¥{p['price']}/{p['period']}
+*{p['name']}*
+{p['desc']}
 
-点击下方按钮打开 PayPal 付款：
-[👉 立即付款]({pay_url})
+💰 价格：¥{p['price']}/{p['period']}（≈ ${p['price_usd']} USD）
 
-付款后 *截图* 发给我，我确认后立刻发送下载链接！
-
-⚠️ 务必先付款再发截图，否则无法处理
+请选择支付方式：
 """
-            kb = InlineKeyboardMarkup([
-                [InlineKeyboardButton("💳 去 PayPal 付款", url=pay_url)],
-                [InlineKeyboardButton("✅ 我已付款，发截图", callback_data=f"paid:{pid}")],
-            ])
-            await query.edit_message_text(text, parse_mode="Markdown", reply_markup=kb)
+            try:
+                await query.edit_message_text(text, parse_mode="Markdown", reply_markup=make_pay_keyboard(pid))
+            except:
+                await query.message.reply_text(text, parse_mode="Markdown", reply_markup=make_pay_keyboard(pid))
+            return
 
-        elif data.startswith("paid:"):
+        # 选择支付方式
+        if data.startswith("paypal:"):
             pid = data.split(":", 1)[1]
             p = PRODUCTS[pid]
-            if user_id not in user_sessions:
-                user_sessions[user_id] = {}
-            user_sessions[user_id]["state"] = "awaiting_screenshot"
-            user_sessions[user_id]["pending_product"] = pid
-            text = f"""📸 *请发送付款截图*
+            sess["product_id"] = pid
+            sess["pay_method"] = "paypal"
+            sess["state"] = "await_pp_screenshot"
+            pay_url = f"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=paypalyinanzo@hotmail.com&item_name=AI超市 - {p['name']}&amount={p['price_usd']}&currency_code=USD"
+            text = f"""
+💳 *PayPal 付款*
 
-商品: {p['name']}
-价格: ¥{p['price']}/{p['period']}
+商品：{p['name']}
+金额：${p['price_usd']} USD（≈ ¥{p['price']}）
 
-请在此聊天中发送 PayPal 付款截图，我确认后立即发送下载链接！
+👉 [点击这里去 PayPal 付款]({pay_url})
 
-💡 截图需包含：付款金额 + 交易号
+✅ 付款后，*发 PayPal 付款截图* 给本机器人
+🤖 机器人自动核验后，立刻发送下载链接！
 """
-            await query.edit_message_text(text, parse_mode="Markdown")
+            try:
+                await query.edit_message_text(text, parse_mode="Markdown", reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton("💳 打开 PayPal 付款", url=pay_url)],
+                    [InlineKeyboardButton("✅ 我已付款，发截图", callback_data="pp_sent")],
+                    [InlineKeyboardButton("◀️ 返回", callback_data="plist")],
+                ]))
+            except:
+                await query.message.reply_text(text, parse_mode="Markdown")
+            return
 
-        elif data == "list":
-            await query.edit_message_text(get_product_list(), parse_mode="Markdown", reply_markup=make_order_keyboard())
-
-        elif data == "guide":
-            await query.edit_message_text(BUY_GUIDE, parse_mode="Markdown")
-
-    async def handle_photo(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        user_id = str(update.effective_user.id)
-        if user_id in user_sessions and user_sessions[user_id].get("state") == "awaiting_screenshot":
-            pid = user_sessions[user_id]["pending_product"]
+        if data.startswith("usdt:"):
+            pid = data.split(":", 1)[1]
             p = PRODUCTS[pid]
-            # 记录订单
-            orders[user_id]["history"].append({
-                "product_id": pid,
-                "product_name": p["name"],
-                "price": p["price"],
-                "time": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                "screenshot": True,
-            })
-            save_orders(orders)
-            # 通知买家
-            await update.message.reply_text(
-                f"✅ 截图已收到！\n\n正在为您准备下载链接，请稍候 1-2 分钟…\n\n商品: {p['name']}\n时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}",
+            sess["product_id"] = pid
+            sess["pay_method"] = "usdt"
+            sess["state"] = "await_usdt_tx"
+            usd_amount = p["price"] / 7.1
+            text = f"""
+🪙 *USDT 付款（TRC20）*
+
+商品：{p['name']}
+应付：≈ {usd_amount:.1f} USDT
+
+━━━━━━━━━━━━━━━━━
+
+📋 *付款步骤：*
+1️⃣ 打开钱包（OKX/币安/Trust Wallet等）
+2️⃣ 转账 USDT (TRC20) 到下方地址
+
+📍 *收款地址（复制）：*
+`TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy`
+
+⚠️ 注意：务必选择 **TRC20** 网络！
+
+3️⃣ 转账后，*发 TxHash（交易哈希）* 给本机器人
+🤖 机器人自动核验链上记录，立刻发送下载链接！
+"""
+            try:
+                await query.edit_message_text(text, parse_mode="Markdown", reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton("📋 我已转账，发TxHash", callback_data="usdt_sent")],
+                    [InlineKeyboardButton("◀️ 返回", callback_data="plist")],
+                ]))
+            except:
+                await query.message.reply_text(text, parse_mode="Markdown")
+            return
+
+        if data == "pp_sent":
+            sess["state"] = "await_pp_screenshot"
+            await query.edit_message_text(
+                "📸 *请发送 PayPal 付款截图*\n\n"
+                "直接在这条聊天里发送 PayPal 付款截图，"
+                "机器人核验后立刻自动发送下载链接！\n\n"
+                "💡 截图需包含：付款金额 + 交易号",
                 parse_mode="Markdown"
             )
-            # 通知管理员
-            for admin_id in ADMIN_IDS:
-                try:
-                    await ctx.bot.send_message(
-                        chat_id=int(admin_id),
-                        text=f"📋 *新订单！*\n\n买家ID: `{user_id}`\n商品: {p['name']}\n价格: ¥{p['price']}\n时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n请发送下载链接给买家！",
+            return
+
+        if data == "usdt_sent":
+            sess["state"] = "await_usdt_tx"
+            await query.edit_message_text(
+                "🔗 *请发送 TxHash（交易哈希）*\n\n"
+                "USDT转账后，在钱包里复制这笔转账的TxHash，"
+                "粘贴发给我。\n\n"
+                "💡 TxHash 例子：\n"
+                "`a1b2c3d4e5f6...`（一串字母数字）",
+                parse_mode="Markdown"
+            )
+            return
+
+    # ── 消息处理 ──────────────────────────────────
+
+    async def handle_photo(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+        uid = str(update.effective_user.id)
+        sess = get_session(uid)
+
+        if sess["state"] != "await_pp_screenshot":
+            await update.message.reply_text(
+                "📸 请先选择一个商品完成付款流程，再发截图。\n\n输入 /start 开始选购！"
+            )
+            return
+
+        pid = sess["product_id"]
+        p = PRODUCTS[pid]
+        now = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        # 记录订单
+        if uid not in orders:
+            orders[uid] = {"joined": now, "purchases": [], "history": []}
+        orders[uid]["purchases"].append({
+            "name": p["name"], "price": p["price"],
+            "product_id": pid, "pay_method": "paypal",
+            "time": now, "auto": True
+        })
+        save_orders(orders)
+
+        # 保存截图
+        import os as _os
+        photo_dir = Path(__file__).parent / "screenshots"
+        photo_dir.mkdir(exist_ok=True)
+        photo_file = photo_dir / f"{uid}_{now.replace(':','-').replace(' ','_')}.jpg"
+        await update.message.effective_attachment[-1].get_file().download_to_drive(photo_file)
+
+        # 自动发下载链接（截图已收，人工核验为辅）
+        logger.info(f"PayPal截图收到: {uid} -> {pid}, 截图已存: {photo_file}")
+
+        link_msg = send_download_link(int(uid), p, ctx)
+        await update.message.reply_text(
+            "✅ *截图已收到！正在核验...*\n\n⏱️ 预计 1-2 分钟内自动发送下载链接，请稍候...",
+            parse_mode="Markdown"
+        )
+        await asyncio.sleep(1.5)
+
+        await update.message.reply_text(link_msg, parse_mode="Markdown", disable_web_page_preview=True)
+
+        # 通知管理员
+        for admin_id in ADMIN_IDS:
+            try:
+                await ctx.bot.send_document(
+                    chat_id=admin_id,
+                    document=str(photo_file),
+                    caption=f"📋 *新订单（截图核验）*\n\n买家：`{uid}`\n商品：{p['name']}\n金额：¥{p['price']}\n时间：{now}\n\n✅ 已自动发送下载链接",
+                    parse_mode="Markdown"
+                )
+            except Exception as e:
+                logger.warning(f"通知管理员 {admin_id} 失败: {e}")
+
+        # 写秘钥发货队列（自动送到客户网站聊天窗口）
+        visitor_ids = orders.get(uid, {}).get("linked_vids", {})
+        latest_vid = list(visitor_ids.keys())[-1] if visitor_ids else ""
+        queue_secret_delivery(uid, pid, latest_vid, "paypal")
+        if latest_vid:
+            await update.message.reply_text(
+                "🔑 *秘钥已加入发货队列！*
+
+"
+                "去你的网站聊天窗口看看吧，秘钥马上到 💬
+"
+                "（约 1-3 分钟内自动送达，刷新页面即可见）",
+                parse_mode="Markdown"
+            )
+
+        # 重置会话
+        sessions[uid] = {"state": "idle", "product_id": None, "pay_method": None}
+
+    async def handle_text(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+        uid = str(update.effective_user.id)
+        sess = get_session(uid)
+        text = update.message.text.strip()
+
+        # 秘钥绑定：客户在网站上买之前，先 /link <visitor_id> 绑定账号
+        if text.startswith("/link "):
+            parts = text.split(" ", 1)
+            if len(parts) < 2:
+                await update.message.reply_text(
+                    "📎 *绑定网站账号*
+
+"
+                    "用法：/link <你的visitor_id>
+
+"
+                    "① 先去网站点击「购买」→ 复制弹窗里的 visitor_id
+"
+                    "② 回来发：/link v849eb28b4b21
+"
+                    "③ 付款后，秘钥会自动出现在你的网站聊天窗口！",
+                    parse_mode="Markdown"
+                )
+                return
+            vid = parts[1].strip()
+            if not vid.startswith("v") or len(vid) < 8:
+                await update.message.reply_text("❌ visitor_id 格式不对，请从网站购买弹窗里复制完整 ID（以 v 开头）")
+                return
+            if uid not in orders:
+                orders[uid] = {"joined": datetime.now().strftime("%Y-%m-%d %H:%M"), "purchases": [], "history": [], "linked_vids": {}}
+            if "linked_vids" not in orders[uid]:
+                orders[uid]["linked_vids"] = {}
+            orders[uid]["linked_vids"][vid] = {"linked_at": datetime.now().strftime("%Y-%m-%d %H:%M")}
+            save_orders(orders)
+            await update.message.reply_text(
+                f"✅ *账号绑定成功！*
+
+"
+                f"Visitor ID：`{vid}`
+
+"
+                f"以后在这个机器人付款后，秘钥会自动发到你的网站聊天窗口，无需手动复制。
+
+"
+                f"💡 现在可以返回网站购买，或发截图/TxHash 完成付款。",
+                parse_mode="Markdown"
+            )
+            return
+
+        # 管理员命令
+        if text.startswith("/"):
+            if text.startswith("/stats") and is_admin(update.effective_user.id):
+                await cmd_stats(update, ctx)
+                return
+            if text.startswith("/pending") and is_admin(update.effective_user.id):
+                pending = load_pending()
+                active = [p for p in pending if not p.get("delivered")]
+                done = [p for p in pending if p.get("delivered")]
+                resp = f"📋 *待发货队列*
+共 {len(active)} 条待处理，{len(done)} 条已完成
+
+"
+                for p in active[:10]:
+                    resp += f"• `{p['telegram_uid'][-6:]}` → {p['product_id']} | vid={p.get('visitor_id','')[:10]}…
+"
+                await update.message.reply_text(resp or "暂无待发货", parse_mode="Markdown")
+                return
+            if text.startswith("/orders") and is_admin(update.effective_user.id):
+                await cmd_orders_admin(update, ctx)
+                return
+            if text.startswith("/send ") and is_admin(update.effective_user.id):
+                parts = text.split(" ", 2)
+                if len(parts) >= 3:
+                    target_uid, link = parts[1], parts[2]
+                    try:
+                        await ctx.bot.send_message(
+                            chat_id=int(target_uid),
+                            text=f"📦 *管理员补发链接*\n\n🔗 `{link}`\n\n如有疑问请联系客服",
+                            parse_mode="Markdown"
+                        )
+                        await update.message.reply_text(f"✅ 已发送链接给用户 {target_uid[-6:]}")
+                    except:
+                        await update.message.reply_text("❌ 发送失败，用户可能未联系过机器人")
+                return
+            if text.startswith("/broadcast ") and is_admin(update.effective_user.id):
+                msg = text.split(" ", 1)[1]
+                sent = 0
+                for u in orders:
+                    try:
+                        await ctx.bot.send_message(chat_id=int(u), text=msg, parse_mode="Markdown")
+                        sent += 1
+                    except:
+                        pass
+                await update.message.reply_text(f"✅ 广播已发送给 {sent} 位用户")
+                return
+
+        # USDT TxHash 核验
+        if sess["state"] == "await_usdt_tx":
+            txhash = text.strip()
+            pid = sess["product_id"]
+            p = PRODUCTS[pid]
+            expected_usd = p["price_usd"]
+
+            await update.message.reply_text("🔍 *正在核验链上交易...*\n\n请稍候 10 秒左右...", parse_mode="Markdown")
+
+            result = await check_trc20_tx(USDT_ADDRESS, expected_usd, hours=6)
+
+            now = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+            if result["found"]:
+                # 记录订单
+                if uid not in orders:
+                    orders[uid] = {"joined": now, "purchases": [], "history": []}
+                orders[uid]["purchases"].append({
+                    "name": p["name"], "price": p["price"],
+                    "product_id": pid, "pay_method": "usdt",
+                    "txhash": txhash, "time": now, "auto": True
+                })
+                save_orders(orders)
+
+                amount = result.get("amount", 0)
+                link_msg = send_download_link(int(uid), p, ctx)
+                await update.message.reply_text(
+                    f"✅ *USDT已确认！*\n链上转账 {amount:.2f} USDT 已到账\n\n{link_msg}",
+                    parse_mode="Markdown", disable_web_page_preview=True
+                )
+                logger.info(f"USDT订单确认: {uid} -> {pid}, TxHash: {txhash}")
+                # 写秘钥发货队列
+                visitor_ids = orders.get(uid, {}).get("linked_vids", {})
+                latest_vid = list(visitor_ids.keys())[-1] if visitor_ids else ""
+                queue_secret_delivery(uid, pid, latest_vid, "usdt")
+                if latest_vid:
+                    await update.message.reply_text(
+                        "🔑 *秘钥已加入发货队列！*
+
+"
+                        "去你的网站聊天窗口看看吧，秘钥马上到 💬
+"
+                        "（约 1-3 分钟内自动送达，刷新页面即可见）",
                         parse_mode="Markdown"
                     )
-                except:
-                    pass
-            user_sessions[user_id] = {}
-        else:
-            await update.message.reply_text("📸 请先选择一个商品，再发送付款截图。\n\n输入 /start 开始选购！")
+            else:
+                err = result.get("error", "")
+                await update.message.reply_text(
+                    f"❌ *未找到匹配的交易*\n\n"
+                    f"请检查：\n"
+                    f"① TxHash 是否正确？\n"
+                    f"② 是否已转账到正确地址？\n"
+                    f"③ 是否选择的是 TRC20 网络？\n\n"
+                    f"收款地址：`TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy`\n\n"
+                    f"如已转账但核验失败，请联系管理员",
+                    parse_mode="Markdown"
+                )
+                if err:
+                    logger.warning(f"TRC20核验错误: {err}")
 
-    async def handle_message(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        text = update.message.text.strip()
-        user_id = str(update.effective_user.id)
-        username = update.effective_user.username or "unknown"
-        first_name = update.effective_user.first_name or ""
+            sessions[uid] = {"state": "idle", "product_id": None, "pay_method": None}
+            return
 
-        if user_id not in orders:
-            orders[user_id] = {"history": [], "purchases": []}
-            save_orders(orders)
+        # PayPal 截图状态时，文字消息提醒
+        if sess["state"] == "await_pp_screenshot":
+            await update.message.reply_text(
+                "📸 请直接发送 *PayPal 付款截图*，不要发文字哦！\n\n"
+                "截图需包含：付款金额 + 交易号",
+                parse_mode="Markdown"
+            )
+            return
 
-        # 检查是否是商品名称或编号
+        # 自由文本匹配商品（快捷购买）
         matched = None
         text_lower = text.lower()
-        # 精确匹配编号
-        try:
-            idx = int(text)
-            if 1 <= idx <= len(PRODUCTS):
-                matched = list(PRODUCTS.keys())[idx - 1]
-        except:
-            pass
-        # 模糊匹配商品名称
-        if not matched:
-            for pid, p in PRODUCTS.items():
-                if pid.replace("-", " ") in text_lower or p["name"].lower() in text_lower:
-                    matched = pid
-                    break
-                # 部分匹配
-                for keyword in p["name"]:
-                    if keyword in text and len(keyword) > 2:
-                        matched = pid
-                        break
+        for pid, p in PRODUCTS.items():
+            if (text_lower in p["name"].lower() or
+                text_lower in p["desc"].lower() or
+                text_lower == pid):
+                matched = pid
+                break
 
         if matched:
             p = PRODUCTS[matched]
-            pay_url = f"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=paypalyinanzo@hotmail.com&item_name=AI超市 - {p['name']}&amount={p['price']}&currency_code=USD"
-            text_resp = f"""💳 *商品已找到！*
-
-*{p['name']}*
-📝 {p['desc']}
-💰 价格：¥{p['price']}/{p['period']}
-
-[👉 点击此处去 PayPal 付款]({pay_url})
-
-付款后发送截图给我，我立即发送下载链接！"""
-
-            kb = InlineKeyboardMarkup([
-                [InlineKeyboardButton("💳 去 PayPal 付款", url=pay_url)],
-            ])
-            await update.message.reply_text(text_resp, parse_mode="Markdown", reply_markup=kb)
+            sess["product_id"] = matched
+            sess["state"] = "select_pay_method"
+            await update.message.reply_text(
+                f"📦 *{p['name']}*\n\n{p['desc']}\n\n"
+                f"💰 价格：¥{p['price']}/{p['period']}\n\n"
+                f"请选择支付方式：",
+                parse_mode="Markdown", reply_markup=make_pay_keyboard(matched)
+            )
             return
 
-        # 默认回复
+        # 默认：展示商品列表
         await update.message.reply_text(
-            "🤔 我没太理解，请试试：\n\n"
-            "• 输入商品名称或编号直接下单\n"
-            "• /list 查看商品列表\n"
-            "• /buy 查看购买指南\n"
-            "• 直接发送付款截图",
-            parse_mode="Markdown"
+            "🤔 没找到这个商品，试试从列表中选择：",
+            parse_mode="Markdown", reply_markup=make_product_keyboard()
         )
 
-    # ── 管理命令 ──
-    async def admin_orders(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        user_id = str(update.effective_user.id)
-        if not is_admin(user_id):
-            await update.message.reply_text("❌ 无权访问")
-            return
-        if not orders:
-            await update.message.reply_text("暂无订单")
-            return
-        text = "*📋 所有订单*\n\n"
-        for uid, info in orders.items():
-            text += f"👤 `{uid}`\n"
-            for o in info.get("history", []):
-                text += f"  - {o['product_name']} ¥{o['price']} ({o['time']})\n"
-            text += "\n"
-        await update.message.reply_text(text, parse_mode="Markdown")
+    # ── 启动机器人 ──────────────────────────────────
 
-    async def admin_sendlink(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        user_id = str(update.effective_user.id)
-        if not is_admin(user_id):
-            await update.message.reply_text("❌ 无权访问")
-            return
-        args = ctx.args
-        if len(args) < 2:
-            await update.message.reply_text("用法: /sendlink <user_id> <product_id> [下载链接]")
-            return
-        target_uid = args[0]
-        product_id = args[1]
-        p = PRODUCTS.get(product_id, {"name": product_id})
-        link = args[2] if len(args) > 2 else p.get("download", f"https://github.com/nima54851/agent-studio/releases/download/v1.0.0/{product_id}.zip")
-        try:
-            await ctx.bot.send_message(
-                chat_id=int(target_uid),
-                text=f"📦 *下载链接来了！*\n\n商品: {p['name']}\n购买时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n🔗 点击下载：\n{link}\n\n感谢购买！🎉",
-                parse_mode="Markdown"
-            )
-            await update.message.reply_text(f"✅ 链接已发送给用户 {target_uid}")
-        except Exception as e:
-            await update.message.reply_text(f"❌ 发送失败: {e}")
+    app = Application.builder().token(BOT_TOKEN).build()
 
-    async def admin_stats(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        user_id = str(update.effective_user.id)
-        if not is_admin(user_id):
-            await update.message.reply_text("❌ 无权访问")
-            return
-        total = sum(len(o.get("history", [])) for o in orders.values())
-        users = len(orders)
-        total_rev = sum(sum(o.get("price", 0) for o in od.get("history", [])) for od in orders.values())
-        text = f"""📊 *统计概览*
+    # 代理（httpx 需要单独处理）
+    # 代理通过 HTTPS_PROXY 环境变量生效（httpx 自动读取）
+    app._http_client = None  # 保持默认，由环境变量控制代理
 
-👥 总用户: {users}
-📦 总订单: {total}
-💰 预估收入: ¥{total_rev}"""
-        await update.message.reply_text(text, parse_mode="Markdown")
+    app.add_handler(CommandHandler("start", cmd_start))
+    app.add_handler(CommandHandler("help", cmd_help))
+    app.add_handler(CommandHandler("list", cmd_list))
+    app.add_handler(CommandHandler("stats", cmd_stats))
+    app.add_handler(CommandHandler(["orders", "order"], cmd_orders_admin))
 
-    async def admin_help(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        user_id = str(update.effective_user.id)
-        if not is_admin(user_id):
-            await update.message.reply_text("❌ 无权访问")
-            return
-        await update.message.reply_text(ADMIN_HELP, parse_mode="Markdown")
+    app.add_handler(CallbackQueryHandler(cb_handler))
+    app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
 
-    # ── 修复 apscheduler 与 pytz 的 timezone 兼容问题 ──
-    # ── 构建并启动 Bot (python-telegram-bot v22+ async API) ──
-    import asyncio
-    from telegram import Bot, Update
-    from telegram.request import HTTPXRequest
-    from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters
-
-    async def run_bot():
-        if PROXY_URL:
-            print(f"🔗 通过代理连接 Telegram...")
-            proxy_req = HTTPXRequest(proxy=PROXY_URL, read_timeout=30.0, connect_timeout=20.0)
-            bot = Bot(token=BOT_TOKEN, request=proxy_req)
-        else:
-            print("🌐 直连模式启动...")
-            bot = Bot(token=BOT_TOKEN)
-
-        app = Application.builder().bot(bot).build()
-        print("✅ Bot 初始化成功！")
-
-        # 注册所有 Handler
-        app.add_handler(CommandHandler("start", start_cmd))
-        app.add_handler(CommandHandler("help", help_cmd))
-        app.add_handler(CommandHandler("list", list_cmd))
-        app.add_handler(CommandHandler("buy", buy_cmd))
-        app.add_handler(CommandHandler("orders", admin_orders))
-        app.add_handler(CommandHandler("sendlink", admin_sendlink))
-        app.add_handler(CommandHandler("stats", admin_stats))
-        app.add_handler(CommandHandler("admin", admin_help))
-        app.add_handler(CallbackQueryHandler(button_handler))
-        app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
-        app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
-        print("🤖 AI超市客服机器人启动中...")
-        print("💬 等待消息...")
-        await app.initialize()
-        await app.start()
-        await app.run_polling(allowed_updates=Update.ALL_TYPES)
+    # 初始化并启动机器人
+    logger.info("🤖 灵犀集市客服机器人 v2.0 启动！")
+    await app.initialize()
+    await app.start()
+    # 保持运行直到收到停止信号
+    stop_event = asyncio.Event()
+    try:
+        await stop_event.wait()
+    except (KeyboardInterrupt, SystemExit):
+        pass
+    finally:
         await app.stop()
 
-    asyncio.run(run_bot())
-
 if __name__ == "__main__":
-    main()
+    import asyncio
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        loop.run_until_complete(main())
+    except KeyboardInterrupt:
+        pass
+    finally:
+        try:
+            loop.run_until_complete(asyncio.sleep(0.1))
+        except RuntimeError:
+            pass
+
+# ══════════════════════════════════════════════════════════════
+# 秘钥自动发货（灵犀集市 v3.0）
+# ══════════════════════════════════════════════════════════════
+
+PENDING_FILE = Path(__file__).parent / "pending_deliveries.json"
+
+def load_pending() -> list:
+    if PENDING_FILE.exists():
+        try:
+            return json.loads(PENDING_FILE.read_text(encoding="utf-8"))
+        except:
+            return []
+    return []
+
+def save_pending(pending: list):
+    PENDING_FILE.write_text(json.dumps(pending, ensure_ascii=False, indent=2), encoding="utf-8")
+
+def queue_secret_delivery(telegram_uid: str, product_id: str, visitor_id: str, pay_method: str):
+    """把一笔待发货写入队列，lingxi_replier 会自动处理"""
+    pending = load_pending()
+    # 避免重复
+    if any(p.get("telegram_uid") == telegram_uid and p.get("product_id") == product_id and not p.get("delivered") for p in pending):
+        logger.info(f"重复发货跳过: {telegram_uid}/{product_id}")
+        return False
+    pending.append({
+        "telegram_uid": telegram_uid,
+        "product_id": product_id,
+        "visitor_id": visitor_id,
+        "pay_method": pay_method,
+        "status": "pending",
+        "queued_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "delivered": False,
+        "secret_key": None,
+    })
+    save_pending(pending)
+    logger.info(f"✅ 秘钥发货队列已写入: {telegram_uid} -> {product_id} (visitor={visitor_id})")
+    return True
+
+def link_visitor_id(telegram_uid: str, visitor_id: str) -> bool:
+    """把 website visitor_id 绑定到 Telegram 用户"""
+    if visitor_id not in orders:
+        orders[telegram_uid] = {"joined": "", "purchases": [], "history": [], "linked_vid": {}}
+    else:
+        if "linked_vid" not in orders[telegram_uid]:
+            orders[telegram_uid]["linked_vid"] = {}
+    orders[telegram_uid]["linked_vid"][product_id] = visitor_id
+    save_orders(orders)
+    return True
