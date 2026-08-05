@@ -953,7 +953,7 @@ function openPayModal(id){
 
   // Reset buy-after state
   document.getElementById('buy-secret-before').style.display = '';
-  document.getElementById('buy-secret-after').classList.remove('show');
+  document.getElementById('buy-secret-after').style.display = 'none';
 
   // Secret panel product info (keep for validation flow)
   document.getElementById('skd-key').textContent = '—';
