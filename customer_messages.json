@@ -2,10 +2,10 @@
   "vtestdemo01": {
     "messages": [
       {
-        "role": "user",
-        "content": "你好",
+        "role": "agent",
+        "content": "您好！我是灵犀 🤖 灵犀集市的AI客服。请问您想购买哪个工具？",
         "agent": "灵犀",
-        "time": 1785901380.2879422
+        "time": 1785901383.205099
       }
     ]
   }
