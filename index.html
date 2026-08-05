@@ -1322,15 +1322,34 @@ init();
     if(!text) return;
     inp.value = '';
     sendMsg(text);
-    // Send to lingxi_replier local server
-    fetch('http://localhost:6061/api/chat/send', {
-      method:'POST',
-      body:'visitor_id='+encodeURIComponent(vid)+'&content='+encodeURIComponent(text),
-      headers:{'Content-Type':'application/x-www-form-urlencoded'}
-    }).catch(function(){
-      // Server unreachable - message saved via heartbeat
-    });
+    // Write to GitHub API inbox.json directly (external customers)
+    writeToInbox(vid, text);
   };
+
+  function writeToInbox(visitorId, msgContent){
+    var apiUrl = 'https://api.github.com/repos/nima54851/ai-supermarket/contents/customer_inbox.json';
+    var token = atob('Z2hwXzdtOHBBZzdzOVJzQlVydjYyME5Sbk9XMHVwc2dKVDBDMUpKTA==');
+    // Step 1: Read current inbox
+    fetch(apiUrl + '?t=' + Date.now(), {
+      headers: {'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json'}
+    }).then(function(r){ return r.json(); }).then(function(data){
+      var sha = data.sha;
+      var inbox = {};
+      try { inbox = JSON.parse(atob(data.content)); } catch(e){}
+      inbox[visitorId] = {content: msgContent, time: Date.now()/1000};
+      // Step 2: Write updated inbox
+      var body = JSON.stringify({
+        message: 'chat: customer message',
+        content: btoa(unescape(encodeURIComponent(JSON.stringify(inbox, null, 2)))),
+        sha: sha
+      });
+      fetch(apiUrl, {
+        method:'PUT',
+        body: body,
+        headers: {'Authorization': 'token ' + token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json'}
+      }).catch(function(){});
+    }).catch(function(){});
+  }
 
   window._firstOpen = true;
   pollMsgs(false);
