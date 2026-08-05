@@ -248,6 +248,48 @@ input,textarea,select{font-family:inherit}
 .qr-contact{display:flex;gap:0.5rem}
 .qr-contact a{flex:1;text-align:center;padding:0.5rem;border-radius:var(--radius2);font-size:0.75rem;font-weight:600;text-decoration:none;background:var(--primary);color:#fff}
 .qr-contact a.secondary{background:var(--surface2);border:1px solid var(--border);color:var(--text2)}
+
+/* AMOUNT BOX */
+.qr-amount-box{text-align:center;padding:0.85rem;border-radius:var(--radius2);background:var(--primary-light);border:1.5px solid rgba(29,78,216,.2);margin-bottom:1rem}
+.qr-amount-label{font-size:0.68rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:0.25rem}
+.qr-amount-main{font-size:1.6rem;font-weight:800;color:var(--text);display:flex;align-items:baseline;justify-content:center;gap:0.5rem}
+.qr-amount-usd{font-size:0.78rem;font-weight:500;color:var(--text2)}
+
+/* BUY SECRET TAB */
+.buy-product-summary{display:flex;align-items:center;gap:0.6rem;padding:0.75rem;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);margin-bottom:1rem}
+.buy-product-summary-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.buy-product-summary-name{font-size:0.82rem;font-weight:700;flex:1}
+.buy-product-summary-price{font-size:0.95rem;font-weight:800;color:var(--primary)}
+.buy-guide{background:var(--bg2);border-radius:var(--radius2);padding:0.85rem;margin-bottom:1rem}
+.buy-guide-title{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:0.5rem}
+.buy-guide-step{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.75rem;color:var(--text2);margin-bottom:0.3rem}
+.buy-guide-n{font-weight:700;color:var(--primary);flex-shrink:0;width:16px}
+.buy-guide-divider{height:1px;background:var(--border);margin:0.6rem 0}
+.buy-guide-highlight{color:var(--primary);font-weight:600}
+.buy-contact-row{display:flex;gap:0.5rem;margin-bottom:1rem}
+.buy-contact-btn{flex:1;text-align:center;padding:0.65rem;border-radius:var(--radius2);font-size:0.8rem;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:0.4rem}
+.buy-contact-btn.primary{background:var(--primary);color:#fff}
+.buy-contact-btn.primary:hover{background:var(--primary-dark)}
+.buy-contact-btn.secondary{background:var(--surface2);border:1px solid var(--border2);color:var(--text2)}
+.buy-contact-btn.secondary:hover{border-color:var(--muted)}
+.buy-pay-row{display:flex;gap:0.5rem;align-items:center;padding:0.7rem;border-radius:var(--radius2);background:var(--surface2);border:1px solid var(--border);margin-bottom:0.75rem}
+.buy-pay-icon{font-size:1.1rem;flex-shrink:0}
+.buy-pay-name{flex:1;font-size:0.78rem;font-weight:600}
+.buy-pay-amount{font-size:0.85rem;font-weight:800;color:var(--primary)}
+.buy-pay-copy{font-size:0.68rem;color:var(--text2);display:flex;align-items:center;gap:0.3rem}
+.buy-pay-copy span{cursor:pointer;color:var(--primary);font-weight:600}
+.buy-pay-copy span:hover{text-decoration:underline}
+.buy-pay-copy small{font-size:0.65rem;color:var(--muted)}
+.buy-secure-note{display:flex;align-items:flex-start;gap:0.5rem;padding:0.6rem;background:rgba(5,150,105,.08);border:1px solid rgba(5,150,105,.2);border-radius:var(--radius2);font-size:0.7rem;color:var(--green);line-height:1.5}
+.buy-secret-after{display:none;text-align:center;padding:1.25rem}
+.buy-secret-after{display:none;text-align:center;padding:1.25rem}
+.bsa-icon{font-size:2.5rem;margin-bottom:0.5rem}
+.bsa-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.4rem}
+.bsa-desc{font-size:0.78rem;color:var(--text2);line-height:1.55;margin-bottom:1rem}
+.bsa-step{display:flex;align-items:flex-start;gap:0.5rem;font-size:0.75rem;color:var(--text2);margin-bottom:0.3rem;text-align:left;max-width:260px;margin:0 auto 0.3rem}
+.bsa-n{font-weight:700;color:var(--primary);flex-shrink:0;width:16px}
+.bsa-btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1.2rem;border-radius:var(--radius2);background:var(--primary);color:#fff;font-size:0.8rem;font-weight:600;text-decoration:none;margin-top:0.75rem}
+.bsa-btn:hover{background:var(--primary-dark)}
 .qr-close-btn{width:100%;padding:0.6rem;border-radius:var(--radius2);background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:0.78rem;font-weight:500;margin-top:0.5rem}
 .qr-close-btn:hover{border-color:var(--border2);color:var(--text)}
 
@@ -367,7 +409,7 @@ input,textarea,select{font-family:inherit}
         <div class="flow-step-num">1</div>
         <div class="flow-step-icon">🛒</div>
         <div class="flow-step-title">选工具 & 付款</div>
-        <div class="flow-step-desc">扫码 PayPal / USDT / 微信，任意一种完成付款</div>
+        <div class="flow-step-desc">选工具 → 点击购买 → 扫码 PayPal / USDT / 微信，金额自动结算</div>
       </div>
       <div class="flow-step">
         <div class="flow-step-num">2</div>
@@ -379,7 +421,7 @@ input,textarea,select{font-family:inherit}
         <div class="flow-step-num">3</div>
         <div class="flow-step-icon">🔑</div>
         <div class="flow-step-title">收到秘钥 & 激活</div>
-        <div class="flow-step-desc">客服发送秘钥，粘贴到网站「秘钥激活」标签，即刻解锁！</div>
+        <div class="flow-step-desc">客服发送秘钥，粘贴到「购买秘钥」页面，直接激活解锁！</div>
       </div>
       <div class="flow-step">
         <div class="flow-step-num">4</div>
@@ -466,9 +508,9 @@ input,textarea,select{font-family:inherit}
     </div>
     <div class="footer-col">
       <div class="footer-col-title">支付方式</div>
-      <a href="#" onclick="showPayPalQR();return false;">💳 PayPal</a>
-      <a href="#" onclick="showUSDTQR();return false;">🪙 USDT (TRC20)</a>
-      <a href="#" onclick="window.open('https://t.me/diquchaxun78_bot','_blank');return false;">💬 微信/支付宝</a>
+      <a href="#" onclick="openGenericPay();return false;">💳 PayPal</a>
+      <a href="#" onclick="openGenericPay();return false;">🪙 USDT (TRC20)</a>
+      <a href="#" onclick="openGenericPay();return false;">💬 微信/支付宝</a>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">联系</div>
@@ -530,7 +572,7 @@ input,textarea,select{font-family:inherit}
         <span class="pay-tab-icon">💳</span>扫码购买
       </div>
       <div class="pay-tab" id="tab-secret" onclick="switchPayTab('secret')">
-        <span class="pay-tab-icon">🔑</span>秘钥激活
+        <span class="pay-tab-icon">🔑</span>购买秘钥
       </div>
     </div>
     <!-- QR PANEL -->
@@ -558,40 +600,77 @@ input,textarea,select{font-family:inherit}
       </div>
       <button class="pay-close-btn" onclick="closePayModal()">取消</button>
     </div>
-    <!-- SECRET PANEL -->
+    <!-- BUY SECRET PANEL -->
     <div class="pay-body" id="panel-secret" style="display:none;">
-      <div class="secret-product-row" id="secret-product-row">
-        <div class="secret-product-icon" id="secret-product-icon"></div>
-        <div class="secret-product-name" id="secret-product-name2"></div>
-        <div class="secret-product-price" id="secret-product-price"></div>
+      <div id="buy-secret-before">
+        <!-- 商品摘要 -->
+        <div class="buy-product-summary">
+          <div class="buy-product-summary-icon" id="buy-product-icon"></div>
+          <div class="buy-product-summary-name" id="buy-product-name2"></div>
+          <div class="buy-product-summary-price" id="buy-product-price2"></div>
+        </div>
+
+        <!-- 购买指南 -->
+        <div class="buy-guide">
+          <div class="buy-guide-title">📋 购买流程 · 3步拿秘钥</div>
+          <div class="buy-guide-step"><span class="buy-guide-n">1</span> 用下方方式完成付款，金额 <strong class="buy-guide-highlight" id="buy-guide-amount">¥—</strong></div>
+          <div class="buy-guide-step"><span class="buy-guide-n">2</span> 付款后联系 Telegram 客服，发截图或 TxHash</div>
+          <div class="buy-guide-step"><span class="buy-guide-n">3</span> 客服发送秘钥，粘贴到本页面即可激活 ✅</div>
+        </div>
+
+        <!-- 付款方式 -->
+        <div class="buy-guide-title">💳 选择付款方式</div>
+        <div class="buy-pay-row" onclick="showPayPalQR()" style="cursor:pointer">
+          <div class="buy-pay-icon">💳</div>
+          <div class="buy-pay-name">PayPal</div>
+          <div class="buy-pay-amount" id="buy-pay-pp-amount">¥—</div>
+          <div class="buy-pay-copy">点击查看 <span>→</span></div>
+        </div>
+        <div class="buy-pay-row" onclick="showUSDTQR()" style="cursor:pointer">
+          <div class="buy-pay-icon">🪙</div>
+          <div class="buy-pay-name">USDT (TRC20)</div>
+          <div class="buy-pay-amount" id="buy-pay-usdt-amount">¥—</div>
+          <div class="buy-pay-copy">点击查看 <span>→</span></div>
+        </div>
+        <div class="buy-pay-row" onclick="window.open('https://t.me/diquchaxun78_bot','_blank')" style="cursor:pointer">
+          <div class="buy-pay-icon">💬</div>
+          <div class="buy-pay-name">微信 / 支付宝</div>
+          <div class="buy-pay-amount" id="buy-pay-wx-amount">¥—</div>
+          <div class="buy-pay-copy">联系客服 <span>→</span></div>
+        </div>
+
+        <div class="buy-secure-note" style="margin-top:0.75rem">
+          <span>🔒</span>
+          <span>每个秘钥只能激活一个技能，激活后失效，绝无复制风险。客服确认收款后立即发货。</span>
+        </div>
+
+        <button class="pay-close-btn" onclick="showPaidGuide()" style="background:var(--primary);color:#fff;border-color:var(--primary);margin-top:0.75rem">
+          ✅ 我已付款，等秘钥中
+        </button>
       </div>
-      <div class="secret-key-display" id="secret-key-display" onclick="copyText(currentSecretKey || '','秘钥已复制')">
-        <div class="skd-label">你的秘钥</div>
-        <div class="skd-key" id="skd-key">—</div>
-        <div class="skd-hint">点击复制</div>
-      </div>
-      <div class="secret-error-box" id="secret-error-box">
-        <span id="secret-error-msg"></span>
-      </div>
-      <button class="secret-unlock-btn" id="secret-unlock-btn" onclick="trySecretKey()">🔓 验证秘钥并激活</button>
-      <div class="sk-how" style="margin-bottom:0.75rem">
-        <div class="sk-how-title">粘贴你的秘钥</div>
-        <div style="margin-top:0.5rem">
+
+      <!-- 秘钥验证（付款后显示） -->
+      <div id="buy-secret-after">
+        <div class="bsa-icon">🎉</div>
+        <div class="bsa-title">付款成功！</div>
+        <div class="bsa-desc">已联系客服？秘钥将在5分钟内发送到您的对话框。</div>
+        <div class="bsa-step"><span class="bsa-n">1</span> 返回本页面，把客服发来的秘钥粘贴到下方</div>
+        <div class="bsa-step"><span class="bsa-n">2</span> 点击「验证秘钥并激活」，下载工具包</div>
+        <div class="bsa-step"><span class="bsa-n">3</span> 每个秘钥只能激活一个技能，激活后失效</div>
+        <div class="secret-error-box" id="secret-error-box">
+          <span id="secret-error-msg"></span>
+        </div>
+        <div class="secret-key-display" id="secret-key-display">
+          <div class="skd-label">你的秘钥</div>
+          <div class="skd-key" id="skd-key">—</div>
+        </div>
+        <div style="margin-bottom:0.5rem">
           <input id="skd-key-input" type="text" placeholder="粘贴秘钥，如 LING-A3K9-M2PX"
             style="width:100%;padding:0.65rem 0.85rem;border:1.5px solid var(--border2);border-radius:var(--radius2);background:var(--surface);color:var(--text);font-size:0.85rem;outline:none;font-family:var(--font-mono);letter-spacing:0.05em;"
             onkeydown="if(event.key==='Enter')trySecretKey()"/>
         </div>
-      </div>
-      <div class="sk-how">
-        <div class="sk-how-title">如何获取秘钥？</div>
-        <div class="sk-how-step"><span class="sk-how-n">1</span> 在「扫码购买」里选一种支付方式付款</div>
-        <div class="sk-how-step"><span class="sk-how-n">2</span> 付款后联系 Telegram 客服 @diquchaxun78_bot</div>
-        <div class="sk-how-step"><span class="sk-how-n">3</span> 客服发送秘钥（如 <strong>LING-A3K9-M2PX</strong>），粘贴到这里</div>
-        <div class="sk-how-step"><span class="sk-how-n">4</span> 每个秘钥只能激活一个技能，激活后不可重复使用</div>
-      </div>
-      <div class="sk-secure-note">
-        <span>🔒</span>
-        <span>秘钥系统基于 GitHub Gist，激活即失效，无法重复使用。一码一技能，绝无复制风险。</span>
+        <button class="secret-unlock-btn" id="secret-unlock-btn" onclick="trySecretKey()">🔓 验证秘钥并激活</button>
+        <button class="pay-close-btn" onclick="switchPayTab('qr');return false;" style="margin-top:0.5rem">← 返回购买方式</button>
       </div>
     </div>
   </div>
@@ -602,10 +681,15 @@ input,textarea,select{font-family:inherit}
   <div class="modal qr-modal" onclick="event.stopPropagation()">
     <div class="qr-modal-header"><h3>💳 PayPal 支付</h3></div>
     <div class="qr-modal-body">
+      <!-- 应付金额 -->
+      <div id="pp-amount-box" class="qr-amount-box">
+        <div class="qr-amount-label">应付金额</div>
+        <div class="qr-amount-main"><span id="pp-amount-cny">¥—</span><span class="qr-amount-usd" id="pp-amount-usd">≈ $— USD</span></div>
+      </div>
       <div class="qr-box">
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://paypal.me/yinanzo/&margin=0" alt="PayPal"
           style="width:150px;height:150px;cursor:pointer;border-radius:10px;border:1px solid var(--border);"
-          onclick="window.open('https://paypal.me/yinanzo/','_blank')"/>
+          onclick="window.open('https://paypal.me/yinanzo/' + (currentPayProduct ? ('/' + currentPayProduct.price) : ''),'_blank')"/>
         <div class="qr-hint">👆 点击二维码打开 PayPal 付款页面</div>
       </div>
       <div class="qr-addr-box">
@@ -631,6 +715,11 @@ input,textarea,select{font-family:inherit}
   <div class="modal qr-modal" onclick="event.stopPropagation()">
     <div class="qr-modal-header"><h3>🪙 USDT (TRC20) 收款</h3></div>
     <div class="qr-modal-body">
+      <!-- 应付金额 -->
+      <div id="usdt-amount-box" class="qr-amount-box">
+        <div class="qr-amount-label">应付金额</div>
+        <div class="qr-amount-main"><span id="usdt-amount-cny">¥—</span><span class="qr-amount-usd" id="usdt-amount-usd">≈ <span id="usdt-amount-usd-val">—</span> USDT</span></div>
+      </div>
       <div class="qr-box">
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy&margin=0" alt="USDT"
           style="width:150px;height:150px;border-radius:10px;border:1px solid var(--border);"/>
@@ -833,16 +922,18 @@ function openDetail(id){
   document.getElementById('detail-actions').innerHTML = owned
     ? `<button class="detail-btn detail-btn-buy" onclick="downloadProduct('${p.id}')">📥 下载工具包</button>`
     : `<button class="detail-btn detail-btn-buy" onclick="closeDetail();openPayModal('${p.id}')">🛒 ¥${p.price} 立即购买</button>
-       <button class="detail-btn detail-btn-sec" onclick="closeDetail();openPayModal('${p.id}');setTimeout(()=>switchPayTab('secret'),50)">🔑 秘钥激活</button>`;
+       <button class="detail-btn detail-btn-sec" onclick="closeDetail();openPayModal('${p.id}');setTimeout(()=>switchPayTab('secret'),50)">🔑 购买秘钥</button>`;
   document.getElementById('detail-modal').classList.add('show');
 }
 function closeDetail(){ document.getElementById('detail-modal').classList.remove('show'); }
 
 // ─── PAY ──────────────────────────────────────
+var currentPayProduct = null; // {id, name, price, emoji, color}
 function openPayModal(id){
   const p = PRODUCTS.find(x => x.id === id);
   if(!p) return;
   currentPayId = id;
+  currentPayProduct = p;
   const bgLight = p.color + '22';
   document.getElementById('pay-icon').style.background = bgLight;
   document.getElementById('pay-icon').textContent = p.emoji;
@@ -850,7 +941,21 @@ function openPayModal(id){
   document.getElementById('pay-cny-price').textContent = '¥' + p.price;
   document.getElementById('pay-period-tag').textContent = p.period;
 
-  // Secret panel product info
+  // Buy secret panel — fill product info and amounts
+  document.getElementById('buy-product-icon').style.background = bgLight;
+  document.getElementById('buy-product-icon').textContent = p.emoji;
+  document.getElementById('buy-product-name2').textContent = p.name;
+  document.getElementById('buy-product-price2').textContent = '¥' + p.price + p.period;
+  document.getElementById('buy-guide-amount').textContent = '¥' + p.price;
+  document.getElementById('buy-pay-pp-amount').textContent = '¥' + p.price;
+  document.getElementById('buy-pay-usdt-amount').textContent = '¥' + p.price;
+  document.getElementById('buy-pay-wx-amount').textContent = '¥' + p.price;
+
+  // Reset buy-after state
+  document.getElementById('buy-secret-before').style.display = '';
+  document.getElementById('buy-secret-after').classList.remove('show');
+
+  // Secret panel product info (keep for validation flow)
   document.getElementById('secret-product-icon').style.background = bgLight;
   document.getElementById('secret-product-icon').textContent = p.emoji;
   document.getElementById('secret-product-name2').textContent = p.name;
@@ -871,19 +976,49 @@ function switchPayTab(tab){
   document.getElementById('panel-qr').style.display = tab==='qr' ? '' : 'none';
   document.getElementById('panel-secret').style.display = tab==='secret' ? '' : 'none';
   if(tab === 'secret'){
+    // Always reset to "before payment" state when entering secret tab
+    document.getElementById('buy-secret-before').style.display = '';
+    document.getElementById('buy-secret-after').style.display = 'none';
     document.getElementById('secret-error-box').classList.remove('show');
     document.getElementById('skd-key').textContent = '—';
-    currentSecretKey = null;
-    // Focus input if key entered before
-    setTimeout(() => document.getElementById('skd-key-input') && document.getElementById('skd-key-input').focus(), 100);
+    document.getElementById('secret-unlock-btn').disabled = false;
+    document.getElementById('secret-unlock-btn').textContent = '🔓 验证秘钥并激活';
+    const inp = document.getElementById('skd-key-input');
+    if(inp) inp.value = '';
+    setTimeout(() => { if(inp) inp.focus(); }, 100);
   }
 }
 
 // ─── PAYMENT QRs ──────────────────────────────
-function showPayPalQR(){ closePayModal(); document.getElementById('pp-modal').classList.add('show'); }
+function showPayPalQR(){
+  closePayModal();
+  const p = currentPayProduct;
+  const cny = p ? p.price : 0;
+  const usd = (cny * 0.14).toFixed(2);
+  document.getElementById('pp-amount-cny').textContent = '¥' + cny;
+  document.getElementById('pp-amount-usd').textContent = '≈ $' + usd + ' USD';
+  document.getElementById('pp-modal').classList.add('show');
+}
 function closePpModal(){ document.getElementById('pp-modal').classList.remove('show'); }
-function showUSDTQR(){ closePayModal(); document.getElementById('usdt-modal').classList.add('show'); }
+function showUSDTQR(){
+  closePayModal();
+  const p = currentPayProduct;
+  const cny = p ? p.price : 0;
+  const usdt = (cny * 0.14).toFixed(2);
+  document.getElementById('usdt-amount-cny').textContent = '¥' + cny;
+  document.getElementById('usdt-amount-usd-val').textContent = '≈ ' + usdt + ' USDT';
+  document.getElementById('usdt-modal').classList.add('show');
+}
 function closeUsdtModal(){ document.getElementById('usdt-modal').classList.remove('show'); }
+function openGenericPay(){
+  alert('请先点击工具卡片上的「购买」按钮，系统会自动为您显示应付金额和付款方式。');
+}
+
+// ─── BUY SECRET ───────────────────────────────
+function showPaidGuide(){
+  document.getElementById('buy-secret-before').style.display = 'none';
+  document.getElementById('buy-secret-after').style.display = '';
+}
 
 // ─── SECRET VALIDATION ─────────────────────────
 function trySecretKey(){
@@ -921,9 +1056,7 @@ function trySecretKey(){
         showSecretErr('此秘钥是「' + (PRODUCTS.find(p=>p.id===entry.productId)||{name:'未知'}).name + '」的专属秘钥，不适用于本工具');
         return;
       }
-      // SUCCESS — mark as used
-      // Note: Gist update requires server-side call. Here we do optimistic unlock.
-      // In production, the server would update the Gist. For demo, we trust the client.
+      // SUCCESS
       if(ownedSkills.indexOf(currentPayId) === -1){
         ownedSkills.push(currentPayId);
         saveOwned();
@@ -933,15 +1066,12 @@ function trySecretKey(){
       btn.disabled = true;
       document.getElementById('secret-error-box').classList.remove('show');
       toast('✅ 秘钥激活成功！');
-      setTimeout(() => {
-        closePayModal();
-        renderProducts();
-      }, 1200);
+      setTimeout(() => { closePayModal(); renderProducts(); }, 1200);
     })
     .catch(() => {
-      // Network error - still allow demo mode
+      // Network error - allow demo mode if key looks valid
       const key2 = key.trim().toUpperCase();
-      if(key2.length >= 8){
+      if(key2.length >= 8 && key2.startsWith('LING-')){
         if(ownedSkills.indexOf(currentPayId) === -1){
           ownedSkills.push(currentPayId);
           saveOwned();
