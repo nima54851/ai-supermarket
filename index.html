@@ -282,6 +282,8 @@ input,textarea,select{font-family:inherit}
 .buy-pay-copy small{font-size:0.65rem;color:var(--muted)}
 .buy-secure-note{display:flex;align-items:flex-start;gap:0.5rem;padding:0.6rem;background:rgba(5,150,105,.08);border:1px solid rgba(5,150,105,.2);border-radius:var(--radius2);font-size:0.7rem;color:var(--green);line-height:1.5}
 .buy-secret-after{display:none;text-align:center;padding:1.25rem}
+.bsa-chat-btn{margin-top:.6rem;width:100%;padding:.65rem;border-radius:var(--radius2);background:var(--surface2);border:1.5px solid var(--primary);color:var(--primary);font-size:.82rem;font-weight:700;cursor:pointer;transition:background .15s}
+.bsa-chat-btn:hover{background:var(--primary);color:#fff}
 .bsa-icon{font-size:2.5rem;margin-bottom:0.5rem}
 .bsa-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.4rem}
 .bsa-desc{font-size:0.78rem;color:var(--text2);line-height:1.55;margin-bottom:1rem}
@@ -757,6 +759,7 @@ input,textarea,select{font-family:inherit}
         </div>
         <button class="secret-unlock-btn" id="secret-unlock-btn" onclick="trySecretKey()">🔓 验证秘钥并激活</button>
         <button class="pay-close-btn" onclick="switchPayTab('qr');return false;" style="margin-top:0.5rem">← 返回购买方式</button>
+        <button class="bsa-chat-btn" onclick="document.getElementById('chat-btn').click()">💬 在线客服咨询</button>
       </div>
     </div>
   </div>
@@ -1232,10 +1235,10 @@ init();
 </div>
 
 <script>(function(){
-  var API = 'http://localhost:6061';
+  var CDN = 'https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@main';
   var vid = localStorage.getItem('lingxi_vid');
   if(!vid){ vid = 'v' + Math.random().toString(36).slice(2,14); localStorage.setItem('lingxi_vid', vid); }
-  var lastTime = 0;
+  var lastTime = parseFloat(localStorage.getItem('lingxi_last') || '0');
   var dot = document.getElementById('chat-notify-dot');
 
   function toggleChat(){
@@ -1244,29 +1247,11 @@ init();
     m.classList.toggle('open');
     if(!wasOpen){
       document.getElementById('chat-input').focus();
-      if(window._firstChatOpen !== false){ window._firstChatOpen = false; doSend('你好，我想购买AI工具'); }
+      if(window._firstOpen !== false){ window._firstOpen = false; sendMsg('你好，我想购买AI工具'); }
       pollMsgs(true);
     }
   }
   window.toggleChat = toggleChat;
-
-  function doSend(text){
-    if(!text) return;
-    var body = document.getElementById('chat-body');
-    var d = document.createElement('div');
-    d.className = 'cm-msg user';
-    d.textContent = text;
-    body.appendChild(d);
-    body.scrollTop = body.scrollHeight;
-    fetch(API+'/api/chat/send', {method:'POST', body:'visitor_id='+encodeURIComponent(vid)+'&content='+encodeURIComponent(text), headers:{'Content-Type':'application/x-www-form-urlencoded'}}).catch(function(){});
-  }
-  window.sendChatMsg = function(){
-    var inp = document.getElementById('chat-input');
-    var text = inp.value.trim();
-    if(!text) return;
-    inp.value = '';
-    doSend(text);
-  };
 
   function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -1285,10 +1270,6 @@ init();
     if(!isUser && hasKey && !window._secretFound){
       window._secretFound = true;
       if(dot) dot.style.display = 'none';
-      var banner = document.createElement('div');
-      banner.className = 'cm-secret-banner';
-      banner.textContent = '🎉 您的秘钥已到达！';
-      d.parentNode && d.parentNode.insertBefore(banner, d);
     }
     var html = esc(raw).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/`([^`]+)`/g, '<code style="background:#F0FDF4;padding:1px 4px;border-radius:4px;font-size:.85em;color:#166534">$1</code>');
@@ -1297,7 +1278,7 @@ init();
     return d;
   }
 
-  function renderAll(msgs){
+  function appendMsgs(msgs){
     var body = document.getElementById('chat-body');
     var modal = document.getElementById('chat-modal');
     var isOpen = modal.classList.contains('open');
@@ -1306,21 +1287,76 @@ init();
     if(!isOpen && msgs.length > 0 && dot) dot.style.display = 'block';
     if(msgs.length > 0){
       lastTime = Math.max.apply(null, msgs.map(function(m){ return m.time || 0; }));
+      localStorage.setItem('lingxi_last', lastTime);
     }
   }
 
   function pollMsgs(immediate){
     setTimeout(function(){
-      fetch(API+'/api/chat/poll?visitor_id='+encodeURIComponent(vid)+'&since='+lastTime)
+      fetch(CDN + '/customer_messages.json?t=' + Date.now())
         .then(function(r){ return r.json(); })
-        .then(function(data){ if(data.messages && data.messages.length) renderAll(data.messages); })
+        .then(function(all){
+          var myMsgs = all[vid];
+          if(!myMsgs || !myMsgs.messages) return;
+          var newMsgs = myMsgs.messages.filter(function(m){ return m.time > lastTime; });
+          if(newMsgs.length) appendMsgs(newMsgs);
+        })
         .catch(function(){})
         .then(function(){ pollMsgs(false); });
-    }, immediate ? 0 : 4000);
+    }, immediate ? 0 : 5000);
   }
 
-  window._firstChatOpen = true;
+  function sendMsg(text){
+    if(!text) return;
+    var body = document.getElementById('chat-body');
+    var d = document.createElement('div');
+    d.className = 'cm-msg user';
+    d.textContent = text;
+    body.appendChild(d);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  window.sendChatMsg = function(){
+    var inp = document.getElementById('chat-input');
+    var text = inp.value.trim();
+    if(!text) return;
+    inp.value = '';
+    sendMsg(text);
+    // Send to lingxi_replier local server
+    fetch('http://localhost:6061/api/chat/send', {
+      method:'POST',
+      body:'visitor_id='+encodeURIComponent(vid)+'&content='+encodeURIComponent(text),
+      headers:{'Content-Type':'application/x-www-form-urlencoded'}
+    }).catch(function(){
+      // Server unreachable - message saved via heartbeat
+    });
+  };
+
+  window._firstOpen = true;
   pollMsgs(false);
+  // Show welcome message after a short delay (polled from CDN)
+  setTimeout(function(){
+    fetch(CDN + '/customer_messages.json?t=' + Date.now())
+      .then(function(r){ return r.json(); })
+      .then(function(all){
+        var myMsgs = all[vid];
+        if(myMsgs && myMsgs.messages && myMsgs.messages.length > 0){
+          appendMsgs(myMsgs.messages);
+        } else {
+          // Show welcome from CDN outbox
+          appendMsgs([{
+            role:'agent', agent:'灵犀',
+            content:'您好！我是灵犀 🤖 请问您想购买哪个AI工具？
+
+📱 Telegram查询 ¥29/月
+⚡ GitHub自动化 ¥99/月
+📣 内容推流 ¥199/月
+🔗 n8n工作流 ¥149/月',
+            time:Date.now()/1000
+          }]);
+        }
+      }).catch(function(){});
+  }, 1500);
 })();
 </script>
 
