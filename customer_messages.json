@@ -1,11 +1,11 @@
 {
-  "vtestdemo01": {
+  "vuser999": {
     "messages": [
       {
-        "role": "agent",
-        "content": "您好！我是灵犀 🤖 灵犀集市的AI客服。请问您想购买哪个工具？",
+        "role": "user",
+        "content": "你好",
         "agent": "灵犀",
-        "time": 1785901383.205099
+        "time": 1785901534.0489218
       }
     ]
   }
