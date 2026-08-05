@@ -2,10 +2,10 @@
   "vtestlingxi99": {
     "messages": [
       {
-        "role": "user",
-        "content": "你好，我想购买GitHub自动化系统",
+        "role": "agent",
+        "content": "您好！灵犀集市商品列表：\n\n📱 Telegram号码查询机器人 — ¥29/月\n⚡ GitHub Agent自动化系统 — ¥99/月\n📣 AI内容推流系统 — ¥199/月\n🔗 n8n工作流自动化系统 — ¥149/月\n🕷️ AI智能网页爬虫 — ¥49/月\n🖊️ 易云章 API 控制面板 — ¥199/月\n\n💳 付款方式：\n• USDT TRC20：`TFfwcPBSF2t5pruoRfN1McxnuStFNkX3Cy`\n• PayPal：paypalyinanzo@hotmail.com\n• Telegram：@diquchaxun78_bot\n\n付款后5分钟内自动发送秘钥到本窗口 ✅",
         "agent": "灵犀",
-        "time": 1785901273.4182935
+        "time": 1785901276.7334116
       }
     ]
   }
