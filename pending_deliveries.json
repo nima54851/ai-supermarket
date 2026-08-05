@@ -1,0 +1,13 @@
+[
+  {
+    "telegram_uid": "test999",
+    "product_id": "github-automation",
+    "visitor_id": "vtestflow001",
+    "pay_method": "paypal",
+    "status": "pending",
+    "queued_at": "2026-08-05",
+    "delivered": true,
+    "delivered_at": "2026-08-05 10:18",
+    "secret_key": "LING-GXPC-XJ35"
+  }
+]
