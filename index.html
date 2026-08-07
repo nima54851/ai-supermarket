@@ -881,6 +881,63 @@ function saveOwned(){
   localStorage.setItem('lingxi_owned', JSON.stringify(ownedSkills));
 }
 
+// ─── CHAT WIDGET ──────────────────────────────
+function toggleChat(){
+  const modal = document.getElementById('chat-modal');
+  if(!modal) return;
+  modal.classList.toggle('open');
+  if(modal.classList.contains('open')){
+    const inp = document.getElementById('chat-input');
+    if(inp) inp.focus();
+  }
+}
+document.addEventListener('DOMContentLoaded', function(){
+  const btn = document.getElementById('chat-btn');
+  const closeBtn = document.getElementById('chat-close');
+  if(btn) btn.addEventListener('click', toggleChat);
+  if(closeBtn) closeBtn.addEventListener('click', toggleChat);
+  const inp = document.getElementById('chat-input');
+  if(inp){
+    inp.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' && !e.shiftKey){
+        e.preventDefault();
+        const val = this.value.trim();
+        if(!val) return;
+        appendChatMsg('user', val);
+        this.value = '';
+        setTimeout(() => botReply(val), 600);
+      }
+    });
+  }
+});
+function appendChatMsg(role, text){
+  const body = document.getElementById('chat-body');
+  if(!body) return;
+  body.innerHTML += `<div class="cm-msg ${role}">${text}</div>`;
+  body.scrollTop = body.scrollHeight;
+}
+function botReply(text){
+  const body = document.getElementById('chat-body');
+  if(!body) return;
+  body.innerHTML += `<div class="cm-msg bot">正在回复…</div>`;
+  body.scrollTop = body.scrollHeight;
+  const lastBot = body.lastElementChild;
+  fetch('https://api.github.com/repos/nima54851/agent-studio/contents/README.md')
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null)
+    .then(() => {
+      const replies = [
+        '您好！有什么关于AI超市产品的问题吗？我可以帮您解答～',
+        '感谢您的咨询！Telegram客服机器人：@diquchaxun78_bot，付款后联系即可获取秘钥 🎉',
+        '购买流程：1.选产品 → 2.付款(微信/支付宝/PayPal/USDT) → 3.联系客服 @diquchaxun78_bot 发截图 → 4.收到秘钥，激活使用 ✅',
+        '有问题？直接点击右下角 💬 按钮，或联系 Telegram @diquchaxun78_bot，客服会尽快回复您！',
+      ];
+      const reply = replies[Math.floor(Math.random() * replies.length)];
+      if(lastBot) lastBot.textContent = reply;
+      else appendChatMsg('bot', reply);
+    });
+}
+
 // ─── THEME ────────────────────────────────────
 function toggleTheme(){
   const dark = localStorage.getItem('lingxi_theme') !== 'light';
@@ -1218,195 +1275,23 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 init();
 </script>
 
-<!-- Chat Widget -->
-<button id="chat-btn" onclick="toggleChat()" title="联系客服">💬<span class="cb-dot" id="chat-notify-dot" style="display:none"></span></button>
-<div id="chat-modal">
-  <div class="cm-header">
-    <div class="cm-header-title">🤖 灵犀客服 <span style="opacity:.7;font-weight:400;font-size:.75rem">· 在线</span></div>
-    <button class="cm-close" onclick="toggleChat()">✕</button>
-  </div>
-  <div class="cm-body" id="chat-body">
-    <!-- messages injected here -->
-  </div>
-  <div class="cm-footer">
-    <input class="cm-input" id="chat-input" placeholder="输入消息…" onkeydown="if(event.key==='Enter')sendChatMsg()">
-    <button class="cm-send" onclick="sendChatMsg()">发送</button>
-  </div>
-</div>
+<!-- Telegram 在线客服 -->
+<script src="https://telegram.org/js/telegram-widget.js?21" data-telegram-login="diquchaxun78_bot" data-size="large" data-onauth="onTelegramAuth(user)" data-auth-url="https://your-bot-auth-url.com/verify"></script>
 
-<script>(function(){
-  // jsDelivr CDN — version auto-pinned on every deploy
-  var _cdnVer = 'main';
-  var CDN = 'https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@' + _cdnVer + '/ai-supermarket';
-  var OUTBOX = CDN + '/customer_outbox.json';
+<!-- 备用：直接跳转链接（始终可用）-->
+<a href="https://t.me/diquchaxun78_bot" target="_blank"
+  style="position:fixed;bottom:24px;right:24px;z-index:9998;width:56px;height:56px;border-radius:50%;
+    background:#0088cc;color:#fff;font-size:1.5rem;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 20px rgba(0,0,0,.22);text-decoration:none;font-family:system-ui;
+    transition:transform .2s;"
+  title="联系客服">💬</a>
 
-  // Auto-pin CDN to latest commit SHA (fetched from GitHub API)
-  (function pinCDN(){
-    fetch('https://api.github.com/repos/nima54851/ai-supermarket/git/refs/heads/main')
-      .then(function(r){ return r.json(); })
-      .then(function(d){
-        var sha = (d.object && d.object.sha) || 'main';
-        _cdnVer = sha;
-        CDN = 'https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@' + sha + '/ai-supermarket';
-        OUTBOX = CDN + '/customer_outbox.json';
-      })
-      .catch(function(){});
-  })();
-  var vid = localStorage.getItem('lingxi_vid');
-  if(!vid){ vid = 'v' + Math.random().toString(36).slice(2,14); localStorage.setItem('lingxi_vid', vid); }
-  var lastTime = parseFloat(localStorage.getItem('lingxi_last') || '0');
-  var dot = document.getElementById('chat-notify-dot');
-
-  function toggleChat(){
-    var m = document.getElementById('chat-modal');
-    var wasOpen = m.classList.contains('open');
-    m.classList.toggle('open');
-    if(!wasOpen){
-      document.getElementById('chat-input').focus();
-      pollMsgs(true);
-    }
-  }
-  window.toggleChat = toggleChat;
-
-  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  function renderMsg(m){
-    var isUser = m.role === 'user';
-    var d = document.createElement('div');
-    d.className = 'cm-msg ' + (isUser ? 'user' : 'agent');
-    if(!isUser && m.agent){
-      var ag = document.createElement('div');
-      ag.className = 'msg-agent';
-      ag.textContent = m.agent;
-      d.appendChild(ag);
-    }
-    var raw = m.content || '';
-    var hasKey = /LING-[A-Z0-9]{4}-[A-Z0-9]{4}/.test(raw);
-    if(!isUser && hasKey && !window._secretFound){
-      window._secretFound = true;
-      if(dot) dot.style.display = 'none';
-    }
-    var html = esc(raw).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/`([^`]+)`/g, '<code style="background:#F0FDF4;padding:1px 4px;border-radius:4px;font-size:.85em;color:#166534">$1</code>');
-    html = html.replace(/\n/g, '<br>');
-    d.innerHTML += html;
-    return d;
-  }
-
-  function appendMsgs(msgs){
-    var body = document.getElementById('chat-body');
-    var modal = document.getElementById('chat-modal');
-    var isOpen = modal.classList.contains('open');
-    msgs.forEach(function(m){ body.appendChild(renderMsg(m)); });
-    body.scrollTop = body.scrollHeight;
-    if(!isOpen && msgs.length > 0 && dot) dot.style.display = 'block';
-    if(msgs.length > 0){
-      lastTime = Math.max.apply(null, msgs.map(function(m){ return m.time || 0; }));
-      localStorage.setItem('lingxi_last', lastTime);
-    }
-  }
-
-  function pollMsgs(immediate){
-    setTimeout(function(){
-      fetch(OUTBOX + '?t=' + Date.now())
-        .then(function(r){ return r.json(); })
-        .then(function(all){
-          // customer_outbox.json is an array: [{visitor_id, messages}]
-          var myMsgs = null;
-          if(Array.isArray(all)){
-            for(var i=0;i<all.length;i++){ if(all[i].visitor_id===vid){ myMsgs=all[i].messages; break; } }
-          } else {
-            myMsgs = (all[vid]||{}).messages;
-          }
-          if(!myMsgs) return;
-          var newMsgs = myMsgs.filter(function(m){ return m.time > lastTime; });
-          if(newMsgs.length) appendMsgs(newMsgs);
-        })
-        .catch(function(){})
-        .then(function(){ pollMsgs(false); });
-    }, immediate ? 0 : 5000);
-  }
-
-  function sendMsg(text){
-    if(!text) return;
-    var body = document.getElementById('chat-body');
-    var d = document.createElement('div');
-    d.className = 'cm-msg user';
-    d.textContent = text;
-    body.appendChild(d);
-    body.scrollTop = body.scrollHeight;
-  }
-
-  window.sendChatMsg = function(){
-    var inp = document.getElementById('chat-input');
-    var text = inp.value.trim();
-    if(!text) return;
-    inp.value = '';
-    sendMsg(text);
-    // Write to GitHub API inbox.json directly (external customers)
-    writeToInbox(vid, text);
-  };
-
-  // token hex-encoded to avoid GitHub secret scanning
-  var _tk = '6768705f32566a764f55364b42686537444b4c4f51384d744a50444233666d726c50306d4c33356d';
-  function _dk(h){return decodeURIComponent(Array.from({length:h.length/2},function(_,i){return'%'+h.substr(i*2,2)}).join(''))}
-
-  function writeToInbox(visitorId, msgContent){
-    var apiUrl = 'https://api.github.com/repos/nima54851/ai-supermarket/contents/customer_inbox.json';
-    var token = _dk(_tk);
-    // Step 1: Read current inbox
-    fetch(apiUrl + '?t=' + Date.now(), {
-      headers: {'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json'}
-    }).then(function(r){ return r.json(); }).then(function(data){
-      var sha = data.sha;
-      var inbox = {};
-      try { inbox = JSON.parse(atob(data.content)); } catch(e){}
-      inbox[visitorId] = {content: msgContent, time: Date.now()/1000};
-      // Step 2: Write updated inbox
-      var body = JSON.stringify({
-        message: 'chat: customer message',
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(inbox, null, 2)))),
-        sha: sha
-      });
-      fetch(apiUrl, {
-        method:'PUT',
-        body: body,
-        headers: {'Authorization': 'token ' + token, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json'}
-      }).catch(function(){});
-    }).catch(function(){});
-  }
-
-  window._firstOpen = true;
-  pollMsgs(false);
-  // Show welcome message after a short delay (polled from CDN)
-  setTimeout(function(){
-    fetch(OUTBOX + '?t=' + Date.now())
-      .then(function(r){ return r.json(); })
-      .then(function(all){
-        var myMsgs = null;
-        if(Array.isArray(all)){
-          for(var i=0;i<all.length;i++){ if(all[i].visitor_id===vid){ myMsgs=all[i].messages; break; } }
-        } else {
-          myMsgs = (all[vid]||{}).messages;
-        }
-        if(myMsgs && myMsgs.length > 0){
-          appendMsgs(myMsgs);
-        } else {
-          // Show welcome from CDN outbox
-          appendMsgs([{
-            role:'agent', agent:'灵犀',
-            content:'您好！我是灵犀 🤖 请问您想购买哪个AI工具？
-
-📱 Telegram查询 ¥29/月
-⚡ GitHub自动化 ¥99/月
-📣 内容推流 ¥199/月
-🔗 n8n工作流 ¥149/月',
-            time:Date.now()/1000
-          }]);
-        }
-      }).catch(function(){});
-  }, 1500);
-})();
+<script>
+function onTelegramAuth(user) {
+  // 可选：把 Telegram 用户信息发给你的后端做绑定
+  console.log('Telegram auth:', user);
+}
 </script>
 
 </body>
