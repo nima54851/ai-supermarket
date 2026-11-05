@@ -1252,6 +1252,48 @@ init();
       })
       .catch(function(){});
   })();
+
+
+  // customer_outbox.json may be: [{visitor_id, content, time}] | [{visitor_id, messages:[...]}] | {vid:{messages:[...]}}
+  function extractMyMsgs(all, vid){
+    if(!all) return null;
+    if(Array.isArray(all)){
+      var flat = [], grouped = [];
+      for(var i=0;i<all.length;i++){
+        var e = all[i];
+        if(!e) continue;
+        if(e.visitor_id === vid){
+          if(Array.isArray(e.messages)) grouped = grouped.concat(e.messages);
+          else if(e.content !== undefined) flat.push({role:'agent', agent:'灵犀', content:e.content, time:e.time||Date.now()/1000});
+        }
+      }
+      return flat.concat(grouped);
+    }
+    var rec = all[vid];
+    if(!rec) return null;
+    if(Array.isArray(rec.messages)) return rec.messages;
+    if(rec.content !== undefined) return [{role:'agent', agent:'灵犀', content:rec.content, time:rec.time||Date.now()/1000}];
+    return null;
+  }
+
+  // Outbox fetch with multi-source fallback (jsDelivr SHA pin -> GitHub Pages -> raw.githubusercontent)
+  var OUTBOX_URLS = [
+    function(sha){ return 'https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@' + sha + '/ai-supermarket/customer_outbox.json'; },
+    function(){ return 'https://nima54851.github.io/ai-supermarket/ai-supermarket/customer_outbox.json'; },
+    function(){ return 'https://raw.githubusercontent.com/nima54851/ai-supermarket/main/ai-supermarket/customer_outbox.json'; }
+  ];
+  function fetchOutbox(cb){
+    var i = 0;
+    function next(){
+      if(i >= OUTBOX_URLS.length){ cb(null); return; }
+      var url = OUTBOX_URLS[i++](_cdnVer);
+      fetch(url + '?t=' + Date.now())
+        .then(function(r){ if(!r.ok) throw new Error('http ' + r.status); return r.json(); })
+        .then(function(d){ cb(d); })
+        .catch(function(){ next(); });
+    }
+    next();
+  }
   var vid = localStorage.getItem('lingxi_vid');
   if(!vid){ vid = 'v' + Math.random().toString(36).slice(2,14); localStorage.setItem('lingxi_vid', vid); }
   var lastTime = parseFloat(localStorage.getItem('lingxi_last') || '0');
@@ -1309,16 +1351,16 @@ init();
 
   function pollMsgs(immediate){
     setTimeout(function(){
-      fetch(OUTBOX + '?t=' + Date.now())
-        .then(function(r){ return r.json(); })
-        .then(function(all){
-          var myMsgs = all[vid];
-          if(!myMsgs || !myMsgs.messages) return;
-          var newMsgs = myMsgs.messages.filter(function(m){ return m.time > lastTime; });
-          if(newMsgs.length) appendMsgs(newMsgs);
-        })
-        .catch(function(){})
-        .then(function(){ pollMsgs(false); });
+      fetchOutbox(function(all){
+        try{
+          var myMsgs = extractMyMsgs(all, vid);
+          if(myMsgs && myMsgs.length){
+            var newMsgs = myMsgs.filter(function(m){ return (m.time||0) > lastTime; });
+            if(newMsgs.length) appendMsgs(newMsgs);
+          }
+        }catch(e){}
+        pollMsgs(false);
+      });
     }, immediate ? 0 : 5000);
   }
 
@@ -1375,26 +1417,19 @@ init();
   pollMsgs(false);
   // Show welcome message after a short delay (polled from CDN)
   setTimeout(function(){
-    fetch(OUTBOX + '?t=' + Date.now())
-      .then(function(r){ return r.json(); })
-      .then(function(all){
-        var myMsgs = all[vid];
-        if(myMsgs && myMsgs.messages && myMsgs.messages.length > 0){
-          appendMsgs(myMsgs.messages);
-        } else {
+    fetchOutbox(function(all){
+      var myMsgs = extractMyMsgs(all, vid);
+      if(myMsgs && myMsgs.length > 0){
+        appendMsgs(myMsgs);
+      } else {
           // Show welcome from CDN outbox
           appendMsgs([{
             role:'agent', agent:'灵犀',
-            content:'您好！我是灵犀 🤖 请问您想购买哪个AI工具？
-
-📱 Telegram查询 ¥29/月
-⚡ GitHub自动化 ¥99/月
-📣 内容推流 ¥199/月
-🔗 n8n工作流 ¥149/月',
+            content:'您好！我是灵犀 🤖 请问您想购买哪个AI工具？\n\n📱 Telegram查询 ¥29/月\n⚡ GitHub自动化 ¥99/月\n📣 内容推流 ¥199/月\n🔗 n8n工作流 ¥149/月',
             time:Date.now()/1000
           }]);
         }
-      }).catch(function(){});
+      });
   }, 1500);
 })();
 </script>
