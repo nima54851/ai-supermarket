@@ -1,9 +1,15 @@
 name: AI超市每日运营
 
 on:
+  push:
+    branches: [main]
   schedule:
     # 每天 09:00 上架一个新技能
     - cron: '0 1 * * *'   # UTC 09:00 北京时间
+    # 早中晚健康检查（北京时间 8:00 / 13:00 / 20:00）
+    - cron: '0 0 * * *'   # UTC 00:00
+    - cron: '0 5 * * *'   # UTC 05:00
+    - cron: '0 12 * * *'  # UTC 12:00
   workflow_dispatch:
     inputs:
       mode:
@@ -20,6 +26,7 @@ on:
 
 jobs:
   daily-ops:
+    if: github.event_name == 'schedule' && github.event.inputs.mode != 'health'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -44,18 +51,19 @@ jobs:
           python3 ai_supermarket_ops.py $OPERATION_MODE
 
   health-check:
+    if: github.event_name == 'schedule' || inputs.mode == 'health'
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    # 早中晚各一次健康检查（北京时间 8:00 / 13:00 / 20:00）
-    schedule:
-      - cron: '0 0 * * *'     # UTC 00:00 = 北京 08:00
-      - cron: '0 5 * * *'     # UTC 05:00 = 北京 13:00
-      - cron: '0 12 * * *'    # UTC 12:00 = 北京 20:00
 
     steps:
       - name: Health check
         run: |
-          echo "🔍 AI超市健康检查 $(date)"
-          curl -s --max-time 10 -o /dev/null -w "GitHub Pages: %{http_code}\n" https://nima54851.github.io/ai-supermarket/
-          curl -s --max-time 10 -o /dev/null -w "jsDelivr CDN: %{http_code}\n" https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@main/index.html
-          curl -s --max-time 10 -o /dev/null -w "GitHub API: %{http_code}\n" https://api.github.com/repos/nima54851/ai-supermarket
+          echo "🔍 AI超市健康检查 $(date -u)"
+          curl -s --max-time 15 -o /dev/null -w "GitHub Pages: %{http_code}\n" https://nima54851.github.io/ai-supermarket/
+          curl -s --max-time 15 -o /dev/null -w "jsDelivr CDN(SHA): %{http_code}\n" https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@main/index.html
+          curl -s --max-time 15 -o /dev/null -w "jsDelivr CDN(tag): %{http_code}\n" https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@1.0.0/index.html
+          curl -s --max-time 15 -o /dev/null -w "GitHub API: %{http_code}\n" https://api.github.com/repos/nima54851/ai-supermarket
+          curl -s --max-time 15 -o /dev/null -w "Pages Outbox: %{http_code}\n" https://nima54851.github.io/ai-supermarket/ai-supermarket/customer_outbox.json
+          echo "--- Release assets ---"
+          curl -s --max-time 15 https://api.github.com/repos/nima54851/ai-supermarket/releases/tags/v1.0.0 \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); print('assets:', len(d.get('assets',[])))"
