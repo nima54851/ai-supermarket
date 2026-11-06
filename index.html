@@ -837,23 +837,23 @@ input,textarea,select{font-family:inherit}
 
 <script>
 var PRODUCTS = [
-  {id:"telegram-bot",name:"Telegram号码查询机器人",emoji:"📱",price:29,period:"/月",category:"自动化",desc:"实时手机号码归属地查询，批量查询，7×24小时云端运行。",features:["实时查询 < 2秒","全国号码数据库","批量查询","自动更新"],color:"#22d3ee",rating:4.6,reviews:215,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/telegram-bot.zip"},
-  {id:"github-automation",name:"GitHub Agent自动化系统",emoji:"⚡",price:99,period:"/月",category:"自动化",desc:"全自动GitHub运营：自动Star、评论、追踪Trending、AI日报。",features:["GitHub Actions 7×24","自动Star热门项目","AI生成评论","Trending追踪"],color:"#f59e0b",rating:4.9,reviews:128,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/github-automation.zip"},
-  {id:"content-promoter",name:"AI内容推流系统",emoji:"📣",price:199,period:"/月",category:"内容",desc:"一键生成多平台推广文案，批量发布，效果追踪。",features:["6平台同时发布","AI批量生成文案","定时自动推流","数据看板"],color:"#ec4899",rating:4.8,reviews:96,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/content-promoter.zip"},
-  {id:"n8n-workflow",name:"n8n工作流自动化系统",emoji:"🔗",price:149,period:"/月",category:"自动化",desc:"拖拽式n8n工作流，500+模板，CRM+社交媒体全场景。",features:["500+开源模板","Webhook+定时调度","自定义Python节点","一键导入"],color:"#8b5cf6",rating:4.7,reviews:84,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/n8n-workflow.zip"},
-  {id:"video-gen",name:"AI视频生成助手",emoji:"🎬",price:99,period:"/月",category:"内容",desc:"AI驱动的视频批量生成，支持多种风格和文案自动配音。",features:["文字转视频","AI配音","多风格模板","批量导出"],color:"#22d3ee",rating:4.5,reviews:67,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/video-gen.zip"},
-  {id:"ai-manga",name:"AI漫剧生成系统",emoji:"🎭",price:149,period:"/月",category:"内容",desc:"AI自动生成漫画/漫剧，脚本→分镜→渲染一条龙。",features:["脚本自动生成","AI分镜","风格迁移","批量渲染"],color:"#ec4899",rating:4.8,reviews:42,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ai-manga.zip"},
-  {id:"idea-generator",name:"脑洞助手/创意生成器",emoji:"🧠",price:39,period:"/月",category:"效率",desc:"AI创意头脑风暴工具，文案、选题、产品创意一键生成。",features:["头脑风暴","文案生成","选题推荐","创意拓展"],color:"#10b981",rating:4.7,reviews:183,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/idea-generator.zip"},
-  {id:"ppt-generator",name:"PPT智能生成器",emoji:"📊",price:79,period:"/月",category:"效率",desc:"AI一键生成PPT，输入主题自动排版，支持模板自定义。",features:["主题→PPT","多模板","支持导出","在线编辑"],color:"#f59e0b",rating:4.6,reviews:134,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ppt-generator.zip"},
-  {id:"ai-writing",name:"AI代写定制服务系统",emoji:"✍️",price:59,period:"/月",category:"内容",desc:"AI文章/文案/报告代写，定制风格与格式，支持中英文。",features:["文章代写","报告生成","风格定制","多语言"],color:"#6366f1",rating:4.5,reviews:99,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ai-writing.zip"},
-  {id:"cross-border-ai",name:"跨境电商AI助手",emoji:"🌐",price:199,period:"/月",category:"电商",desc:"AI驱动的跨境电商运营助手：商品描述翻译、SEO优化、竞品分析。",features:["商品描述AI生成","多语言翻译","SEO优化","竞品分析"],color:"#6366f1",rating:4.7,reviews:58,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/cross-border-ai.zip"},
-  {id:"ai-agent",name:"多平台AI Agent助手",emoji:"🤖",price:129,period:"/月",category:"自动化",desc:"通用的AI Agent框架，可对接微信、Discord、Slack等多平台。",features:["多平台接入","插件系统","记忆持久化","自定义技能"],color:"#22d3ee",rating:4.6,reviews:71,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/ai-agent.zip"},
-  {id:"3d-generator",name:"3D模型生成系统",emoji:"🎨",price:129,period:"/月",category:"开发",desc:"AI文本→3D模型生成，支持导出GLTF/OBJ，游戏开发利器。",features:["文本生成3D","多格式导出","纹理自动生成","游戏引擎对接"],color:"#8b5cf6",rating:4.8,reviews:37,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/3d-generator.zip"},
-  {id:"web-scraper",name:"AI智能网页爬虫",emoji:"🕷️",price:69,period:"/月",category:"数据",desc:"AI驱动的智能网页数据采集，自动解析结构化数据。",features:["自动抓取","智能解析","结构化导出","定时采集"],color:"#10b981",rating:4.4,reviews:88,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/web-scraper.zip"},
-  {id:"database-toolkit",name:"AI数据库管理工具包",emoji:"🗄️",price:89,period:"/月",category:"开发",desc:"AI辅助的数据库查询、优化、迁移工具，降低数据库使用门槛。",features:["自然语言查询","SQL优化","数据迁移","ER图生成"],color:"#6366f1",rating:4.5,reviews:62,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/database-toolkit.zip"},
-  {id:"security-scanner",name:"AI代码安全审计系统",emoji:"🔒",price:149,period:"/月",category:"安全",desc:"AI驱动的代码安全审计，自动检测漏洞、依赖风险、CI/CD集成。",features:["漏洞扫描","依赖分析","CI/CD集成","自动修复建议"],color:"#ec4899",rating:4.9,reviews:45,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/security-scanner.zip"},
-  {id:"design-toolkit",name:"AI设计素材生成器",emoji:"🖌️",price:79,period:"/月",category:"设计",desc:"AI生成Logo、UI设计等设计素材，快速原型设计。",features:["Logo自动生成","UI素材生成","设计推荐","批量导出"],color:"#22d3ee",rating:4.6,reviews:103,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/design-toolkit.zip"},
-  {id:"game-dev-kit",name:"AI游戏开发工具包",emoji:"🎮",price:199,period:"/月",category:"开发",desc:"AI辅助游戏开发，代码生成、美术资源生成、关卡设计。",features:["代码生成","美术资源AI生成","关卡设计","游戏AI"],color:"#f59e0b",rating:4.7,reviews:52,downloadUrl:"https://github.com/nima54851/ai-supermarket/releases/download/v1.0.0/game-dev-kit.zip"}
+  {id:"telegram-bot",name:"Telegram号码查询机器人",emoji:"📱",price:29,period:"/月",category:"自动化",desc:"实时手机号码归属地查询，批量查询，7×24小时云端运行。",features:["实时查询 < 2秒","全国号码数据库","批量查询","自动更新"],color:"#22d3ee",rating:4.6,reviews:215,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/telegram-bot.zip"},
+  {id:"github-automation",name:"GitHub Agent自动化系统",emoji:"⚡",price:99,period:"/月",category:"自动化",desc:"全自动GitHub运营：自动Star、评论、追踪Trending、AI日报。",features:["GitHub Actions 7×24","自动Star热门项目","AI生成评论","Trending追踪"],color:"#f59e0b",rating:4.9,reviews:128,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/github-automation.zip"},
+  {id:"content-promoter",name:"AI内容推流系统",emoji:"📣",price:199,period:"/月",category:"内容",desc:"一键生成多平台推广文案，批量发布，效果追踪。",features:["6平台同时发布","AI批量生成文案","定时自动推流","数据看板"],color:"#ec4899",rating:4.8,reviews:96,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/content-promoter.zip"},
+  {id:"n8n-workflow",name:"n8n工作流自动化系统",emoji:"🔗",price:149,period:"/月",category:"自动化",desc:"拖拽式n8n工作流，500+模板，CRM+社交媒体全场景。",features:["500+开源模板","Webhook+定时调度","自定义Python节点","一键导入"],color:"#8b5cf6",rating:4.7,reviews:84,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/n8n-workflow.zip"},
+  {id:"video-gen",name:"AI视频生成助手",emoji:"🎬",price:99,period:"/月",category:"内容",desc:"AI驱动的视频批量生成，支持多种风格和文案自动配音。",features:["文字转视频","AI配音","多风格模板","批量导出"],color:"#22d3ee",rating:4.5,reviews:67,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/video-gen.zip"},
+  {id:"ai-manga",name:"AI漫剧生成系统",emoji:"🎭",price:149,period:"/月",category:"内容",desc:"AI自动生成漫画/漫剧，脚本→分镜→渲染一条龙。",features:["脚本自动生成","AI分镜","风格迁移","批量渲染"],color:"#ec4899",rating:4.8,reviews:42,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/ai-manga.zip"},
+  {id:"idea-generator",name:"脑洞助手/创意生成器",emoji:"🧠",price:39,period:"/月",category:"效率",desc:"AI创意头脑风暴工具，文案、选题、产品创意一键生成。",features:["头脑风暴","文案生成","选题推荐","创意拓展"],color:"#10b981",rating:4.7,reviews:183,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/idea-generator.zip"},
+  {id:"ppt-generator",name:"PPT智能生成器",emoji:"📊",price:79,period:"/月",category:"效率",desc:"AI一键生成PPT，输入主题自动排版，支持模板自定义。",features:["主题→PPT","多模板","支持导出","在线编辑"],color:"#f59e0b",rating:4.6,reviews:134,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/ppt-generator.zip"},
+  {id:"ai-writing",name:"AI代写定制服务系统",emoji:"✍️",price:59,period:"/月",category:"内容",desc:"AI文章/文案/报告代写，定制风格与格式，支持中英文。",features:["文章代写","报告生成","风格定制","多语言"],color:"#6366f1",rating:4.5,reviews:99,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/ai-writing.zip"},
+  {id:"cross-border-ai",name:"跨境电商AI助手",emoji:"🌐",price:199,period:"/月",category:"电商",desc:"AI驱动的跨境电商运营助手：商品描述翻译、SEO优化、竞品分析。",features:["商品描述AI生成","多语言翻译","SEO优化","竞品分析"],color:"#6366f1",rating:4.7,reviews:58,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/cross-border-ai.zip"},
+  {id:"ai-agent",name:"多平台AI Agent助手",emoji:"🤖",price:129,period:"/月",category:"自动化",desc:"通用的AI Agent框架，可对接微信、Discord、Slack等多平台。",features:["多平台接入","插件系统","记忆持久化","自定义技能"],color:"#22d3ee",rating:4.6,reviews:71,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/ai-agent.zip"},
+  {id:"3d-generator",name:"3D模型生成系统",emoji:"🎨",price:129,period:"/月",category:"开发",desc:"AI文本→3D模型生成，支持导出GLTF/OBJ，游戏开发利器。",features:["文本生成3D","多格式导出","纹理自动生成","游戏引擎对接"],color:"#8b5cf6",rating:4.8,reviews:37,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/3d-generator.zip"},
+  {id:"web-scraper",name:"AI智能网页爬虫",emoji:"🕷️",price:69,period:"/月",category:"数据",desc:"AI驱动的智能网页数据采集，自动解析结构化数据。",features:["自动抓取","智能解析","结构化导出","定时采集"],color:"#10b981",rating:4.4,reviews:88,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/web-scraper.zip"},
+  {id:"database-toolkit",name:"AI数据库管理工具包",emoji:"🗄️",price:89,period:"/月",category:"开发",desc:"AI辅助的数据库查询、优化、迁移工具，降低数据库使用门槛。",features:["自然语言查询","SQL优化","数据迁移","ER图生成"],color:"#6366f1",rating:4.5,reviews:62,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/database-toolkit.zip"},
+  {id:"security-scanner",name:"AI代码安全审计系统",emoji:"🔒",price:149,period:"/月",category:"安全",desc:"AI驱动的代码安全审计，自动检测漏洞、依赖风险、CI/CD集成。",features:["漏洞扫描","依赖分析","CI/CD集成","自动修复建议"],color:"#ec4899",rating:4.9,reviews:45,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/security-scanner.zip"},
+  {id:"design-toolkit",name:"AI设计素材生成器",emoji:"🖌️",price:79,period:"/月",category:"设计",desc:"AI生成Logo、UI设计等设计素材，快速原型设计。",features:["Logo自动生成","UI素材生成","设计推荐","批量导出"],color:"#22d3ee",rating:4.6,reviews:103,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/design-toolkit.zip"},
+  {id:"game-dev-kit",name:"AI游戏开发工具包",emoji:"🎮",price:199,period:"/月",category:"开发",desc:"AI辅助游戏开发，代码生成、美术资源生成、关卡设计。",features:["代码生成","美术资源AI生成","关卡设计","游戏AI"],color:"#f59e0b",rating:4.7,reviews:52,downloadUrl:"https://nima54851.github.io/ai-supermarket/releases/game-dev-kit.zip"}
 ];
 
 var CATEGORIES = ["全部","自动化","内容","数据","开发","安全","电商","设计","效率"];
@@ -1183,7 +1183,7 @@ function showSecretErr(msg){
 function downloadProduct(id){
   const p = PRODUCTS.find(x => x.id === id);
   if(!p) return;
-  const url = p.downloadUrl || 'https://github.com/nima54851/ai-supermarket/releases';
+  const url = p.downloadUrl || 'https://nima54851.github.io/ai-supermarket/releases/';
   if(confirm('下载「' + p.name + '」？\n\n将跳转 GitHub Release 页面。')){
     window.open(url, '_blank');
   }
@@ -1252,48 +1252,6 @@ init();
       })
       .catch(function(){});
   })();
-
-
-  // customer_outbox.json may be: [{visitor_id, content, time}] | [{visitor_id, messages:[...]}] | {vid:{messages:[...]}}
-  function extractMyMsgs(all, vid){
-    if(!all) return null;
-    if(Array.isArray(all)){
-      var flat = [], grouped = [];
-      for(var i=0;i<all.length;i++){
-        var e = all[i];
-        if(!e) continue;
-        if(e.visitor_id === vid){
-          if(Array.isArray(e.messages)) grouped = grouped.concat(e.messages);
-          else if(e.content !== undefined) flat.push({role:'agent', agent:'灵犀', content:e.content, time:e.time||Date.now()/1000});
-        }
-      }
-      return flat.concat(grouped);
-    }
-    var rec = all[vid];
-    if(!rec) return null;
-    if(Array.isArray(rec.messages)) return rec.messages;
-    if(rec.content !== undefined) return [{role:'agent', agent:'灵犀', content:rec.content, time:rec.time||Date.now()/1000}];
-    return null;
-  }
-
-  // Outbox fetch with multi-source fallback (jsDelivr SHA pin -> GitHub Pages -> raw.githubusercontent)
-  var OUTBOX_URLS = [
-    function(sha){ return 'https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@' + sha + '/ai-supermarket/customer_outbox.json'; },
-    function(){ return 'https://nima54851.github.io/ai-supermarket/ai-supermarket/customer_outbox.json'; },
-    function(){ return 'https://raw.githubusercontent.com/nima54851/ai-supermarket/main/ai-supermarket/customer_outbox.json'; }
-  ];
-  function fetchOutbox(cb){
-    var i = 0;
-    function next(){
-      if(i >= OUTBOX_URLS.length){ cb(null); return; }
-      var url = OUTBOX_URLS[i++](_cdnVer);
-      fetch(url + '?t=' + Date.now())
-        .then(function(r){ if(!r.ok) throw new Error('http ' + r.status); return r.json(); })
-        .then(function(d){ cb(d); })
-        .catch(function(){ next(); });
-    }
-    next();
-  }
   var vid = localStorage.getItem('lingxi_vid');
   if(!vid){ vid = 'v' + Math.random().toString(36).slice(2,14); localStorage.setItem('lingxi_vid', vid); }
   var lastTime = parseFloat(localStorage.getItem('lingxi_last') || '0');
@@ -1350,16 +1308,22 @@ init();
 
   function pollMsgs(immediate){
     setTimeout(function(){
-      fetchOutbox(function(all){
-        try{
-          var myMsgs = extractMyMsgs(all, vid);
-          if(myMsgs && myMsgs.length){
-            var newMsgs = myMsgs.filter(function(m){ return (m.time||0) > lastTime; });
-            if(newMsgs.length) appendMsgs(newMsgs);
+      fetch(OUTBOX + '?t=' + Date.now())
+        .then(function(r){ return r.json(); })
+        .then(function(all){
+          // customer_outbox.json is an array: [{visitor_id, messages}]
+          var myMsgs = null;
+          if(Array.isArray(all)){
+            for(var i=0;i<all.length;i++){ if(all[i].visitor_id===vid){ myMsgs=all[i].messages; break; } }
+          } else {
+            myMsgs = (all[vid]||{}).messages;
           }
-        }catch(e){}
-        pollMsgs(false);
-      });
+          if(!myMsgs) return;
+          var newMsgs = myMsgs.filter(function(m){ return m.time > lastTime; });
+          if(newMsgs.length) appendMsgs(newMsgs);
+        })
+        .catch(function(){})
+        .then(function(){ pollMsgs(false); });
     }, immediate ? 0 : 5000);
   }
 
@@ -1416,19 +1380,31 @@ init();
   pollMsgs(false);
   // Show welcome message after a short delay (polled from CDN)
   setTimeout(function(){
-    fetchOutbox(function(all){
-      var myMsgs = extractMyMsgs(all, vid);
-      if(myMsgs && myMsgs.length > 0){
-        appendMsgs(myMsgs);
-      } else {
+    fetch(OUTBOX + '?t=' + Date.now())
+      .then(function(r){ return r.json(); })
+      .then(function(all){
+        var myMsgs = null;
+        if(Array.isArray(all)){
+          for(var i=0;i<all.length;i++){ if(all[i].visitor_id===vid){ myMsgs=all[i].messages; break; } }
+        } else {
+          myMsgs = (all[vid]||{}).messages;
+        }
+        if(myMsgs && myMsgs.length > 0){
+          appendMsgs(myMsgs);
+        } else {
           // Show welcome from CDN outbox
           appendMsgs([{
             role:'agent', agent:'灵犀',
-            content:'您好！我是灵犀 🤖 请问您想购买哪个AI工具？\n\n📱 Telegram查询 ¥29/月\n⚡ GitHub自动化 ¥99/月\n📣 内容推流 ¥199/月\n🔗 n8n工作流 ¥149/月',
+            content:'您好！我是灵犀 🤖 请问您想购买哪个AI工具？
+
+📱 Telegram查询 ¥29/月
+⚡ GitHub自动化 ¥99/月
+📣 内容推流 ¥199/月
+🔗 n8n工作流 ¥149/月',
             time:Date.now()/1000
           }]);
         }
-      });
+      }).catch(function(){});
   }, 1500);
 })();
 </script>
