@@ -103,7 +103,9 @@ OUTBOX_FILE = "customer_outbox.json"   # 网站轮询的站内信文件（扁平
 
 
 def sync_outbox_for_site(msgs):
-    """把回复转成网站轮询的扁平数组，写回 ai-supermarket/customer_outbox.json"""
+    """把回复转成网站轮询的数组格式，写回 ai-supermarket/customer_outbox.json
+    格式: [{visitor_id, messages:[{role,content,agent,time}]}]  ← 前端按此解析
+    """
     flat = []
     for vid, rec in msgs.items():
         if not isinstance(rec, dict):
@@ -113,10 +115,14 @@ def sync_outbox_for_site(msgs):
                 continue
             flat.append({
                 "visitor_id": vid,
-                "content": m.get("content", ""),
-                "time": m.get("time", time.time()),
+                "messages": [{
+                    "role": "agent",
+                    "content": m.get("content", ""),
+                    "agent": m.get("agent", "灵犀"),
+                    "time": m.get("time", time.time()),
+                }],
             })
-    flat.sort(key=lambda x: x["time"])
+    flat.sort(key=lambda x: x["messages"][0]["time"])
     # 保留最近 200 条
     flat = flat[-200:]
     try:
