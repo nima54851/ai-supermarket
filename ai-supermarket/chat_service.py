@@ -13,7 +13,7 @@ IMG_DIR = "/tmp/chat_images"
 GITHUB_REPO = "nima54851/ai-supermarket"
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_MSG_PATH = "inbox.json"
-COMMIT_SHA = "872efe84b7fa9d2c3e4f1a8b6c9d2e3f4a5b6c7d"
+COMMIT_SHA = "main"  # 固定旧 SHA 会 404，改用分支名（CDN 自动取最新）
 os.makedirs(IMG_DIR, exist_ok=True)
 
 app = Flask(__name__)
