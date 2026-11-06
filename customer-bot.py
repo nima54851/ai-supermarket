@@ -21,13 +21,36 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 # ── 配置 ──────────────────────────────────────────
-BOT_TOKEN = "8979991426:AAEtgWjhF1KV_pJZVwzjk-ZE2_Yf1-W4RDU"
+# Token 优先从环境变量/密钥文件读取，方便 @BotFather 换 token 后无需改代码
+def _load_token():
+    env = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+    if env:
+        return env
+    for f in ("/root/.openclaw/workspace/.secrets/telegram_bot.env",):
+        try:
+            for line in open(f):
+                if line.strip().startswith("TELEGRAM_BOT_TOKEN"):
+                    v = line.split("=", 1)[1].strip().strip('"').strip("'")
+                    if v:
+                        return v
+        except Exception:
+            pass
+    return "8979991426:AAEtgWjhF1KV_pJZVwzjk-ZE2_Yf1-W4RDU"
 
-# 代理（国内服务器需要）
-PROXY_URL = os.environ.get(
-    "TELEGRAM_PROXY",
-    "socks5://ee29044830465c5171f152ab7d07ccfc89617a7572652e6d6963726f736f66742e636f6d@18.139.137.172:443"
-)
+BOT_TOKEN = _load_token()
+
+# 代理（国内服务器需要）—— 逗号分隔的候选列表，按顺序轮换
+PROXY_CANDIDATES = [
+    p.strip()
+    for p in os.environ.get(
+        "TELEGRAM_PROXY",
+        "socks5h://101.36.104.239:10808,"
+        "socks5h://193.25.215.182:22222,"
+        "socks5h://45.194.33.12:30001"
+    ).split(",")
+    if p.strip()
+]
+PROXY_URL = PROXY_CANDIDATES[0] if PROXY_CANDIDATES else None
 
 # 管理员 ID
 ADMIN_IDS = [7668716558, 7576072069]  # 万的ID + 可添加更多
@@ -208,6 +231,10 @@ async def main():
         Application, CommandHandler, MessageHandler,
         CallbackQueryHandler, filters, ContextTypes,
     )
+    try:
+        from telegram.request import HTTPXRequest
+    except Exception:
+        HTTPXRequest = None
 
     # 订单 & 会话
     orders = load_orders()
@@ -512,11 +539,11 @@ async def main():
         queue_secret_delivery(uid, pid, latest_vid, "paypal")
         if latest_vid:
             await update.message.reply_text(
-                "🔑 *秘钥已加入发货队列！*
+                "🔑 *秘钥已加入发货队列！*"
 
-"
-                "去你的网站聊天窗口看看吧，秘钥马上到 💬
-"
+""
+                "去你的网站聊天窗口看看吧，秘钥马上到 💬"
+""
                 "（约 1-3 分钟内自动送达，刷新页面即可见）",
                 parse_mode="Markdown"
             )
@@ -534,16 +561,16 @@ async def main():
             parts = text.split(" ", 1)
             if len(parts) < 2:
                 await update.message.reply_text(
-                    "📎 *绑定网站账号*
+                    "📎 *绑定网站账号*"
 
-"
-                    "用法：/link <你的visitor_id>
+""
+                    "用法：/link <你的visitor_id>"
 
-"
-                    "① 先去网站点击「购买」→ 复制弹窗里的 visitor_id
-"
-                    "② 回来发：/link v849eb28b4b21
-"
+""
+                    "① 先去网站点击「购买」→ 复制弹窗里的 visitor_id"
+""
+                    "② 回来发：/link v849eb28b4b21"
+""
                     "③ 付款后，秘钥会自动出现在你的网站聊天窗口！",
                     parse_mode="Markdown"
                 )
@@ -559,15 +586,15 @@ async def main():
             orders[uid]["linked_vids"][vid] = {"linked_at": datetime.now().strftime("%Y-%m-%d %H:%M")}
             save_orders(orders)
             await update.message.reply_text(
-                f"✅ *账号绑定成功！*
+                f"✅ *账号绑定成功！*"
 
-"
-                f"Visitor ID：`{vid}`
+""
+                f"Visitor ID：`{vid}`"
 
-"
-                f"以后在这个机器人付款后，秘钥会自动发到你的网站聊天窗口，无需手动复制。
+""
+                f"以后在这个机器人付款后，秘钥会自动发到你的网站聊天窗口，无需手动复制。"
 
-"
+""
                 f"💡 现在可以返回网站购买，或发截图/TxHash 完成付款。",
                 parse_mode="Markdown"
             )
@@ -582,13 +609,10 @@ async def main():
                 pending = load_pending()
                 active = [p for p in pending if not p.get("delivered")]
                 done = [p for p in pending if p.get("delivered")]
-                resp = f"📋 *待发货队列*
-共 {len(active)} 条待处理，{len(done)} 条已完成
-
-"
+                resp = f"📋 *待发货队列*\n"
+                f"共 {len(active)} 条待处理，{len(done)} 条已完成\n"
                 for p in active[:10]:
-                    resp += f"• `{p['telegram_uid'][-6:]}` → {p['product_id']} | vid={p.get('visitor_id','')[:10]}…
-"
+                    resp += f"• `{p['telegram_uid'][-6:]}` → {p['product_id']} | vid={p.get('visitor_id','')[:10]}…"
                 await update.message.reply_text(resp or "暂无待发货", parse_mode="Markdown")
                 return
             if text.startswith("/orders") and is_admin(update.effective_user.id):
@@ -657,11 +681,11 @@ async def main():
                 queue_secret_delivery(uid, pid, latest_vid, "usdt")
                 if latest_vid:
                     await update.message.reply_text(
-                        "🔑 *秘钥已加入发货队列！*
+                        "🔑 *秘钥已加入发货队列！*"
 
-"
-                        "去你的网站聊天窗口看看吧，秘钥马上到 💬
-"
+""
+                        "去你的网站聊天窗口看看吧，秘钥马上到 💬"
+""
                         "（约 1-3 分钟内自动送达，刷新页面即可见）",
                         parse_mode="Markdown"
                     )
@@ -722,11 +746,33 @@ async def main():
 
     # ── 启动机器人 ──────────────────────────────────
 
-    app = Application.builder().token(BOT_TOKEN).build()
-
-    # 代理（httpx 需要单独处理）
-    # 代理通过 HTTPS_PROXY 环境变量生效（httpx 自动读取）
-    app._http_client = None  # 保持默认，由环境变量控制代理
+    # ── 代理：httpx 请求客户端 + getUpdates 都走代理 ──
+    # 国内服务器直连 api.telegram.org 不通，必须走 SOCKS5 代理
+    # 代理列表失效时自动轮换到下一个可用代理
+    app = None
+    last_err = None
+    for proxy in (PROXY_CANDIDATES or [None]):
+        try:
+            from telegram.request import HTTPXRequest
+            if proxy:
+                request = HTTPXRequest(
+                    proxy=proxy,
+                    connect_timeout=20.0,
+                    read_timeout=30.0,
+                    write_timeout=30.0,
+                    http_version="1.1",
+                )
+                app = Application.builder().token(BOT_TOKEN).request(request).build()
+                logger.info(f"🌐 使用代理: {proxy}")
+            else:
+                app = Application.builder().token(BOT_TOKEN).build()
+                logger.info("🌐 未配置代理，使用直连")
+            break
+        except Exception as e:
+            last_err = e
+            logger.warning(f"代理 {proxy} 初始化失败: {e}")
+    if app is None:
+        raise last_err
 
     app.add_handler(CommandHandler("start", cmd_start))
     app.add_handler(CommandHandler("help", cmd_help))
@@ -769,7 +815,7 @@ if __name__ == "__main__":
 # 秘钥自动发货（灵犀集市 v3.0）
 # ══════════════════════════════════════════════════════════════
 
-PENDING_FILE = Path(__file__).parent / "pending_deliveries.json"
+PENDING_FILE = Path(__file__).parent / "ai-supermarket" / "pending_deliveries.json"
 
 def load_pending() -> list:
     if PENDING_FILE.exists():
