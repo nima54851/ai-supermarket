@@ -66,28 +66,65 @@ def read_raw(url, default=None):
     except:
         return default
 
-def read_messages():
-    """读取 GitHub 上的 inbox.json"""
+def _read_gh_json(path):
+    """通过 GitHub API 直接读 JSON（不走 raw.githubusercontent，国内不可达）"""
+    import base64 as _b64
     try:
-        sha_info = gh_api(f"contents/{INBOX_FILE}")
-        raw = urllib.request.urlopen(sha_info["download_url"], timeout=10)
-        return json.loads(raw.read()), sha_info["sha"]
-    except:
-        return {}, None
+        info = gh_api(f"contents/{path}")
+        content = info.get("content")
+        if content:
+            return json.loads(_b64.b64decode(content).decode()), info["sha"]
+        # 大文件走 git blob
+        blob = gh_api(f"git/blobs/{info['sha']}")
+        return json.loads(_b64.b64decode(blob["content"]).decode()), info["sha"]
+    except Exception as e:
+        print(f"  ⚠️ 读取 {path} 失败: {e}")
+        return None, None
+
+
+def read_messages():
+    """读取 GitHub 上的 customer_inbox.json"""
+    data, sha = _read_gh_json(INBOX_FILE)
+    return (data or {}), sha
 
 def read_customer_messages():
     """读取现有的 customer_messages.json"""
-    try:
-        sha_info = gh_api(f"contents/{MSG_FILE}")
-        raw = urllib.request.urlopen(sha_info["download_url"], timeout=10)
-        return json.loads(raw.read()), sha_info["sha"]
-    except:
-        return {}, None
+    data, sha = _read_gh_json(MSG_FILE)
+    return (data or {}), sha
 
 def save_customer_messages(msgs):
-    """保存完整的 customer_messages.json"""
+    """保存完整的 customer_messages.json（根目录，兼容 chat_service）"""
     write_file(MSG_FILE, json.dumps(msgs, ensure_ascii=False, indent=2),
                msg="chat: 更新客户消息")
+    sync_outbox_for_site(msgs)
+
+
+OUTBOX_FILE = "customer_outbox.json"   # 网站轮询的站内信文件（扁平数组格式）
+
+
+def sync_outbox_for_site(msgs):
+    """把回复转成网站轮询的扁平数组，写回 ai-supermarket/customer_outbox.json"""
+    flat = []
+    for vid, rec in msgs.items():
+        if not isinstance(rec, dict):
+            continue
+        for m in rec.get("messages", []):
+            if m.get("role") != "agent":
+                continue
+            flat.append({
+                "visitor_id": vid,
+                "content": m.get("content", ""),
+                "time": m.get("time", time.time()),
+            })
+    flat.sort(key=lambda x: x["time"])
+    # 保留最近 200 条
+    flat = flat[-200:]
+    try:
+        write_file(f"ai-supermarket/{OUTBOX_FILE}",
+                   json.dumps(flat, ensure_ascii=False, indent=2),
+                   msg="chat: 更新站内信 outbox")
+    except Exception as e:
+        print(f"  ⚠️ outbox 同步失败: {e}")
 
 # ══════════════════════════════════════════════════════════════
 #  自动回复
