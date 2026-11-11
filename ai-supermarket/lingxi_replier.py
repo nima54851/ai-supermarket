@@ -11,6 +11,10 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 REPO = "nima54851/ai-supermarket"
 GIST_ID = "3fda3818530c065953da3f2257bc05d1"
 INBOX_FILE = "customer_inbox.json"
+# 前端 widget.js 写入的是 ai-supermarket/customer_inbox.json（子目录），
+# 而客服引擎原先只轮询仓库根目录的 customer_inbox.json —— 两者路径不一致，
+# 导致网站访客消息无人应答。改为两处都读、都清空。
+INBOX_FILES = ["ai-supermarket/customer_inbox.json", "customer_inbox.json"]
 MSG_FILE = "customer_messages.json"
 PENDING_FILE = "/root/.openclaw/workspace/ai-supermarket/pending_deliveries.json"
 POLL_INTERVAL = 8   # 轮询间隔（秒）
@@ -42,9 +46,16 @@ def gh_api(path, method="GET", data=None):
     url = f"https://api.github.com/repos/{REPO}/{path}"
     hdrs = {"Authorization": f"token {GITHUB_TOKEN}", "Accept": "application/vnd.github.v3+json"}
     body = json.dumps(data).encode() if data else None
-    req = urllib.request.Request(url, data=body, headers=hdrs, method=method)
-    with urllib.request.urlopen(req, timeout=15) as r:
-        return json.loads(r.read())
+    last = None
+    for attempt in range(4):          # 网络抖动重试（GitHub API 偶发 502 / 连接重置）
+        try:
+            req = urllib.request.Request(url, data=body, headers=hdrs, method=method)
+            with urllib.request.urlopen(req, timeout=20) as r:
+                return json.loads(r.read())
+        except Exception as e:
+            last = e
+            time.sleep(1.5 * (attempt + 1))
+    raise last
 
 def get_sha(path):
     try:
@@ -83,9 +94,20 @@ def _read_gh_json(path):
 
 
 def read_messages():
-    """读取 GitHub 上的 customer_inbox.json"""
-    data, sha = _read_gh_json(INBOX_FILE)
-    return (data or {}), sha
+    """读取所有 inbox 文件（合并），返回 (消息字典, 落盘路径列表)"""
+    merged = {}
+    paths = []
+    for path in INBOX_FILES:
+        data, _ = _read_gh_json(path)
+        if isinstance(data, dict):
+            paths.append(path)
+            for vid, item in data.items():
+                if not isinstance(item, dict):
+                    continue          # 跳过 messages/processed 这类历史数组字段
+                if "content" not in item:
+                    continue
+                merged.setdefault(vid, item)
+    return merged, paths
 
 def read_customer_messages():
     """读取现有的 customer_messages.json"""
@@ -178,7 +200,7 @@ def generate_reply(c):
 _processed = set()
 
 def process_inbox():
-    inbox, _ = read_messages()
+    inbox, inbox_paths = read_messages()
     if not inbox:
         return
 
@@ -214,8 +236,12 @@ def process_inbox():
 
     if changed:
         save_customer_messages(msgs_db)
-        # 清空 inbox（已处理）
-        write_file(INBOX_FILE, "{}", msg="chat: 清空已处理的 inbox")
+        # 清空所有 inbox 文件（已处理）
+        for path in (inbox_paths or INBOX_FILES):
+            try:
+                write_file(path, "{}", msg="chat: 清空已处理的 inbox")
+            except Exception as e:
+                print(f"  ⚠️ 清空 {path} 失败: {e}")
 
 def load_pending():
     if os.path.exists(PENDING_FILE):
@@ -334,10 +360,10 @@ class ChatHandler(BaseHTTPRequestHandler):
             self.wfile.write(b'{"ok":false}')
             return
 
-        # 写入 GitHub inbox.json
-        inbox, sha = read_messages()
+        # 写入 GitHub inbox.json（写到前端读取的子目录路径）
+        inbox, _ = read_messages()
         inbox[vid] = {"content": content, "time": time.time()}
-        write_file(INBOX_FILE, json.dumps(inbox, ensure_ascii=False, indent=2), msg="chat: 客户新消息")
+        write_file(INBOX_FILES[0], json.dumps(inbox, ensure_ascii=False, indent=2), msg="chat: 客户新消息")
         print(f"[{time.strftime('%H:%M:%S')}] 💬 {vid[:12]}: {content[:40]}")
 
         self.send_response(200)
