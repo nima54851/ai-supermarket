@@ -1238,7 +1238,11 @@ init();
   // jsDelivr CDN — version auto-pinned on every deploy
   var _cdnVer = 'main';
   var CDN = 'https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@' + _cdnVer + '/ai-supermarket';
-  var OUTBOX = CDN + '/customer_outbox.json';
+  // 主通道：GitHub Pages（仓库体积约 530MB，超过 jsDelivr 50MB 包限制，新 commit 后
+  // jsDelivr 偶发返回 403 "Package size exceeded"，故 Pages 优先，CDN 作为备用）
+  var OUTBOX_PAGES = 'https://nima54851.github.io/ai-supermarket/ai-supermarket/customer_outbox.json';
+  var OUTBOX_CDN = CDN + '/customer_outbox.json';
+  var OUTBOX = OUTBOX_PAGES;
 
   // Auto-pin CDN to latest commit SHA (fetched from GitHub API)
   (function pinCDN(){
@@ -1248,10 +1252,23 @@ init();
         var sha = (d.object && d.object.sha) || 'main';
         _cdnVer = sha;
         CDN = 'https://cdn.jsdelivr.net/gh/nima54851/ai-supermarket@' + sha + '/ai-supermarket';
-        OUTBOX = CDN + '/customer_outbox.json';
+        OUTBOX_CDN = CDN + '/customer_outbox.json';
       })
       .catch(function(){});
   })();
+
+  // 带备用通道的 outbox 拉取
+  function fetchOutbox(cb){
+    return fetch(OUTBOX_PAGES + '?t=' + Date.now())
+      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(d){ cb(d); })
+      .catch(function(){
+        return fetch(OUTBOX_CDN + '?t=' + Date.now())
+          .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+          .then(function(d){ cb(d); })
+          .catch(function(){});
+      });
+  }
   var vid = localStorage.getItem('lingxi_vid');
   if(!vid){ vid = 'v' + Math.random().toString(36).slice(2,14); localStorage.setItem('lingxi_vid', vid); }
   var lastTime = parseFloat(localStorage.getItem('lingxi_last') || '0');
@@ -1308,9 +1325,7 @@ init();
 
   function pollMsgs(immediate){
     setTimeout(function(){
-      fetch(OUTBOX + '?t=' + Date.now())
-        .then(function(r){ return r.json(); })
-        .then(function(all){
+      fetchOutbox(function(all){
           // customer_outbox.json is an array: [{visitor_id, messages}]
           var myMsgs = null;
           if(Array.isArray(all)){
@@ -1380,9 +1395,7 @@ init();
   pollMsgs(false);
   // Show welcome message after a short delay (polled from CDN)
   setTimeout(function(){
-    fetch(OUTBOX + '?t=' + Date.now())
-      .then(function(r){ return r.json(); })
-      .then(function(all){
+    fetchOutbox(function(all){
         var myMsgs = null;
         if(Array.isArray(all)){
           for(var i=0;i<all.length;i++){ if(all[i].visitor_id===vid){ myMsgs=all[i].messages; break; } }
